@@ -486,8 +486,8 @@ const SITUACIONS = {
 // GARATGE - 17 COTXES AMB 6 SUPERCOTXES NOUS
 const COTXES = [
   {id:'c1',nom:'SEAT Ibiza',emoji:'🚗',preu:200,cv:90},
-  {id:'c2',nom:'VW Golf GTI',emoji:'🚗',preu:800,cv:220},
-  {id:'c3',nom:'BMW M3',emoji:'🚗',preu:1500,cv:420},
+  {id:'c2',nom:'VW Golf GTI',emoji:'🚘',preu:800,cv:220},
+  {id:'c3',nom:'BMW M3',emoji:'🚙',preu:1500,cv:420},
   {id:'c4',nom:'Tesla Model S',emoji:'⚡',preu:2000,cv:670},
   {id:'c5',nom:'Porsche 911',emoji:'🔴🏎️',preu:2500,cv:450},
   {id:'c6',nom:'Bugatti Chiron',emoji:'🔵🏎️',preu:5000,cv:1500},
@@ -689,8 +689,13 @@ function respondreTest(cat, idx, el) {
   const s = estat.test[cat];
   const preguntes = PREGUNTES[cat];
   const p = preguntes[s.idx % preguntes.length];
-  if(el.classList.contains('bloquejada')) return;
+
+  // Anti-farm: si ja hi ha resposta pintada, fora
+  const cont = document.getElementById(`test-${cat}-opciones`);
+  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+
   document.querySelectorAll(`#test-${cat}-opciones.opcio`).forEach(o => o.classList.add('bloquejada'));
+
   const correcte = idx === p.ok;
   if(correcte) {
     el.classList.add('correcta');
