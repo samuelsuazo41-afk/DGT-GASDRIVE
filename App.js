@@ -18,7 +18,13 @@ let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
     emergencia: { total: 0, aciertos: 0, unicas: [], falladas: [] }
   },
   examenes: { realizados: 0, aprobados: 0, historial: [] },
-  temarios: { senales: false, normas: false, mecanica: false, auxilios: false, medioambiente: false },
+  temarios: {
+    senales: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    normas: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    mecanica: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    auxilios: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    medioambiente: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 }
+  },
   racha: { dias: 0, ultimaFecha: "" }
 };
 
@@ -38,7 +44,7 @@ function mostrarIntro(){
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT 2026</h1>
+      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026</h1>
       <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
       <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
       <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
