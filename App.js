@@ -1,9 +1,4 @@
-// ===== DATOS - GASDRIVE DGT V8.2 ES =====
-const VERSION = "8.2";
 
-// COMBO DOPAMINA
-const EMOJIS_ENCERT = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
-const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
