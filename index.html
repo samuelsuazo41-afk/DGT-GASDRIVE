@@ -6,9 +6,9 @@
 <title>GasDrive DGT ES V8.5</title>
 <link rel="manifest" href="./manifest.json">
 <style>
-html, body { background: #0a; color: #fff; margin: 0; padding: 0; }
+html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
 /* Header compacto y centrado */
-.header{background:linear-gradient(180deg,#2a 0%,#0a0a0a 100%);padding:14px 20px 18px;text-align:center;border-bottom:1px solid #333;position:sticky;top:0;z-index:50}
+.header{background:linear-gradient(180deg,#2a2a2a 0%,#0a0a0a 100%);padding:14px 20px 18px;text-align:center;border-bottom:1px solid #333;position:sticky;top:0;z-index:50}
 h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .subtitle{font-size:11px;opacity:0.9;margin-top:2px;display:flex;align-items:center;justify-content:center;gap:6px}
 .coins{display:inline-flex;align-items:center;background:#FFD700;color:#000;padding:2px 9px;border-radius:14px;font-weight:900;font-size:11px}
@@ -38,9 +38,9 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .opcion.bloqueada{pointer-events:none}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
-.btn-sig{background:linear-gradient(180deg,#4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
+.btn-sig{background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
 .btn-sig:disabled{background:#333;color:#666;cursor:not-allowed}
-.stats{display:flex;justify-content:space-between;background:#0f0f0f;padding:9px;border-radius:7px;margin-bottom:10px;font-size:12px}
+.stats{display:flex;justify-content:space-between;background:#0f0f;padding:9px;border-radius:7px;margin-bottom:10px;font-size:12px}
 .stats span{color:#00D9FF;font-weight:700}
 .feedback{text-align:center;font-size:18px;font-weight:900;margin:12px 0;padding:10px;border-radius:9px;animation:bounceIn 0.5s}
 .feedback.acierto{background:#0a4;color:#fff}
@@ -79,7 +79,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .btn-dgt:disabled{background:#333;color:#666;cursor:not-allowed}
 /* Fix scroll menú lateral */
 body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
-.side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
+.side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a0a0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
 .side-menu.active{ transform:translateX(0); }
 .menu-overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:199; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
 .menu-overlay.active{ opacity:1; pointer-events:all; }
@@ -92,7 +92,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="motivacion" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
 </div>
 
-<!-- TEMARIO - PRIMERA TAB ACTIVA -->
+<!-- TEMARIO - AHORA ES LA PRIMERA TAB -->
 <div id="tab-temario" class="tab-content active">
   <div class="card">
     <h2>📖 TEMARIOS OFICIALES</h2>
@@ -205,6 +205,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="sit-clima-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-clima" onclick="siguienteSituacion(event,'clima')" disabled>SIGUIENTE</button>
     </div>
+  </div>
   <div id="sit-urbano" class="sub-content">
     <div class="card">
       <h2>🏙️ CASOS REALES - URBANO</h2>
@@ -304,4 +305,4 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 <script src="./SITUACIONES.js"></script>
 <script src="./App.js?v=8.5.1"></script>
 </body>
-</html>  
+</html>
