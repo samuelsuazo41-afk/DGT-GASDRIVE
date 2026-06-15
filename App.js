@@ -796,7 +796,8 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== TU CÓDIGO EXISTENTE + MEJORAS - 100% ESPAÑOL =====
+
+// ===== ESTADO + LÓGICA - GASDRIVE DGT ES V8.5 =====
 let tipsData = [];
 let currentTip = 0;
 
@@ -841,6 +842,9 @@ let sitCategoriaActiva = 'clima';
 
 function init() {
   console.log("GasDrive DGT ES V8.5 cargado");
+  console.log("PREGUNTAS:", typeof PREGUNTAS!== 'undefined'? 'OK' : 'FALTA');
+  console.log("SITUACIONES:", typeof SITUACIONES!== 'undefined'? 'OK' : 'FALTA');
+  
   mostrarIntro();
   actualizarCoins();
   cargarPregunta('general');
@@ -865,7 +869,6 @@ function actualizarCoins() {
   if(el) el.textContent = `💰 ${estado.coins}`;
 }
 
-// Mezclador Fisher-Yates para randomizar opciones y preguntas
 function barajarArray(arr) {
   const a = arr.slice();
   for(let i = a.length - 1; i > 0; i--) {
@@ -927,11 +930,13 @@ function mostrarEmoji(acierto, elemento) {
   if(navigator.vibrate) navigator.vibrate(acierto? [30,20,30] : 100);
 }
 
-// TEST con preguntas aleatorias cada vez
 function cargarPregunta(cat) {
   const s = estado.test[cat];
-  const preguntas = barajarArray(PREGUNTAS[cat]);
-  if(!preguntas || preguntas.length === 0) return;
+  const preguntas = barajarArray(PREGUNTAS[cat] || []);
+  if(!preguntas || preguntas.length === 0) {
+    document.getElementById(`test-${cat}-pregunta`).textContent = 'No hay preguntas en esta categoria';
+    return;
+  }
   const pOriginal = preguntas[s.idx % preguntas.length];
   const opcionesBarajadas = barajarArray(pOriginal.a);
   const textoCorrecto = pOriginal.a[pOriginal.ok];
@@ -990,12 +995,14 @@ function siguienteTest(e, cat) {
   cargarPregunta(cat);
 }
 
-// CASOS con preguntas aleatorias cada vez
 function cargarSituacion(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estado.sit[cat];
-  const casos = barajarArray(SITUACIONES[cat]);
-  if(!casos || casos.length === 0) return;
+  const casos = barajarArray(SITUACIONES[cat] || []);
+  if(!casos || casos.length === 0) {
+    document.getElementById(`sit-${cat}-pregunta`).textContent = 'No hay casos en esta categoria';
+    return;
+  }
   const pOriginal = casos[s.idx % casos.length];
   const opcionesBarajadas = barajarArray(pOriginal.a);
   const textoCorrecto = pOriginal.a[pOriginal.ok];
@@ -1051,7 +1058,6 @@ function siguienteSituacion(e, cat) {
   cargarSituacion(cat);
 }
 
-// Examen con etiqueta de tipo
 function iniciarExamen(e) {
   const todas = [
 ...PREGUNTAS.general,
@@ -1070,16 +1076,6 @@ function iniciarExamen(e) {
   estado.examen.aciertos = 0;
   estado.examen.fallos = 0;
   estado.examen.categoria = 'general';
-
-  const tipoExamen = {
-    general: "EXAMEN OFICIAL 30 PREGUNTAS - General",
-    mecanica: "EXAMEN OFICIAL 30 PREGUNTAS - Mecanica",
-    medioambiente: "EXAMEN OFICIAL 30 PREGUNTAS - Medio Ambiente",
-    senales: "EXAMEN OFICIAL 30 PREGUNTAS - Senales"
-  };
-  const tituloEl = document.querySelector('#tab-examen h2,.examen-titulo');
-  if(tituloEl) tituloEl.textContent = tipoExamen[estado.examen.categoria];
-
   document.getElementById('btn-iniciar-examen').style.display = 'none';
   document.getElementById('btn-sig-examen').style.display = 'block';
   iniciarTimerExamen();
@@ -1345,7 +1341,7 @@ function cargarTemario() {
       <div>Mecanica</div>
       <div style="font-size:11px;color:#999">Manual VIII 2025</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./05_Medio_Ambiente_Distintius_DGT_2025.pdf')">
+    <div class="temario-item" onclick="abrirPDF('./05_Medio_Ambiente_Distintivos_DGT_2025.pdf')">
       <div style="font-size:40px">♻️</div>
       <div>Medio Ambiente</div>
       <div style="font-size:11px;color:#999">Distintivos DGT 2025</div>
@@ -1353,7 +1349,6 @@ function cargarTemario() {
   `;
 }
 
-// PDF normal, sin marcador
 function abrirPDF(ruta) {
   const modal = document.createElement('div');
   modal.id = 'pdf-modal';
@@ -1391,7 +1386,6 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// SERVICE WORKER REGISTRO
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
