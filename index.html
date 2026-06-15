@@ -27,7 +27,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .sub-content{display:none}
 .sub-content.active{display:block;animation:fadeIn 0.3s}
 /* Cards centradas y compactas */
-.card{ background:#1a1a1a; border:1px solid #333; border-radius:14px; padding:16px 8px; margin:0 auto 12px; box-shadow:0 4px 20px rgba(0,0,0,0.5); max-width:380px; }
+.card{ background:#1a1a; border:1px solid #333; border-radius:14px; padding:16px 8px; margin:0 auto 12px; box-shadow:0 4px 20px rgba(0,0,0,0.5); max-width:380px; }
 .card h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4}
@@ -154,7 +154,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-mecanica" class="sub-content">
     <div class="card">
       <h2>🔧 MECANICA BASICA</h2>
-      <div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span>/5</div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div>
+      <div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span>/5</div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div>
       <div class="pregunta" id="test-mecanica-pregunta"></div>
       <div id="test-mecanica-opciones"></div>
@@ -215,17 +215,17 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="sit-urbano-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-urbano" onclick="siguienteSituacion(event,'urbano')" disabled>SIGUIENTE</button>
     </div>
+  </div>
   <div id="sit-carretera" class="sub-content">
     <div class="card">
       <h2>🛣️ CASOS REALES - CARRETERA</h2>
-      <div class="stats"><div>Resueltas: <span id="sit-carretera-aciertos">0</span>/20</div><div>Score: <span id="sit-carretera-score">0</span></div>
+      <div class="stats"><div>Resueltas: <span id="sit-carretera-aciertos">0</span>/20</div><div>Score: <span id="sit-carretera-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="sit-carretera-progress"></div></div>
       <div class="pregunta" id="sit-carretera-pregunta"></div>
       <div id="sit-carretera-opciones"></div>
       <div class="feedback" id="sit-carretera-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-carretera" onclick="siguienteSituacion(event,'carretera')" disabled>SIGUIENTE</button>
     </div>
-  </div>
   <div id="sit-emergencia" class="sub-content">
     <div class="card">
       <h2>🚨 CASOS REALES - EMERGENCIA</h2>
@@ -303,4 +303,4 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 <script src="./SITUACIONES.js"></script>
 <script src="./App.js?v=8.5.1"></script>
 </body>
-</html> 
+</html>
