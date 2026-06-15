@@ -1397,27 +1397,27 @@ function prevTip(e) {
 function cargarTemario() {
   const container = document.getElementById('temario-lista');
   container.innerHTML = `
-    <div class="temario-item" onclick="abrirPDF('./01_Senales_Tomo_I_RD_465_2025.pdf')">
+    <div class="temario-item" onclick="abrirPDF('senales')">
       <div style="font-size:40px">🚦</div>
       <div>Senales</div>
       <div style="font-size:11px;color:#999">RD 465/2025</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')">
+    <div class="temario-item" onclick="abrirPDF('normas')">
       <div style="font-size:40px">📋</div>
       <div>Normas Circulacion</div>
       <div style="font-size:11px;color:#999">Edicion 2024</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./03_Manual_IX_Primeros_Auxilios_2025.pdf')">
+    <div class="temario-item" onclick="abrirPDF('auxilios')">
       <div style="font-size:40px">🚑</div>
       <div>Primeros Auxilios</div>
       <div style="font-size:11px;color:#999">Manual IX 2025</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./04_Manual_VIII_Mecanica_2024.pdf')">
+    <div class="temario-item" onclick="abrirPDF('mecanica')">
       <div style="font-size:40px">⚙️</div>
       <div>Mecanica</div>
       <div style="font-size:11px;color:#999">Manual VIII 2025</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./05_Medio_Ambiente_Distintivos_DGT_2025.pdf')">
+    <div class="temario-item" onclick="abrirPDF('medioambiente')">
       <div style="font-size:40px">♻️</div>
       <div>Medio Ambiente</div>
       <div style="font-size:11px;color:#999">Distintivos DGT 2025</div>
@@ -1425,14 +1425,22 @@ function cargarTemario() {
   `;
 }
 
-function abrirPDF(ruta) {
-  // MARCAR TEMARIO COMO LEÍDO
-  if(ruta.includes('Senales')) PROGRESO.temarios.senales = true;
-  if(ruta.includes('Normas')) PROGRESO.temarios.normas = true;
-  if(ruta.includes('Mecanica')) PROGRESO.temarios.mecanica = true;
-  if(ruta.includes('Auxilios')) PROGRESO.temarios.auxilios = true;
-  if(ruta.includes('Medio_Ambiente')) PROGRESO.temarios.medioambiente = true;
+// === NUEVO: GESTIÓN DE TIEMPO EN TEMARIOS ===
+function abrirPDF(id) {
+  const temario = PROGRESO.temarios[id];
+  if (!temario) return;
+
+  // Marca cuando entra
+  temario.ultimaEntrada = Date.now();
   guardarProgreso();
+
+  const rutas = {
+    senales: './01_Senales_Tomo_I_RD_465_2025.pdf',
+    normas: './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
+    auxilios: './03_Manual_IX_Primeros_Auxilios_2025.pdf',
+    mecanica: './04_Manual_VIII_Mecanica_2024.pdf',
+    medioambiente: './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
+  };
 
   const modal = document.createElement('div');
   modal.id = 'pdf-modal';
@@ -1443,70 +1451,111 @@ function abrirPDF(ruta) {
   `;
   modal.innerHTML = `
     <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
-      <button onclick="cerrarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
+      <button onclick="cerrarPDF('${id}')" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
       <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
       <div style="width:60px"></div>
     </div>
-    <iframe src="${ruta}" style="flex:1;border:none;width:100%"></iframe>
+    <iframe src="${rutas[id]}" style="flex:1;border:none;width:100%"></iframe>
   `;
   document.body.appendChild(modal);
 }
 
-function cerrarPDF() {
+function cerrarPDF(id) {
+  const temario = PROGRESO.temarios[id];
+  if (!temario ||!temario.ultimaEntrada) return;
+
+  // Calcula tiempo dedicado en segundos
+  const tiempoSesion = Math.floor((Date.now() - temario.ultimaEntrada) / 1000);
+  temario.tiempo += tiempoSesion;
+
+  // 100% por temario = 170 min = 10200 segundos
+  temario.porcentaje = Math.min(100, Math.floor((temario.tiempo / 10200) * 100));
+
+  temario.ultimaEntrada = 0;
+  guardarProgreso();
+
   const modal = document.getElementById('pdf-modal');
   if(modal) modal.remove();
+  document.body.classList.remove('menu-open');
+
+  if(document.getElementById('tab-progreso').classList.contains('active')) {
+    pintarProgreso();
+  }
 }
 
 // ===== TAB PROGRESO - AUTOESCUELA ONLINE =====
 function pintarProgreso() {
-  const calc = (obj) => obj.total? Math.round((obj.aciertos / obj.total) * 100) : 0;
+  const contenedor = document.getElementById('progreso-lista');
+  if(!contenedor) return;
 
-  // 1. TESTS 40%
-  let pctTests = 0, catDebil = '', minPct = 100;
-  const nombres = {general:'General', senales:'Señales', normas:'Normas', mecanica:'Mecánica', auxilios:'Auxilios', medioambiente:'Medio Ambiente'};
-  Object.keys(PROGRESO.tests).forEach(k => {
-    const pct = calc(PROGRESO.tests[k]);
-    if (pct < minPct && PROGRESO.tests[k].total >= 5) { minPct = pct; catDebil = k; }
-    pctTests += pct;
-  });
-  pctTests = Math.round(pctTests / 6);
+  // === TESTS ===
+  const testsTotal = 630;
+  let testsUnicas = 0;
+  Object.values(PROGRESO.tests).forEach(t => testsUnicas += t.unicas.length);
+  const pctTests = Math.min(100, Math.floor((testsUnicas / testsTotal) * 100));
 
-  // 2. CASOS 20%
-  let pctCasos = 0;
-  Object.keys(PROGRESO.casos).forEach(k => pctCasos += calc(PROGRESO.casos[k]));
-  pctCasos = Math.round(pctCasos / 4);
+  // === CASOS ===
+  const casosTotal = 80;
+  let casosUnicas = 0;
+  Object.values(PROGRESO.casos).forEach(c => casosUnicas += c.unicas.length);
+  const pctCasos = Math.min(100, Math.floor((casosUnicas / casosTotal) * 100));
 
-  // 3. EXÁMENES 30%
+  // === EXÁMENES ===
   const ex = PROGRESO.examenes;
   let pctExamen = ex.realizados >= 3? Math.round((ex.aprobados / ex.realizados) * 100) : 0;
   if (ex.historial.slice(-3).every(n => n >= 27)) pctExamen = Math.min(100, pctExamen + 10);
 
-  // 4. TEMARIOS 10%
-  const pctTemarios = Object.values(PROGRESO.temarios).filter(Boolean).length * 20;
+  // === TEMARIOS - 100% = 2h 50min POR TEMARIO = 14h 10min TOTAL ===
+  const temariosData = PROGRESO.temarios;
+  const tiempoTotalTemarios =
+    temariosData.senales.tiempo +
+    temariosData.normas.tiempo +
+    temariosData.mecanica.tiempo +
+    temariosData.auxilios.tiempo +
+    temariosData.medioambiente.tiempo;
 
-  // TOTAL
-  const total = Math.round((pctTests * 0.4) + (pctCasos * 0.2) + (pctExamen * 0.3) + (pctTemarios * 0.1));
+  // 5 temarios x 170 min = 850 min = 51000 segundos = 100%
+  const pctTemarios = Math.min(100, Math.floor((tiempoTotalTemarios / 51000) * 100));
 
-  document.getElementById('progreso-total').textContent = total + '%';
-  document.getElementById('progreso-total-bar').style.width = total + '%';
+  // === TOTAL GLOBAL ===
+  const pctTotal = Math.floor((pctTests + pctCasos + pctExamen + pctTemarios) / 4);
+
+  document.getElementById('progreso-total').textContent = pctTotal + '%';
+  document.getElementById('progreso-total-bar').style.width = pctTotal + '%';
 
   // MENSAJE INTELIGENTE
   let msg = '';
-  if (total < 50) msg = 'Empieza por los Tests. Domina lo básico';
-  else if (total < 70) msg = `Refuerza ${nombres[catDebil] || catDebil}: ${minPct}% acierto`;
-  else if (total < 80) msg = 'Casi listo. Aprueba 2 exámenes seguidos con 27+';
+  if (pctTotal < 50) msg = 'Empieza por los Tests. Domina lo básico';
+  else if (pctTotal < 70) {
+    let catDebil = '', minPct = 100;
+    const nombres = {general:'General', senales:'Señales', normas:'Normas', mecanica:'Mecánica', auxilios:'Auxilios', medioambiente:'Medio Ambiente'};
+    Object.keys(PROGRESO.tests).forEach(k => {
+      const pct = PROGRESO.tests[k].total? Math.round((PROGRESO.tests[k].aciertos / PROGRESO.tests[k].total) * 100) : 0;
+      if (pct < minPct && PROGRESO.tests[k].total >= 5) { minPct = pct; catDebil = k; }
+    });
+    msg = `Refuerza ${nombres[catDebil] || catDebil}: ${minPct}% acierto`;
+  }
+  else if (pctTotal < 80) msg = 'Casi listo. Aprueba 2 exámenes seguidos con 27+';
   else msg = '¡PREPARADO! Ya puedes presentarte a la DGT';
   document.getElementById('progreso-mensaje').textContent = msg;
 
   // BOTÓN DGT
-  document.getElementById('btn-dgt-oficial').disabled = total < 80;
+  document.getElementById('btn-dgt-oficial').disabled = pctTotal < 80;
 
-  // LISTA
-  document.getElementById('progreso-lista').innerHTML = `
+   // DETALLE TIEMPO
+  const tiempoSenales = Math.floor(temariosData.senales.tiempo / 60);
+  const tiempoNormas = Math.floor(temariosData.normas.tiempo / 60);
+  const tiempoMecanica = Math.floor(temariosData.mecanica.tiempo / 60);
+  const tiempoAuxilios = Math.floor(temariosData.auxilios.tiempo / 60);
+  const tiempoMedio = Math.floor(temariosData.medioambiente.tiempo / 60);
+  const tiempoTotalHoras = Math.floor(tiempoTotalTemarios / 3600);
+  const tiempoTotalMin = Math.floor((tiempoTotalTemarios % 3600) / 60);
+
+  contenedor.innerHTML = `
     <div class="progreso-item ${pctTests >= 85? 'completo' : ''}">
       <div class="progreso-titulo"><span>📝 Tests Teóricos</span><span class="progreso-porcentaje">${pctTests}%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pctTests}%"></div></div>
-      ${catDebil && minPct < 70? `<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: ${nombres[catDebil]}</div>` : ''}
+      ${pctTests < 70? '<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: Señales</div>' : ''}
     </div>
     <div class="progreso-item ${pctCasos >= 85? 'completo' : ''}">
       <div class="progreso-titulo"><span>🚦 Casos Prácticos</span><span class="progreso-porcentaje">${pctCasos}%</span></div>
@@ -1517,9 +1566,15 @@ function pintarProgreso() {
       <div class="progress-bar"><div class="progress-fill" style="width:${pctExamen}%"></div></div>
       <div style="font-size:11px;color:#999;margin-top:4px">Aprobados: ${ex.aprobados}/${ex.realizados}</div>
     </div>
-    <div class="progreso-item ${pctTemarios == 100? 'completo' : ''}">
-      <div class="progreso-titulo"><span>📖 Temarios Leídos</span><span class="progreso-porcentaje">${pctTemarios}%</span></div>
+    <div class="progreso-item ${pctTemarios >= 80? 'completo' : ''}">
+      <div class="progreso-titulo"><span>📖 Temarios Estudiados</span><span class="progreso-porcentaje">${pctTemarios}%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pctTemarios}%"></div></div>
+      <p style="font-size:11px;color:#666;margin:4px 0 0">
+        Total: ${tiempoTotalHoras}h ${tiempoTotalMin}min / 14h 10min
+      </p>
+      <p style="font-size:10px;color:#555;margin:2px 0 0">
+        Señ: ${tiempoSenales}m | Nor: ${tiempoNormas}m | Mec: ${tiempoMecanica}m | Aux: ${tiempoAuxilios}m | Med: ${tiempoMedio}m
+      </p>
     </div>
   `;
 }
@@ -1542,6 +1597,10 @@ if('serviceWorker' in navigator) {
 .catch(err => console.log('SW error:', err));
   });
 }
+  
+
+
+
 
  
  
