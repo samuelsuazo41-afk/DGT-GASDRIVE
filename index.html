@@ -6,7 +6,7 @@
 <title>GasDrive DGT ES V8.5</title>
 <link rel="manifest" href="./manifest.json">
 <style>
-html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
+html, body { background: #0a; color: #fff; margin: 0; padding: 0; }
 /* Header compacto y centrado */
 .header{background:linear-gradient(180deg,#2a2a2a 0%,#0a0a0a 100%);padding:14px 20px 18px;text-align:center;border-bottom:1px solid #333;position:sticky;top:0;z-index:50}
 h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
@@ -27,27 +27,27 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .sub-content{display:none}
 .sub-content.active{display:block;animation:fadeIn 0.3s}
 /* Cards centradas y compactas */
-.card{ background:#1a1a1a; border:1px solid #333; border-radius:14px; padding:16px 8px; margin:0 auto 12px; box-shadow:0 4px 20px rgba(0,0,0,0.5); max-width:380px; }
+.card{ background:#1a1a; border:1px solid #333; border-radius:14px; padding:16px 8px; margin:0 auto 12px; box-shadow:0 4px 20px rgba(0,0,0,0.5); max-width:380px; }
 .card h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4}
-.opcion{ background:#2a2a2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
+.opcion{ background:#2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
 .opcion:hover{background:#333;border-color:#00D9FF}
 .opcion.correcta{background:#0a4!important;border-color:#0f5!important;animation:pulse 0.5s}
 .opcion.incorrecta{background:#a00!important;border-color:#f00!important;animation:shake 0.5s}
 .opcion.bloqueada{pointer-events:none}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
-.btn-sig{background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
+.btn-sig{background:linear-gradient(180deg,#4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
 .btn-sig:disabled{background:#333;color:#666;cursor:not-allowed}
-.stats{display:flex;justify-content:space-between;background:#0f0f0f;padding:9px;border-radius:7px;margin-bottom:10px;font-size:12px}
+.stats{display:flex;justify-content:space-between;background:#0f;padding:9px;border-radius:7px;margin-bottom:10px;font-size:12px}
 .stats span{color:#00D9FF;font-weight:700}
 .feedback{text-align:center;font-size:18px;font-weight:900;margin:12px 0;padding:10px;border-radius:9px;animation:bounceIn 0.5s}
 .feedback.acierto{background:#0a4;color:#fff}
 .feedback.fallo{background:#a00;color:#fff}
 @keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 /* Garaje y tienda */
-.garage-car{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:18px;text-align:center;margin:9px 0}
+.garage-car{background:#1a1a;border:2px solid #333;border-radius:11px;padding:18px;text-align:center;margin:9px 0}
 .garage-car.locked{opacity:0.4}
 .garage-car h3{color:#00D9FF;margin:7px 0}
 .score-big{text-align:center;font-size:44px;font-weight:900;color:#00D9FF;margin:18px 0;text-shadow:0 0 20px rgba(0,217,255,0.5)}
@@ -122,7 +122,11 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-normas" class="sub-content">
     <div class="card">
       <h2>📋 NORMAS Y VELOCIDADES</h2>
-      <div class="stats"><div>Aciertos: <span id="test-normas-aciertos">0</span>/5</div><div>Racha: <span id="test-normas-racha">0</span>🔥</div><div>Score: <span id="test-normas-score">0</span></div>
+      <div class="stats">
+        <div>Aciertos: <span id="test-normas-aciertos">0</span>/5</div>
+        <div>Racha: <span id="test-normas-racha">0</span>🔥</div>
+        <div>Score: <span id="test-normas-score">0</span></div>
+      </div>
       <div class="progress-bar"><div class="progress-fill" id="test-normas-progress"></div></div>
       <div class="pregunta" id="test-normas-pregunta"></div>
       <div id="test-normas-opciones"></div>
@@ -185,7 +189,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="sit-clima-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-clima" onclick="siguienteSituacion(event,'clima')" disabled>SIGUIENTE</button>
     </div>
-  </div>
   <div id="sit-urbano" class="sub-content">
     <div class="card">
       <h2>🏙️ CASOS REALES - URBANO</h2>
