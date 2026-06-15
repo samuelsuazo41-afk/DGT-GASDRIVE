@@ -28,6 +28,45 @@ let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   racha: { dias: 0, ultimaFecha: "" }
 };
 
+// === MENSAJES INTELIGENTES POR TEMARIO - PÁGINAS REALES DGT 2025/2026 ===
+const SUBTEMAS_DEBILES = {
+  senales: [
+    { pct: 0, msg: 'Señales de Prioridad (R-1 a R-6: Stop, Ceda) - Pág 65-66' },
+    { pct: 20, msg: 'Señales de Prohibición de Entrada - Pág 68-72' },
+    { pct: 40, msg: 'Señales de Prohibición de Paso/Adelantar - Pág 73-78' },
+    { pct: 60, msg: 'Señales de Obligación (R-413 a R-422) - Pág 75-76' },
+    { pct: 80, msg: 'Señales de Indicación General - Pág 80-95' }
+  ],
+  normas: [
+    { pct: 0, msg: 'Normas Generales y Definiciones - Pág 5-15' },
+    { pct: 20, msg: 'Velocidades Máximas por Vía - Pág 25-32' },
+    { pct: 40, msg: 'Prioridad en Intersecciones y Pasos Estrechos - Pág 45-52' },
+    { pct: 60, msg: 'Adelantamientos y Cambios de Sentido - Pág 65-75' },
+    { pct: 80, msg: 'Alumbrado y Uso de Carriles - Pág 85-92' }
+  ],
+  auxilios: [
+    { pct: 0, msg: 'Conducta PAS: Proteger, Avisar, Socorrer - Pág 40-45' },
+    { pct: 25, msg: 'Valoración Inicial del Herido (ABC) - Pág 50-55' },
+    { pct: 50, msg: 'RCP: Reanimación Cardiopulmonar Básica - Pág 53-58' },
+    { pct: 75, msg: 'Hemorragias y Heridas - Pág 65-72' }
+  ],
+  mecanica: [
+    { pct: 0, msg: 'Motor: Elementos y Funcionamiento - Pág 15-25' },
+    { pct: 25, msg: 'Sistema de Frenos y ABS - Pág 35-42' },
+    { pct: 50, msg: 'Neumáticos: Presión y Desgaste - Pág 55-62' },
+    { pct: 75, msg: 'Niveles: Aceite, Refrigerante, Líquido Frenos - Pág 70-76' }
+  ],
+  medioambiente: [
+    { pct: 0, msg: 'Distintivos Ambientales DGT (0, ECO, C, B) - Pág 8-14' },
+    { pct: 25, msg: 'Zonas de Bajas Emisiones ZBE - Pág 18-25' },
+    { pct: 50, msg: 'Conducción Eficiente: Marchas y RPM - Pág 30-38' },
+    { pct: 75, msg: 'Contaminación Acústica y Atmosférica - Pág 45-50' }
+  ],
+  general: [
+    { pct: 0, msg: 'Documentación y Permisos - Pág 5-10' }
+  ]
+};
+
 const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/obtencion-renovacion-duplicados-permiso/permiso-conducir/';
 
 function guardarProgreso() {
@@ -56,12 +95,6 @@ function mostrarIntro(){
       <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
     </div>
   `);
-}
-
-function tancarIntro(){
-  // Ya no guardamos en localStorage, así sale siempre
-  const intro = document.getElementById('intro-screen');
-  if(intro) intro.remove();
 }
 
 
