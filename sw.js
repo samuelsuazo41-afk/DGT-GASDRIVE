@@ -1,4 +1,4 @@
-const CACHE = 'gasdrive-v9.2.2-es'; // subo versión para forzar update
+const CACHE = 'gasdrive-v9.3.3-es'; // subo versión para forzar update
 const FILES = [
   './',
   './index.html',
@@ -7,11 +7,11 @@ const FILES = [
   './icon-192.png',
   './icon-512.png',
   // PDFs Temario - 5 archivos completos
-  './01_Senyals_Tomo_I_RD_465_2025.pdf',           // PDF 1: Señales
-  './02_Normes_Circulacio_Tomo_II_Edicio_2024.pdf', // PDF 2: Normas Circulación
-  './03_Manual_IX_Primers_Auxilis_2025.pdf',        // PDF 3: Primeros Auxilios
+  './01_Señales_Tomo_I_RD_465_2025.pdf',           // PDF 1: Señales
+  './02_Normas_Circulacion_Tomo_II_Edicio_2024.pdf', // PDF 2: Normas Circulación
+  './03_Manual_IX_Primeros_Auxilios_2025.pdf',        // PDF 3: Primeros Auxilios
   './04_Manual_VIII_Mecanica_2024.pdf',             // PDF 4: Mecánica
-  './05_Medi_Ambient_Distintius_DGT_2025.pdf'       // PDF 5: Medio Ambiente
+  './05_Medio_Ambiente_Distintius_DGT_2025.pdf'       // PDF 5: Medio Ambiente
 ];
 
 self.addEventListener('install', e => {
