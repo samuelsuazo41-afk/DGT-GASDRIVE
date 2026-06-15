@@ -796,7 +796,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== ESTADO + LÓGICA - GASDRIVE DGT ES V8.2 =====
+// ===== TU CÓDIGO EXISTENTE + MEJORAS - 100% ESPAÑOL =====
 let tipsData = [];
 let currentTip = 0;
 
@@ -840,7 +840,7 @@ if (document.readyState === 'loading') {
 let sitCategoriaActiva = 'clima';
 
 function init() {
-  console.log("GasDrive DGT ES V8.2 cargado");
+  console.log("GasDrive DGT ES V8.5 cargado");
   mostrarIntro();
   actualizarCoins();
   cargarPregunta('general');
