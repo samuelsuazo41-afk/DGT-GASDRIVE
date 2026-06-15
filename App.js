@@ -32,9 +32,9 @@ function guardarProgreso() {
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
-// INTRO SCREEN - Aparece SIEMPRE al abrir
+// INTRO SCREEN - APARECE SIEMPRE AL ABRIR
 function mostrarIntro(){
-  if(localStorage.getItem('gasdrive_intro_vista')) return;
+  // Quitamos el check de localStorage para que salga siempre
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
@@ -53,8 +53,9 @@ function mostrarIntro(){
 }
 
 function tancarIntro(){
-  localStorage.setItem('gasdrive_intro_vista','1');
-  document.getElementById('intro-screen').remove();
+  // Ya no guardamos en localStorage, así sale siempre
+  const intro = document.getElementById('intro-screen');
+  if(intro) intro.remove();
 }
 
 
@@ -871,16 +872,20 @@ function init() {
   console.log("PREGUNTAS:", typeof PREGUNTAS!== 'undefined'? 'OK' : 'FALTA');
   console.log("SITUACIONES:", typeof SITUACIONES!== 'undefined'? 'OK' : 'FALTA');
 
+  // 1. Mostrar intro SIEMPRE al abrir
   mostrarIntro();
+
+  // 2. Cargar datos básicos
   actualizarCoins();
-  cargarPregunta('general');
-  cargarPregunta('senales');
-  cargarPregunta('normas');
-  cargarPregunta('mecanica');
-  cargarPregunta('auxilios');
-  cargarPregunta('medioambiente');
-  cargarSituacion('clima');
   actualizarMensajeMotivacional();
+
+  // 3. CARGAR TEMARIO POR DEFECTO - Así al quitar la intro ya está todo listo
+  cargarTemario();
+
+  // 4. Precargar solo la primera pregunta de test para que vaya rápido cuando cambies de tab
+  if(typeof PREGUNTAS!== 'undefined') {
+    cargarPregunta('general');
+  }
 }
 
 function guardar() {
