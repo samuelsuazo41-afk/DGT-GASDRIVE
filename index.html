@@ -6,7 +6,7 @@
 <title>GasDrive DGT ES V8.5</title>
 <link rel="manifest" href="./manifest.json">
 <style>
-html, body { background: #0a; color: #fff; margin: 0; padding: 0; }
+html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
 /* Header compacto y centrado */
 .header{background:linear-gradient(180deg,#2a2a2a 0%,#0a0a0a 100%);padding:14px 20px 18px;text-align:center;border-bottom:1px solid #333;position:sticky;top:0;z-index:50}
 h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
@@ -38,7 +38,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .opcion.bloqueada{pointer-events:none}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
-.btn-sig{background:linear-gradient(180deg,#4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
+.btn-sig{background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
 .btn-sig:disabled{background:#333;color:#666;cursor:not-allowed}
 .stats{display:flex;justify-content:space-between;background:#0f0f0f;padding:9px;border-radius:7px;margin-bottom:10px;font-size:12px}
 .stats span{color:#00D9FF;font-weight:700}
@@ -70,7 +70,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .temario-item:active{ transform:scale(0.96); background:#222; }
 .temario-item.locked{ border-color:#444; opacity:0.4; cursor:not-allowed; }
 .temario-item div:nth-child(2){ font-size:14px; font-weight:700; margin:8px 0 4px; }
-/* Fix scroll menu lateral */
+/* Fix scroll menú lateral */
 body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 .side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a0a0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
 .side-menu.active{ transform:translateX(0); }
