@@ -798,6 +798,34 @@ const EMOJI_TIENDA = [
 
 
 // ===== ESTADO + LÓGICA - GASDRIVE DGT ES V8.5 =====
+
+// === MOTOR DE PROGRESO DGT - AUTOESCUELA ONLINE ===
+let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
+  tests: {
+    general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    senales: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    normas: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    mecanica: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    auxilios: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    medioambiente: { total: 0, aciertos: 0, unicas: [], falladas: [] }
+  },
+  casos: {
+    clima: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    urbano: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    carretera: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    emergencia: { total: 0, aciertos: 0, unicas: [], falladas: [] }
+  },
+  examenes: { realizados: 0, aprobados: 0, historial: [] },
+  temarios: { senales: false, normas: false, mecanica: false, auxilios: false, medioambiente: false },
+  racha: { dias: 0, ultimaFecha: "" }
+};
+
+const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/obtencion-renovacion-duplicados-permiso/permiso-conducir/';
+
+function guardarProgreso() {
+  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
+}
+
 let tipsData = [];
 let currentTip = 0;
 
@@ -844,7 +872,7 @@ function init() {
   console.log("GasDrive DGT ES V8.5 cargado");
   console.log("PREGUNTAS:", typeof PREGUNTAS!== 'undefined'? 'OK' : 'FALTA');
   console.log("SITUACIONES:", typeof SITUACIONES!== 'undefined'? 'OK' : 'FALTA');
-  
+
   mostrarIntro();
   actualizarCoins();
   cargarPregunta('general');
@@ -890,6 +918,7 @@ function cambiarTab(e, tab) {
   if(tab === 'temario') cargarTemario();
   if(tab === 'test') cargarPregunta('general');
   if(tab === 'situaciones') cargarSituacion(sitCategoriaActiva);
+  if(tab === 'progreso') pintarProgreso(); // NUEVO
 }
 
 function cambiarSubTab(e, tab, subtab) {
@@ -985,6 +1014,15 @@ function responderTest(cat, idx, el) {
     mostrarEmoji(false, el);
     s.racha = 0;
   }
+
+  // === REGISTRAR PROGRESO DGT ===
+  const idPregunta = p.q.substring(0, 50);
+  PROGRESO.tests[cat].total++;
+  if(correcto) PROGRESO.tests[cat].aciertos++;
+  if(!PROGRESO.tests[cat].unicas.includes(idPregunta)) PROGRESO.tests[cat].unicas.push(idPregunta);
+  if(!correcto &&!PROGRESO.tests[cat].falladas.includes(idPregunta)) PROGRESO.tests[cat].falladas.push(idPregunta);
+  guardarProgreso();
+
   document.getElementById(`btn-sig-test-${cat}`).disabled = false;
   actualizarCoins();
   guardar();
@@ -1048,6 +1086,15 @@ function responderSituacion(cat, idx, el) {
     document.getElementById(`sit-${cat}-feedback`).textContent = '❌ FALLO';
     mostrarEmoji(false, el);
   }
+
+  // === REGISTRAR PROGRESO CASOS ===
+  const idCaso = p.q.substring(0, 50);
+  PROGRESO.casos[cat].total++;
+  if(correcto) PROGRESO.casos[cat].aciertos++;
+  if(!PROGRESO.casos[cat].unicas.includes(idCaso)) PROGRESO.casos[cat].unicas.push(idCaso);
+  if(!correcto &&!PROGRESO.casos[cat].falladas.includes(idCaso)) PROGRESO.casos[cat].falladas.push(idCaso);
+  guardarProgreso();
+
   document.getElementById(`btn-sig-sit-${cat}`).disabled = false;
   actualizarCoins();
   guardar();
@@ -1158,6 +1205,13 @@ function finalizarExamen() {
   const aprobado = nota >= 27;
   const res = document.getElementById('examen-resultado');
   res.style.display = 'block';
+
+  // === REGISTRAR EXAMEN EN PROGRESO ===
+  PROGRESO.examenes.realizados++;
+  PROGRESO.examenes.historial.push(nota);
+  if(aprobado) PROGRESO.examenes.aprobados++;
+  guardarProgreso();
+
   if(aprobado) {
     res.innerHTML = `
       <h2 style="color:#2ecc71">✅ ¡APROBADO!</h2>
@@ -1350,6 +1404,14 @@ function cargarTemario() {
 }
 
 function abrirPDF(ruta) {
+  // MARCAR TEMARIO COMO LEÍDO
+  if(ruta.includes('Senales')) PROGRESO.temarios.senales = true;
+  if(ruta.includes('Normas')) PROGRESO.temarios.normas = true;
+  if(ruta.includes('Mecanica')) PROGRESO.temarios.mecanica = true;
+  if(ruta.includes('Auxilios')) PROGRESO.temarios.auxilios = true;
+  if(ruta.includes('Medio_Ambiente')) PROGRESO.temarios.medioambiente = true;
+  guardarProgreso();
+
   const modal = document.createElement('div');
   modal.id = 'pdf-modal';
   modal.style.cssText = `
@@ -1386,6 +1448,787 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
+// ===== TAB PROGRESO - AUTOESCUELA ONLINE =====
+function pintarProgreso() {
+  const calc = (obj) => obj.total? Math.round((obj.aciertos / obj.total) * 100) : 0;
+
+  // 1. TESTS 40%
+  let pctTests = 0, catDebil = '', minPct = 100;
+  const nombres = {general:'General', senales:'Señales', normas:'Normas', mecanica:'Mecánica', auxilios:'Auxilios', medioambiente:'Medio Ambiente'};
+  Object.keys(PROGRESO.tests).forEach(k => {
+    const pct = calc(PROGRESO.tests[k]);
+    if (pct < minPct && PROGRESO.tests[k].total >= 5) { minPct = pct; catDebil = k; }
+    pctTests += pct;
+  });
+  pctTests = Math.round(pctTests / 6);
+
+  // 2. CASOS 20%
+  let pctCasos = 0;
+  Object.keys(PROGRESO.casos).forEach(k => pctCasos += calc(PROGRESO.casos[k]));
+  pctCasos = Math.round(pctCasos / 4);
+
+  // 3. EXÁMENES 30%
+  const ex = PROGRESO.examenes;
+  let pctExamen = ex.realizados >= 3? Math.round((ex.aprobados / ex.realizados) * 100) : 0;
+  if (ex.historial.slice(-3).every(n => n >= 27)) pctExamen = Math.min(100, pctExamen + 10);
+
+  // 4. TEMARIOS 10%
+  const pctTemarios = Object.values(PROGRESO.temarios).filter(Boolean).length * 20;
+
+  // TOTAL
+  const total = Math.round((pctTests * 0.4) + (pctCasos * 0.2) + (pctExamen * 0.3) + (pctTemarios * 0.1));
+
+  document.getElementById('progreso-total').textContent = total + '%';
+  document.getElementById('progreso-total-bar').style.width = total + '%';
+
+  // MENSAJE INTELIGENTE
+  let msg = '';
+  if (total < 50) msg = 'Empieza por los Tests. Domina lo básico';
+  else if (total < 70) msg = `Refuerza ${nombres[catDebil] || catDebil}: ${minPct}% acierto`;
+  else if (total < 80) msg = 'Casi listo. Aprueba 2 exámenes seguidos con 27+';
+  else msg = '¡PREPARADO! Ya puedes presentarte a la DGT';
+  document.getElementById('progreso-mensaje').textContent = msg;
+
+  // BOTÓN DGT
+  document.getElementById('btn-dgt-oficial').disabled = total < 80;
+
+  // LISTA
+  document.getElementById('progreso-lista').innerHTML = `
+    <div class="progreso-item ${pctTests >= 85? 'completo' : ''}">
+      <div class="progreso-titulo"><span>📝 Tests Teóricos</span><span class="progreso-porcentaje">${pctTests}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pctTests}%"></div></div>
+      ${catDebil? `<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: ${nombres[catDebil]}</div>` : ''}
+    </div>
+    <div class="progreso-item ${pctCasos >= 85? 'completo' : ''}">
+      <div class=// ===== ESTADO + LÓGICA - GASDRIVE DGT ES V8.5 =====
+
+// === MOTOR DE PROGRESO DGT - AUTOESCUELA ONLINE ===
+let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
+  tests: {
+    general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    senales: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    normas: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    mecanica: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    auxilios: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    medioambiente: { total: 0, aciertos: 0, unicas: [], falladas: [] }
+  },
+  casos: {
+    clima: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    urbano: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    carretera: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    emergencia: { total: 0, aciertos: 0, unicas: [], falladas: [] }
+  },
+  examenes: { realizados: 0, aprobados: 0, historial: [] },
+  temarios: { senales: false, normas: false, mecanica: false, auxilios: false, medioambiente: false },
+  racha: { dias: 0, ultimaFecha: "" }
+};
+
+const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/obtencion-renovacion-duplicados-permiso/permiso-conducir/';
+
+function guardarProgreso() {
+  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
+}
+
+let tipsData = [];
+let currentTip = 0;
+
+let estado = {
+  coins: parseInt(localStorage.getItem('gd_coins')) || 0,
+  coches: JSON.parse(localStorage.getItem('gd_coches')) || ['c1'],
+  accesorios: JSON.parse(localStorage.getItem('gd_accesorios')) || [],
+  emojis: JSON.parse(localStorage.getItem('gd_emojis')) || [],
+  test: {
+    general: {idx:0,aciertos:0,racha:0,puntuacion:0},
+    senales: {idx:0,aciertos:0,racha:0,puntuacion:0},
+    normas: {idx:0,aciertos:0,racha:0,puntuacion:0},
+    mecanica: {idx:0,aciertos:0,racha:0,puntuacion:0},
+    auxilios: {idx:0,aciertos:0,racha:0,puntuacion:0},
+    medioambiente: {idx:0,aciertos:0,racha:0,puntuacion:0}
+  },
+  examen: {
+    activa: false,
+    preguntas: [],
+    index: 0,
+    aciertos: 0,
+    fallos: 0,
+    timer: null,
+    tiempo: 1800,
+    categoria: 'general'
+  },
+  sit: {
+    clima: {idx:0,aciertos:0,puntuacion:0,current:null},
+    urbano: {idx:0,aciertos:0,puntuacion:0,current:null},
+    carretera: {idx:0,aciertos:0,puntuacion:0,current:null},
+    emergencia: {idx:0,aciertos:0,puntuacion:0,current:null}
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+let sitCategoriaActiva = 'clima';
+
+function init() {
+  console.log("GasDrive DGT ES V8.5 cargado");
+  console.log("PREGUNTAS:", typeof PREGUNTAS!== 'undefined'? 'OK' : 'FALTA');
+  console.log("SITUACIONES:", typeof SITUACIONES!== 'undefined'? 'OK' : 'FALTA');
+
+  mostrarIntro();
+  actualizarCoins();
+  cargarPregunta('general');
+  cargarPregunta('senales');
+  cargarPregunta('normas');
+  cargarPregunta('mecanica');
+  cargarPregunta('auxilios');
+  cargarPregunta('medioambiente');
+  cargarSituacion('clima');
+  actualizarMensajeMotivacional();
+}
+
+function guardar() {
+  localStorage.setItem('gd_coins', estado.coins);
+  localStorage.setItem('gd_coches', JSON.stringify(estado.coches));
+  localStorage.setItem('gd_accesorios', JSON.stringify(estado.accesorios));
+  localStorage.setItem('gd_emojis', JSON.stringify(estado.emojis));
+}
+
+function actualizarCoins() {
+  const el = document.getElementById('coins');
+  if(el) el.textContent = `💰 ${estado.coins}`;
+}
+
+function barajarArray(arr) {
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function cambiarTab(e, tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  e.target.closest('.tab-btn').classList.add('active');
+
+  if(tab === 'garaje') cargarGaraje();
+  if(tab === 'tienda') cargarTienda();
+  if(tab === 'tips') cargarTips();
+  if(tab === 'temario') cargarTemario();
+  if(tab === 'test') cargarPregunta('general');
+  if(tab === 'situaciones') cargarSituacion(sitCategoriaActiva);
+  if(tab === 'progreso') pintarProgreso(); // NUEVO
+}
+
+function cambiarSubTab(e, tab, subtab) {
+  const tabId = tab === 'sit'? 'situaciones' : tab;
+  const contenedor = document.getElementById('tab-' + tabId);
+  contenedor.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+  contenedor.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(`${tab === 'test'? 'test' : 'sit'}-${subtab}`).classList.add('active');
+  if(tab === 'test') cargarPregunta(subtab);
+  if(tab === 'sit') cargarSituacion(subtab);
+}
+
+function cambiarCategoriaSit(cat) {
+  sitCategoriaActiva = cat;
+  document.querySelectorAll('#tab-situaciones.category-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  const titulos = {
+    clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
+    urbano: '🏙️ CASOS REALES - URBANO',
+    carretera: '🛣️ CASOS REALES - CARRETERA',
+    emergencia: '🚨 CASOS REALES - EMERGENCIA'
+  };
+  document.getElementById('sit-titulo').textContent = titulos[cat];
+  estado.sit[cat].idx = 0;
+  cargarSituacion(cat);
+}
+
+function mostrarEmoji(acierto, elemento) {
+  const lista = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
+  const emoji = lista[Math.floor(Math.random() * lista.length)];
+  const span = document.createElement('span');
+  span.textContent = emoji;
+  span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:32px;animation:bounceIn 0.4s;pointer-events:none;z-index:999;';
+  elemento.style.position = 'relative';
+  elemento.appendChild(span);
+  setTimeout(() => span.remove(), 600);
+  if(navigator.vibrate) navigator.vibrate(acierto? [30,20,30] : 100);
+}
+
+function cargarPregunta(cat) {
+  const s = estado.test[cat];
+  const preguntas = barajarArray(PREGUNTAS[cat] || []);
+  if(!preguntas || preguntas.length === 0) {
+    document.getElementById(`test-${cat}-pregunta`).textContent = 'No hay preguntas en esta categoria';
+    return;
+  }
+  const pOriginal = preguntas[s.idx % preguntas.length];
+  const opcionesBarajadas = barajarArray(pOriginal.a);
+  const textoCorrecto = pOriginal.a[pOriginal.ok];
+  const nuevoIndexCorrecto = opcionesBarajadas.indexOf(textoCorrecto);
+  const p = {...pOriginal, a: opcionesBarajadas, ok: nuevoIndexCorrecto};
+  s.current = p;
+  document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
+  document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
+  document.getElementById(`test-${cat}-racha`).textContent = s.racha;
+  document.getElementById(`test-${cat}-score`).textContent = s.puntuacion;
+  document.getElementById(`test-${cat}-progress`).style.width = `${((s.idx % preguntas.length)/preguntas.length)*100}%`;
+  const cont = document.getElementById(`test-${cat}-opciones`);
+  cont.innerHTML = '';
+  document.getElementById(`test-${cat}-feedback`).textContent = '';
+  document.getElementById(`btn-sig-test-${cat}`).disabled = true;
+  p.a.forEach((txt, i) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.textContent = txt;
+    div.onclick = function() { responderTest(cat, i, this); };
+    cont.appendChild(div);
+  });
+}
+
+function responderTest(cat, idx, el) {
+  const s = estado.test[cat];
+  const p = s.current;
+  const cont = document.getElementById(`test-${cat}-opciones`);
+  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+  cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
+  const correcto = idx === p.ok;
+  if(correcto) {
+    el.classList.add('correcta');
+    s.aciertos++;
+    s.racha++;
+    s.puntuacion += 10 + (s.racha * 2);
+    estado.coins += 5;
+    document.getElementById(`test-${cat}-feedback`).className = 'feedback acierto';
+    document.getElementById(`test-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +${10+(s.racha*2)} pts`;
+    mostrarEmoji(true, el);
+  } else {
+    el.classList.add('incorrecta');
+    cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
+    document.getElementById(`test-${cat}-feedback`).className = 'feedback fallo';
+    document.getElementById(`test-${cat}-feedback`).textContent = '❌ FALLO';
+    mostrarEmoji(false, el);
+    s.racha = 0;
+  }
+
+  // === REGISTRAR PROGRESO DGT ===
+  const idPregunta = p.q.substring(0, 50);
+  PROGRESO.tests[cat].total++;
+  if(correcto) PROGRESO.tests[cat].aciertos++;
+  if(!PROGRESO.tests[cat].unicas.includes(idPregunta)) PROGRESO.tests[cat].unicas.push(idPregunta);
+  if(!correcto &&!PROGRESO.tests[cat].falladas.includes(idPregunta)) PROGRESO.tests[cat].falladas.push(idPregunta);
+  guardarProgreso();
+
+  document.getElementById(`btn-sig-test-${cat}`).disabled = false;
+  actualizarCoins();
+  guardar();
+}
+
+function siguienteTest(e, cat) {
+  estado.test[cat].idx++;
+  cargarPregunta(cat);
+}
+
+function cargarSituacion(cat) {
+  if(!cat) cat = sitCategoriaActiva;
+  const s = estado.sit[cat];
+  const casos = barajarArray(SITUACIONES[cat] || []);
+  if(!casos || casos.length === 0) {
+    document.getElementById(`sit-${cat}-pregunta`).textContent = 'No hay casos en esta categoria';
+    return;
+  }
+  const pOriginal = casos[s.idx % casos.length];
+  const opcionesBarajadas = barajarArray(pOriginal.a);
+  const textoCorrecto = pOriginal.a[pOriginal.ok];
+  const nuevoIndexCorrecto = opcionesBarajadas.indexOf(textoCorrecto);
+  const p = {...pOriginal, a: opcionesBarajadas, ok: nuevoIndexCorrecto};
+  s.current = p;
+  document.getElementById(`sit-${cat}-pregunta`).textContent = p.q;
+  document.getElementById(`sit-${cat}-aciertos`).textContent = s.aciertos;
+  document.getElementById(`sit-${cat}-score`).textContent = s.puntuacion;
+  document.getElementById(`sit-${cat}-progress`).style.width = `${((s.idx % casos.length)/casos.length)*100}%`;
+  const cont = document.getElementById(`sit-${cat}-opciones`);
+  cont.innerHTML = '';
+  document.getElementById(`sit-${cat}-feedback`).textContent = '';
+  document.getElementById(`btn-sig-sit-${cat}`).disabled = true;
+  p.a.forEach((txt, i) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.textContent = txt;
+    div.onclick = function() { responderSituacion(cat, i, this); };
+    cont.appendChild(div);
+  });
+}
+
+function responderSituacion(cat, idx, el) {
+  const s = estado.sit[cat];
+  const p = s.current;
+  const cont = document.getElementById(`sit-${cat}-opciones`);
+  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+  cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
+  const correcto = idx === p.ok;
+  if(correcto) {
+    el.classList.add('correcta');
+    s.aciertos++;
+    s.puntuacion += 15;
+    estado.coins += 10;
+    document.getElementById(`sit-${cat}-feedback`).className = 'feedback acierto';
+    document.getElementById(`sit-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +15 pts`;
+    mostrarEmoji(true, el);
+  } else {
+    el.classList.add('incorrecta');
+    cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
+    document.getElementById(`sit-${cat}-feedback`).className = 'feedback fallo';
+    document.getElementById(`sit-${cat}-feedback`).textContent = '❌ FALLO';
+    mostrarEmoji(false, el);
+  }
+
+  // === REGISTRAR PROGRESO CASOS ===
+  const idCaso = p.q.substring(0, 50);
+  PROGRESO.casos[cat].total++;
+  if(correcto) PROGRESO.casos[cat].aciertos++;
+  if(!PROGRESO.casos[cat].unicas.includes(idCaso)) PROGRESO.casos[cat].unicas.push(idCaso);
+  if(!correcto &&!PROGRESO.casos[cat].falladas.includes(idCaso)) PROGRESO.casos[cat].falladas.push(idCaso);
+  guardarProgreso();
+
+  document.getElementById(`btn-sig-sit-${cat}`).disabled = false;
+  actualizarCoins();
+  guardar();
+}
+
+function siguienteSituacion(e, cat) {
+  estado.sit[cat].idx++;
+  cargarSituacion(cat);
+}
+
+function iniciarExamen(e) {
+  const todas = [
+...PREGUNTAS.general,
+...PREGUNTAS.senales,
+...PREGUNTAS.normas,
+...PREGUNTAS.mecanica,
+...SITUACIONES.clima
+  ];
+  if(todas.length < 30) {
+    alert('Faltan preguntas. Necesitas 30 minimo.');
+    return;
+  }
+  estado.examen.preguntas = barajarArray(todas).slice(0, 30);
+  estado.examen.activa = true;
+  estado.examen.index = 0;
+  estado.examen.aciertos = 0;
+  estado.examen.fallos = 0;
+  estado.examen.categoria = 'general';
+  document.getElementById('btn-iniciar-examen').style.display = 'none';
+  document.getElementById('btn-sig-examen').style.display = 'block';
+  iniciarTimerExamen();
+  cargarPreguntaExamen();
+}
+
+function iniciarTimerExamen() {
+  clearInterval(estado.examen.timer);
+  estado.examen.tiempo = 1800;
+  estado.examen.timer = setInterval(() => {
+    estado.examen.tiempo--;
+    const min = Math.floor(estado.examen.tiempo / 60);
+    const seg = estado.examen.tiempo % 60;
+    document.getElementById('examen-timer').textContent =
+      `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`;
+    if(estado.examen.tiempo <= 0) finalizarExamen();
+  }, 1000);
+}
+
+function cargarPreguntaExamen() {
+  if(estado.examen.index >= 30) return finalizarExamen();
+  const pOriginal = estado.examen.preguntas[estado.examen.index];
+  const opcionesBarajadas = barajarArray(pOriginal.a);
+  const textoCorrecto = pOriginal.a[pOriginal.ok];
+  const nuevoIndexCorrecto = opcionesBarajadas.indexOf(textoCorrecto);
+  const p = {...pOriginal, a: opcionesBarajadas, ok: nuevoIndexCorrecto};
+  estado.examen.preguntas[estado.examen.index] = p;
+  document.getElementById('examen-num').textContent = estado.examen.index + 1;
+  document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
+  document.getElementById('examen-progress').style.width = `${(estado.examen.index/30)*100}%`;
+  document.getElementById('examen-pregunta').textContent = p.q;
+  const cont = document.getElementById('examen-opciones');
+  cont.innerHTML = '';
+  document.getElementById('btn-sig-examen').disabled = true;
+  p.a.forEach((txt, i) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.textContent = txt;
+    div.onclick = function() { responderExamen(i, this); };
+    cont.appendChild(div);
+  });
+}
+
+function responderExamen(idx, el) {
+  const p = estado.examen.preguntas[estado.examen.index];
+  const cont = document.getElementById('examen-opciones');
+  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+  cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
+  const correcto = idx === p.ok;
+  if(correcto) {
+    el.classList.add('correcta');
+    estado.examen.aciertos++;
+    estado.coins += 20;
+    mostrarEmoji(true, el);
+  } else {
+    el.classList.add('incorrecta');
+    cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
+    estado.examen.fallos++;
+    mostrarEmoji(false, el);
+  }
+  document.getElementById('btn-sig-examen').disabled = false;
+  document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
+  actualizarCoins();
+  guardar();
+}
+
+function siguientePreguntaExamen(e) {
+  estado.examen.index++;
+  if(estado.examen.index >= 30) {
+    finalizarExamen();
+  } else {
+    cargarPreguntaExamen();
+  }
+}
+
+function finalizarExamen() {
+  clearInterval(estado.examen.timer);
+  estado.examen.activa = false;
+  const nota = estado.examen.aciertos;
+  const aprobado = nota >= 27;
+  const res = document.getElementById('examen-resultado');
+  res.style.display = 'block';
+
+  // === REGISTRAR EXAMEN EN PROGRESO ===
+  PROGRESO.examenes.realizados++;
+  PROGRESO.examenes.historial.push(nota);
+  if(aprobado) PROGRESO.examenes.aprobados++;
+  guardarProgreso();
+
+  if(aprobado) {
+    res.innerHTML = `
+      <h2 style="color:#2ecc71">✅ ¡APROBADO!</h2>
+      <p style="font-size:24px">${nota}/30</p>
+      <p>Aciertos: ${nota} | Fallos: ${estado.examen.fallos}</p>
+      <p>Has ganado +${nota*20} coins</p>
+      <button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>
+    `;
+    estado.coins += nota * 20;
+  } else {
+    res.innerHTML = `
+      <h2 style="color:#e74c3c">❌ SUSPENSO</h2>
+      <p style="font-size:24px">${nota}/30</p>
+      <p>Aciertos: ${nota} | Fallos: ${estado.examen.fallos}</p>
+      <p>Necesitas 27 aciertos minimo</p>
+      <button class="btn" onclick="reiniciarExamen()">Volver a intentar</button>
+    `;
+  }
+  actualizarCoins();
+  guardar();
+}
+
+function reiniciarExamen() {
+  document.getElementById('examen-resultado').style.display = 'none';
+  document.getElementById('btn-iniciar-examen').style.display = 'block';
+  document.getElementById('btn-sig-examen').style.display = 'none';
+  document.getElementById('examen-pregunta').textContent = "Pulsa Iniciar Examen";
+  document.getElementById('examen-opciones').innerHTML = '';
+  document.getElementById('examen-num').textContent = '0';
+  document.getElementById('examen-aciertos').textContent = '0';
+  document.getElementById('examen-progress').style.width = '0%';
+  document.getElementById('examen-timer').textContent = '30:00';
+}
+
+function cargarGaraje() {
+  const cont = document.getElementById('garage-lista');
+  cont.innerHTML = '';
+  let hpTotal = 90;
+  estado.accesorios.forEach(id => {
+    const acc = ACCESORIOS.find(a => a.id === id);
+    if(acc) hpTotal += acc.hp;
+  });
+  document.getElementById('garage-score').textContent = `🏎️ ${hpTotal} CV`;
+  COCHES.forEach(coche => {
+    const desbloqueado = estado.coches.includes(coche.id);
+    const div = document.createElement('div');
+    div.className = 'garage-car' + (desbloqueado? '' : ' locked');
+    div.innerHTML = `
+      <div style="font-size:40px; filter:${coche.color}">${coche.emoji}</div>
+      <div>${coche.nombre}</div>
+      <div style="color:#667eea">${coche.cv} CV</div>
+      ${!desbloqueado? `<button class="btn-buy" onclick="comprarCoche('${coche.id}')">Comprar ${coche.precio}💰</button>` : '<div style="color:#2ecc71">✓ Propietario</div>'}
+    `;
+    cont.appendChild(div);
+  });
+}
+
+function comprarCoche(id) {
+  const coche = COCHES.find(c => c.id === id);
+  if(!coche) return;
+  if(estado.coins < coche.precio) {
+    alert('No tienes suficientes coins');
+    return;
+  }
+  estado.coins -= coche.precio;
+  estado.coches.push(id);
+  guardar();
+  actualizarCoins();
+  cargarGaraje();
+}
+
+function cargarTienda() {
+  const cont = document.getElementById('emoji-tienda');
+  cont.innerHTML = '';
+  ACCESORIOS.forEach(acc => {
+    const comprado = estado.accesorios.includes(acc.id);
+    const div = document.createElement('div');
+    div.className = 'emoji-item' + (comprado? ' locked' : '');
+    div.innerHTML = `
+      <div style="font-size:40px">${acc.emoji}</div>
+      <div>${acc.nombre}</div>
+      <div style="color:#667eea">+${acc.hp} CV</div>
+      ${!comprado? `<button class="btn-buy" onclick="comprarAccesorio('${acc.id}')">Comprar ${acc.precio}💰</button>` : '<div style="color:#2ecc71">✓ Comprado</div>'}
+    `;
+    cont.appendChild(div);
+  });
+  EMOJI_TIENDA.forEach(emoji => {
+    const comprado = estado.emojis.includes(emoji.id);
+    const div = document.createElement('div');
+    div.className = 'emoji-item' + (comprado? ' locked' : '');
+    div.innerHTML = `
+      <div style="font-size:40px">${emoji.emoji}</div>
+      <div>${emoji.nombre}</div>
+      <div style="color:#667eea">Cosmetico</div>
+      ${!comprado? `<button class="btn-buy" onclick="comprarEmoji('${emoji.id}')">Comprar ${emoji.precio}💰</button>` : '<div style="color:#2ecc71">✓ Comprado</div>'}
+    `;
+    cont.appendChild(div);
+  });
+}
+
+function comprarAccesorio(id) {
+  const acc = ACCESORIOS.find(a => a.id === id);
+  if(!acc) return;
+  if(estado.coins < acc.precio) {
+    alert('No tienes suficientes coins');
+    return;
+  }
+  estado.coins -= acc.precio;
+  estado.accesorios.push(id);
+  guardar();
+  actualizarCoins();
+  cargarTienda();
+  const totalAcc = estado.accesorios.length;
+  const msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff8c00,#ff2d55);color:#fff;padding:12px 24px;border-radius:12px;font-weight:bold;z-index:999;animation:slideUp 0.3s';
+  msg.innerHTML = `🏎️ ¡Ya estas creando tu supercoche! ${totalAcc}/42 accesorios`;
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2000);
+}
+
+function comprarEmoji(id) {
+  const emoji = EMOJI_TIENDA.find(e => e.id === id);
+  if(!emoji) return;
+  if(estado.coins < emoji.precio) {
+    alert('No tienes suficientes coins');
+    return;
+  }
+  estado.coins -= emoji.precio;
+  estado.emojis.push(id);
+  guardar();
+  actualizarCoins();
+  cargarTienda();
+}
+
+function cargarTips() {
+  tipsData = TIPS;
+  currentTip = 0;
+  mostrarTip();
+}
+
+function mostrarTip() {
+  if (tipsData.length === 0) return;
+  const tip = tipsData[currentTip];
+  document.getElementById('tip-content').innerHTML = `
+    <div class="tip-emoji">${tip.emoji}</div>
+    <div class="tip-text">${tip.txt}</div>
+  `;
+  document.getElementById('tip-counter').textContent = `${currentTip + 1} / ${tipsData.length}`;
+}
+
+function nextTip(e) {
+  currentTip = (currentTip + 1) % tipsData.length;
+  mostrarTip();
+}
+
+function prevTip(e) {
+  currentTip = (currentTip - 1 + tipsData.length) % tipsData.length;
+  mostrarTip();
+}
+
+function cargarTemario() {
+  const container = document.getElementById('temario-lista');
+  container.innerHTML = `
+    <div class="temario-item" onclick="abrirPDF('./01_Senales_Tomo_I_RD_465_2025.pdf')">
+      <div style="font-size:40px">🚦</div>
+      <div>Senales</div>
+      <div style="font-size:11px;color:#999">RD 465/2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')">
+      <div style="font-size:40px">📋</div>
+      <div>Normas Circulacion</div>
+      <div style="font-size:11px;color:#999">Edicion 2024</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./03_Manual_IX_Primeros_Auxilios_2025.pdf')">
+      <div style="font-size:40px">🚑</div>
+      <div>Primeros Auxilios</div>
+      <div style="font-size:11px;color:#999">Manual IX 2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./04_Manual_VIII_Mecanica_2024.pdf')">
+      <div style="font-size:40px">⚙️</div>
+      <div>Mecanica</div>
+      <div style="font-size:11px;color:#999">Manual VIII 2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./05_Medio_Ambiente_Distintivos_DGT_2025.pdf')">
+      <div style="font-size:40px">♻️</div>
+      <div>Medio Ambiente</div>
+      <div style="font-size:11px;color:#999">Distintivos DGT 2025</div>
+    </div>
+  `;
+}
+
+function abrirPDF(ruta) {
+  // MARCAR TEMARIO COMO LEÍDO
+  if(ruta.includes('Senales')) PROGRESO.temarios.senales = true;
+  if(ruta.includes('Normas')) PROGRESO.temarios.normas = true;
+  if(ruta.includes('Mecanica')) PROGRESO.temarios.mecanica = true;
+  if(ruta.includes('Auxilios')) PROGRESO.temarios.auxilios = true;
+  if(ruta.includes('Medio_Ambiente')) PROGRESO.temarios.medioambiente = true;
+  guardarProgreso();
+
+  const modal = document.createElement('div');
+  modal.id = 'pdf-modal';
+  modal.style.cssText = `
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:#0a0a0a;z-index:9999;
+    display:flex;flex-direction:column;
+  `;
+  modal.innerHTML = `
+    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
+      <button onclick="cerrarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
+      <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
+      <div style="width:60px"></div>
+    </div>
+    <iframe src="${ruta}" style="flex:1;border:none;width:100%"></iframe>
+  `;
+  document.body.appendChild(modal);
+}
+
+function cerrarPDF() {
+  const modal = document.getElementById('pdf-modal');
+  if(modal) modal.remove();
+}
+
+function actualizarMensajeMotivacional() {
+  const mensajes = [
+    "Vas por buen camino 💪",
+    "Cada fallo te hace mas fuerte 🔥",
+    "El examen DGT es tuyo 🚗",
+    "No pares ahora 💎",
+    "Concentrate y aprobaras 👑"
+  ];
+  const msg = mensajes[Math.floor(Math.random() * mensajes.length)];
+  const el = document.getElementById('motivacion');
+  if(el) el.textContent = msg;
+}
+
+// ===== TAB PROGRESO - AUTOESCUELA ONLINE =====
+function pintarProgreso() {
+  const calc = (obj) => obj.total? Math.round((obj.aciertos / obj.total) * 100) : 0;
+
+  // 1. TESTS 40%
+  let pctTests = 0, catDebil = '', minPct = 100;
+  const nombres = {general:'General', senales:'Señales', normas:'Normas', mecanica:'Mecánica', auxilios:'Auxilios', medioambiente:'Medio Ambiente'};
+  Object.keys(PROGRESO.tests).forEach(k => {
+    const pct = calc(PROGRESO.tests[k]);
+    if (pct < minPct && PROGRESO.tests[k].total >= 5) { minPct = pct; catDebil = k; }
+    pctTests += pct;
+  });
+  pctTests = Math.round(pctTests / 6);
+
+  // 2. CASOS 20%
+  let pctCasos = 0;
+  Object.keys(PROGRESO.casos).forEach(k => pctCasos += calc(PROGRESO.casos[k]));
+  pctCasos = Math.round(pctCasos / 4);
+
+  // 3. EXÁMENES 30%
+  const ex = PROGRESO.examenes;
+  let pctExamen = ex.realizados >= 3? Math.round((ex.aprobados / ex.realizados) * 100) : 0;
+  if (ex.historial.slice(-3).every(n => n >= 27)) pctExamen = Math.min(100, pctExamen + 10);
+
+  // 4. TEMARIOS 10%
+  const pctTemarios = Object.values(PROGRESO.temarios).filter(Boolean).length * 20;
+
+  // TOTAL
+  const total = Math.round((pctTests * 0.4) + (pctCasos * 0.2) + (pctExamen * 0.3) + (pctTemarios * 0.1));
+
+  document.getElementById('progreso-total').textContent = total + '%';
+  document.getElementById('progreso-total-bar').style.width = total + '%';
+
+  // MENSAJE INTELIGENTE
+  let msg = '';
+  if (total < 50) msg = 'Empieza por los Tests. Domina lo básico';
+  else if (total < 70) msg = `Refuerza ${nombres[catDebil] || catDebil}: ${minPct}% acierto`;
+  else if (total < 80) msg = 'Casi listo. Aprueba 2 exámenes seguidos con 27+';
+  else msg = '¡PREPARADO! Ya puedes presentarte a la DGT';
+  document.getElementById('progreso-mensaje').textContent = msg;
+
+   // BOTÓN DGT
+  document.getElementById('btn-dgt-oficial').disabled = total < 80;
+
+  // LISTA
+  document.getElementById('progreso-lista').innerHTML = `
+    <div class="progreso-item ${pctTests >= 85? 'completo' : ''}">
+      <div class="progreso-titulo"><span>📝 Tests Teóricos</span><span class="progreso-porcentaje">${pctTests}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pctTests}%"></div></div>
+      ${catDebil && minPct < 70? `<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: ${nombres[catDebil]}</div>` : ''}
+    </div>
+    <div class="progreso-item ${pctCasos >= 85? 'completo' : ''}">
+      <div class="progreso-titulo"><span>🚦 Casos Prácticos</span><span class="progreso-porcentaje">${pctCasos}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pctCasos}%"></div></div>
+    </div>
+    <div class="progreso-item ${pctExamen >= 80? 'completo' : ''}">
+      <div class="progreso-titulo"><span>📋 Exámenes Reales</span><span class="progreso-porcentaje">${pctExamen}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pctExamen}%"></div></div>
+      <div style="font-size:11px;color:#999;margin-top:4px">Aprobados: ${ex.aprobados}/${ex.realizados}</div>
+    </div>
+    <div class="progreso-item ${pctTemarios == 100? 'completo' : ''}">
+      <div class="progreso-titulo"><span>📖 Temarios Leídos</span><span class="progreso-porcentaje">${pctTemarios}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pctTemarios}%"></div></div>
+    </div>
+  `;
+}
+
+function irExamenDGT() {
+  const total = parseInt(document.getElementById('progreso-total').textContent);
+  if (total >= 80) {
+    if (confirm('¡Estás preparado! ¿Quieres ir a la web oficial de la DGT para reservar tu examen?')) {
+      window.open(LINK_DGT_OFICIAL, '_blank');
+    }
+  } else {
+    alert('Necesitas llegar al 80% para presentarte. ¡Sigue practicando!');
+  }
+}
+
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -1393,7 +2236,9 @@ if('serviceWorker' in navigator) {
 .catch(err => console.log('SW error:', err));
   });
 }
- 
+  
+
+
 
 
   
