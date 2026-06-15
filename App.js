@@ -97,6 +97,10 @@ function mostrarIntro(){
   `);
 }
 
+function tancarIntro() {
+  const intro = document.getElementById('intro-screen');
+  if(intro) intro.remove();
+}
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
