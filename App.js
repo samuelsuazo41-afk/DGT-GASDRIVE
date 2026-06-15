@@ -1,32 +1,10 @@
-// GASDRIVE DGT V8.2 ES - 630 PREGUNTAS DGT 2026
+// ===== DATOS - GASDRIVE DGT V8.2 ES =====
 const VERSION = "8.2";
 
 // COMBO DOPAMINA
 const EMOJIS_ENCERT = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
-// INTRO SCREEN - Aparece SIEMPRE al abrir
-function mostrarIntro(){
-  document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-      <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT 2026</h1>
-      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
-      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-        <div>💰 Gana coins respondiendo bien</div>
-        <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 630 preguntas DGT reales</div>
-        <div>📖 Temarios completos para repasar</div>
-      </div>
-      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
-    </div>
-  `);
-}
-
-function tancarIntro(){
-  document.getElementById('intro-screen').remove();
-}
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
@@ -793,7 +771,7 @@ const EMOJI_BOTIGA = [
   {id:'e6',emoji:'⚡',nom:'Rayo',preu:700}
 ];
 
-// ===== TU CÓDIGO EXISTENTE + MEJORAS =====
+// ===== ESTADO =====
 let tipsData = [];
 let currentTip = 0;
 
@@ -822,23 +800,35 @@ let estat = {
   },
   sit: {
     clima: {idx:0,encerts:0,puntuacio:0,current:null},
-    urbà: {idx:0,encerts:0,puntuacio:0,current:null},
+    urba: {idx:0,encerts:0,puntuacio:0,current:null},
     carretera: {idx:0,encerts:0,puntuacio:0,current:null},
-    emergència: {idx:0,encerts:0,puntuacio:0,current:null}
+    emergencia: {idx:0,encerts:0,puntuacio:0,current:null}
   }
 };
 
+let sitCategoriaActiva = 'clima';
+
+// ===== INIT =====
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
 }
 
-let sitCategoriaActiva = 'clima';
-
 function init() {
-  console.log("GasDrive V8.5 ES cargado");
-  mostrarIntro();
+  console.log("GasDrive V8.2 ES cargado");
+  
+  if(typeof PREGUNTES === 'undefined' ||!PREGUNTES.general) {
+    document.getElementById('test-general-pregunta').innerHTML = '❌ ERROR: Falta el bloque PREGUNTES';
+    return;
+  }
+  
+  try {
+    mostrarIntro();
+  } catch(e) {
+    console.log('Intro skip:', e);
+  }
+  
   actualitzarCoins();
   carregarPregunta('general');
   carregarPregunta('senyals');
@@ -850,6 +840,32 @@ function init() {
   actualitzarMissatgeMotivacional();
 }
 
+// ===== INTRO SCREEN =====
+function mostrarIntro(){
+  if(localStorage.getItem('gasdrive_intro_vista')) return;
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+      <div style="font-size:64px;margin-bottom:20px">🚗</div>
+      <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT 2026</h1>
+      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
+      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+        <div>💰 Gana coins respondiendo bien</div>
+        <div>🏎️ Compra supercoches en el Garaje</div>
+        <div>📚 630 preguntas DGT reales</div>
+        <div>📖 Temarios completos para repasar</div>
+      </div>
+      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+    </div>
+  `);
+}
+
+function tancarIntro(){
+  localStorage.setItem('gasdrive_intro_vista','1');
+  document.getElementById('intro-screen').remove();
+}
+
+// ===== STORAGE =====
 function guardar() {
   localStorage.setItem('gd_coins', estat.coins);
   localStorage.setItem('gd_cotxes', JSON.stringify(estat.cotxes));
@@ -862,7 +878,7 @@ function actualitzarCoins() {
   if(el) el.textContent = `💰 ${estat.coins}`;
 }
 
-// Mezclador Fisher-Yates para randomizar opciones y preguntas
+// ===== MEZCLADOR =====
 function barrejarArray(arr) {
   const a = arr.slice();
   for(let i = a.length - 1; i > 0; i--) {
@@ -872,6 +888,7 @@ function barrejarArray(arr) {
   return a;
 }
 
+// ===== TABS =====
 function canviarTab(e, tab) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -887,7 +904,7 @@ function canviarTab(e, tab) {
 }
 
 function canviarSubTab(e, tab, subtab) {
-  const tabId = tab === 'sit'? 'situaciones' : tab;
+  const tabId = tab === 'sit'? 'situacions' : tab;
   const contenidor = document.getElementById('tab-' + tabId);
   contenidor.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
   contenidor.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
@@ -903,15 +920,16 @@ function canviarCategoriaSit(cat) {
   event.target.classList.add('active');
   const titols = {
     clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
-    urbà: '🏙️ CASOS REALES - URBANO',
+    urba: '🏙️ CASOS REALES - URBANO',
     carretera: '🛣️ CASOS REALES - CARRETERA',
-    emergència: '🚨 CASOS REALES - EMERGENCIA'
+    emergencia: '🚨 CASOS REALES - EMERGENCIA'
   };
   document.getElementById('sit-titol').textContent = titols[cat];
   estat.sit[cat].idx = 0;
   carregarSituacio(cat);
 }
 
+// ===== EMOJI FEEDBACK =====
 function mostrarEmoji(encert, element) {
   const llista = encert? EMOJIS_ENCERT : EMOJIS_FALLO;
   const emoji = llista[Math.floor(Math.random() * llista.length)];
@@ -924,7 +942,7 @@ function mostrarEmoji(encert, element) {
   if(navigator.vibrate) navigator.vibrate(encert? [30,20,30] : 100);
 }
 
-// TEST con preguntas aleatorias cada vez
+// ===== TEST =====
 function carregarPregunta(cat) {
   const s = estat.test[cat];
   const preguntes = barrejarArray(PREGUNTES[cat]);
@@ -987,7 +1005,7 @@ function seguentTest(e, cat) {
   carregarPregunta(cat);
 }
 
-// CASOS con preguntas aleatorias cada vez
+// ===== CASOS REALES =====
 function carregarSituacio(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estat.sit[cat];
@@ -1048,7 +1066,7 @@ function seguentSituacio(e, cat) {
   carregarSituacio(cat);
 }
 
-// Examen con etiqueta de tipo
+// ===== EXAMEN =====
 function iniciarExamen(e) {
   const totes = [
 ...PREGUNTES.general,
@@ -1193,6 +1211,7 @@ function reiniciarExamen() {
   document.getElementById('examen-timer').textContent = '30:00';
 }
 
+// ===== GARAJE =====
 function carregarGaratge() {
   const cont = document.getElementById('garage-lista');
   cont.innerHTML = '';
@@ -1230,6 +1249,7 @@ function comprarCotxe(id) {
   carregarGaratge();
 }
 
+// ===== TIENDA =====
 function carregarBotiga() {
   const cont = document.getElementById('emoji-tienda');
   cont.innerHTML = '';
@@ -1271,10 +1291,11 @@ function comprarAccessoris(id) {
   guardar();
   actualitzarCoins();
   carregarBotiga();
+  carregarGaratge();
   const totalAcc = estat.accessoris.length;
   const msg = document.createElement('div');
   msg.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff8c00,#ff2d55);color:#fff;padding:12px 24px;border-radius:12px;font-weight:bold;z-index:999;animation:slideUp 0.3s';
-  msg.innerHTML = `🏎️ ¡Ya estás creando tu supercoche! ${totalAcc}/42 accesorios`;
+  msg.innerHTML = `🏎️ ¡Ya estás creando tu supercoche! ${totalAcc}/${ACCESSORIS.length} accesorios`;
   document.body.appendChild(msg);
   setTimeout(() => msg.remove(), 2000);
 }
@@ -1293,6 +1314,7 @@ function comprarEmoji(id) {
   carregarBotiga();
 }
 
+// ===== TIPS =====
 function carregarTips() {
   tipsData = TIPS;
   currentTip = 0;
@@ -1319,6 +1341,7 @@ function prevTip(e) {
   mostrarTip();
 }
 
+// ===== TEMARIO =====
 function carregarTemari() {
   const container = document.getElementById('temari-lista');
   container.innerHTML = `
@@ -1350,7 +1373,6 @@ function carregarTemari() {
   `;
 }
 
-// PDF normal, sin marcador
 function obrirPDF(ruta) {
   const modal = document.createElement('div');
   modal.id = 'pdf-modal';
@@ -1375,27 +1397,30 @@ function tancarPDF() {
   if(modal) modal.remove();
 }
 
+// ===== MENSAJE MOTIVACIONAL =====
 function actualitzarMissatgeMotivacional() {
   const missatges = [
     "Vas por buen camino 💪",
     "Cada fallo te hace más fuerte 🔥",
     "El examen DGT es tuyo 🚗",
     "No pares ahora 💎",
-    "Concéntrate y aprobarás 👑"
+    "Concéntrate y aprobarás 👑",
+    "15 min al día y apruebas seguro 📚"
   ];
   const msg = missatges[Math.floor(Math.random() * missatges.length)];
   const el = document.getElementById('motivacio');
   if(el) el.textContent = msg;
 }
 
-// SERVICE WORKER REGISTRO
+// ===== SERVICE WORKER =====
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js')
-.then(reg => console.log('SW registrado'))
-.catch(err => console.log('SW error:', err));
+     .then(reg => console.log('SW registrado'))
+     .catch(err => console.log('SW error:', err));
   });
 }
+ 
 
 
   
