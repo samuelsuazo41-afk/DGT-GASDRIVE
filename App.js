@@ -1516,7 +1516,7 @@ function cerrarPDF(id) {
   }
 }
 
-// ===== TAB PROGRESO - AUTOESCUELA ONLINE =====
+// ===== TAB PROGRESO - AUTOESCUELA ONLINE CON MENSAJES INTELIGENTES =====
 function pintarProgreso() {
   const contenedor = document.getElementById('progreso-lista');
   if(!contenedor) return;
@@ -1556,17 +1556,27 @@ function pintarProgreso() {
   document.getElementById('progreso-total').textContent = pctTotal + '%';
   document.getElementById('progreso-total-bar').style.width = pctTotal + '%';
 
-  // MENSAJE INTELIGENTE
+  // === MENSAJE INTELIGENTE MEJORADO CON PÁGINAS ===
   let msg = '';
   if (pctTotal < 50) msg = 'Empieza por los Tests. Domina lo básico';
   else if (pctTotal < 70) {
+    // Busca la categoría más débil y muestra el subtema específico
     let catDebil = '', minPct = 100;
     const nombres = {general:'General', senales:'Señales', normas:'Normas', mecanica:'Mecánica', auxilios:'Auxilios', medioambiente:'Medio Ambiente'};
     Object.keys(PROGRESO.tests).forEach(k => {
-      const pct = PROGRESO.tests[k].total? Math.round((PROGRESO.tests[k].aciertos / PROGRESO.tests[k].total) * 100) : 0;
-      if (pct < minPct && PROGRESO.tests[k].total >= 5) { minPct = pct; catDebil = k; }
+      const t = PROGRESO.tests[k];
+      const pct = t.total? Math.round((t.aciertos / t.total) * 100) : 0;
+      if (pct < minPct && t.total >= 5) { minPct = pct; catDebil = k; }
     });
-    msg = `Refuerza ${nombres[catDebil] || catDebil}: ${minPct}% acierto`;
+
+    // Busca el mensaje específico del subtema débil
+    if (catDebil && SUBTEMAS_DEBILES[catDebil]) {
+      const subtemas = SUBTEMAS_DEBILES[catDebil];
+      let subMsg = subtemas.find(s => minPct >= s.pct) || subtemas[subtemas.length - 1];
+      msg = `⚠️ Repasa: ${subMsg.msg}`;
+    } else {
+      msg = `Refuerza ${nombres[catDebil] || catDebil}: ${minPct}% acierto`;
+    }
   }
   else if (pctTotal < 80) msg = 'Casi listo. Aprueba 2 exámenes seguidos con 27+';
   else msg = '¡PREPARADO! Ya puedes presentarte a la DGT';
@@ -1584,20 +1594,43 @@ function pintarProgreso() {
   const tiempoTotalHoras = Math.floor(tiempoTotalTemarios / 3600);
   const tiempoTotalMin = Math.floor((tiempoTotalTemarios % 3600) / 60);
 
+   // === MENSAJES INDIVIDUALES POR TEST CON PÁGINAS ===
+  function getMensajeTest(cat) {
+    const t = PROGRESO.tests[cat];
+    if (t.total < 5) return '';
+    const pct = Math.round((t.aciertos / t.total) * 100);
+    if (pct >= 85) return '<div style="font-size:11px;color:#2ecc71;margin-top:4px">✓ Dominado</div>';
+    
+    const subtemas = SUBTEMAS_DEBILES[cat];
+    if (!subtemas) return '';
+    
+    // Busca el mensaje que corresponde al porcentaje actual
+    let subMsg = subtemas.find(s => pct >= s.pct) || subtemas[0];
+    return `<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: ${subMsg.msg}</div>`;
+  }
+
   contenedor.innerHTML = `
     <div class="progreso-item ${pctTests >= 85? 'completo' : ''}">
       <div class="progreso-titulo"><span>📝 Tests Teóricos</span><span class="progreso-porcentaje">${pctTests}%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pctTests}%"></div></div>
-      ${pctTests < 70? '<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: Señales</div>' : ''}
+      <div style="font-size:11px;color:#999;margin-top:4px">${testsUnicas}/${testsTotal} preguntas únicas</div>
+      ${getMensajeTest('general')}
+      ${getMensajeTest('senales')}
+      ${getMensajeTest('normas')}
+      ${getMensajeTest('mecanica')}
+      ${getMensajeTest('auxilios')}
+      ${getMensajeTest('medioambiente')}
     </div>
     <div class="progreso-item ${pctCasos >= 85? 'completo' : ''}">
       <div class="progreso-titulo"><span>🚦 Casos Prácticos</span><span class="progreso-porcentaje">${pctCasos}%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pctCasos}%"></div></div>
+      <div style="font-size:11px;color:#999;margin-top:4px">${casosUnicas}/${casosTotal} casos únicos</div>
     </div>
     <div class="progreso-item ${pctExamen >= 80? 'completo' : ''}">
       <div class="progreso-titulo"><span>📋 Exámenes Reales</span><span class="progreso-porcentaje">${pctExamen}%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pctExamen}%"></div></div>
       <div style="font-size:11px;color:#999;margin-top:4px">Aprobados: ${ex.aprobados}/${ex.realizados}</div>
+      ${ex.realizados < 3? '<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Haz 3 exámenes mínimo</div>' : ''}
     </div>
     <div class="progreso-item ${pctTemarios >= 80? 'completo' : ''}">
       <div class="progreso-titulo"><span>📖 Temarios Estudiados</span><span class="progreso-porcentaje">${pctTemarios}%</span></div>
@@ -1630,6 +1663,10 @@ if('serviceWorker' in navigator) {
 .catch(err => console.log('SW error:', err));
   });
 }
+
+
+
+
   
 
 
