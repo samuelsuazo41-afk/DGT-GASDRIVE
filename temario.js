@@ -7,19 +7,19 @@ const TEMARIO = [
   { 
     id: 1, 
     titulo: "1. Señales de tráfico", 
-    pdf: require('./01_Senyals_Tomo_I_RD_465_2025.pdf'),
+    pdf: require('./01_Señales_Tomo_I_RD_465_2025.pdf'),
     bloqueado: true
   },
   { 
     id: 2, 
     titulo: "2. Normas de circulación", 
-    pdf: require('./02_Normes_Circulacio_Tomo_II_Edicio_2024.pdf'),
+    pdf: require('./02_Normas_Circulacion_Tomo_II_Edicio_2024.pdf'),
     bloqueado: true
   },
   { 
     id: 3, 
     titulo: "3. Primeros Auxilios", 
-    pdf: require('./03_Manual_IX_Primers_Auxilis_2025.pdf'),
+    pdf: require('./03_Manual_IX_Primeros_Auxilios_2025.pdf'),
     bloqueado: true
   },
   { 
@@ -31,7 +31,7 @@ const TEMARIO = [
   { 
     id: 5, 
     titulo: "5. Medio Ambiente + Distintivos DGT", 
-    pdf: require('./05_Medi_Ambient_Distintius_DGT_2025.pdf'),
+    pdf: require('./05_Medio_Ambiente_Distintius_DGT_2025.pdf'),
     bloqueado: true
   }
 ];
