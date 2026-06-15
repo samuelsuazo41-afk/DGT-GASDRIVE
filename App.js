@@ -1,4 +1,34 @@
+// GASDRIVE DGT V8.2 ES - 630 PREGUNTAS DGT 2026
+const VERSION = "8.2";
 
+// COMBO DOPAMINA
+const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
+const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
+
+// INTRO SCREEN - Aparece SIEMPRE al abrir
+function mostrarIntro(){
+  if(localStorage.getItem('gasdrive_intro_vista')) return;
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+      <div style="font-size:64px;margin-bottom:20px">🚗</div>
+      <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT 2026</h1>
+      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
+      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+        <div>💰 Gana coins respondiendo bien</div>
+        <div>🏎️ Compra supercoches en el Garaje</div>
+        <div>📚 630 preguntas DGT reales</div>
+        <div>📖 Temarios completos para repasar</div>
+      </div>
+      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+    </div>
+  `);
+}
+
+function tancarIntro(){
+  localStorage.setItem('gasdrive_intro_vista','1');
+  document.getElementById('intro-screen').remove();
+}
 
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
@@ -214,7 +244,7 @@ const PREGUNTES = {
     {q:"Con viento fuerte lateral en puente, ¿qué haces?",a:["Acelera","Sujeta firme el volante","Cambia carril"],ok:1},
     {q:"En caso de vertido de aceite en la calzada?",a:["Acelera para pasar rápido","Avisa y circula con precaución","Frena fuerte"],ok:1}
   ],
-    senyals: [
+    senales: [
     {q:"Señal de STOP octogonal:",a:["Cede el paso","Parada obligatoria","Precaución"],ok:1},
     {q:"Triángulo invertido es:",a:["STOP","Ceda el paso","No entrar"],ok:1},
     {q:"Círculo rojo con línea:",a:["Obligación","Prohibición","Fin prohibición"],ok:1},
@@ -407,7 +437,7 @@ const PREGUNTES = {
     {q:"Coche huele a aceite:",a:["Normal","Fuga aceite","No pasa nada"],ok:1},
     {q:"Coche huele a refrigerante:",a:["Normal","Fuga refrigerante","No pasa nada"],ok:1}
   ],
-  auxilis: [
+  auxilios: [
     {q:"¿Qué haces primero ante un accidente?",a:["Llamar al 112","Mover al herido","Dar agua"],ok:0},
     {q:"En una hemorragia arterial, ¿qué haces?",a:["Comprimir directo","Elevar extremidad","Dar aspirina"],ok:0},
     {q:"Posición lateral de seguridad sirve para:",a:["Evitar asfixia","Acelerar recuperación","Reducir dolor"],ok:0},
@@ -450,7 +480,7 @@ const PREGUNTES = {
     {q:"Niño inconsciente que no respira:",a:["5 ventilaciones iniciales","30 compresiones","Respirarle a cara"],ok:0},
     {q:"Hemorragia externa grave:",a:["Esperar que pare","Compresión + elevar","Poner alcohol"],ok:1}
   ],
-    mediambient: [
+    medioambiente: [
     {q:"¿Qué es la etiqueta ambiental B?",a:["Eléctrico","Gasolina Euro 4+","Híbrido"],ok:1},
     {q:"Coche con etiqueta 0 emite:",a:["CO2 bajo","Cero emisiones tubo","Solo CO"],ok:1},
     {q:"Conducción eficiente reduce:",a:["Solo ruido","Consumo + CO2","Velocidad"],ok:1},
@@ -548,7 +578,7 @@ const SITUACIONS = {
     {q:"Hielo + semáforo en verde:",a:["Acelerar fuerte","Arrancar suave, marcha larga","Frenar en el cruce"],ok:1},
     {q:"Viento lateral + salida túnel:",a:["Sujetar volante firme, reducir","Ir igual","Acelerar para compensar"],ok:0}
   ],
-  urbà: [
+  urbano: [
     {q:"Peatón cruza fuera paso cebra:",a:["Toca claxon","Reduce, prepárate para parar","Acelera"],ok:1},
     {q:"Niño corre hacia calzada:",a:["Toca claxon","Frena, prevé que puede correr","Acelera"],ok:1},
     {q:"Bici va por acera:",a:["Toca claxon","Reduce, puede bajar a calzada","Acelera"],ok:1},
@@ -632,7 +662,7 @@ const SITUACIONS = {
     {q:"Carretera con obras y carril desviado:",a:["Seguir GPS","Hacer caso señales naranja, reducir","Ir por arcén"],ok:1},
     {q:"Señal ‘prohibido adelantar’ y vas lento:",a:["Adelantar igual","Respetar señal, no adelantar","Tocar claxon"],ok:1}
   ],
-    emergència: [
+    emergencia: [
     {q:"Ambulancia detrás con luces y sonido:",a:["Acelera","Apártate a derecha y para si hace falta","Toca claxon"],ok:1},
     {q:"Coche en llamas delante:",a:["Acelera para pasar","Para lejos, avisa 112, no te acerques","Abre capó"],ok:1},
     {q:"Accidente con herido en vía:",a:["Sigue","Para, señaliza, avisa 112, no muevas herido","Mueve herido"],ok:1},
