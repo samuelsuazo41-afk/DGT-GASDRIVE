@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT 2026</title>
+<title>GasDrive DGT ES V8.5</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
@@ -12,7 +12,7 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
 h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .subtitle{font-size:11px;opacity:0.9;margin-top:2px;display:flex;align-items:center;justify-content:center;gap:6px}
 .coins{display:inline-flex;align-items:center;background:#FFD700;color:#000;padding:2px 9px;border-radius:14px;font-weight:900;font-size:11px}
-#motivacio{margin-top:6px;font-size:12px;color:#FFD700;font-weight:600}
+#motivacion{margin-top:6px;font-size:12px;color:#FFD700;font-weight:600}
 /* Tabs inferior */
 .tabs{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;z-index:100;overflow-x:auto}
 .tab-btn{flex:1;min-width:70px;padding:11px 4px;background:none;border:none;color:#666;font-size:10px;cursor:pointer;transition:0.2s}
@@ -27,15 +27,15 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .sub-content{display:none}
 .sub-content.active{display:block;animation:fadeIn 0.3s}
 /* Cards centradas y compactas */
-.card{ background:#1a1a1a; border:1px solid #333; border-radius:14px; padding:16px 8px; margin:0 auto 12px; box-shadow:0 4px 20px rgba(0,0,0.5); max-width:380px; }
+.card{ background:#1a1a1a; border:1px solid #333; border-radius:14px; padding:16px 8px; margin:0 auto 12px; box-shadow:0 4px 20px rgba(0,0,0,0.5); max-width:380px; }
 .card h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4}
-.opcio{ background:#2a2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
-.opcio:hover{background:#333;border-color:#00D9FF}
-.opcio.correcta{background:#0a4!important;border-color:#0f5!important;animation:pulse 0.5s}
-.opcio.incorrecta{background:#a00!important;border-color:#f00!important;animation:shake 0.5s}
-.opcio.bloquejada{pointer-events:none}
+.opcion{ background:#2a2a2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
+.opcion:hover{background:#333;border-color:#00D9FF}
+.opcion.correcta{background:#0a4!important;border-color:#0f5!important;animation:pulse 0.5s}
+.opcion.incorrecta{background:#a00!important;border-color:#f00!important;animation:shake 0.5s}
+.opcion.bloqueada{pointer-events:none}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
 .btn-sig{background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
@@ -47,7 +47,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .feedback.fallo{background:#a00;color:#fff}
 @keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 /* Garaje y tienda */
-.garage-car{background:#1a1a;border:2px solid #333;border-radius:11px;padding:18px;text-align:center;margin:9px 0}
+.garage-car{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:18px;text-align:center;margin:9px 0}
 .garage-car.locked{opacity:0.4}
 .garage-car h3{color:#00D9FF;margin:7px 0}
 .score-big{text-align:center;font-size:44px;font-weight:900;color:#00D9FF;margin:18px 0;text-shadow:0 0 20px rgba(0,217,255,0.5)}
@@ -64,13 +64,13 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .btn{background:#00D9FF;color:#000;border:none;padding:11px 18px;border-radius:7px;font-weight:700;cursor:pointer;margin:4px}
 .btn-buy{background:linear-gradient(135deg,#00D9FF 0%,#00ff88 100%);color:#000;border:none;padding:7px 11px;border-radius:7px;font-weight:700;font-size:12px;margin-top:7px;cursor:pointer}
 .btn-buy:active{transform:scale(0.95)}
-/* NUEVO: Grid Temario */
-#temari-lista{ display:grid; grid-template-columns:repeat(2,160px); gap:12px; justify-content:center; margin:14px auto 0; }
-.temari-item{ background:#1a1a1a; border:2px solid #00D9FF; border-radius:12px; padding:16px 10px; text-align:center; cursor:pointer; transition:0.2s; min-height:110px; display:flex; flex-direction:column; justify-content:center; }
-.temari-item:active{ transform:scale(0.96); background:#222; }
-.temari-item.locked{ border-color:#444; opacity:0.4; cursor:not-allowed; }
-.temari-item div:nth-child(2){ font-size:14px; font-weight:700; margin:8px 0 4px; }
-/* Fix scroll menú lateral - bloquea body y deja scroll solo en menú */
+/* Grid Temario */
+#temario-lista{ display:grid; grid-template-columns:repeat(2,160px); gap:12px; justify-content:center; margin:14px auto 0; }
+.temario-item{ background:#1a1a1a; border:2px solid #00D9FF; border-radius:12px; padding:16px 10px; text-align:center; cursor:pointer; transition:0.2s; min-height:110px; display:flex; flex-direction:column; justify-content:center; }
+.temario-item:active{ transform:scale(0.96); background:#222; }
+.temario-item.locked{ border-color:#444; opacity:0.4; cursor:not-allowed; }
+.temario-item div:nth-child(2){ font-size:14px; font-weight:700; margin:8px 0 4px; }
+/* Fix scroll menu lateral */
 body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 .side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a0a0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
 .side-menu.active{ transform:translateX(0); }
@@ -80,19 +80,19 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 </head>
 <body>
 <div class="header">
-  <h1>🚘 GasDrive DGT 2026</h1>
+  <h1>🚘 GasDrive DGT ES</h1>
   <div class="subtitle">630 Preguntas DGT. Offline<span class="coins" id="coins">💰 0</span></div>
-  <div id="motivacio" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
+  <div id="motivacion" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
 </div>
 
 <div id="tab-test" class="tab-content active">
   <div class="sub-tabs">
-    <button class="sub-tab-btn active" onclick="canviarSubTab(event,'test','general')">📝 General</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','senyals')">🚸 Señales</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','normes')">📋 Normas</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','mecanica')">🔧 Mecánica</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','auxilis')">🚑 Auxilios</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','mediambient')">🌱 Medio Ambiente</button>
+    <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'test','general')">📝 General</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','senales')">🚸 Senales</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','normas')">📋 Normas</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','mecanica')">🔧 Mecanica</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','auxilios')">🚑 Auxilios</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','medioambiente')">🌱 Medio Ambiente</button>
   </div>
 
   <div id="test-general" class="sub-content active">
@@ -103,98 +103,98 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="pregunta" id="test-general-pregunta">Cargando...</div>
       <div id="test-general-opciones"></div>
       <div class="feedback" id="test-general-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-general" onclick="seguentTest(event,'general')" disabled>SIGUIENTE</button>
+      <button class="btn-sig" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>SIGUIENTE</button>
     </div>
   </div>
 
-  <div id="test-senyals" class="sub-content">
+  <div id="test-senales" class="sub-content">
     <div class="card">
-      <h2>🚸 SEÑALES DE TRÁFICO</h2>
-      <div class="stats"><div>Aciertos: <span id="test-senyals-aciertos">0</span>/5</div><div>Racha: <span id="test-senyals-racha">0</span>🔥</div><div>Score: <span id="test-senyals-score">0</span></div></div>
-      <div class="progress-bar"><div class="progress-fill" id="test-senyals-progress"></div></div>
-      <div class="pregunta" id="test-senyals-pregunta"></div>
-      <div id="test-senyals-opciones"></div>
-      <div class="feedback" id="test-senyals-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-senyals" onclick="seguentTest(event,'senyals')" disabled>SIGUIENTE</button>
+      <h2>🚸 SENALES DE TRAFICO</h2>
+      <div class="stats"><div>Aciertos: <span id="test-senales-aciertos">0</span>/5</div><div>Racha: <span id="test-senales-racha">0</span>🔥</div><div>Score: <span id="test-senales-score">0</span></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="test-senales-progress"></div></div>
+      <div class="pregunta" id="test-senales-pregunta"></div>
+      <div id="test-senales-opciones"></div>
+      <div class="feedback" id="test-senales-feedback"></div>
+      <button class="btn-sig" id="btn-sig-test-senales" onclick="siguienteTest(event,'senales')" disabled>SIGUIENTE</button>
     </div>
   </div>
 
-  <div id="test-normes" class="sub-content">
+  <div id="test-normas" class="sub-content">
     <div class="card">
       <h2>📋 NORMAS Y VELOCIDADES</h2>
-      <div class="stats"><div>Aciertos: <span id="test-normes-aciertos">0</span>/5</div><div>Racha: <span id="test-normes-racha">0</span>🔥</div><div>Score: <span id="test-normes-score">0</span></div></div>
-      <div class="progress-bar"><div class="progress-fill" id="test-normes-progress"></div></div>
-      <div class="pregunta" id="test-normes-pregunta"></div>
-      <div id="test-normes-opciones"></div>
-      <div class="feedback" id="test-normes-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-normes" onclick="seguentTest(event,'normes')" disabled>SIGUIENTE</button>
+      <div class="stats"><div>Aciertos: <span id="test-normas-aciertos">0</span>/5</div><div>Racha: <span id="test-normas-racha">0</span>🔥</div><div>Score: <span id="test-normas-score">0</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="test-normas-progress"></div></div>
+      <div class="pregunta" id="test-normas-pregunta"></div>
+      <div id="test-normas-opciones"></div>
+      <div class="feedback" id="test-normas-feedback"></div>
+      <button class="btn-sig" id="btn-sig-test-normas" onclick="siguienteTest(event,'normas')" disabled>SIGUIENTE</button>
     </div>
   </div>
 
   <div id="test-mecanica" class="sub-content">
     <div class="card">
-      <h2>🔧 MECÁNICA BÁSICA</h2>
+      <h2>🔧 MECANICA BASICA</h2>
       <div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span>/5</div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div>
       <div class="pregunta" id="test-mecanica-pregunta"></div>
       <div id="test-mecanica-opciones"></div>
       <div class="feedback" id="test-mecanica-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-mecanica" onclick="seguentTest(event,'mecanica')" disabled>SIGUIENTE</button>
+      <button class="btn-sig" id="btn-sig-test-mecanica" onclick="siguienteTest(event,'mecanica')" disabled>SIGUIENTE</button>
     </div>
   </div>
 
-  <div id="test-auxilis" class="sub-content">
+  <div id="test-auxilios" class="sub-content">
     <div class="card">
       <h2>🚑 PRIMEROS AUXILIOS</h2>
-      <div class="stats"><div>Aciertos: <span id="test-auxilis-aciertos">0</span>/5</div><div>Racha: <span id="test-auxilis-racha">0</span>🔥</div><div>Score: <span id="test-auxilis-score">0</span></div></div>
-      <div class="progress-bar"><div class="progress-fill" id="test-auxilis-progress"></div></div>
-      <div class="pregunta" id="test-auxilis-pregunta"></div>
-      <div id="test-auxilis-opciones"></div>
-      <div class="feedback" id="test-auxilis-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-auxilis" onclick="seguentTest(event,'auxilis')" disabled>SIGUIENTE</button>
+      <div class="stats"><div>Aciertos: <span id="test-auxilios-aciertos">0</span>/5</div><div>Racha: <span id="test-auxilios-racha">0</span>🔥</div><div>Score: <span id="test-auxilios-score">0</span></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="test-auxilios-progress"></div></div>
+      <div class="pregunta" id="test-auxilios-pregunta"></div>
+      <div id="test-auxilios-opciones"></div>
+      <div class="feedback" id="test-auxilios-feedback"></div>
+      <button class="btn-sig" id="btn-sig-test-auxilios" onclick="siguienteTest(event,'auxilios')" disabled>SIGUIENTE</button>
     </div>
   </div>
 
-  <div id="test-mediambient" class="sub-content">
+  <div id="test-medioambiente" class="sub-content">
     <div class="card">
       <h2>♻️ MEDIO AMBIENTE</h2>
-      <div class="stats"><div>Aciertos: <span id="test-mediambient-aciertos">0</span>/5</div><div>Racha: <span id="test-mediambient-racha">0</span>🔥</div><div>Score: <span id="test-mediambient-score">0</span></div></div>
-      <div class="progress-bar"><div class="progress-fill" id="test-mediambient-progress"></div></div>
-      <div class="pregunta" id="test-mediambient-pregunta"></div>
-      <div id="test-mediambient-opciones"></div>
-      <div class="feedback" id="test-mediambient-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-mediambient" onclick="seguentTest(event,'mediambient')" disabled>SIGUIENTE</button>
+      <div class="stats"><div>Aciertos: <span id="test-medioambiente-aciertos">0</span>/5</div><div>Racha: <span id="test-medioambiente-racha">0</span>🔥</div><div>Score: <span id="test-medioambiente-score">0</span></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="test-medioambiente-progress"></div></div>
+      <div class="pregunta" id="test-medioambiente-pregunta"></div>
+      <div id="test-medioambiente-opciones"></div>
+      <div class="feedback" id="test-medioambiente-feedback"></div>
+      <button class="btn-sig" id="btn-sig-test-medioambiente" onclick="siguienteTest(event,'medioambiente')" disabled>SIGUIENTE</button>
     </div>
   </div>
 </div>
 
 <div id="tab-situaciones" class="tab-content">
   <div class="sub-tabs">
-    <button class="sub-tab-btn active" onclick="canviarSubTab(event,'sit','clima')">🌧️ Clima</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'sit','urbà')">🏙️ Urbano</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'sit','carretera')">🛣️ Carretera</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'sit','emergència')">🚨 Emergencia</button>
+    <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'sit','clima')">🌧️ Clima</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','urbano')">🏙️ Urbano</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','carretera')">🛣️ Carretera</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','emergencia')">🚨 Emergencia</button>
   </div>
   <div id="sit-clima" class="sub-content active">
     <div class="card">
-      <h2 id="sit-titol">🌧️ CASOS REALES - CLIMA ADVERSO</h2>
+      <h2 id="sit-titulo">🌧️ CASOS REALES - CLIMA ADVERSO</h2>
       <div class="stats"><div>Resueltas: <span id="sit-clima-aciertos">0</span>/20</div><div>Score: <span id="sit-clima-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="sit-clima-progress"></div></div>
       <div class="pregunta" id="sit-clima-pregunta"></div>
       <div id="sit-clima-opciones"></div>
       <div class="feedback" id="sit-clima-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-clima" onclick="seguentSituacio(event,'clima')" disabled>SIGUIENTE</button>
+      <button class="btn-sig" id="btn-sig-sit-clima" onclick="siguienteSituacion(event,'clima')" disabled>SIGUIENTE</button>
     </div>
   </div>
-  <div id="sit-urbà" class="sub-content">
+  <div id="sit-urbano" class="sub-content">
     <div class="card">
       <h2>🏙️ CASOS REALES - URBANO</h2>
-      <div class="stats"><div>Resueltas: <span id="sit-urbà-aciertos">0</span>/20</div><div>Score: <span id="sit-urbà-score">0</span></div></div>
-      <div class="progress-bar"><div class="progress-fill" id="sit-urbà-progress"></div></div>
-      <div class="pregunta" id="sit-urbà-pregunta"></div>
-      <div id="sit-urbà-opciones"></div>
-      <div class="feedback" id="sit-urbà-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-urbà" onclick="seguentSituacio(event,'urbà')" disabled>SIGUIENTE</button>
+      <div class="stats"><div>Resueltas: <span id="sit-urbano-aciertos">0</span>/20</div><div>Score: <span id="sit-urbano-score">0</span></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="sit-urbano-progress"></div></div>
+      <div class="pregunta" id="sit-urbano-pregunta"></div>
+      <div id="sit-urbano-opciones"></div>
+      <div class="feedback" id="sit-urbano-feedback"></div>
+      <button class="btn-sig" id="btn-sig-sit-urbano" onclick="siguienteSituacion(event,'urbano')" disabled>SIGUIENTE</button>
     </div>
   </div>
   <div id="sit-carretera" class="sub-content">
@@ -205,18 +205,18 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="pregunta" id="sit-carretera-pregunta"></div>
       <div id="sit-carretera-opciones"></div>
       <div class="feedback" id="sit-carretera-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-carretera" onclick="seguentSituacio(event,'carretera')" disabled>SIGUIENTE</button>
+      <button class="btn-sig" id="btn-sig-sit-carretera" onclick="siguienteSituacion(event,'carretera')" disabled>SIGUIENTE</button>
     </div>
   </div>
-  <div id="sit-emergència" class="sub-content">
+  <div id="sit-emergencia" class="sub-content">
     <div class="card">
       <h2>🚨 CASOS REALES - EMERGENCIA</h2>
-      <div class="stats"><div>Resueltas: <span id="sit-emergència-aciertos">0</span>/20</div><div>Score: <span id="sit-emergència-score">0</span></div></div>
-      <div class="progress-bar"><div class="progress-fill" id="sit-emergència-progress"></div></div>
-      <div class="pregunta" id="sit-emergència-pregunta"></div>
-      <div id="sit-emergència-opciones"></div>
-      <div class="feedback" id="sit-emergència-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-emergència" onclick="seguentSituacio(event,'emergència')" disabled>SIGUIENTE</button>
+      <div class="stats"><div>Resueltas: <span id="sit-emergencia-aciertos">0</span>/20</div><div>Score: <span id="sit-emergencia-score">0</span></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="sit-emergencia-progress"></div></div>
+      <div class="pregunta" id="sit-emergencia-pregunta"></div>
+      <div id="sit-emergencia-opciones"></div>
+      <div class="feedback" id="sit-emergencia-feedback"></div>
+      <button class="btn-sig" id="btn-sig-sit-emergencia" onclick="siguienteSituacion(event,'emergencia')" disabled>SIGUIENTE</button>
     </div>
   </div>
 </div>
@@ -229,17 +229,17 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
     <div class="pregunta" id="examen-pregunta">Pulsa Iniciar Examen</div>
     <div id="examen-opciones"></div>
     <button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button>
-    <button class="btn-sig" id="btn-sig-examen" onclick="seguentPreguntaExamen(event)" style="display:none" disabled>SIGUIENTE</button>
-    <div id="examen-resultat" style="display:none;text-align:center;margin-top:20px"></div>
+    <button class="btn-sig" id="btn-sig-examen" onclick="siguientePreguntaExamen(event)" style="display:none" disabled>SIGUIENTE</button>
+    <div id="examen-resultado" style="display:none;text-align:center;margin-top:20px"></div>
   </div>
 </div>
 
-<div id="tab-garage" class="tab-content">
+<div id="tab-garaje" class="tab-content">
   <div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div></div>
 </div>
 
 <div id="tab-tienda" class="tab-content">
-  <div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Canjea tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div>
+  <div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div>
 </div>
 
 <div id="tab-tips" class="tab-content">
@@ -252,24 +252,24 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   </div>
 </div>
 
-<div id="tab-temari" class="tab-content">
+<div id="tab-temario" class="tab-content">
   <div class="card">
     <h2>📖 TEMARIOS OFICIALES</h2>
     <p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT</p>
-    <div id="temari-lista"></div>
+    <div id="temario-lista"></div>
   </div>
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="canviarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
-  <button class="tab-btn" onclick="canviarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
-  <button class="tab-btn" onclick="canviarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
-  <button class="tab-btn" onclick="canviarTab(event,'garage')"><span class="emoji">🏁</span>GARAJE</button>
-  <button class="tab-btn" onclick="canviarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
-  <button class="tab-btn" onclick="canviarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
-  <button class="tab-btn" onclick="canviarTab(event,'temari')"><span class="emoji">📖</span>TEMARIO</button>
+  <button class="tab-btn active" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<script src="./app.js?v=8.5.1"></script>
+<script src="./App.js?v=8.5.1"></script>
 </body>
-  </html>
+</html>
