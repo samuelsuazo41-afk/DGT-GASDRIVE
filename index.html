@@ -92,7 +92,16 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="motivacion" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
 </div>
 
-<div id="tab-test" class="tab-content active">
+<!-- TEMARIO - AHORA ES LA PRIMERA TAB -->
+<div id="tab-temario" class="tab-content active">
+  <div class="card">
+    <h2>📖 TEMARIOS OFICIALES</h2>
+    <p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT</p>
+    <div id="temario-lista"></div>
+  </div>
+</div>
+
+<div id="tab-test" class="tab-content">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'test','general')">📝 General</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','senales')">🚸 Senales</button>
@@ -157,7 +166,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-auxilios" class="sub-content">
     <div class="card">
       <h2>🚑 PRIMEROS AUXILIOS</h2>
-      <div class="stats"><div>Aciertos: <span id="test-auxilios-aciertos">0</span>/5</div><div>Racha: <span id="test-auxilios-racha">0</span>🔥</div><div>Score: <span id="test-auxilios-score">0</span></div></div>
+      <div class="stats"><div>Aciertos: <span id="test-auxilios-aciertos">0</span>/5</div><div>Racha: <span id="test-auxilios-racha">0</span>🔥</div><div>Score: <span id="test-auxilios-score">0</span></div>
       <div class="progress-bar"><div class="progress-fill" id="test-auxilios-progress"></div></div>
       <div class="pregunta" id="test-auxilios-pregunta"></div>
       <div id="test-auxilios-opciones"></div>
@@ -207,7 +216,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="sit-urbano-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-urbano" onclick="siguienteSituacion(event,'urbano')" disabled>SIGUIENTE</button>
     </div>
-  </div>
   <div id="sit-carretera" class="sub-content">
     <div class="card">
       <h2>🛣️ CASOS REALES - CARRETERA</h2>
@@ -261,14 +269,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   </div>
 </div>
 
-<div id="tab-garaje" class="tab-content">
-  <div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div></div>
-</div>
-
-<div id="tab-tienda" class="tab-content">
-  <div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div>
-</div>
-
 <div id="tab-tips" class="tab-content">
   <div class="card"><h2>💡 CONSEJO DGT</h2><div id="tip-content"></div>
     <div style="display:flex;gap:10px;margin-top:15px">
@@ -279,23 +279,24 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   </div>
 </div>
 
-<div id="tab-temario" class="tab-content">
-  <div class="card">
-    <h2>📖 TEMARIOS OFICIALES</h2>
-    <p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT</p>
-    <div id="temario-lista"></div>
-  </div>
+<div id="tab-garaje" class="tab-content">
+  <div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div></div>
 </div>
 
+<div id="tab-tienda" class="tab-content">
+  <div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div>
+</div>
+
+<!-- MENÚ INFERIOR REORDENADO: TEMARIO → TEST → CASOS → EXAMEN → PROGRESO → TIPS → GARAJE → TIENDA -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
+  <button class="tab-btn active" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
   <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
   <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
   <button class="tab-btn" onclick="cambiarTab(event,'progreso')"><span class="emoji">📊</span>PROGRESO</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
   <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
 <!-- CRÍTICO: Cargar datos ANTES que App.js -->
