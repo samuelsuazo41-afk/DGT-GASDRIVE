@@ -137,7 +137,7 @@ const TIPS = [
 ];
 
 // 470 PREGUNTAS TEST DGT OFICIALES 2026
-const PREGUNTES = {
+const PREGUNTAS = {
   general: [
     {q:"¿Cuál es la velocidad máxima en zona urbana?",a:["30 km/h","50 km/h","60 km/h"],ok:1},
     {q:"¿Qué indica una luz amarilla intermitente?",a:["Parada total","Precaución","Acelera"],ok:1},
@@ -535,7 +535,7 @@ const PREGUNTES = {
 };
 
 // 160 CASOS REALES DE CONDUCCIÓN
-const SITUACIONS = {
+const SITUACIONES= {
   clima: [
     {q:"Lluvia intensa: ¿qué haces?",a:["Acelero para salir","Reduzco velocidad y aumento distancia","Freno en seco"],ok:1},
     {q:"Niebla espesa:",a:["Luces largas","Antiniebla + cortas","Sin luces"],ok:1},
