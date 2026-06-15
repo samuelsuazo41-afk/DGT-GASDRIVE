@@ -196,6 +196,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="sit-clima-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-clima" onclick="siguienteSituacion(event,'clima')" disabled>SIGUIENTE</button>
     </div>
+  </div>
   <div id="sit-urbano" class="sub-content">
     <div class="card">
       <h2>🏙️ CASOS REALES - URBANO</h2>
@@ -206,6 +207,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="sit-urbano-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-urbano" onclick="siguienteSituacion(event,'urbano')" disabled>SIGUIENTE</button>
     </div>
+  </div>
   <div id="sit-carretera" class="sub-content">
     <div class="card">
       <h2>🛣️ CASOS REALES - CARRETERA</h2>
@@ -216,6 +218,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="sit-carretera-feedback"></div>
       <button class="btn-sig" id="btn-sig-sit-carretera" onclick="siguienteSituacion(event,'carretera')" disabled>SIGUIENTE</button>
     </div>
+  </div>
   <div id="sit-emergencia" class="sub-content">
     <div class="card">
       <h2>🚨 CASOS REALES - EMERGENCIA</h2>
@@ -295,6 +298,9 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <button class="tab-btn" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
+<!-- CRÍTICO: Cargar datos ANTES que App.js -->
+<script src="./PREGUNTAS.js"></script>
+<script src="./SITUACIONES.js"></script>
 <script src="./App.js?v=8.5.1"></script>
 </body>
 </html>
