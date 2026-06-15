@@ -707,93 +707,93 @@ const SITUACIONS = {
 };
 
 // GARAJE - 17 COCHES CON 6 SUPERCOCHES NUEVOS
-const COTXES = [
+const COCHES = [
   // 3 primeros normales, sin filtro
-  {id:'c1',nom:'SEAT Ibiza',emoji:'🚗',preu:200,cv:90,color:''},
-  {id:'c2',nom:'VW Golf GTI',emoji:'🚘',preu:800,cv:220,color:''},
-  {id:'c3',nom:'BMW M3',emoji:'🚙',preu:1500,cv:420,color:''},
+  {id:'c1',nombre:'SEAT Ibiza',emoji:'🚗',precio:200,cv:90,color:''},
+  {id:'c2',nombre:'VW Golf GTI',emoji:'🚘',precio:800,cv:220,color:''},
+  {id:'c3',nombre:'BMW M3',emoji:'🚙',precio:1500,cv:420,color:''},
 
   // Resto con efecto TRON y colores caros
-  {id:'c4',nom:'Tesla Model S',emoji:'⚡',preu:2000,cv:670,color:'hue-rotate(210deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00d4ff)'}, // azul eléctrico
-  {id:'c5',nom:'Porsche 911',emoji:'🏎️',preu:2500,cv:450,color:'hue-rotate(130deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00ff88)'}, // verde esmeralda
-  {id:'c6',nom:'Bugatti Chiron',emoji:'🏎️',preu:5000,cv:1500,color:'hue-rotate(200deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00c8ff)'}, // azul hielo
-  {id:'c7',nom:'Yamaha R1',emoji:'🏍️',preu:2200,cv:200,color:'hue-rotate(55deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 8px #ffdd00)'}, // amarillo oro
-  {id:'c8',nom:'Ducati Panigale',emoji:'🏍️',preu:2800,cv:220,color:'hue-rotate(25deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #ff8800)'}, // naranja intenso
-  {id:'c9',nom:'Audi RS6',emoji:'🏎️',preu:3200,cv:600,color:'hue-rotate(180deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00ffff)'}, // cian
-  {id:'c10',nom:'Nissan GTR',emoji:'🏎️',preu:3500,cv:565,color:'hue-rotate(90deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #88ff00)'}, // verde lima
-  {id:'c11',nom:'McLaren 720S',emoji:'🏎️',preu:4200,cv:720,color:'hue-rotate(15deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #ff6600)'}, // naranja fuego
-  // SUPERCOCHES PREMIO MAYOR con glow más potente
-  {id:'c12',nom:'Ferrari SF90 Stradale',emoji:'🏎️',preu:8500,cv:1000,color:'hue-rotate(0deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #ff0000)'}, // rojo neón
-  {id:'c13',nom:'Lamborghini Aventador SVJ',emoji:'🏎️',preu:8000,cv:770,color:'hue-rotate(55deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #ffdd00)'}, // amarillo oro
-  {id:'c14',nom:'Koenigsegg Jesko Absolut',emoji:'🏎️',preu:14000,cv:1600,color:'hue-rotate(270deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #aa00ff)'},// violeta royal
-  {id:'c15',nom:'Porsche 918 Spyder',emoji:'🏎️',preu:9500,cv:887,color:'hue-rotate(130deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #00ff88)'}, // verde esmeralda
-  {id:'c16',nom:'McLaren P1 GTR',emoji:'🏎️',preu:9000,cv:916,color:'hue-rotate(35deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #ff8800)'}, // naranja neón
-  {id:'c17',nom:'Bugatti Bolide',emoji:'🏎️',preu:16000,cv:1825,color:'hue-rotate(200deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #00d4ff)'} // azul eléctrico
+  {id:'c4',nombre:'Tesla Model S',emoji:'⚡',precio:2000,cv:670,color:'hue-rotate(210deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00d4ff)'}, // azul electrico
+  {id:'c5',nombre:'Porsche 911',emoji:'🏎️',precio:2500,cv:450,color:'hue-rotate(130deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00ff88)'}, // verde esmeralda
+  {id:'c6',nombre:'Bugatti Chiron',emoji:'🏎️',precio:5000,cv:1500,color:'hue-rotate(200deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00c8ff)'}, // azul hielo
+  {id:'c7',nombre:'Yamaha R1',emoji:'🏍️',precio:2200,cv:200,color:'hue-rotate(55deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 8px #ffdd00)'}, // amarillo oro
+  {id:'c8',nombre:'Ducati Panigale',emoji:'🏍️',precio:2800,cv:220,color:'hue-rotate(25deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #ff8800)'}, // naranja intenso
+  {id:'c9',nombre:'Audi RS6',emoji:'🏎️',precio:3200,cv:600,color:'hue-rotate(180deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #00ffff)'}, // cian
+  {id:'c10',nombre:'Nissan GTR',emoji:'🏎️',precio:3500,cv:565,color:'hue-rotate(90deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #88ff00)'}, // verde lima
+  {id:'c11',nombre:'McLaren 720S',emoji:'🏎️',precio:4200,cv:720,color:'hue-rotate(15deg) saturate(2) brightness(1.2) drop-shadow(0 0 6px #ff6600)'}, // naranja fuego
+  // SUPERCOCHES PREMIO MAYOR con glow mas potente
+  {id:'c12',nombre:'Ferrari SF90 Stradale',emoji:'🏎️',precio:8500,cv:1000,color:'hue-rotate(0deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #ff0000)'}, // rojo neon
+  {id:'c13',nombre:'Lamborghini Aventador SVJ',emoji:'🏎️',precio:8000,cv:770,color:'hue-rotate(55deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #ffdd00)'}, // amarillo oro
+  {id:'c14',nombre:'Koenigsegg Jesko Absolut',emoji:'🏎️',precio:14000,cv:1600,color:'hue-rotate(270deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #aa00ff)'},// violeta royal
+  {id:'c15',nombre:'Porsche 918 Spyder',emoji:'🏎️',precio:9500,cv:887,color:'hue-rotate(130deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #00ff88)'}, // verde esmeralda
+  {id:'c16',nombre:'McLaren P1 GTR',emoji:'🏎️',precio:9000,cv:916,color:'hue-rotate(35deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #ff8800)'}, // naranja neon
+  {id:'c17',nombre:'Bugatti Bolide',emoji:'🏎️',precio:16000,cv:1825,color:'hue-rotate(200deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #00d4ff)'} // azul electrico
 ];
 
-const ACCESSORIS = [
-  // Mecánica / Potencia
-  {id:'a1',nom:'Turbo',emoji:'💨',preu:300,hp:50},
-  {id:'a2',nom:'Nitro',emoji:'🔥',preu:600,hp:80},
-  {id:'a3',nom:'Motor Eléctrico',emoji:'⚡',preu:800,hp:100},
-  {id:'a4',nom:'Kit Mecánico',emoji:'🛠️',preu:400,hp:40},
-  {id:'a5',nom:'Herramientas Racing',emoji:'🔧',preu:250,hp:20},
-  {id:'a6',nom:'Cadena Reforzada',emoji:'⛓️',preu:350,hp:30},
-  {id:'a7',nom:'Engranajes Sport',emoji:'⚙️',preu:300,hp:25},
-  {id:'a8',nom:'Tornillos Racing',emoji:'🔩',preu:200,hp:15},
+const ACCESORIOS = [
+  // Mecanica / Potencia
+  {id:'a1',nombre:'Turbo',emoji:'💨',precio:300,hp:50},
+  {id:'a2',nombre:'Nitro',emoji:'🔥',precio:600,hp:80},
+  {id:'a3',nombre:'Motor Electrico',emoji:'⚡',precio:800,hp:100},
+  {id:'a4',nombre:'Kit Mecanico',emoji:'🛠️',precio:400,hp:40},
+  {id:'a5',nombre:'Herramientas Racing',emoji:'🔧',precio:250,hp:20},
+  {id:'a6',nombre:'Cadena Reforzada',emoji:'⛓️',precio:350,hp:30},
+  {id:'a7',nombre:'Engranajes Sport',emoji:'⚙️',precio:300,hp:25},
+  {id:'a8',nombre:'Tornillos Racing',emoji:'🔩',precio:200,hp:15},
 
   // Ruedas / Adherencia
-  {id:'a9',nom:'Neumáticos Slick',emoji:'🛞',preu:400,hp:35},
-  {id:'a10',nom:'Neumáticos Lluvia',emoji:'🛞',preu:350,hp:30},
-  {id:'a11',nom:'Cadenas Nieve',emoji:'❄️',preu:300,hp:25},
-  {id:'a12',nom:'Llantas Racing',emoji:'🔲',preu:500,hp:40},
-  {id:'a13',nom:'Eje Equilibrado',emoji:'🎯',preu:250,hp:20},
+  {id:'a9',nombre:'Neumaticos Slick',emoji:'🛞',precio:400,hp:35},
+  {id:'a10',nombre:'Neumaticos Lluvia',emoji:'🛞',precio:350,hp:30},
+  {id:'a11',nombre:'Cadenas Nieve',emoji:'❄️',precio:300,hp:25},
+  {id:'a12',nombre:'Llantas Racing',emoji:'🔲',precio:500,hp:40},
+  {id:'a13',nombre:'Eje Equilibrado',emoji:'🎯',precio:250,hp:20},
 
-  // Aerodinámica / Exterior
-  {id:'a14',nom:'Alerón GT',emoji:'🔰',preu:400,hp:40},
-  {id:'a15',nom:'Alerón F1',emoji:'🏁',preu:700,hp:70},
-  {id:'a16',nom:'Cristales Tintados',emoji:'🪟',preu:200,hp:10},
-  {id:'a17',nom:'Luces LED',emoji:'💡',preu:250,hp:15},
-  {id:'a18',nom:'Faros Láser',emoji:'🔦',preu:600,hp:50},
-  {id:'a19',nom:'Retrovisor Racing',emoji:'🪞',preu:200,hp:10},
-  {id:'a20',nom:'Defensa Reforzada',emoji:'🛡️',preu:450,hp:35},
+  // Aerodinamica / Exterior
+  {id:'a14',nombre:'Aleron GT',emoji:'🔰',precio:400,hp:40},
+  {id:'a15',nombre:'Aleron F1',emoji:'🏁',precio:700,hp:70},
+  {id:'a16',nombre:'Cristales Tintados',emoji:'🪟',precio:200,hp:10},
+  {id:'a17',nombre:'Luces LED',emoji:'💡',precio:250,hp:15},
+  {id:'a18',nombre:'Faros Laser',emoji:'🔦',precio:600,hp:50},
+  {id:'a19',nom:'Retrovisor Racing',emoji:'🪞',precio:200,hp:10},
+  {id:'a20',nombre:'Defensa Reforzada',emoji:'🛡️',precio:450,hp:35},
 
   // Interior / Piloto
-  {id:'a21',nom:'Asiento Bucket',emoji:'🪑',preu:400,hp:25},
-  {id:'a22',nom:'Volante Racing',emoji:'🎛️',preu:350,hp:20},
-  {id:'a23',nom:'Cuadro Digital',emoji:'📊',preu:500,hp:30},
-  {id:'a24',nom:'Guantes Piloto',emoji:'🧤',preu:150,hp:10},
-  {id:'a25',nom:'Casco Racing',emoji:'🪖',preu:300,hp:15},
-  {id:'a26',nom:'Intercom',emoji:'🎧',preu:250,hp:10},
+  {id:'a21',nombre:'Asiento Bucket',emoji:'🪑',precio:400,hp:25},
+  {id:'a22',nombre:'Volante Racing',emoji:'🎛️',precio:350,hp:20},
+  {id:'a23',nombre:'Cuadro Digital',emoji:'📊',precio:500,hp:30},
+  {id:'a24',nombre:'Guantes Piloto',emoji:'🧤',precio:150,hp:10},
+  {id:'a25',nombre:'Casco Racing',emoji:'🪖',precio:300,hp:15},
+  {id:'a26',nombre:'Intercom',emoji:'🎧',precio:250,hp:10},
 
-  // Estética / Detalles Lujo
-  {id:'a27',nom:'Vinilo Llamas',emoji:'🎨',preu:300,hp:10},
-  {id:'a28',nom:'Vinilo Cromo',emoji:'🌈',preu:500,hp:15},
-  {id:'a29',nom:'Pintura Metalizada',emoji:'✨',preu:600,hp:20},
-  {id:'a30',nom:'Cristales Swarovski',emoji:'💎',preu:1000,hp:5},
-  {id:'a31',nom:'Corona Royal',emoji:'👑',preu:800,hp:10},
-  {id:'a32',nom:'Unicornio',emoji:'🦄',preu:1200,hp:5},
-  {id:'a33',nom:'Cohete',emoji:'🚀',preu:600,hp:15},
-  {id:'a34',nom:'Diamante',emoji:'💎',preu:1200,hp:5},
-  {id:'a35',nom:'Rayo',emoji:'⚡',preu:700,hp:20},
-  {id:'a36',nom:'Fuego',emoji:'🔥',preu:500,hp:15},
+  // Estetica / Detalles Lujo
+  {id:'a27',nombre:'Vinilo Llamas',emoji:'🎨',precio:300,hp:10},
+  {id:'a28',nombre:'Vinilo Cromo',emoji:'🌈',precio:500,hp:15},
+  {id:'a29',nombre:'Pintura Metalizada',emoji:'✨',precio:600,hp:20},
+  {id:'a30',nombre:'Cristales Swarovski',emoji:'💎',precio:1000,hp:5},
+  {id:'a31',nombre:'Corona Royal',emoji:'👑',precio:800,hp:10},
+  {id:'a32',nombre:'Unicornio',emoji:'🦄',precio:1200,hp:5},
+  {id:'a33',nombre:'Cohete',emoji:'🚀',precio:600,hp:15},
+  {id:'a34',nombre:'Diamante',emoji:'💎',precio:1200,hp:5},
+  {id:'a35',nombre:'Rayo',emoji:'⚡',precio:700,hp:20},
+  {id:'a36',nombre:'Fuego',emoji:'🔥',precio:500,hp:15},
 
-  // Útiles / Safety
-  {id:'a37',nom:'Extintor',emoji:'🧯',preu:200,hp:5},
-  {id:'a38',nom:'Triángulo Emergencia',emoji:'🔺',preu:150,hp:5},
-  {id:'a39',nom:'Chaleco Reflectante',emoji:'🦺',preu:150,hp:5},
-  {id:'a40',nom:'Powerbank Coche',emoji:'🔋',preu:200,hp:5},
-  {id:'a41',nom:'Soporte Móvil',emoji:'📱',preu:180,hp:5},
-  {id:'a42',nom:'Dashcam',emoji:'🎥',preu:400,hp:10}
+  // Utiles / Safety
+  {id:'a37',nombre:'Extintor',emoji:'🧯',precio:200,hp:5},
+  {id:'a38',nombre:'Triangulo Emergencia',emoji:'🔺',precio:150,hp:5},
+  {id:'a39',nombre:'Chaleco Reflectante',emoji:'🦺',precio:150,hp:5},
+  {id:'a40',nombre:'Powerbank Coche',emoji:'🔋',precio:200,hp:5},
+  {id:'a41',nombre:'Soporte Movil',emoji:'📱',precio:180,hp:5},
+  {id:'a42',nombre:'Dashcam',emoji:'🎥',precio:400,hp:10}
 ];
 
-const EMOJI_BOTIGA = [
-  {id:'e1',emoji:'🦄',nom:'Unicornio',preu:1000},
-  {id:'e2',emoji:'👑',nom:'Corona',preu:800},
-  {id:'e3',emoji:'💎',nom:'Diamante',preu:1200},
-  {id:'e4',emoji:'🚀',nom:'Cohete',preu:600},
-  {id:'e5',emoji:'🔥',nom:'Fuego',preu:500},
-  {id:'e6',emoji:'⚡',nom:'Rayo',preu:700}
+const EMOJI_TIENDA = [
+  {id:'e1',emoji:'🦄',nombre:'Unicornio',precio:1000},
+  {id:'e2',emoji:'👑',nombre:'Corona',precio:800},
+  {id:'e3',emoji:'💎',nombre:'Diamante',precio:1200},
+  {id:'e4',emoji:'🚀',nombre:'Cohete',precio:600},
+  {id:'e5',emoji:'🔥',nombre:'Fuego',precio:500},
+  {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
 // ===== ESTADO =====
