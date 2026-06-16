@@ -79,9 +79,8 @@ const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','�
 
 // INTRO SCREEN - APARECE SIEMPRE AL ABRIR
 function mostrarIntro(){
-  // Quitamos el check de localStorage para que salga siempre
   document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
       <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026</h1>
       <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
@@ -102,38 +101,46 @@ function tancarIntro() {
   if(intro) intro.remove();
 }
 
-// === NUEVO V8.5: FUNCIONES HELPER PARA BLOQUE 2 ===
-// Estas 3 funciones preparan el terreno para que el Bloque 2 enganche imágenes + explicaciones
+// === NUEVO V8.5: FUNCIONES HELPER PARA IMAGEN + REFUERZO ===
+// Estas 3 funciones son el cableado que usará el Bloque 2
 
-// 1. Pinta la imagen si existe en IMAGENES
+// 1. PINTA IMAGEN: Se llama al cargar pregunta. Busca en IMAGENES con clave exacta
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
+  // CLAVE: p.q debe ser idéntica a la clave en imagenes.js
   const rutaImg = (typeof IMAGENES!== 'undefined' && IMAGENES[preguntaTexto])? IMAGENES[preguntaTexto].trim() : '';
-  imgCont.innerHTML = rutaImg? `<img src="${rutaImg}" onerror="this.parentElement.innerHTML=''" style="max-width:100%;border-radius:8px;margin:10px auto;display:block;border:2px solid #333">` : '';
+  if (rutaImg!== '') {
+    imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML=''" style="max-width:100%;border-radius:8px;margin:10px auto;display:block;border:2px solid #333">`;
+  } else {
+    imgCont.innerHTML = ''; // Si no hay imagen, deja el hueco vacío
+  }
 }
 
-// 2. Pinta la explicación si existe en EXPLICACIONES
+// 2. PINTA EXPLICACIÓN/REFUERZO: Se llama al responder. Aparece debajo del feedback
 function pintarExplicacionTest(cat, preguntaTexto) {
   const feedback = document.getElementById(`test-${cat}-feedback`);
   const expVieja = document.getElementById(`exp-${cat}`);
-  if (expVieja) expVieja.remove();
+  if (expVieja) expVieja.remove(); // Limpia la anterior
 
   if (typeof EXPLICACIONES!== 'undefined' && EXPLICACIONES[preguntaTexto]) {
     const exp = EXPLICACIONES[preguntaTexto];
     const expDiv = document.createElement('div');
     expDiv.id = `exp-${cat}`;
     expDiv.style.cssText = 'background:#1a1a2e;padding:12px;border-radius:8px;margin-top:10px;font-size:13px;color:#00D9FF;text-align:left;border-left:3px solid #00D9FF';
+    
     if (exp.motivo) {
+      // Formato nuevo: {motivo, refuerzo, pdf, pag}
       expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp.motivo}<br><span style="color:#999;font-size:11px">${exp.refuerzo} - ${exp.pdf} Pág ${exp.pag}</span>`;
     } else {
+      // Formato viejo: string directo
       expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp}`;
     }
-    feedback.after(expDiv);
+    feedback.after(expDiv); // La pinta justo debajo del FALLO/ACIERTO
   }
 }
 
-// 3. Limpia explicación al cambiar pregunta
+// 3. LIMPIA EXPLICACIÓN: Se llama al cargar nueva pregunta
 function limpiarExplicacionTest(cat) {
   const expVieja = document.getElementById(`exp-${cat}`);
   if (expVieja) expVieja.remove();
