@@ -1118,12 +1118,12 @@ let estado = {
   accesorios: JSON.parse(localStorage.getItem('gd_accesorios')) || [],
   emojis: JSON.parse(localStorage.getItem('gd_emojis')) || [],
   test: {
-    general: {idx:0,aciertos:0,racha:0,puntuacion:0},
-    senales: {idx:0,aciertos:0,racha:0,puntuacion:0},
-    normas: {idx:0,aciertos:0,racha:0,puntuacion:0},
-    mecanica: {idx:0,aciertos:0,racha:0,puntuacion:0},
-    auxilios: {idx:0,aciertos:0,racha:0,puntuacion:0},
-    medioambiente: {idx:0,aciertos:0,racha:0,puntuacion:0}
+    general: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
+    senales: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
+    normas: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
+    mecanica: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
+    auxilios: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
+    medioambiente: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null}
   },
   examen: {
     activa: false,
@@ -1158,17 +1158,10 @@ function init() {
   console.log("EXPLICACIONES:", typeof EXPLICACIONES!== 'undefined'? 'OK' : 'FALTA');
   console.log("IMAGENES:", typeof IMAGENES!== 'undefined'? 'OK' : 'FALTA');
 
-  // 1. Mostrar intro SIEMPRE al abrir
   mostrarIntro();
-
-  // 2. Cargar datos básicos
   actualizarCoins();
   actualizarMensajeMotivacional();
-
-  // 3. CARGAR TEMARIO POR DEFECTO - Así al quitar la intro ya está todo listo
   cargarTemario();
-
-  // 4. Precargar solo la primera pregunta de test para que vaya rápido cuando cambies de tab
   if(typeof PREGUNTAS!== 'undefined') {
     cargarPregunta('general');
   }
@@ -1261,18 +1254,18 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// === CARGAR PREGUNTA BLINDADA CON IMÁGENES ===
+// === CARGAR PREGUNTA CON IMAGEN ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
   let preguntas;
 
   if (cat === 'general') {
     preguntas = barajarArray([
-   ...PREGUNTAS.senales,
-   ...PREGUNTAS.normas,
-   ...PREGUNTAS.mecanica,
-   ...PREGUNTAS.auxilios,
-   ...PREGUNTAS.medioambiente
+  ...PREGUNTAS.senales,
+  ...PREGUNTAS.normas,
+  ...PREGUNTAS.mecanica,
+  ...PREGUNTAS.auxilios,
+  ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1290,18 +1283,9 @@ function cargarPregunta(cat) {
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // === CARGAR IMAGEN CON PROTECCIÓN TOTAL ===
-  const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if (imgCont) {
-    // BLINDAJE: Solo pinta si existe en IMAGENES y no está vacío
-    const rutaImg = (typeof IMAGENES!== 'undefined' && IMAGENES[p.q])? IMAGENES[p.q].trim() : '';
-
-    if (rutaImg!== '') {
-      imgCont.innerHTML = `<img src="${rutaImg}" style="max-width:100%;border-radius:8px;margin:10px 0;display:block" onerror="this.parentElement.innerHTML=''">`;
-    } else {
-      imgCont.innerHTML = ''; // No hay imagen = no pinta nada, cero iconos rotos
-    }
-  }
+  // NUEVO V8.5: PINTA IMAGEN AL CARGAR
+  pintarImagenTest(cat, p.q);
+  limpiarExplicacionTest(cat); // Limpia explicación anterior
 
   document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`test-${cat}-racha`).textContent = s.racha;
@@ -1320,6 +1304,7 @@ function cargarPregunta(cat) {
   });
 }
 
+// === RESPONDER CON EXPLICACIÓN ===
 function responderTest(cat, idx, el) {
   const s = estado.test[cat];
   const p = s.current;
@@ -1345,22 +1330,10 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // MOSTRAR EXPLICACIÓN SI EXISTE - COMPATIBLE CON TU FORMATO {motivo, refuerzo, pdf, pag}
-  try {
-    if (typeof EXPLICACIONES!== 'undefined' && EXPLICACIONES[p.q]) {
-      const exp = EXPLICACIONES[p.q];
-      const expDiv = document.createElement('div');
-      expDiv.style.cssText = 'background:#1a1a2e;padding:12px;border-radius:8px;margin-top:10px;font-size:13px;color:#00D9FF;text-align:left';
-      if (exp.motivo) {
-        expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp.motivo}<br><span style="color:#999;font-size:11px">${exp.refuerzo} - ${exp.pdf} Pág ${exp.pag}</span>`;
-      } else {
-        expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp}`;
-      }
-      document.getElementById(`test-${cat}-feedback`).after(expDiv);
-    }
-  } catch(e) { console.log('Error explicación:', e); }
+  // NUEVO V8.5: PINTA EXPLICACIÓN AL RESPONDER
+  pintarExplicacionTest(cat, p.q);
 
-  // === REGISTRAR PROGRESO DGT ===
+  // REGISTRAR PROGRESO DGT
   const idPregunta = p.q.substring(0, 50);
   PROGRESO.tests[cat].total++;
   if(correcto) PROGRESO.tests[cat].aciertos++;
@@ -1378,6 +1351,9 @@ function siguienteTest(e, cat) {
   cargarPregunta(cat);
 }
 
+// ===== CONTINUACIÓN BLOQUE 2 =====
+
+// === SITUACIONES / CASOS REALES ===
 function cargarSituacion(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estado.sit[cat];
@@ -1432,7 +1408,7 @@ function responderSituacion(cat, idx, el) {
     mostrarEmoji(false, el);
   }
 
-  // === REGISTRAR PROGRESO CASOS ===
+  // REGISTRAR PROGRESO CASOS
   const idCaso = p.q.substring(0, 50);
   PROGRESO.casos[cat].total++;
   if(correcto) PROGRESO.casos[cat].aciertos++;
@@ -1450,13 +1426,14 @@ function siguienteSituacion(e, cat) {
   cargarSituacion(cat);
 }
 
+// === EXAMEN OFICIAL ===
 function iniciarExamen(e) {
   const todas = [
-   ...PREGUNTAS.senales,
-   ...PREGUNTAS.normas,
-   ...PREGUNTAS.mecanica,
-   ...PREGUNTAS.auxilios,
-   ...PREGUNTAS.medioambiente
+ ...PREGUNTAS.senales,
+ ...PREGUNTAS.normas,
+ ...PREGUNTAS.mecanica,
+ ...PREGUNTAS.auxilios,
+ ...PREGUNTAS.medioambiente
   ];
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 minimo.');
@@ -1551,7 +1528,7 @@ function finalizarExamen() {
   const res = document.getElementById('examen-resultado');
   res.style.display = 'block';
 
-  // === REGISTRAR EXAMEN EN PROGRESO ===
+  // REGISTRAR EXAMEN EN PROGRESO
   PROGRESO.examenes.realizados++;
   PROGRESO.examenes.historial.push(nota);
   if(aprobado) PROGRESO.examenes.aprobados++;
@@ -1591,6 +1568,7 @@ function reiniciarExamen() {
   document.getElementById('examen-timer').textContent = '30:00';
 }
 
+// === GARAJE ===
 function cargarGaraje() {
   const cont = document.getElementById('garage-lista');
   cont.innerHTML = '';
@@ -1628,6 +1606,7 @@ function comprarCoche(id) {
   cargarGaraje();
 }
 
+// === TIENDA ===
 function cargarTienda() {
   const cont = document.getElementById('emoji-tienda');
   cont.innerHTML = '';
@@ -1691,6 +1670,7 @@ function comprarEmoji(id) {
   cargarTienda();
 }
 
+// === TIPS ===
 function cargarTips() {
   tipsData = TIPS;
   currentTip = 0;
@@ -1717,6 +1697,7 @@ function prevTip(e) {
   mostrarTip();
 }
 
+// === TEMARIO ===
 function cargarTemario() {
   const container = document.getElementById('temario-lista');
   container.innerHTML = `
@@ -1748,12 +1729,9 @@ function cargarTemario() {
   `;
 }
 
-// === NUEVO: GESTIÓN DE TIEMPO EN TEMARIOS ===
 function abrirPDF(id) {
   const temario = PROGRESO.temarios[id];
   if (!temario) return;
-
-  // Marca cuando entra
   temario.ultimaEntrada = Date.now();
   guardarProgreso();
 
@@ -1769,11 +1747,11 @@ function abrirPDF(id) {
   modal.id = 'pdf-modal';
   modal.style.cssText = `
     position:fixed;top:0;left:0;right:0;bottom:0;
-    background:#0a;z-index:9999;
+    background:#0a0a0a;z-index:9999;
     display:flex;flex-direction:column;
   `;
   modal.innerHTML = `
-    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
+    <div style="background:#1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
       <button onclick="cerrarPDF('${id}')" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
       <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
       <div style="width:60px"></div>
@@ -1786,49 +1764,38 @@ function abrirPDF(id) {
 function cerrarPDF(id) {
   const temario = PROGRESO.temarios[id];
   if (!temario ||!temario.ultimaEntrada) return;
-
-  // Calcula tiempo dedicado en segundos
   const tiempoSesion = Math.floor((Date.now() - temario.ultimaEntrada) / 1000);
   temario.tiempo += tiempoSesion;
-
-  // 100% por temario = 170 min = 10200 segundos
   temario.porcentaje = Math.min(100, Math.floor((temario.tiempo / 10200) * 100));
-
   temario.ultimaEntrada = 0;
   guardarProgreso();
-
   const modal = document.getElementById('pdf-modal');
   if(modal) modal.remove();
   document.body.classList.remove('menu-open');
-
   if(document.getElementById('tab-progreso').classList.contains('active')) {
     pintarProgreso();
   }
 }
 
-// ===== TAB PROGRESO - AUTOESCUELA ONLINE CON MENSAJES INTELIGENTES =====
+// === PROGRESO - AUTOESCUELA ONLINE ===
 function pintarProgreso() {
   const contenedor = document.getElementById('progreso-lista');
   if(!contenedor) return;
 
-  // === TESTS ===
   const testsTotal = 630;
   let testsUnicas = 0;
   Object.values(PROGRESO.tests).forEach(t => testsUnicas += t.unicas.length);
   const pctTests = Math.min(100, Math.floor((testsUnicas / testsTotal) * 100));
 
-  // === CASOS ===
   const casosTotal = 80;
   let casosUnicas = 0;
   Object.values(PROGRESO.casos).forEach(c => casosUnicas += c.unicas.length);
   const pctCasos = Math.min(100, Math.floor((casosUnicas / casosTotal) * 100));
 
-  // === EXÁMENES ===
   const ex = PROGRESO.examenes;
   let pctExamen = ex.realizados >= 3? Math.round((ex.aprobados / ex.realizados) * 100) : 0;
   if (ex.historial.slice(-3).every(n => n >= 27)) pctExamen = Math.min(100, pctExamen + 10);
 
-  // === TEMARIOS - 100% = 2h 50min POR TEMARIO = 14h 10min TOTAL ===
   const temariosData = PROGRESO.temarios;
   const tiempoTotalTemarios =
     temariosData.senales.tiempo +
@@ -1836,21 +1803,16 @@ function pintarProgreso() {
     temariosData.mecanica.tiempo +
     temariosData.auxilios.tiempo +
     temariosData.medioambiente.tiempo;
-
-  // 5 temarios x 170 min = 850 min = 51000 segundos = 100%
   const pctTemarios = Math.min(100, Math.floor((tiempoTotalTemarios / 51000) * 100));
 
-  // === TOTAL GLOBAL ===
   const pctTotal = Math.floor((pctTests + pctCasos + pctExamen + pctTemarios) / 4);
 
   document.getElementById('progreso-total').textContent = pctTotal + '%';
   document.getElementById('progreso-total-bar').style.width = pctTotal + '%';
 
-  // === MENSAJE INTELIGENTE MEJORADO CON PÁGINAS ===
   let msg = '';
   if (pctTotal < 50) msg = 'Empieza por los Tests. Domina lo básico';
   else if (pctTotal < 70) {
-    // Busca la categoría más débil y muestra el subtema específico
     let catDebil = '', minPct = 100;
     const nombres = {general:'General', senales:'Señales', normas:'Normas', mecanica:'Mecánica', auxilios:'Auxilios', medioambiente:'Medio Ambiente'};
     Object.keys(PROGRESO.tests).forEach(k => {
@@ -1858,8 +1820,6 @@ function pintarProgreso() {
       const pct = t.total? Math.round((t.aciertos / t.total) * 100) : 0;
       if (pct < minPct && t.total >= 5) { minPct = pct; catDebil = k; }
     });
-
-    // Busca el mensaje específico del subtema débil
     if (catDebil && SUBTEMAS_DEBILES[catDebil]) {
       const subtemas = SUBTEMAS_DEBILES[catDebil];
       let subMsg = subtemas.find(s => minPct >= s.pct) || subtemas[0];
@@ -1872,10 +1832,8 @@ function pintarProgreso() {
   else msg = '¡PREPARADO! Ya puedes presentarte a la DGT';
   document.getElementById('progreso-mensaje').textContent = msg;
 
-  // BOTÓN DGT
   document.getElementById('btn-dgt-oficial').disabled = pctTotal < 80;
 
-   // DETALLE TIEMPO
   const tiempoSenales = Math.floor(temariosData.senales.tiempo / 60);
   const tiempoNormas = Math.floor(temariosData.normas.tiempo / 60);
   const tiempoMecanica = Math.floor(temariosData.mecanica.tiempo / 60);
@@ -1884,17 +1842,13 @@ function pintarProgreso() {
   const tiempoTotalHoras = Math.floor(tiempoTotalTemarios / 3600);
   const tiempoTotalMin = Math.floor((tiempoTotalTemarios % 3600) / 60);
 
-   // === MENSAJES INDIVIDUALES POR TEST CON PÁGINAS ===
   function getMensajeTest(cat) {
     const t = PROGRESO.tests[cat];
     if (t.total < 5) return '';
     const pct = Math.round((t.aciertos / t.total) * 100);
     if (pct >= 85) return '<div style="font-size:11px;color:#2ecc71;margin-top:4px">✓ Dominado</div>';
-
     const subtemas = SUBTEMAS_DEBILES[cat];
     if (!subtemas) return '';
-
-    // Busca el mensaje que corresponde al porcentaje actual
     let subMsg = subtemas.find(s => pct >= s.pct) || subtemas[0];
     return `<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: ${subMsg.msg}</div>`;
   }
@@ -1928,7 +1882,7 @@ function pintarProgreso() {
       <p style="font-size:11px;color:#666;margin:4px 0 0">
         Total: ${tiempoTotalHoras}h ${tiempoTotalMin}min / 14h 10min
       </p>
-      <p style="font-size:10px;color:#555;margin:2px 0 0">
+      <p style="font-size:10px;color:#555;margin:2px 0">
         Señ: ${tiempoSenales}m | Nor: ${tiempoNormas}m | Mec: ${tiempoMecanica}m | Aux: ${tiempoAuxilios}m | Med: ${tiempoMedio}m
       </p>
     </div>
@@ -1949,8 +1903,8 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-     .then(reg => console.log('SW registrado'))
-     .catch(err => console.log('SW error:', err));
+   .then(reg => console.log('SW registrado'))
+   .catch(err => console.log('SW error:', err));
   });
 } 
 
