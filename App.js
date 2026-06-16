@@ -1224,17 +1224,18 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
+// === CARGAR PREGUNTA BLINDADA CON IMÁGENES ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
   let preguntas;
 
   if (cat === 'general') {
     preguntas = barajarArray([
-    ...PREGUNTAS.senales,
-    ...PREGUNTAS.normas,
-    ...PREGUNTAS.mecanica,
-    ...PREGUNTAS.auxilios,
-    ...PREGUNTAS.medioambiente
+   ...PREGUNTAS.senales,
+   ...PREGUNTAS.normas,
+   ...PREGUNTAS.mecanica,
+   ...PREGUNTAS.auxilios,
+   ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1252,18 +1253,16 @@ function cargarPregunta(cat) {
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // CARGAR IMAGEN SI EXISTE CON PROTECCIÓN
+  // === CARGAR IMAGEN CON PROTECCIÓN TOTAL ===
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (imgCont) {
-    try {
-      if (typeof IMAGENES!== 'undefined' && IMAGENES[p.q]) {
-        imgCont.innerHTML = `<img src="${IMAGENES[p.q]}" style="max-width:100%;border-radius:8px;margin:10px 0;display:block">`;
-      } else {
-        imgCont.innerHTML = '';
-      }
-    } catch(e) {
-      console.log('Error imagen:', e);
-      imgCont.innerHTML = '';
+    // BLINDAJE: Solo pinta si existe en IMAGENES y no está vacío
+    const rutaImg = (typeof IMAGENES!== 'undefined' && IMAGENES[p.q])? IMAGENES[p.q].trim() : '';
+
+    if (rutaImg!== '') {
+      imgCont.innerHTML = `<img src="${rutaImg}" style="max-width:100%;border-radius:8px;margin:10px 0;display:block" onerror="this.parentElement.innerHTML=''">`;
+    } else {
+      imgCont.innerHTML = ''; // No hay imagen = no pinta nada, cero iconos rotos
     }
   }
 
@@ -1416,11 +1415,11 @@ function siguienteSituacion(e, cat) {
 
 function iniciarExamen(e) {
   const todas = [
-...PREGUNTAS.general,
-...PREGUNTAS.senales,
-...PREGUNTAS.normas,
-...PREGUNTAS.mecanica,
-...SITUACIONES.clima
+   ...PREGUNTAS.senales,
+   ...PREGUNTAS.normas,
+   ...PREGUNTAS.mecanica,
+   ...PREGUNTAS.auxilios,
+   ...PREGUNTAS.medioambiente
   ];
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 minimo.');
@@ -1733,11 +1732,11 @@ function abrirPDF(id) {
   modal.id = 'pdf-modal';
   modal.style.cssText = `
     position:fixed;top:0;left:0;right:0;bottom:0;
-    background:#0a0a0a;z-index:9999;
+    background:#0a;z-index:9999;
     display:flex;flex-direction:column;
   `;
   modal.innerHTML = `
-    <div style="background:#1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
+    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
       <button onclick="cerrarPDF('${id}')" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
       <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
       <div style="width:60px"></div>
@@ -1826,7 +1825,7 @@ function pintarProgreso() {
     // Busca el mensaje específico del subtema débil
     if (catDebil && SUBTEMAS_DEBILES[catDebil]) {
       const subtemas = SUBTEMAS_DEBILES[catDebil];
-      let subMsg = subtemas.find(s => minPct >= s.pct) || subtemas[subtemas.length - 1];
+      let subMsg = subtemas.find(s => minPct >= s.pct) || subtemas[0];
       msg = `⚠️ Repasa: ${subMsg.msg}`;
     } else {
       msg = `Refuerza ${nombres[catDebil] || catDebil}: ${minPct}% acierto`;
@@ -1913,11 +1912,10 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-.then(reg => console.log('SW registrado'))
-.catch(err => console.log('SW error:', err));
+     .then(reg => console.log('SW registrado'))
+     .catch(err => console.log('SW error:', err));
   });
-}
-
+} 
 
 
 
