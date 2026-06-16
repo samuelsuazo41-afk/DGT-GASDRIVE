@@ -1269,11 +1269,11 @@ function cargarPregunta(cat) {
 
   if (cat === 'general') {
     preguntas = barajarArray([
-     ...PREGUNTAS.senales,
-     ...PREGUNTAS.normas,
-     ...PREGUNTAS.mecanica,
-     ...PREGUNTAS.auxilios,
-     ...PREGUNTAS.medioambiente
+    ...PREGUNTAS.senales,
+    ...PREGUNTAS.normas,
+    ...PREGUNTAS.mecanica,
+    ...PREGUNTAS.auxilios,
+    ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1291,7 +1291,7 @@ function cargarPregunta(cat) {
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // PINTA IMAGEN - CLAVE EXACTA
+  // NUEVO V8.5: PINTA IMAGEN AL CARGAR
   pintarImagenTest(cat, p.q);
   limpiarExplicacionTest(cat);
 
@@ -1338,7 +1338,7 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // PINTA EXPLICACIÓN
+  // NUEVO V8.5: PINTA EXPLICACIÓN DGT
   pintarExplicacionTest(cat, p.q);
 
   // REGISTRAR PROGRESO DGT
@@ -1434,11 +1434,11 @@ function siguienteSituacion(e, cat) {
 // === EXAMEN ===
 function iniciarExamen(e) {
   const todas = [
-   ...PREGUNTAS.senales,
-   ...PREGUNTAS.normas,
-   ...PREGUNTAS.mecanica,
-   ...PREGUNTAS.auxilios,
-   ...PREGUNTAS.medioambiente
+  ...PREGUNTAS.senales,
+  ...PREGUNTAS.normas,
+  ...PREGUNTAS.mecanica,
+  ...PREGUNTAS.auxilios,
+  ...PREGUNTAS.medioambiente
   ];
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 minimo.');
@@ -1468,7 +1468,6 @@ function iniciarTimerExamen() {
     if(estado.examen.tiempo <= 0) finalizarExamen();
   }, 1000);
 }
-
 
 function cargarPreguntaExamen() {
   if(estado.examen.index >= 30) return finalizarExamen();
@@ -1534,7 +1533,6 @@ function finalizarExamen() {
   const res = document.getElementById('examen-resultado');
   res.style.display = 'block';
 
-  // REGISTRAR EXAMEN EN PROGRESO
   PROGRESO.examenes.realizados++;
   PROGRESO.examenes.historial.push(nota);
   if(aprobado) PROGRESO.examenes.aprobados++;
@@ -1909,10 +1907,11 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-   .then(reg => console.log('SW registrado'))
-   .catch(err => console.log('SW error:', err));
+  .then(reg => console.log('SW registrado'))
+  .catch(err => console.log('SW error:', err));
   });
-} 
+}
+
 
 
 
