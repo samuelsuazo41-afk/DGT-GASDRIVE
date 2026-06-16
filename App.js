@@ -81,7 +81,7 @@ const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','�
 function mostrarIntro(){
   // Quitamos el check de localStorage para que salga siempre
   document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
       <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026</h1>
       <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
@@ -1186,7 +1186,7 @@ function cambiarSubTab(e, tab, subtab) {
 
 function cambiarCategoriaSit(cat) {
   sitCategoriaActiva = cat;
-  document.querySelectorAll('#tab-situaciones.category-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
   event.target.classList.add('active');
   const titulos = {
     clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
@@ -1224,19 +1224,17 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// === CAMBIO 1: BOTÓN GENERAL JUNTA LOS 5 ARRAYS ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
   let preguntas;
 
-  // SOLO ESTE IF ES NUEVO - EL RESTO IGUAL
   if (cat === 'general') {
     preguntas = barajarArray([
-     ...PREGUNTAS.senales,
-     ...PREGUNTAS.normas,
-     ...PREGUNTAS.mecanica,
-     ...PREGUNTAS.auxilios,
-     ...PREGUNTAS.medioambiente
+    ...PREGUNTAS.senales,
+    ...PREGUNTAS.normas,
+    ...PREGUNTAS.mecanica,
+    ...PREGUNTAS.auxilios,
+    ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1254,12 +1252,17 @@ function cargarPregunta(cat) {
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // === CAMBIO 2: CARGAR IMAGEN SI EXISTE ===
+  // CARGAR IMAGEN SI EXISTE CON PROTECCIÓN
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (imgCont) {
-    if (typeof IMAGENES!== 'undefined' && IMAGENES[p.q]) {
-      imgCont.innerHTML = `<img src="${IMAGENES[p.q]}" style="max-width:100%;border-radius:8px;margin:10px 0;display:block">`;
-    } else {
+    try {
+      if (typeof IMAGENES!== 'undefined' && IMAGENES[p.q]) {
+        imgCont.innerHTML = `<img src="${IMAGENES[p.q]}" style="max-width:100%;border-radius:8px;margin:10px 0;display:block">`;
+      } else {
+        imgCont.innerHTML = '';
+      }
+    } catch(e) {
+      console.log('Error imagen:', e);
       imgCont.innerHTML = '';
     }
   }
@@ -1306,13 +1309,20 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // === CAMBIO 3: MOSTRAR EXPLICACIÓN SI EXISTE ===
-  if (typeof EXPLICACIONES!== 'undefined' && EXPLICACIONES[p.q]) {
-    const expDiv = document.createElement('div');
-    expDiv.style.cssText = 'background:#1a1a2e;padding:12px;border-radius:8px;margin-top:10px;font-size:13px;color:#00D9FF';
-    expDiv.innerHTML = `💡 <b>Explicación:</b> ${EXPLICACIONES[p.q]}`;
-    document.getElementById(`test-${cat}-feedback`).after(expDiv);
-  }
+  // MOSTRAR EXPLICACIÓN SI EXISTE - COMPATIBLE CON TU FORMATO {motivo, refuerzo, pdf, pag}
+  try {
+    if (typeof EXPLICACIONES!== 'undefined' && EXPLICACIONES[p.q]) {
+      const exp = EXPLICACIONES[p.q];
+      const expDiv = document.createElement('div');
+      expDiv.style.cssText = 'background:#1a1a2e;padding:12px;border-radius:8px;margin-top:10px;font-size:13px;color:#00D9FF;text-align:left';
+      if (exp.motivo) {
+        expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp.motivo}<br><span style="color:#999;font-size:11px">${exp.refuerzo} - ${exp.pdf} Pág ${exp.pag}</span>`;
+      } else {
+        expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp}`;
+      }
+      document.getElementById(`test-${cat}-feedback`).after(expDiv);
+    }
+  } catch(e) { console.log('Error explicación:', e); }
 
   // === REGISTRAR PROGRESO DGT ===
   const idPregunta = p.q.substring(0, 50);
@@ -1332,7 +1342,6 @@ function siguienteTest(e, cat) {
   cargarPregunta(cat);
 }
 
-// === RESTO DE FUNCIONES IGUAL - NO TOCAR ===
 function cargarSituacion(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estado.sit[cat];
@@ -1728,7 +1737,7 @@ function abrirPDF(id) {
     display:flex;flex-direction:column;
   `;
   modal.innerHTML = `
-    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
+    <div style="background:#1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
       <button onclick="cerrarPDF('${id}')" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
       <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
       <div style="width:60px"></div>
@@ -1908,7 +1917,6 @@ if('serviceWorker' in navigator) {
 .catch(err => console.log('SW error:', err));
   });
 }
-
 
 
 
