@@ -1118,6 +1118,8 @@ function init() {
   console.log("GasDrive DGT ES V8.5 cargado");
   console.log("PREGUNTAS:", typeof PREGUNTAS!== 'undefined'? 'OK' : 'FALTA');
   console.log("SITUACIONES:", typeof SITUACIONES!== 'undefined'? 'OK' : 'FALTA');
+  console.log("EXPLICACIONES:", typeof EXPLICACIONES!== 'undefined'? 'OK' : 'FALTA');
+  console.log("IMAGENES:", typeof IMAGENES!== 'undefined'? 'OK' : 'FALTA');
 
   // 1. Mostrar intro SIEMPRE al abrir
   mostrarIntro();
@@ -1222,9 +1224,24 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
+// === CAMBIO 1: BOTÓN GENERAL JUNTA LOS 5 ARRAYS ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
-  const preguntas = barajarArray(PREGUNTAS[cat] || []);
+  let preguntas;
+
+  // SOLO ESTE IF ES NUEVO - EL RESTO IGUAL
+  if (cat === 'general') {
+    preguntas = barajarArray([
+     ...PREGUNTAS.senales,
+     ...PREGUNTAS.normas,
+     ...PREGUNTAS.mecanica,
+     ...PREGUNTAS.auxilios,
+     ...PREGUNTAS.medioambiente
+    ]);
+  } else {
+    preguntas = barajarArray(PREGUNTAS[cat] || []);
+  }
+
   if(!preguntas || preguntas.length === 0) {
     document.getElementById(`test-${cat}-pregunta`).textContent = 'No hay preguntas en esta categoria';
     return;
@@ -1236,6 +1253,17 @@ function cargarPregunta(cat) {
   const p = {...pOriginal, a: opcionesBarajadas, ok: nuevoIndexCorrecto};
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
+
+  // === CAMBIO 2: CARGAR IMAGEN SI EXISTE ===
+  const imgCont = document.getElementById(`test-${cat}-imagen`);
+  if (imgCont) {
+    if (typeof IMAGENES!== 'undefined' && IMAGENES[p.q]) {
+      imgCont.innerHTML = `<img src="${IMAGENES[p.q]}" style="max-width:100%;border-radius:8px;margin:10px 0;display:block">`;
+    } else {
+      imgCont.innerHTML = '';
+    }
+  }
+
   document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`test-${cat}-racha`).textContent = s.racha;
   document.getElementById(`test-${cat}-score`).textContent = s.puntuacion;
@@ -1278,6 +1306,14 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
+  // === CAMBIO 3: MOSTRAR EXPLICACIÓN SI EXISTE ===
+  if (typeof EXPLICACIONES!== 'undefined' && EXPLICACIONES[p.q]) {
+    const expDiv = document.createElement('div');
+    expDiv.style.cssText = 'background:#1a1a2e;padding:12px;border-radius:8px;margin-top:10px;font-size:13px;color:#00D9FF';
+    expDiv.innerHTML = `💡 <b>Explicación:</b> ${EXPLICACIONES[p.q]}`;
+    document.getElementById(`test-${cat}-feedback`).after(expDiv);
+  }
+
   // === REGISTRAR PROGRESO DGT ===
   const idPregunta = p.q.substring(0, 50);
   PROGRESO.tests[cat].total++;
@@ -1296,6 +1332,7 @@ function siguienteTest(e, cat) {
   cargarPregunta(cat);
 }
 
+// === RESTO DE FUNCIONES IGUAL - NO TOCAR ===
 function cargarSituacion(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estado.sit[cat];
@@ -1808,10 +1845,10 @@ function pintarProgreso() {
     if (t.total < 5) return '';
     const pct = Math.round((t.aciertos / t.total) * 100);
     if (pct >= 85) return '<div style="font-size:11px;color:#2ecc71;margin-top:4px">✓ Dominado</div>';
-    
+
     const subtemas = SUBTEMAS_DEBILES[cat];
     if (!subtemas) return '';
-    
+
     // Busca el mensaje que corresponde al porcentaje actual
     let subMsg = subtemas.find(s => pct >= s.pct) || subtemas[0];
     return `<div style="font-size:11px;color:#FF9500;margin-top:4px">⚠️ Repasa: ${subMsg.msg}</div>`;
@@ -1871,6 +1908,9 @@ if('serviceWorker' in navigator) {
 .catch(err => console.log('SW error:', err));
   });
 }
+
+
+
 
 
 
