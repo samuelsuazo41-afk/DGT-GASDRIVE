@@ -81,7 +81,7 @@ const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','�
 function mostrarIntro(){
   // Quitamos el check de localStorage para que salga siempre
   document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
       <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026</h1>
       <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
