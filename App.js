@@ -207,7 +207,7 @@ const TIPS = [
   {emoji:'🏆', txt:'¡Tú puedes sacarte el carnet!'}
 ];
 
-// 470 PREGUNTAS TEST DGT OFICIALES 2026
+// 500 PREGUNTAS TEST DGT OFICIALES 2026
 const PREGUNTAS = {
     senales: [
     // === PRIORIDAD R-1 a R-6 === Pág 65-66
