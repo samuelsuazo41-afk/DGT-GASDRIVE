@@ -1,4 +1,4 @@
-const CACHE = 'gasdrive-v15.10.10-es'; // Subo versión para forzar update
+const CACHE = 'gasdrive-v16.1.1-es'; // Subo versión para forzar update
 const FILES = [
   './',
   './index.html',
