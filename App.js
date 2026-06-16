@@ -1108,7 +1108,8 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== ESTADO + LÓGICA =====
+// ===== BLOQUE 2 COMPLETO - CABLEADO IMÁGENES + EXPLICACIONES V8.5 =====
+
 let tipsData = [];
 let currentTip = 0;
 
@@ -1254,18 +1255,18 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// === CARGAR PREGUNTA CON IMAGEN ===
+// === CARGAR PREGUNTA + IMAGEN ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
   let preguntas;
 
   if (cat === 'general') {
     preguntas = barajarArray([
-  ...PREGUNTAS.senales,
-  ...PREGUNTAS.normas,
-  ...PREGUNTAS.mecanica,
-  ...PREGUNTAS.auxilios,
-  ...PREGUNTAS.medioambiente
+     ...PREGUNTAS.senales,
+     ...PREGUNTAS.normas,
+     ...PREGUNTAS.mecanica,
+     ...PREGUNTAS.auxilios,
+     ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1283,9 +1284,9 @@ function cargarPregunta(cat) {
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // NUEVO V8.5: PINTA IMAGEN AL CARGAR
+  // PINTA IMAGEN - CLAVE EXACTA
   pintarImagenTest(cat, p.q);
-  limpiarExplicacionTest(cat); // Limpia explicación anterior
+  limpiarExplicacionTest(cat);
 
   document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`test-${cat}-racha`).textContent = s.racha;
@@ -1304,7 +1305,7 @@ function cargarPregunta(cat) {
   });
 }
 
-// === RESPONDER CON EXPLICACIÓN ===
+// === RESPONDER + EXPLICACIÓN ===
 function responderTest(cat, idx, el) {
   const s = estado.test[cat];
   const p = s.current;
@@ -1330,7 +1331,7 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // NUEVO V8.5: PINTA EXPLICACIÓN AL RESPONDER
+  // PINTA EXPLICACIÓN
   pintarExplicacionTest(cat, p.q);
 
   // REGISTRAR PROGRESO DGT
@@ -1351,9 +1352,7 @@ function siguienteTest(e, cat) {
   cargarPregunta(cat);
 }
 
-// ===== CONTINUACIÓN BLOQUE 2 =====
-
-// === SITUACIONES / CASOS REALES ===
+// === SITUACIONES ===
 function cargarSituacion(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estado.sit[cat];
@@ -1408,7 +1407,6 @@ function responderSituacion(cat, idx, el) {
     mostrarEmoji(false, el);
   }
 
-  // REGISTRAR PROGRESO CASOS
   const idCaso = p.q.substring(0, 50);
   PROGRESO.casos[cat].total++;
   if(correcto) PROGRESO.casos[cat].aciertos++;
@@ -1426,14 +1424,14 @@ function siguienteSituacion(e, cat) {
   cargarSituacion(cat);
 }
 
-// === EXAMEN OFICIAL ===
+// === EXAMEN ===
 function iniciarExamen(e) {
   const todas = [
- ...PREGUNTAS.senales,
- ...PREGUNTAS.normas,
- ...PREGUNTAS.mecanica,
- ...PREGUNTAS.auxilios,
- ...PREGUNTAS.medioambiente
+   ...PREGUNTAS.senales,
+   ...PREGUNTAS.normas,
+   ...PREGUNTAS.mecanica,
+   ...PREGUNTAS.auxilios,
+   ...PREGUNTAS.medioambiente
   ];
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 minimo.');
@@ -1463,6 +1461,7 @@ function iniciarTimerExamen() {
     if(estado.examen.tiempo <= 0) finalizarExamen();
   }, 1000);
 }
+
 
 function cargarPreguntaExamen() {
   if(estado.examen.index >= 30) return finalizarExamen();
