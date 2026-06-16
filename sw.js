@@ -1,4 +1,4 @@
-const CACHE = 'gasdrive-v14.3.3-es'; // subo versión para forzar update
+const CACHE = 'gasdrive-v14.3.4-es'; // Subo versión para forzar update
 const FILES = [
   './',
   './index.html',
@@ -6,12 +6,22 @@ const FILES = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  // PDFs Temario - SIN ACENTOS NI Ñ NI Ç
+  // === NUEVO: Bancos de datos ===
+  './PREGUNTAS.js',
+  './SITUACIONES.js',
+  // === NUEVO: Explicaciones e imágenes ===
+  './assets/explicaciones.js',
+  './assets/imágenes.js', // Si renombras a imagenes.js, cambia esta línea
+  // === PDFs Temario - SIN ACENTOS NI Ñ NI Ç ===
   './01_Senales_Tomo_I_RD_465_2025.pdf',           // PDF 1: Señales
   './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf', // PDF 2: Normas Circulación  
   './03_Manual_IX_Primeros_Auxilios_2025.pdf',        // PDF 3: Primeros Auxilios
   './04_Manual_VIII_Mecanica_2024.pdf',             // PDF 4: Mecánica
   './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'       // PDF 5: Medio Ambiente
+  // === TODAS LAS IMÁGENES DE PREGUNTAS VAN AQUÍ ===
+  // './img/senales/p65_stop.jpg',
+  // './img/senales/p66_ceda.jpg',
+  // etc... añádelas cuando las subas a /img/
 ];
 
 self.addEventListener('install', e => {
@@ -38,4 +48,4 @@ self.addEventListener('fetch', e => {
       if (e.request.mode === 'navigate') return caches.match('./index.html');
     }))
   );
-});
+}); 
