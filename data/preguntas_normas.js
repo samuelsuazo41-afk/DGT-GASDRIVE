@@ -1,5 +1,4 @@
 export const PREGUNTAS_NORMAS = [
-normas: [
     // === ALCOHOL Y DROGAS === Pág 45-48
     {q:"Tasa de alcohol general turismos:",a:["0,5 g/l sangre","0,3 g/l sangre","0,0 g/l sangre"],ok:0},
     {q:"Tasa de alcohol noveles y profesionales:",a:["0,5 g/l","0,3 g/l","0,0 g/l"],ok:2},
