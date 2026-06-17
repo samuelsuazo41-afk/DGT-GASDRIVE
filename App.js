@@ -101,6 +101,19 @@ function tancarIntro() {
   if(intro) intro.remove();
 }
 
+// === NUEVO V8.5: BUSCA CLAVE FLEXIBLE ===
+// Busca aunque falle el ":" o mayúsculas/espacios
+function buscarClave(obj, texto) {
+  if (!obj ||!texto) return null;
+  if (obj[texto]) return obj[texto]; // 1. Exacta
+  const limpio = texto.trim().replace(/:$/, '').toLowerCase();
+  for (let k in obj) {
+    if (k.trim().replace(/:$/, '').toLowerCase() === limpio) return obj[k]; // 2. Flexible
+  }
+  console.log('No encontrada:', texto);
+  return null;
+}
+
 // === NUEVO V8.5: FUNCIONES HELPER PARA IMAGEN + REFUERZO ===
 // Estas 3 funciones usan los contenedores fijos del HTML
 
@@ -108,10 +121,12 @@ function tancarIntro() {
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
-  // CLAVE: preguntaTexto debe ser idéntica a la clave en imagenes.js
-  const rutaImg = (typeof IMAGENES!== 'undefined' && IMAGENES[preguntaTexto])? IMAGENES[preguntaTexto].trim() : '';
-  if (rutaImg!== '') {
-    imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML=''" style="max-width:100%;border-radius:8px;margin:10px auto;display:block;border:2px solid #333">`;
+  
+  const rutaImg = buscarClave(IMAGENES, preguntaTexto);
+  console.log('Buscando imagen:', preguntaTexto, '→', rutaImg);
+  
+  if (rutaImg) {
+    imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML='<div style=color:#666;font-size:12px>📷 Imagen no encontrada</div>'" style="max-width:100%;border-radius:8px;margin:10px auto;display:block;border:2px solid #333">`;
   } else {
     imgCont.innerHTML = ''; // Si no hay imagen, deja el hueco vacío
   }
@@ -121,9 +136,9 @@ function pintarImagenTest(cat, preguntaTexto) {
 function pintarExplicacionTest(cat, preguntaTexto) {
   const expBox = document.getElementById(`test-${cat}-explicacion`);
   if (!expBox) return;
-  
-  if (typeof EXPLICACIONES!== 'undefined' && EXPLICACIONES[preguntaTexto]) {
-    const exp = EXPLICACIONES[preguntaTexto];
+
+  const exp = buscarClave(EXPLICACIONES, preguntaTexto);
+  if (exp) {
     if (exp.motivo) {
       // Formato nuevo: {motivo, refuerzo, pdf, pag}
       expBox.innerHTML = `💡 <b>Explicación DGT:</b> ${exp.motivo}<span>${exp.refuerzo} - ${exp.pdf} Pág ${exp.pag}</span>`;
@@ -142,7 +157,6 @@ function limpiarExplicacionTest(cat) {
   const expBox = document.getElementById(`test-${cat}-explicacion`);
   if (expBox) expBox.classList.remove('visible');
 }
-// === FIN NUEVO V8.5 ===
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
