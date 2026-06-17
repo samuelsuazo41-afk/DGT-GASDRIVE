@@ -102,13 +102,13 @@ function tancarIntro() {
 }
 
 // === NUEVO V8.5: FUNCIONES HELPER PARA IMAGEN + REFUERZO ===
-// Estas 3 funciones son el cableado que usará el Bloque 2
+// Estas 3 funciones usan los contenedores fijos del HTML
 
-// 1. PINTA IMAGEN: Se llama al cargar pregunta. Busca en IMAGENES con clave exacta
+// 1. PINTA IMAGEN: Se llama al cargar pregunta. Usa test-XXX-imagen
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
-  // CLAVE: p.q debe ser idéntica a la clave en imagenes.js
+  // CLAVE: preguntaTexto debe ser idéntica a la clave en imagenes.js
   const rutaImg = (typeof IMAGENES!== 'undefined' && IMAGENES[preguntaTexto])? IMAGENES[preguntaTexto].trim() : '';
   if (rutaImg!== '') {
     imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML=''" style="max-width:100%;border-radius:8px;margin:10px auto;display:block;border:2px solid #333">`;
@@ -117,34 +117,32 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 }
 
-// 2. PINTA EXPLICACIÓN/REFUERZO: Se llama al responder. Aparece debajo del feedback
+// 2. PINTA EXPLICACIÓN/REFUERZO: Usa el contenedor fijo test-XXX-explicacion
 function pintarExplicacionTest(cat, preguntaTexto) {
-  const feedback = document.getElementById(`test-${cat}-feedback`);
-  const expVieja = document.getElementById(`exp-${cat}`);
-  if (expVieja) expVieja.remove(); // Limpia la anterior
-
+  const expBox = document.getElementById(`test-${cat}-explicacion`);
+  if (!expBox) return;
+  
   if (typeof EXPLICACIONES!== 'undefined' && EXPLICACIONES[preguntaTexto]) {
     const exp = EXPLICACIONES[preguntaTexto];
-    const expDiv = document.createElement('div');
-    expDiv.id = `exp-${cat}`;
-    expDiv.style.cssText = 'background:#1a1a2e;padding:12px;border-radius:8px;margin-top:10px;font-size:13px;color:#00D9FF;text-align:left;border-left:3px solid #00D9FF';
-    
     if (exp.motivo) {
       // Formato nuevo: {motivo, refuerzo, pdf, pag}
-      expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp.motivo}<br><span style="color:#999;font-size:11px">${exp.refuerzo} - ${exp.pdf} Pág ${exp.pag}</span>`;
+      expBox.innerHTML = `💡 <b>Explicación DGT:</b> ${exp.motivo}<span>${exp.refuerzo} - ${exp.pdf} Pág ${exp.pag}</span>`;
     } else {
       // Formato viejo: string directo
-      expDiv.innerHTML = `💡 <b>Explicación:</b> ${exp}`;
+      expBox.innerHTML = `💡 <b>Explicación:</b> ${exp}`;
     }
-    feedback.after(expDiv); // La pinta justo debajo del FALLO/ACIERTO
+    expBox.classList.add('visible');
+  } else {
+    expBox.classList.remove('visible');
   }
 }
 
-// 3. LIMPIA EXPLICACIÓN: Se llama al cargar nueva pregunta
+// 3. LIMPIA EXPLICACIÓN: Oculta la caja al cambiar de pregunta
 function limpiarExplicacionTest(cat) {
-  const expVieja = document.getElementById(`exp-${cat}`);
-  if (expVieja) expVieja.remove();
+  const expBox = document.getElementById(`test-${cat}-explicacion`);
+  if (expBox) expBox.classList.remove('visible');
 }
+// === FIN NUEVO V8.5 ===
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
@@ -1269,11 +1267,11 @@ function cargarPregunta(cat) {
 
   if (cat === 'general') {
     preguntas = barajarArray([
-    ...PREGUNTAS.senales,
-    ...PREGUNTAS.normas,
-    ...PREGUNTAS.mecanica,
-    ...PREGUNTAS.auxilios,
-    ...PREGUNTAS.medioambiente
+   ...PREGUNTAS.senales,
+   ...PREGUNTAS.normas,
+   ...PREGUNTAS.mecanica,
+   ...PREGUNTAS.auxilios,
+   ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1434,11 +1432,11 @@ function siguienteSituacion(e, cat) {
 // === EXAMEN ===
 function iniciarExamen(e) {
   const todas = [
-  ...PREGUNTAS.senales,
-  ...PREGUNTAS.normas,
-  ...PREGUNTAS.mecanica,
-  ...PREGUNTAS.auxilios,
-  ...PREGUNTAS.medioambiente
+ ...PREGUNTAS.senales,
+ ...PREGUNTAS.normas,
+ ...PREGUNTAS.mecanica,
+ ...PREGUNTAS.auxilios,
+ ...PREGUNTAS.medioambiente
   ];
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 minimo.');
@@ -1907,8 +1905,8 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-  .then(reg => console.log('SW registrado'))
-  .catch(err => console.log('SW error:', err));
+ .then(reg => console.log('SW registrado'))
+ .catch(err => console.log('SW error:', err));
   });
 }
 
