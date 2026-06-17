@@ -1289,7 +1289,8 @@ function cargarPregunta(cat) {
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // NUEVO V8.5: PINTA IMAGEN AL CARGAR
+  // NUEVO V8.5: PINTA IMAGEN AL CARGAR + DEBUG
+  console.log('Buscando imagen para:', p.q);
   pintarImagenTest(cat, p.q);
   limpiarExplicacionTest(cat);
 
@@ -1336,7 +1337,8 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // NUEVO V8.5: PINTA EXPLICACIÓN DGT
+  // NUEVO V8.5: PINTA EXPLICACIÓN DGT + DEBUG
+  console.log('Buscando explicación para:', p.q);
   pintarExplicacionTest(cat, p.q);
 
   // REGISTRAR PROGRESO DGT
