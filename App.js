@@ -1113,7 +1113,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO - CABLEADO IMÁGENES + EXPLICACIONES V8.5 FIX =====
+// ===== BLOQUE 2 COMPLETO - IMAGEN + EXPLICACIÓN V8.5 FINAL =====
 
 let tipsData = [];
 let currentTip = 0;
@@ -1194,10 +1194,20 @@ function barajarArray(arr) {
   return a;
 }
 
-// NUEVO V8.5 FIX: Normaliza claves para buscar en IMAGENES y EXPLICACIONES
-function normalizarClave(txt) {
-  if (!txt) return '';
-  return txt.trim().replace(/:$/, '').toLowerCase();
+// CLAVE: Normaliza para que coincida aunque falte ":" o haya espacios
+function buscarClave(obj, texto) {
+  if (!obj ||!texto) return null;
+  // 1. Busca exacta
+  if (obj[texto]) return obj[texto];
+  // 2. Busca sin : final
+  const sinDosPuntos = texto.trim().replace(/:$/, '');
+  if (obj[sinDosPuntos]) return obj[sinDosPuntos];
+  // 3. Busca sin : y en minúsculas
+  const normalizada = sinDosPuntos.toLowerCase();
+  for (let k in obj) {
+    if (k.trim().replace(/:$/, '').toLowerCase() === normalizada) return obj[k];
+  }
+  return null;
 }
 
 function cambiarTab(e, tab) {
@@ -1273,11 +1283,11 @@ function cargarPregunta(cat) {
 
   if (cat === 'general') {
     preguntas = barajarArray([
- ...PREGUNTAS.senales,
- ...PREGUNTAS.normas,
- ...PREGUNTAS.mecanica,
- ...PREGUNTAS.auxilios,
- ...PREGUNTAS.medioambiente
+...PREGUNTAS.senales,
+...PREGUNTAS.normas,
+...PREGUNTAS.mecanica,
+...PREGUNTAS.auxilios,
+...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1295,8 +1305,7 @@ function cargarPregunta(cat) {
   s.current = p;
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // NUEVO V8.5: PINTA IMAGEN AL CARGAR + DEBUG
-  console.log('Cargando pregunta:', p.q);
+  // PINTA IMAGEN SIEMPRE - aunque no exista pone placeholder
   pintarImagenTest(cat, p.q);
   limpiarExplicacionTest(cat);
 
@@ -1343,8 +1352,7 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // NUEVO V8.5: PINTA EXPLICACIÓN DGT + DEBUG
-  console.log('Buscando explicación para:', p.q);
+  // PINTA EXPLICACIÓN SIEMPRE
   pintarExplicacionTest(cat, p.q);
 
   // REGISTRAR PROGRESO DGT
@@ -1757,7 +1765,7 @@ function abrirPDF(id) {
   modal.id = 'pdf-modal';
   modal.style.cssText = `
     position:fixed;top:0;left:0;right:0;bottom:0;
-    background:#0a0a0a;z-index:9999;
+    background:#0a;z-index:9999;
     display:flex;flex-direction:column;
   `;
   modal.innerHTML = `
@@ -1916,8 +1924,8 @@ if('serviceWorker' in navigator) {
 .then(reg => console.log('SW registrado'))
 .catch(err => console.log('SW error:', err));
   });
-} 
-
+}
+  
 
 
 
