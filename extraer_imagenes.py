@@ -1,209 +1,75 @@
-import fitz # pip install PyMuPDF
+import fitz # PyMuPDF
 import os
-import re
 
-PDFS = {
-    "01_Senales_Tomo_I_RD_465_2025.pdf": "senales",
-    "02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf": "normas",
-    "03_Manual_IX_Primeros_Auxilios_2025.pdf": "auxilios",
-    "04_Manual_VIII_Mecanica_2024.pdf": "mecanica",
-    "05_Medio_Ambiente_Distintivos_DGT_2025.pdf": "medioambiente"
-}
+PDF_PATH = "01_Senales_Tomo_I_RD_465_2025.pdf"
+OUTPUT_FOLDER = "data/img/senales"
 
-# === CLAVE: MAPEA PREGUNTA EXACTA DE PREGUNTAS.JS → NOMBRE ARCHIVO ===
-# Copia la pregunta EXACTA de tu PREGUNTAS.js como clave
-MAPEO_PREGUNTAS = {
-    # SEÑALES
-    "Señal de STOP octogonal R-2:": "p65_stop",
-    "Triángulo invertido R-1 es:": "p65_ceda_paso",
-    "Señal R-3 calzada con prioridad:": "p66_calzada_prioridad",
-    "Señal R-4 fin de prioridad:": "p66_fin_prioridad",
-    "Señal R-5 prioridad sentido contrario:": "p66_prioridad_contrario",
-    "Señal R-6 prioridad respecto contrario:": "p66_prioridad_respecto",
-    "Círculo rojo con línea R-101:": "p68_prohibido_entrada",
-    "Señal R-102 entrada prohibida vehículos motor:": "p68_prohibido_motor",
-    "Señal R-104 entrada prohibida motos:": "p68_prohibido_motos",
-    "Señal R-105 entrada prohibida camiones:": "p68_prohibido_camiones",
-    "Señal R-106 entrada prohibida buses:": "p69_prohibido_buses",
-    "Señal R-107 entrada prohibida ciclos:": "p69_prohibido_bicis",
-    "Señal R-108 entrada prohibida ciclomotores:": "p69_prohibido_ciclomotor",
-    "Señal R-111 entrada prohibida vehículos agrícolas:": "p69_prohibido_tractor",
-    "Señal R-112 entrada prohibida animales montura:": "p69_prohibido_montura",
-    "Señal R-113 entrada prohibida carros mano:": "p69_prohibido_carros",
-    "Señal R-114 entrada prohibida peatones:": "p69_prohibido_peatones",
-    "Señal R-116 entrada prohibida animales sueltos:": "p70_prohibido_ganado",
-    "Señal circular rojo con 3,5t R-201:": "p70_peso_35t",
-    "Señal R-202 anchura máxima:": "p70_anchura_max",
-    "Señal R-203 altura máxima:": "p70_altura_max",
-    "Señal R-204 longitud máxima:": "p70_longitud_max",
-    "Señal R-300 velocidad máxima:": "p72_velocidad_max",
-    "Señal R-301 fin velocidad máxima:": "p72_fin_velocidad",
-    "Señal R-302 giro izquierda prohibido:": "p73_giro_izq_prohibido",
-    "Señal R-303 giro derecha prohibido:": "p73_giro_der_prohibido",
-    "Señal R-304 cambio sentido prohibido:": "p73_cambio_sentido_prohibido",
-    "Señal R-305 adelantamiento prohibido:": "p73_adelantar_prohibido",
-    "Señal R-306 fin prohibición adelantar:": "p73_fin_adelantar",
-    "Señal R-307 adelantamiento prohibido camiones:": "p73_adelantar_camiones",
-    "Señal R-308 fin prohibición adelantar camiones:": "p74_fin_adelantar_camiones",
-    "Señal R-309 zona prohibida adelantar:": "p74_zona_adelantar",
-    "Señal R-310 señales acústicas prohibidas:": "p74_claxon_prohibido",
-    "Círculo azul con flecha R-400:": "p75_sentido_obligatorio",
-    "Señal R-401 sentido obligatorio derecha:": "p75_obligatorio_derecha",
-    "Señal R-402 sentido obligatorio izquierda:": "p75_obligatorio_izquierda",
-    "Señal R-403 paso obligatorio derecha:": "p75_paso_derecha",
-    "Señal R-404 paso obligatorio izquierda:": "p75_paso_izquierda",
-    "Señal R-405 único sentido:": "p75_sentido_unico",
-    "Señal R-407 vía reservada ciclistas:": "p76_carril_bici",
-    "Señal R-410 vía reservada peatones y ciclos:": "p76_peatones_ciclos",
-    "Señal R-411 velocidad mínima:": "p76_velocidad_min",
-    "Señal R-412 fin velocidad mínima:": "p76_fin_vel_min",
-    "Señal R-413 alumbrado corto alcance:": "p76_luces_cruce",
-    "Señal R-414 fin alumbrado corto:": "p76_fin_luces",
-    "Señal R-415 cadenas para nieve:": "p76_cadenas",
-    "Señal R-416 fin cadenas nieve:": "p77_fin_cadenas",
-    "Señal R-417 uso obligatorio cinturón:": "p77_cinturon",
-    "Señal R-418 vía para automóviles:": "p77_automoviles",
-    "Señal R-422 fin vía reservada:": "p77_fin_reservada",
-    "Rombo amarillo P-1:": "p78_peligro",
-    "Señal P-2 intersección con prioridad:": "p78_interseccion_prioridad",
-    "Señal P-3 semáforos:": "p78_semaforos",
-    "Señal P-4 intersección giratoria:": "p78_rotonda",
-    "Señal P-13a curva peligrosa derecha:": "p78_curva_derecha",
-    "Señal P-13b curva peligrosa izquierda:": "p78_curva_izquierda",
-    "Señal P-14a curvas peligrosas primera derecha:": "p79_curvas_derecha",
-    "Señal P-15 perfil irregular:": "p79_perfil_irregular",
-    "Señal P-16a bajada peligrosa:": "p79_bajada",
-    "Señal P-16b subida peligrosa:": "p79_subida",
-    "Señal P-17 estrechamiento:": "p79_estrechamiento",
-    "Señal P-17a estrechamiento derecha:": "p79_estrecha_derecha",
-    "Señal P-17b estrechamiento izquierda:": "p79_estrecha_izquierda",
-    "Señal P-18 obras:": "p79_obras",
-    "Señal P-19 pavimento deslizante:": "p79_deslizante",
-    "Señal P-20 peatones:": "p79_peatones",
-    "Señal P-21 niños:": "p79_ninos",
-    "Señal P-22 ciclistas:": "p79_ciclistas",
-    "Señal P-23 animales domésticos:": "p80_animales_domesticos",
-    "Señal P-24 animales salvajes:": "p80_animales_salvajes",
-    "Señal P-25 circulación dos sentidos:": "p80_dos_sentidos",
-    "Señal P-26 desprendimientos:": "p80_desprendimientos",
-    "Señal P-28 proyección gravilla:": "p80_gravilla",
-    "Señal P-29 viento transversal:": "p80_viento",
-    "Señal P-30 escalón lateral:": "p80_escalon",
-    "Señal P-31 congestión:": "p80_congestion",
-    "Señal P-32 obstrucción calzada:": "p80_obstruccion",
-    "Señal P-33 visibilidad reducida:": "p80_visibilidad",
-    "Señal P-34 pavimento deslizante hielo/nieve:": "p80_hielo",
-    "Señal P-50 otros peligros:": "p80_otros_peligros",
-    "Señal S-50 carriles reservados:": "p88_carriles_reservados",
-    "Señal S-51 carril bus:": "p88_carril_bus",
-    "Señal S-52 fin carril bus:": "p88_fin_bus",
-    "Señal S-53 carril bus-VAO:": "p88_bus_vao",
-    "Señal S-60 bifurcación:": "p89_bifurcacion_derecha",
-    "Señal S-61 bifurcación izquierda:": "p89_bifurcacion_izquierda",
-    "Señal S-62 preseñalización carriles:": "p90_presenalizacion",
-    "Señal S-100 estación servicio:": "p92_gasolinera",
-    "Señal S-101 taller mecánico:": "p92_taller",
-    "Señal S-102 teléfono:": "p92_telefono",
-    "Señal S-103 restaurante:": "p92_restaurante",
-    "Señal S-104 hotel:": "p92_hotel",
-    "Señal S-105 camping:": "p93_camping",
-    "Señal S-106 terreno caravanas:": "p93_caravanas",
-    "Señal S-107 merendero:": "p93_merendero",
-    "Señal S-108 punto partida excursiones:": "p93_excursiones",
-    "Señal S-109 camping y caravanas:": "p93_camping_caravanas",
-    "Señal S-110 hotel:": "p93_hotel_2",
-    "Señal S-111 restaurante:": "p93_restaurante_2",
-    "Señal S-112 cafetería:": "p93_cafeteria",
-    "Señal S-113 área descanso:": "p94_area_descanso",
-    "Señal S-114 aparcamiento:": "p94_aparcamiento",
-    "Señal S-115 aparcamiento cubierto:": "p94_aparcamiento_cubierto",
-    "Señal S-116 aparcamiento vigilado:": "p94_aparcamiento_vigilado",
-    "Señal S-117 hospital:": "p94_hospital",
-    "Señal S-118 puesto socorro:": "p94_socorro",
-    "Señal S-119 bascula:": "p94_bascula",
-    "Señal S-120 control policía:": "p94_policia",
-    "Señal S-121 extintor:": "p94_extintor",
-    "Señal S-122 salida emergencia:": "p95_salida_emergencia",
-    "Señal S-123 área servicio:": "p95_area_servicio",
-    "Señal S-124 punto recarga eléctrico:": "p95_recarga_electrico",
-    "Señal S-125 punto información:": "p95_informacion",
-    "Señal S-126 centro inspección:": "p95_itv",
-    "Panel S-800 distancia:": "p96_distancia",
-    "Panel S-810 longitud tramo:": "p96_longitud",
-    "Panel S-820 extensión prohibición:": "p96_extension",
-    "Panel S-830 fin prohibición:": "p96_fin_prohibicion",
-    "Panel S-840 dirección tramo:": "p96_direccion",
-    "Panel S-850 itinerario desvío:": "p96_desvio",
-    "Panel S-860 nieve:": "p96_nieve",
-    "Panel S-870 texto:": "p96_texto",
-    
-    # NORMAS - añade las que uses
-    "Obstrucción calzada:": "img/normas/p104_obstruccion.jpg",
-    "Tasa de alcohol general turismos:": "img/normas/p45_tasa_general.jpg",
-    "Límite ciudad genérico 2026:": "img/normas/p25_limite_ciudad.jpg",
-}
+# Lista de códigos del Tomo I en orden exacto del BOE RD 465/2025
+CODIGOS = [
+    # PRIORIDAD
+    "r-1","r-2","r-3","r-4","r-5","r-6",
+    # PROHIBICIÓN ENTRADA
+    "r-101","r-102","r-103","r-104","r-105","r-106","r-107","r-108","r-109","r-110","r-111","r-112","r-113","r-114","r-115","r-116",
+    # RESTRICCIÓN
+    "r-200","r-201","r-202","r-203","r-204",
+    # OTRAS PROHIBICIÓN
+    "r-300","r-301","r-302","r-303","r-304","r-305","r-306","r-307","r-308","r-309","r-310","r-311",
+    # OBLIGACIÓN
+    "r-400","r-401","r-402","r-403","r-404","r-405","r-406","r-407","r-408","r-409","r-410","r-411","r-412","r-413","r-414","r-415","r-416","r-417","r-418","r-419","r-420","r-421","r-422",
+    # PELIGRO
+    "p-1","p-2","p-3","p-4","p-5","p-6","p-7","p-8","p-9","p-10","p-11","p-12","p-13a","p-13b","p-14a","p-14b","p-15","p-16a","p-16b","p-17","p-17a","p-17b","p-18","p-19","p-20","p-21","p-22","p-23","p-24","p-25","p-26","p-27","p-28","p-29","p-30","p-31","p-32","p-33","p-34","p-35","p-36","p-37","p-38","p-39","p-40","p-41","p-42","p-43","p-44","p-45","p-46","p-47","p-48","p-49","p-50",
+    # INDICACIONES
+    "s-50","s-51","s-52","s-53","s-54","s-55","s-56","s-57","s-58","s-59","s-60","s-61","s-62","s-63","s-100","s-101","s-102","s-103","s-104","s-105","s-106","s-107","s-108","s-109","s-110","s-111","s-112","s-113","s-114","s-115","s-116","s-117","s-118","s-119","s-120","s-121","s-122","s-123","s-124","s-125","s-126",
+    # CARRILES
+    "s-230","s-231","s-232","s-233","s-234","s-235","s-236","s-237","s-238","s-239","s-240","s-241",
+    # PRESEÑALIZACIÓN
+    "s-370","s-371","s-372","s-373","s-374","s-375","s-376","s-377",
+    # DIRECCIÓN
+    "s-200","s-201","s-202","s-203","s-204","s-205","s-206","s-207","s-208","s-209","s-210","s-211","s-212","s-213","s-214","s-215","s-216","s-217","s-218","s-219","s-220","s-221","s-222","s-223","s-224","s-225","s-226","s-227","s-228","s-229",
+    # IDENTIFICACIÓN
+    "s-320","s-330","s-340","s-350","s-351","s-352",
+    # LOCALIZACIÓN
+    "s-500","s-510","s-520","s-521",
+    # CONFIRMACIÓN
+    "s-360","s-361","s-362","s-363","s-364","s-365","s-366","s-367","s-368","s-369",
+    # POBLADO
+    "s-440","s-441","s-442","s-443","s-444","s-445","s-446","s-447",
+    # OTRAS
+    "s-600","s-601",
+    # PANELES
+    "s-800","s-810","s-820","s-830","s-840a","s-840b","s-850","s-860","s-861","s-870","s-871","s-872","s-873","s-874","s-875","s-876","s-877","s-878","s-879","s-880"
+]
 
-def limpiar_nombre(texto):
-    texto = texto.lower()
-    texto = re.sub(r'[áàäâ]', 'a', texto)
-    texto = re.sub(r'[éèëê]', 'e', texto)
-    texto = re.sub(r'[íìïî]', 'i', texto)
-    texto = re.sub(r'[óòöô]', 'o', texto)
-    texto = re.sub(r'[úùüû]', 'u', texto)
-    texto = re.sub(r'[^a-z0-9_]', '_', texto)
-    texto = re.sub(r'_+', '_', texto)
-    return texto.strip('_')
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-def extraer():
-    imagenes_js_final = {}
+doc = fitz.open(PDF_PATH)
+img_count = 0
+codigo_index = 0
 
-    for pdf, carpeta in PDFS.items():
-        if not os.path.exists(pdf):
-            print(f"⚠️ No encontrado: {pdf}")
-            continue
+for page_num in range(len(doc)):
+    page = doc.load_page(page_num)
+    images = page.get_images(full=True)
 
-        os.makedirs(f"img/{carpeta}", exist_ok=True)
-        doc = fitz.open(pdf)
+    for img_index, img in enumerate(images):
+        if codigo_index >= len(CODIGOS):
+            break
 
-        for pag_num, pag in enumerate(doc, 1):
-            imagenes = pag.get_images(full=True)
-            texto_pag = pag.get_text()
+        xref = img[0]
+        base_image = doc.extract_image(xref)
+        image_bytes = base_image["image"]
+        ext = base_image["ext"]
 
-            for img_idx, img in enumerate(imagenes):
-                xref = img[0]
-                pix = fitz.Pixmap(doc, xref)
+        codigo = CODIGOS[codigo_index]
+        filename = f"{codigo.replace('-', '')}.{ext}"
+        filepath = os.path.join(OUTPUT_FOLDER, filename)
 
-                if pix.width < 100 or pix.height < 100:
-                    pix = None
-                    continue
+        with open(filepath, "wb") as f:
+            f.write(image_bytes)
 
-                if pix.n - pix.alpha < 4:
-                    # Busca qué pregunta de MAPEO_PREGUNTAS está en esta página
-                    for pregunta, nombre_archivo in MAPEO_PREGUNTAS.items():
-                        if nombre_archivo.startswith(f"p{pag_num}_") and pregunta not in imagenes_js_final:
-                            ext = "jpg"
-                            if pix.alpha:
-                                pix = fitz.Pixmap(fitz.csRGB, pix)
-                            
-                            ruta = f"img/{carpeta}/{nombre_archivo}.{ext}"
-                            pix.save(ruta, output="jpeg", jpg_quality=85)
-                            print(f"✅ {ruta}")
-                            
-                            imagenes_js_final[pregunta] = f"./{ruta}"
-                            break
+        print(f"Guardada: {filename}")
+        img_count += 1
+        codigo_index += 1
 
-                pix = None
-        doc.close()
-
-    # Genera imagenes.js con claves EXACTAS
-    with open("imagenes.js", "w", encoding="utf-8") as f:
-        f.write("// AUTO-GENERADO - Claves exactas de PREGUNTAS.js\n")
-        f.write("const IMAGENES = {\n")
-        for k, v in imagenes_js_final.items():
-            f.write(f' "{k}": "{v}",\n')
-        f.write("};\n")
-    print(f"\n🎯 Generado imagenes.js con {len(imagenes_js_final)} imágenes")
-
-if __name__ == "__main__":
-    extraer()
-    print("\n🎯 Listo. Revisa imagenes.js")
+doc.close()
+print(f"\n✅ Listo! {img_count} imágenes extraídas en {OUTPUT_FOLDER}/")
+print("Nombres: r2.png, p20.png, s51.png, etc. Ya coinciden con imagenes.js")
