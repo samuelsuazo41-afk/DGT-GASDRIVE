@@ -1113,7 +1113,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO - CABLEADO IMÁGENES + EXPLICACIONES V8.5 =====
+// ===== BLOQUE 2 COMPLETO - CABLEADO IMÁGENES + EXPLICACIONES V8.5 FIX =====
 
 let tipsData = [];
 let currentTip = 0;
@@ -1194,6 +1194,11 @@ function barajarArray(arr) {
   return a;
 }
 
+// NUEVO V8.5 FIX: Normaliza claves quitando espacios y : final
+function normalizarClave(txt) {
+  return txt.trim().replace(/:$/, '');
+}
+
 function cambiarTab(e, tab) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1267,11 +1272,11 @@ function cargarPregunta(cat) {
 
   if (cat === 'general') {
     preguntas = barajarArray([
-   ...PREGUNTAS.senales,
-   ...PREGUNTAS.normas,
-   ...PREGUNTAS.mecanica,
-   ...PREGUNTAS.auxilios,
-   ...PREGUNTAS.medioambiente
+  ...PREGUNTAS.senales,
+  ...PREGUNTAS.normas,
+  ...PREGUNTAS.mecanica,
+  ...PREGUNTAS.auxilios,
+  ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1290,7 +1295,7 @@ function cargarPregunta(cat) {
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
   // NUEVO V8.5: PINTA IMAGEN AL CARGAR + DEBUG
-  console.log('Buscando imagen para:', p.q);
+  console.log('Cargando pregunta:', p.q);
   pintarImagenTest(cat, p.q);
   limpiarExplicacionTest(cat);
 
@@ -1434,11 +1439,11 @@ function siguienteSituacion(e, cat) {
 // === EXAMEN ===
 function iniciarExamen(e) {
   const todas = [
- ...PREGUNTAS.senales,
- ...PREGUNTAS.normas,
- ...PREGUNTAS.mecanica,
- ...PREGUNTAS.auxilios,
- ...PREGUNTAS.medioambiente
+...PREGUNTAS.senales,
+...PREGUNTAS.normas,
+...PREGUNTAS.mecanica,
+...PREGUNTAS.auxilios,
+...PREGUNTAS.medioambiente
   ];
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 minimo.');
