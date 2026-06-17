@@ -1194,9 +1194,10 @@ function barajarArray(arr) {
   return a;
 }
 
-// NUEVO V8.5 FIX: Normaliza claves quitando espacios y : final
+// NUEVO V8.5 FIX: Normaliza claves para buscar en IMAGENES y EXPLICACIONES
 function normalizarClave(txt) {
-  return txt.trim().replace(/:$/, '');
+  if (!txt) return '';
+  return txt.trim().replace(/:$/, '').toLowerCase();
 }
 
 function cambiarTab(e, tab) {
@@ -1272,11 +1273,11 @@ function cargarPregunta(cat) {
 
   if (cat === 'general') {
     preguntas = barajarArray([
-  ...PREGUNTAS.senales,
-  ...PREGUNTAS.normas,
-  ...PREGUNTAS.mecanica,
-  ...PREGUNTAS.auxilios,
-  ...PREGUNTAS.medioambiente
+ ...PREGUNTAS.senales,
+ ...PREGUNTAS.normas,
+ ...PREGUNTAS.mecanica,
+ ...PREGUNTAS.auxilios,
+ ...PREGUNTAS.medioambiente
     ]);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
@@ -1760,7 +1761,7 @@ function abrirPDF(id) {
     display:flex;flex-direction:column;
   `;
   modal.innerHTML = `
-    <div style="background:#1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
+    <div style="background:#1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
       <button onclick="cerrarPDF('${id}')" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
       <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
       <div style="width:60px"></div>
@@ -1912,8 +1913,8 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
- .then(reg => console.log('SW registrado'))
- .catch(err => console.log('SW error:', err));
+.then(reg => console.log('SW registrado'))
+.catch(err => console.log('SW error:', err));
   });
 }
 
