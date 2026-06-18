@@ -23,7 +23,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
 h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 .subtitle{font-size:11px;opacity:0.9;margin-top:2px}
 
-/* Tabs inferior */
 .tabs{
   position:fixed;
   bottom:0;
@@ -48,11 +47,11 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   font-size:10px;
   cursor:pointer;
   transition:0.2s;
+  touch-action:manipulation;
 }
 .tab-btn.active{color:#00D9FF;background:rgba(26,26,26,0.8)}
 .tab-btn .emoji{font-size:19px;display:block;margin-bottom:3px}
 
-/* Cards */
 .card{ 
   background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%); 
   border:1px solid #333; 
@@ -64,10 +63,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 .card h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
 
-/* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4;font-weight:500}
 
-/* Stats bar */
 .stats{
   display:flex;
   justify-content:space-around;
@@ -79,7 +76,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 .stats span{color:#fff;font-weight:900;font-size:13px}
 
-/* SVG Container */
 .pregunta-img{
   margin-top:24px;
   padding:18px;
@@ -105,15 +101,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 
 @media (max-width: 480px) {
-  .pregunta-img{
-    height:160px;
-    min-height:160px;
-    padding:12px;
-  }
-  .pregunta-img svg{
-    width:120px !important;
-    height:120px !important;
-  }
+  .pregunta-img{height:160px;min-height:160px;padding:12px}
+  .pregunta-img svg{width:120px !important;height:120px !important}
 }
 
 .opcion{ 
@@ -126,6 +115,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   transition:0.2s;
   font-size:14px;
   position:relative;
+  touch-action:manipulation;
 }
 .opcion:hover{background:#333;border-color:#00D9FF}
 .opcion.correcta{
@@ -151,6 +141,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   margin-top:12px;
   border-radius:12px;
   cursor:pointer;
+  touch-action:manipulation;
 }
 .btn-sig:disabled{background:#333;color:#666;cursor:not-allowed}
 
@@ -191,7 +182,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   transition:width 0.3s;
 }
 
-/* Subtabs */
 .sub-tabs{
   display:flex;
   gap:6px;
@@ -210,6 +200,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   cursor:pointer;
   white-space:nowrap;
   transition:0.2s;
+  touch-action:manipulation;
 }
 .sub-tab-btn.active{
   background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
@@ -218,7 +209,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   font-weight:700;
 }
 
-/* Content */
 .tab-content{
   display:none;
   padding:12px;
@@ -258,6 +248,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   font-size:12px;
   margin-top:7px;
   cursor:pointer;
+  touch-action:manipulation;
 }
 .btn-buy:disabled{background:#333;color:#666;cursor:not-allowed}
 
@@ -273,60 +264,14 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 </head>
 <body>
 
-<!-- 
-
-DIAGRAMA DE FUNCIONAMIENTO BOTONES
-
-FLUJO INICIAL:
-1. App.js carga → mostrarIntro() crea #intro-screen
-2. Usuario pulsa EMPEZAR → window.tancarIntro()
-3. Quita intro → Activa tab-temario → cargarTemario()
-
-MENÚ INFERIOR - TODOS CONECTADOS A cambiarTab():
-[📖 TEMARIO] onclick="cambiarTab(event,'temario')" → cargarTemario()
-[📝 TEST] onclick="cambiarTab(event,'test')" → cargarTest('general') 
-[🚦 CASOS] onclick="cambiarTab(event,'situaciones')" → cargarSituaciones()
-[📋 EXAMEN] onclick="cambiarTab(event,'examen')" → iniciarExamen()
-[📊 PROGRESO] onclick="cambiarTab(event,'progreso')" → mostrarProgreso()
-[💡 TIPS] onclick="cambiarTab(event,'tips')" → cargarTips()
-[🏁 GARAJE] onclick="cambiarTab(event,'garaje')" → cargarGaraje()
-[🛒 TIENDA] onclick="cambiarTab(event,'tienda')" → cargarTienda()
-
-BOTONES INTERNOS:
-[EMPEZAR] onclick="window.tancarIntro()" → Quita intro + activa TEMARIO
-[SIGUIENTE] onclick="siguienteTest(event,'general')" → Siguiente pregunta
-[OPCIONES A/B/C/D] → onclick dinámico verificarRespuesta(idx)
-[SUBTABS] onclick="cambiarSubTab(event,'basico')" → Cambia temario
-[COMPRAR] onclick="comprarCoche(id)" → Descuenta coins + desbloquea
-
-TODO ESTÁ CONTEMPLADO EN APP.JS V8.8.5
-
--->
-
-<!-- INTRO V8.8.5 - FIX: window.tancarIntro() + touch-action -->
-<div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-  <div style="font-size:64px;margin-bottom:20px">🚗</div>
-  <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v8.8.5</h1>
-  <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-  <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 6 temarios oficiales + casos reales</p>
-  <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-    <div>💰 Gana coins respondiendo bien</div>
-    <div>🏎️ Compra supercoches en el Garaje</div>
-    <div>📚 187 preguntas DGT reales</div>
-    <div>📖 Temarios completos para repasar</div>
-  </div>
-  <button onclick="window.tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;touch-action:manipulation">EMPEZAR</button>
-</div>
+<!-- SIN INTRO AQUÍ. La crea App.js después de cargar datos -->
 
 <div class="header">
   <h1>🚗 GasDrive DGT ES</h1>
   <div class="subtitle">187 Señales RD 465/2025</div>
 </div>
 
-<!-- TAB 1: TEMARIO - Activo por defecto -->
 <div id="tab-temario" class="tab-content active"></div>
-
-<!-- TAB 2: TEST -->
 <div id="tab-test" class="tab-content">
   <div class="card">
     <h2>📝 Test DGT Oficial</h2>
@@ -346,65 +291,22 @@ TODO ESTÁ CONTEMPLADO EN APP.JS V8.8.5
   </div>
 </div>
 
-<!-- TAB 3: SITUACIONES/CASOS -->
 <div id="tab-situaciones" class="tab-content"></div>
-
-<!-- TAB 4: EXAMEN -->
 <div id="tab-examen" class="tab-content"></div>
-
-<!-- TAB 5: PROGRESO -->
 <div id="tab-progreso" class="tab-content"></div>
-
-<!-- TAB 6: TIPS -->
 <div id="tab-tips" class="tab-content"></div>
-
-<!-- TAB 7: GARAJE -->
 <div id="tab-garaje" class="tab-content"></div>
-
-<!-- TAB 8: TIENDA -->
 <div id="tab-tienda" class="tab-content"></div>
 
-<!-- MENÚ INFERIOR - 8 BOTONES TODOS CONECTADOS -->
 <div class="tabs">
-  <!-- 1. TEMARIO -->
-  <button class="tab-btn active" onclick="cambiarTab(event,'temario')">
-    <span class="emoji">📖</span>TEMARIO
-  </button>
-  
-  <!-- 2. TEST -->
-  <button class="tab-btn" onclick="cambiarTab(event,'test')">
-    <span class="emoji">📝</span>TEST
-  </button>
-  
-  <!-- 3. CASOS -->
-  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')">
-    <span class="emoji">🚦</span>CASOS
-  </button>
-  
-  <!-- 4. EXAMEN -->
-  <button class="tab-btn" onclick="cambiarTab(event,'examen')">
-    <span class="emoji">📋</span>EXAMEN
-  </button>
-  
-  <!-- 5. PROGRESO -->
-  <button class="tab-btn" onclick="cambiarTab(event,'progreso')">
-    <span class="emoji">📊</span>PROGRESO
-  </button>
-  
-  <!-- 6. TIPS -->
-  <button class="tab-btn" onclick="cambiarTab(event,'tips')">
-    <span class="emoji">💡</span>TIPS
-  </button>
-  
-  <!-- 7. GARAJE -->
-  <button class="tab-btn" onclick="cambiarTab(event,'garaje')">
-    <span class="emoji">🏁</span>GARAJE
-  </button>
-  
-  <!-- 8. TIENDA -->
-  <button class="tab-btn" onclick="cambiarTab(event,'tienda')">
-    <span class="emoji">🛒</span>TIENDA
-  </button>
+  <button class="tab-btn active" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'progreso')"><span class="emoji">📊</span>PROGRESO</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
 <script src="./App.js?v=8.8.5"></script>
