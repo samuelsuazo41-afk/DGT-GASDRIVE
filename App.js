@@ -478,10 +478,16 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO V8.6.6 - SVG + TEST CORREGIDO =====
+// ===== BLOQUE 2 COMPLETO V8.8.2 - SVG RD 465/2025 + TEST CORREGIDO =====
 
 let tipsData = [];
 let currentTip = 0;
+
+// Arrays vacíos por defecto para que no rompa si no tienes los datos
+const COCHES = window.COCHES || [];
+const ACCESORIOS = window.ACCESORIOS || [];
+const EMOJI_TIENDA = window.EMOJI_TIENDA || [];
+const TIPS = window.TIPS || [];
 
 let estado = {
   coins: parseInt(localStorage.getItem('gd_coins')) || 0,
@@ -504,14 +510,13 @@ let estado = {
 
 // Genera estado.test y estado.sit dinámico según MODULOS
 function initEstadoDinamico() {
-  // FIX: Añade "general" manual
   estado.test.general = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
 
   Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
     estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
   });
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null}; // FIX: era estado.sit = {}
+    estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null};
   });
 }
 
@@ -530,14 +535,13 @@ async function init() {
   console.log(`GasDrive DGT ES V${VERSION} cargado`);
   console.log("PREGUNTAS:", Object.keys(PREGUNTAS).map(k => `${k}:${PREGUNTAS[k].length}`));
   console.log("CASOS:", Object.keys(CASOS));
-  console.log("SVG SEÑALES:", Object.keys(window.SENALES_SVG || {}).length);
+  console.log("SVG SEÑALES:", Object.keys(SENALES_SVG || {}).length);
 
   mostrarIntro();
   actualizarCoins();
   actualizarMensajeMotivacional();
   cargarTemario();
 
-  // ESPERA a que carguen módulos antes de pintar primera pregunta
   if (PREGUNTAS.general && PREGUNTAS.general.length > 0) {
     setTimeout(() => cargarPregunta('general'), 100);
   }
@@ -582,17 +586,20 @@ function cambiarTab(e, tab) {
 function cambiarSubTab(e, tab, subtab) {
   const tabId = tab === 'sit'? 'situaciones' : tab;
   const contenedor = document.getElementById('tab-' + tabId);
+  if(!contenedor) return;
   contenedor.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
   contenedor.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
   e.target.classList.add('active');
-  document.getElementById(`${tab === 'test'? 'test' : 'sit'}-${subtab}`).classList.add('active');
+  const contentId = `${tab === 'test'? 'test' : 'sit'}-${subtab}`;
+  const contentEl = document.getElementById(contentId);
+  if(contentEl) contentEl.classList.add('active');
   if(tab === 'test') cargarPregunta(subtab);
   if(tab === 'sit') cargarSituacion(subtab);
 }
 
-function cambiarCategoriaSit(e, cat) { // FIX: añadido parámetro e
+function cambiarCategoriaSit(e, cat) {
   sitCategoriaActiva = cat;
-  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(btn => btn.classList.remove('active')); // FIX: selector correcto
+  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
   e.target.classList.add('active');
   const titulos = {
     clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
@@ -631,15 +638,6 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// === STUB VACÍO PARA EXPLICACIONES - NO ROMPE NADA ===
-function pintarExplicacionTest(cat, preguntaTexto) {
-  // Vacío por ahora. Cuando tengas explicaciones.js lo activamos
-}
-
-function limpiarExplicacionTest(cat) {
-  // Vacío por ahora
-}
-
 // === CARGAR PREGUNTA + SVG CON ESPERA ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
@@ -667,7 +665,7 @@ function cargarPregunta(cat) {
 
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // FIX: Espera a que SVG estén cargados antes de pintar
+  // FIX V8.8.2: Espera a que SVG estén cargados
   if (SVG_CARGADOS) {
     pintarImagenTest(cat, p.q);
   } else {
@@ -694,7 +692,7 @@ function cargarPregunta(cat) {
   });
 }
 
-// === RESPONDER TEST - SIN EXPLICACIONES ===
+// === RESPONDER TEST ===
 function responderTest(cat, idx, el) {
   const s = estado.test[cat];
   const p = s.current;
@@ -722,7 +720,6 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // REGISTRAR PROGRESO DGT
   const idPregunta = p.q.substring(0, 50);
   PROGRESO.tests[cat].total++;
   if(correcto) PROGRESO.tests[cat].aciertos++;
@@ -963,19 +960,27 @@ function reiniciarExamen() {
 // === GARAJE ===
 function cargarGaraje() {
   const cont = document.getElementById('garage-lista');
+  if(!cont) return;
   cont.innerHTML = '';
   let hpTotal = 90;
   estado.accesorios.forEach(id => {
     const acc = ACCESORIOS.find(a => a.id === id);
     if(acc) hpTotal += acc.hp;
   });
-  document.getElementById('garage-score').textContent = `🏎️ ${hpTotal} CV`;
+  const scoreEl = document.getElementById('garage-score');
+  if(scoreEl) scoreEl.textContent = `🏎️ ${hpTotal} CV`;
+
+  if(COCHES.length === 0) {
+    cont.innerHTML = '<div style="text-align:center;color:#999">No hay coches cargados</div>';
+    return;
+  }
+
   COCHES.forEach(coche => {
     const desbloqueado = estado.coches.includes(coche.id);
     const div = document.createElement('div');
     div.className = 'garage-car' + (desbloqueado? '' : ' locked');
     div.innerHTML = `
-      <div style="font-size:40px; filter:${coche.color}">${coche.emoji}</div>
+      <div style="font-size:40px; filter:${coche.color || ''}">${coche.emoji}</div>
       <div>${coche.nombre}</div>
       <div style="color:#667eea">${coche.cv} CV</div>
       ${!desbloqueado? `<button class="btn-buy" onclick="comprarCoche('${coche.id}')">Comprar ${coche.precio}💰</button>` : '<div style="color:#2ecc71">✓ Propietario</div>'}
@@ -1001,7 +1006,9 @@ function comprarCoche(id) {
 // === TIENDA ===
 function cargarTienda() {
   const cont = document.getElementById('emoji-tienda');
+  if(!cont) return;
   cont.innerHTML = '';
+
   ACCESORIOS.forEach(acc => {
     const comprado = estado.accesorios.includes(acc.id);
     const div = document.createElement('div');
@@ -1014,6 +1021,7 @@ function cargarTienda() {
     `;
     cont.appendChild(div);
   });
+
   EMOJI_TIENDA.forEach(emoji => {
     const comprado = estado.emojis.includes(emoji.id);
     const div = document.createElement('div');
@@ -1040,12 +1048,6 @@ function comprarAccesorio(id) {
   guardar();
   actualizarCoins();
   cargarTienda();
-  const totalAcc = estado.accesorios.length;
-  const msg = document.createElement('div');
-  msg.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff8c00,#ff2d55);color:#fff;padding:12px 24px;border-radius:12px;font-weight:bold;z-index:999;animation:slideUp 0.3s';
-  msg.innerHTML = `🏎️ ¡Ya estas creando tu supercoche! ${totalAcc}/42 accesorios`;
-  document.body.appendChild(msg);
-  setTimeout(() => msg.remove(), 2000);
 }
 
 function comprarEmoji(id) {
@@ -1070,7 +1072,10 @@ function cargarTips() {
 }
 
 function mostrarTip() {
-  if (tipsData.length === 0) return;
+  if (tipsData.length === 0) {
+    document.getElementById('tip-content').innerHTML = '<div style="text-align:center;color:#999">No hay tips cargados</div>';
+    return;
+  }
   const tip = tipsData[currentTip];
   document.getElementById('tip-content').innerHTML = `
     <div class="tip-emoji">${tip.emoji}</div>
@@ -1092,6 +1097,7 @@ function prevTip(e) {
 // === TEMARIO ===
 function cargarTemario() {
   const container = document.getElementById('temario-lista');
+  if(!container) return;
   container.innerHTML = `
     <div class="temario-item" onclick="abrirPDF('senales')">
       <div style="font-size:40px">🚦</div>
@@ -1169,7 +1175,7 @@ function cerrarPDF(id) {
   }
 }
 
-// === PROGRESO - AUTOESCUELA ONLINE ===
+// === PROGRESO ===
 function pintarProgreso() {
   const contenedor = document.getElementById('progreso-lista');
   if(!contenedor) return;
@@ -1224,7 +1230,8 @@ function pintarProgreso() {
   else msg = '¡PREPARADO! Ya puedes presentarte a la DGT';
   document.getElementById('progreso-mensaje').textContent = msg;
 
-  document.getElementById('btn-dgt-oficial').disabled = pctTotal < 80;
+  const btnDgt = document.getElementById('btn-dgt-oficial');
+  if(btnDgt) btnDgt.disabled = pctTotal < 80;
 
   const tiempoSenales = Math.floor(temariosData.senales.tiempo / 60);
   const tiempoNormas = Math.floor(temariosData.normas.tiempo / 60);
@@ -1292,13 +1299,15 @@ function irExamenDGT() {
   }
 }
 
+// === SERVICE WORKER ===
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-.then(reg => console.log('SW registrado'))
-.catch(err => console.log('SW error:', err));
+   .then(reg => console.log('SW registrado'))
+   .catch(err => console.log('SW error:', err));
   });
 }
+
   
 
 
