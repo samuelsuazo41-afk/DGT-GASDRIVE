@@ -454,7 +454,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO V8.6.4 - DINÁMICO + IMAGEN + EXPLICACIÓN =====
+// ===== BLOQUE 2 COMPLETO V8.6.5 - SOLO IMÁGENES =====
 
 let tipsData = [];
 let currentTip = 0;
@@ -480,18 +480,18 @@ let estado = {
 
 // Genera estado.test y estado.sit dinámico según MODULOS
 function initEstadoDinamico() {
-  // FIX 1: Añade "general" manual porque no está en MODULOS_PREGUNTAS
+  // FIX: Añade "general" manual
   estado.test.general = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
 
   Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
     estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
   });
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null};
+    estado.sit = {idx:0, aciertos:0, puntuacion:0, current:null};
   });
 }
 
-// FIX 3: NO llames cargarModulos aquí, ya se llama en bloque 1
+// NO llames cargarModulos aquí, ya se llama en bloque 1
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
@@ -513,7 +513,6 @@ async function init() {
   actualizarMensajeMotivacional();
   cargarTemario();
 
-  // Espera a que carguen módulos antes de pintar
   if(PREGUNTAS.general && PREGUNTAS.general.length > 0) {
     cargarPregunta('general');
   }
@@ -607,35 +606,20 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// === EXPLICACIÓN DGT - FIX 2 ===
+// === STUB VACÍO PARA EXPLICACIONES - NO ROMPE NADA ===
 function pintarExplicacionTest(cat, preguntaTexto) {
-  const box = document.getElementById(`test-${cat}-explicacion`);
-  if (!box) return;
-
-  const exp = buscarClave(window.EXPLICACIONES || {}, preguntaTexto);
-
-  if (exp) {
-    box.innerHTML = `<b>💡 Explicación DGT:</b> ${exp.texto}<span>Fuente: ${exp.fuente}</span>`;
-    box.classList.add('visible');
-  } else {
-    box.classList.remove('visible');
-    box.innerHTML = '';
-  }
+  // Vacío por ahora. Cuando tengas explicaciones.js lo activamos
 }
 
 function limpiarExplicacionTest(cat) {
-  const box = document.getElementById(`test-${cat}-explicacion`);
-  if (box) {
-    box.classList.remove('visible');
-    box.innerHTML = '';
-  }
+  // Vacío por ahora
 }
 
 // === CARGAR PREGUNTA + IMAGEN ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
   if(!s) {
-    console.error(`❌ estado.test[${cat}] no existe. Llama initEstadoDinamico()`);
+    console.error(`❌ estado.test[${cat}] no existe`);
     return;
   }
 
@@ -657,8 +641,7 @@ function cargarPregunta(cat) {
   s.current = p;
 
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
-  pintarImagenTest(cat, p.q); // Pinta imagen si existe
-  limpiarExplicacionTest(cat);
+  pintarImagenTest(cat, p.q); // SOLO imagen, explicaciones desactivadas
 
   document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`test-${cat}-racha`).textContent = s.racha;
@@ -679,7 +662,7 @@ function cargarPregunta(cat) {
   });
 }
 
-// === RESPONDER + EXPLICACIÓN ===
+// === RESPONDER TEST - SIN EXPLICACIONES ===
 function responderTest(cat, idx, el) {
   const s = estado.test[cat];
   const p = s.current;
@@ -706,8 +689,6 @@ function responderTest(cat, idx, el) {
     mostrarEmoji(false, el);
     s.racha = 0;
   }
-
-  pintarExplicacionTest(cat, p.q);
 
   // REGISTRAR PROGRESO DGT
   const idPregunta = p.q.substring(0, 50);
