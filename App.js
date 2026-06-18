@@ -1,5 +1,5 @@
-// === GASDRIVE DGT V8.8.5 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
-const VERSION = "8.8.5";
+// === GASDRIVE DGT V8.8.6 ES - BLOQUE 1 DEPLOY LIMPIO SVG RD 465/2025 ===
+const VERSION = "8.8.6";
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
 const MODULOS_PREGUNTAS = {
@@ -61,13 +61,14 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO V8.8.5 SVG EXPORT PARALELO ===
+// === CARGADOR DINÁMICO V8.8.6 SVG EXPORT PARALELO ===
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 let MODULOS_LISTOS = false;
+let DATOS_CARGADOS = false;
 
 async function cargarModulos() {
   console.log(`🚀 GasDrive V${VERSION} - Cargando módulos RD 465/2025...`);
@@ -130,7 +131,11 @@ async function cargarModulos() {
   console.log(`✅ general: ${PREGUNTAS.general.length} preguntas mezcladas`);
 
   MODULOS_LISTOS = true;
+  DATOS_CARGADOS = true;
   console.log('📊 RESUMEN FINAL:', Object.entries(PREGUNTAS).map(([k,v]) => `${k}:${v.length}`).join(' | '));
+
+  // Si la intro ya está mostrada, actualizar contador
+  actualizarContadorIntro();
 }
 
 // === SUBTEMAS DÉBILES ===
@@ -193,7 +198,7 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA SVG V8.8.5 CON ESPERA SI HACE FALTA
+// PINTA SVG V8.8.6 CON ESPERA SI HACE FALTA
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
@@ -238,20 +243,26 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 }
 
-// INICIO - NO ESPERAR A CARGAR MÓDULOS PARA QUE INTRO SALGA INSTANTÁNEO
+// DEPLOY LIMPIO V8.8.6: 1.Carga datos 2.Intro 3.EMPEZAR
 document.addEventListener('DOMContentLoaded', () => {
-  cargarModulos(); // Carga en background
-  mostrarIntro(); // Intro aparece ya
+  console.log('GasDrive V8.8.6 iniciando...');
+
+  // 1. Cargar todos los datos primero en background
+  cargarModulos();
+
+  // 2. Mostrar intro después de 200ms cuando DOM está listo
+  setTimeout(() => mostrarIntro(), 200);
 });
 
-// INTRO SCREEN - FIX V8.8.5: NO DUPLICAR SI INDEX YA LA TIENE
+// INTRO SCREEN - V8.8.6: Se crea dinámico, no duplica
 function mostrarIntro(){
   if(document.getElementById('intro-screen')) {
-    console.log('✅ Intro ya existe en index.html, no duplicar');
+    console.log('✅ Intro ya existe, no duplicar');
     return;
   }
 
-  const totalPreg = 187;
+  const totalPreg = PREGUNTAS.general? PREGUNTAS.general.length : 187;
+
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
@@ -261,30 +272,41 @@ function mostrarIntro(){
       <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
         <div>💰 Gana coins respondiendo bien</div>
         <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 ${totalPreg} preguntas DGT reales</div>
+        <div id="intro-contador-preguntas">📚 ${totalPreg} preguntas DGT reales</div>
         <div>📖 Temarios completos para repasar</div>
       </div>
-      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+      <button onclick="window.tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;touch-action:manipulation">EMPEZAR</button>
     </div>
   `);
 }
 
-// FIX V8.8.5: Quita intro + activa PRIMER TAB = TEMARIOS
-function tancarIntro() {
+// Actualiza contador cuando cargan datos
+function actualizarContadorIntro() {
+  const contador = document.getElementById('intro-contador-preguntas');
+  if(contador && PREGUNTAS.general) {
+    contador.innerHTML = `📚 ${PREGUNTAS.general.length} preguntas DGT reales`;
+  }
+}
+
+// FIX V8.8.6: Quita intro + activa app completa
+window.tancarIntro = function() {
+  console.log('🔘 EMPEZAR pulsado - entrando a app completa');
   const intro = document.getElementById('intro-screen');
   if(intro) intro.remove();
 
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-  // Activa temario primero según tu menú
+  // Activa TEMARIO primero según tu menú
   document.getElementById('tab-temario').classList.add('active');
   const btnTemario = document.querySelector('.tab-btn[onclick*="temario"]');
   if(btnTemario) btnTemario.classList.add('active');
 
   // Carga contenido temario después
   setTimeout(() => {
-    if(typeof cargarTemario === 'function') cargarTemario();
+    if(typeof cargarTemario === 'function') {
+      cargarTemario();
+    }
   }, 150);
 }
 
