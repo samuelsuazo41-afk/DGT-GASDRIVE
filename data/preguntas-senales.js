@@ -1,5 +1,7 @@
+// GASDRIVE DGT V8.6.5 - PREGUNTAS SEÑALES RD 465/2025
+// Ubicación: data/preguntas-senales.js
 export const PREGUNTAS_SENALES = [
-  // === 3.2 PRIORIDAD R-1 a R-6 = 6 ===
+  // === SECCIÓN 3.2: SEÑALES DE PRIORIDAD R-1 a R-6 ===
   {q:"¿Qué significa la señal R-1?",a:["Stop","Ceda el paso","Prohibido entrar"],ok:1,codigo:"R-1"},
   {q:"¿Qué significa la señal R-2?",a:["Ceda el paso","Parada obligatoria total","Ceda en intersección"],ok:1,codigo:"R-2"},
   {q:"¿Qué indica la señal R-3?",a:["Fin de prioridad","Calzada con prioridad","Intersección con prioridad"],ok:1,codigo:"R-3"},
@@ -7,7 +9,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué significa la señal R-5?",a:["Usted tiene prioridad","Prioridad para sentido contrario","Stop obligatorio"],ok:1,codigo:"R-5"},
   {q:"¿Qué significa la señal R-6?",a:["Ceda el paso","Tiene prioridad respecto al sentido contrario","Prohibido pasar"],ok:1,codigo:"R-6"},
 
-  // === 3.3 PROHIBICIÓN ENTRADA R-100 a R-116 = 13 ===
+  // === SECCIÓN 3.3: SEÑALES DE PROHIBICIÓN DE ENTRADA R-100 a R-116 ===
   {q:"¿Qué significa la señal R-101?",a:["Obligación de girar","Prohibición de entrada a toda clase de vehículos","Fin de prohibiciones"],ok:1,codigo:"R-101"},
   {q:"¿Qué significa la señal R-102?",a:["Prohibida entrada a bicicletas","Prohibida entrada a vehículos de motor","Prohibida entrada a peatones"],ok:1,codigo:"R-102"},
   {q:"¿Qué significa la señal R-103?",a:["Prohibida entrada a turismos","Prohibida entrada a camiones","Prohibida entrada a autobuses"],ok:1,codigo:"R-103"},
@@ -25,14 +27,14 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué significa la señal R-115?",a:["Prohibida entrada a animales sueltos","Prohibida entrada a peatones","Prohibida entrada a bicicletas"],ok:1,codigo:"R-115"},
   {q:"¿Qué significa la señal R-116?",a:["Prohibida entrada a peatones","Prohibida entrada a animales sueltos","Prohibida entrada a bicicletas"],ok:1,codigo:"R-116"},
 
-  // === 3.4 RESTRICCIÓN PASO R-200 a R-204 = 5 ===
+  // === SECCIÓN 3.4: SEÑALES DE RESTRICCIÓN DE PASO R-200 a R-204 ===
   {q:"¿Qué indica la señal R-200?",a:["Peso mínimo","Masa máxima autorizada","Fin limitación de peso"],ok:1,codigo:"R-200"},
   {q:"¿Qué indica la señal R-201?",a:["Peso mínimo 3,5 toneladas","Masa máxima autorizada 3,5 toneladas","Fin limitación de peso"],ok:1,codigo:"R-201"},
   {q:"¿Qué indica la señal R-202?",a:["Anchura máxima 2,5 metros","Altura máxima 2,5 metros","Longitud máxima 2,5 metros"],ok:1,codigo:"R-202"},
   {q:"¿Qué indica la señal R-203?",a:["Anchura máxima 4 metros","Altura máxima 4 metros","Peso máximo 4 toneladas"],ok:1,codigo:"R-203"},
   {q:"¿Qué indica la señal R-204?",a:["Longitud máxima 10 metros","Anchura máxima 10 metros","Altura máxima 10 metros"],ok:1,codigo:"R-204"},
 
-  // === 3.5 OTRAS PROHIBICIÓN R-300 a R-310 = 13 ===
+  // === SECCIÓN 3.5: OTRAS SEÑALES DE PROHIBICIÓN R-300 a R-311 ===
   {q:"¿Qué significa la señal R-300?",a:["Velocidad mínima 50 km/h","Velocidad máxima 50 km/h","Velocidad recomendada 50 km/h"],ok:1,codigo:"R-300"},
   {q:"¿Qué significa la señal R-301?",a:["Inicio limitación 50","Fin de limitación de velocidad máxima","Nueva limitación 50"],ok:1,codigo:"R-301"},
   {q:"¿Qué significa la señal R-302?",a:["Giro izquierda permitido","Prohibido girar a la izquierda","Obligatorio girar izquierda"],ok:1,codigo:"R-302"},
@@ -46,7 +48,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué significa la señal R-310?",a:["Uso obligatorio claxon","Prohibido uso de señales acústicas","Fin prohibición claxon"],ok:1,codigo:"R-310"},
   {q:"¿Qué significa la señal R-311?",a:["Velocidad mínima 30 km/h","Velocidad máxima 30 km/h","Fin velocidad mínima"],ok:1,codigo:"R-311"},
 
-  // === 3.6 OBLIGACIÓN R-400 a R-422 = 23 ===
+  // === SECCIÓN 3.6: SEÑALES DE OBLIGACIÓN R-400 a R-422 ===
   {q:"¿Qué significa la señal R-400?",a:["Prohibición","Sentido obligatorio","Fin de obligación"],ok:1,codigo:"R-400"},
   {q:"¿Qué significa la señal R-401?",a:["Prohibido girar derecha","Sentido obligatorio a la derecha","Giro derecha recomendado"],ok:1,codigo:"R-401"},
   {q:"¿Qué significa la señal R-402?",a:["Prohibido girar izquierda","Sentido obligatorio a la izquierda","Giro izquierda recomendado"],ok:1,codigo:"R-402"},
@@ -71,7 +73,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué significa la señal R-421?",a:["Prohibido taxis","Vía reservada para taxis","Vía recomendada taxis"],ok:1,codigo:"R-421"},
   {q:"¿Qué significa la señal R-422?",a:["Inicio vía reservada","Fin vía reservada para automóviles","Vía compartida"],ok:1,codigo:"R-422"},
 
-  // === 3.1 ADVERTENCIA PELIGRO P-1 a P-50 = 50 ===
+  // === SECCIÓN 3.1: SEÑALES DE ADVERTENCIA DE PELIGRO P-1 a P-50 ===
   {q:"¿Qué indica la señal P-1?",a:["Peligro específico","Peligro indefinido","Fin peligro"],ok:1,codigo:"P-1"},
   {q:"¿Qué indica la señal P-2?",a:["Intersección sin prioridad","Intersección con prioridad a la derecha","Ceda el paso"],ok:1,codigo:"P-2"},
   {q:"¿Qué indica la señal P-3?",a:["Semáforo apagado","Peligro por proximidad de semáforos","Prohibido semáforos"],ok:1,codigo:"P-3"},
@@ -128,7 +130,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal P-49?",a:["Peligro por viento","Peligro por viento lateral fuerte","Prohibido circular"],ok:1,codigo:"P-49"},
   {q:"¿Qué indica la señal P-50?",a:["Peligro concreto","Peligro por otros motivos","Fin peligros"],ok:1,codigo:"P-50"},
 
-  // === 3.8 INDICACIONES GENERALES S-50 a S-63, S-100 a S-126 = 34 ===
+  // === SECCIÓN 3.8: SEÑALES DE INDICACIONES GENERALES S-50 a S-63, S-100 a S-126 ===
   {q:"¿Qué indica la señal S-50?",a:["Carril bus","Carriles reservados sentido contrario al habitual","Carril bici"],ok:1,codigo:"S-50"},
   {q:"¿Qué indica la señal S-51?",a:["Carril libre","Carril reservado para autobuses y taxis","Prohibido bus"],ok:1,codigo:"S-51"},
   {q:"¿Qué indica la señal S-52?",a:["Inicio carril bus","Fin de carril reservado para autobuses","Carril compartido"],ok:1,codigo:"S-52"},
@@ -171,7 +173,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-125?",a:["Hotel","Punto de información turística","Policía"],ok:1,codigo:"S-125"},
   {q:"¿Qué indica la señal S-126?",a:["Taller","Centro inspección técnica vehículos","Gasolinera"],ok:1,codigo:"S-126"},
 
-  // === 3.9 CARRILES S-230 a S-241 = 12 ===
+  // === SECCIÓN 3.9: SEÑALES DE CARRILES S-230 a S-241 ===
   {q:"¿Qué indica la señal S-230?",a:["Carriles con direcciones obligatorias","Carriles libres","Prohibido cambiar carril"],ok:1,codigo:"S-230"},
   {q:"¿Qué indica la señal S-231?",a:["Carriles con direcciones obligatorias","Carriles libres","Prohibido cambiar carril"],ok:1,codigo:"S-231"},
   {q:"¿Qué indica la señal S-232?",a:["Carriles con direcciones obligatorias","Carriles libres","Prohibido cambiar carril"],ok:1,codigo:"S-232"},
@@ -185,7 +187,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-240?",a:["Carril de aceleración","Carril de deceleración","Prohibido incorporar"],ok:1,codigo:"S-240"},
   {q:"¿Qué indica la señal S-241?",a:["Carril de aceleración","Carril de deceleración","Prohibido salir"],ok:1,codigo:"S-241"},
 
-    // === 3.11 PRESEÑALIZACIÓN S-370 a S-377 = 8 ===
+    // === SECCIÓN 3.11: SEÑALES DE PRESEÑALIZACIÓN S-370 a S-377 ===
   {q:"¿Qué indica la señal S-370?",a:["Preseñalización de dirección","Información general","Prohibición"],ok:1,codigo:"S-370"},
   {q:"¿Qué indica la señal S-371?",a:["Preseñalización de dirección","Información general","Prohibición"],ok:1,codigo:"S-371"},
   {q:"¿Qué indica la señal S-372?",a:["Preseñalización de dirección","Información general","Prohibición"],ok:1,codigo:"S-372"},
@@ -195,7 +197,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-376?",a:["Preseñalización de dirección","Información general","Prohibición"],ok:1,codigo:"S-376"},
   {q:"¿Qué indica la señal S-377?",a:["Preseñalización de dirección","Información general","Prohibición"],ok:1,codigo:"S-377"},
 
-  // === 3.12 DIRECCIÓN S-200 a S-229 = 30 ===
+  // === SECCIÓN 3.12: SEÑALES DE DIRECCIÓN S-200 a S-229 ===
   {q:"¿Qué indica la señal S-200?",a:["Calle sin salida","Dirección obligatoria","Prohibido pasar"],ok:0,codigo:"S-200"},
   {q:"¿Qué indica la señal S-201?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"S-201"},
   {q:"¿Qué indica la señal S-202?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"S-202"},
@@ -227,7 +229,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-228?",a:["Prohibido rotonda","Sentido giratorio obligatorio","Ceda el paso"],ok:1,codigo:"S-228"},
   {q:"¿Qué indica la señal S-229?",a:["Prohibido rotonda","Sentido giratorio obligatorio","Ceda el paso"],ok:1,codigo:"S-229"},
 
-  // === 3.13 IDENTIFICACIÓN CARRETERAS S-320 a S-350 = 6 ===
+  // === SECCIÓN 3.13: SEÑALES DE IDENTIFICACIÓN CARRETERAS S-320 a S-350 ===
   {q:"¿Qué indica la señal S-320?",a:["Carretera nacional","Autopista A-1","Carretera comarcal"],ok:1,codigo:"S-320"},
   {q:"¿Qué indica la señal S-330?",a:["Autopista","Carretera nacional N-340","Carretera local"],ok:1,codigo:"S-330"},
   {q:"¿Qué indica la señal S-340?",a:["Carretera nacional","Autopista de peaje AP-7","Carretera comarcal"],ok:1,codigo:"S-340"},
@@ -235,13 +237,13 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-351?",a:["Carretera nacional","Itinerario europeo E-90","Carretera local"],ok:1,codigo:"S-351"},
   {q:"¿Qué indica la señal S-352?",a:["Carretera nacional","Itinerario europeo E-80","Carretera local"],ok:1,codigo:"S-352"},
 
-  // === 3.14 LOCALIZACIÓN S-500, S-510, S-520, S-521 = 4 ===
+  // === SECCIÓN 3.14: SEÑALES DE LOCALIZACIÓN S-500, S-510, S-520, S-521 ===
   {q:"¿Qué indica la señal S-500?",a:["Fin población","Inicio de población con 20.000+ hab","Prohibido entrar población"],ok:1,codigo:"S-500"},
   {q:"¿Qué indica la señal S-510?",a:["Inicio población","Fin de población","Prohibido entrar población"],ok:1,codigo:"S-510"},
   {q:"¿Qué indica la señal S-520?",a:["Fin población","Inicio de población <5.000 hab","Prohibido entrar población"],ok:1,codigo:"S-520"},
   {q:"¿Qué indica la señal S-521?",a:["Inicio población","Fin de población <5.000 hab","Prohibido entrar población"],ok:1,codigo:"S-521"},
 
-  // === 3.15 CONFIRMACIÓN S-360 a S-369 = 10 ===
+  // === SECCIÓN 3.15: SEÑALES DE CONFIRMACIÓN S-360 a S-369 ===
   {q:"¿Qué indica la señal S-360?",a:["Distancia a la próxima población","Velocidad recomendada","Prohibido entrar"],ok:1,codigo:"S-360"},
   {q:"¿Qué indica la señal S-361?",a:["Distancia a población","Nombre población","Velocidad máxima"],ok:1,codigo:"S-361"},
   {q:"¿Qué indica la señal S-362?",a:["Distancia a población","Nombre población","Velocidad máxima"],ok:1,codigo:"S-362"},
@@ -253,7 +255,7 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-368?",a:["Distancia a población","Nombre población","Velocidad máxima"],ok:1,codigo:"S-368"},
   {q:"¿Qué indica la señal S-369?",a:["Distancia a población","Nombre población","Velocidad máxima"],ok:1,codigo:"S-369"},
 
-  // === 3.16 USO ESPECÍFICO POBLADO S-440 a S-447 = 8 ===
+  // === SECCIÓN 3.16: SEÑALES DE USO ESPECÍFICO POBLADO S-440 a S-447 ===
   {q:"¿Qué indica la señal S-440?",a:["Zona peatonal","Zona residencial","Prohibido circular"],ok:1,codigo:"S-440"},
   {q:"¿Qué indica la señal S-441?",a:["Inicio zona residencial","Fin de zona residencial","Zona peatonal"],ok:1,codigo:"S-441"},
   {q:"¿Qué indica la señal S-442?",a:["Zona 30","Velocidad máxima 30","Prohibido 30"],ok:1,codigo:"S-442"},
@@ -263,11 +265,11 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-446?",a:["Zona peatonal","Zona comercial","Prohibido comprar"],ok:1,codigo:"S-446"},
   {q:"¿Qué indica la señal S-447?",a:["Inicio zona comercial","Fin de zona comercial","Zona peatonal"],ok:1,codigo:"S-447"},
 
-  // === 3.18 OTRAS SEÑALES S-600 a S-601 = 2 ===
+  // === SECCIÓN 3.18: OTRAS SEÑALES S-600 a S-601 ===
   {q:"¿Qué indica la señal S-600?",a:["Vía rápida","Autopista","Túnel"],ok:1,codigo:"S-600"},
   {q:"¿Qué indica la señal S-601?",a:["Inicio autopista","Fin de autopista","Salida autopista"],ok:1,codigo:"S-601"},
 
-  // === 3.17 PANELES COMPLEMENTARIOS S-800 a S-884 = 20 ===
+  // === SECCIÓN 3.17: PANELES COMPLEMENTARIOS S-800 a S-880 ===
   {q:"¿Qué indica el panel S-800?",a:["Indica anchura","Panel que indica distancia al peligro","No sirve"],ok:1,codigo:"S-800"},
   {q:"¿Qué indica el panel S-810?",a:["Indica anchura","Panel que indica longitud del tramo peligroso","Indica altura"],ok:1,codigo:"S-810"},
   {q:"¿Qué indica el panel S-820?",a:["Inicio señal","Panel que indica extensión de prohibición","Fin señal"],ok:1,codigo:"S-820"},
@@ -289,3 +291,4 @@ export const PREGUNTAS_SENALES = [
   {q:"¿Qué indica el panel S-879?",a:["Panel decorativo","Panel con texto complementario al peligro próximo","No sirve"],ok:1,codigo:"S-879"},
   {q:"¿Qué indica el panel S-880?",a:["Panel decorativo","Panel con texto complementario al peligro próximo","No sirve"],ok:1,codigo:"S-880"}
 ];
+
