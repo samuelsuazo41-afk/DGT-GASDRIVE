@@ -1,6 +1,7 @@
     export const PREGUNTAS_AUXILIOS= [
     // === PROTOCOLO PAS === Pág 40-41
-    {q:"¿Qué haces primero ante un accidente?",a:["Llamar al 112","Proteger la zona","Socorrer heridos"],ok:1},
+    
+{q:"¿Qué haces primero ante un accidente?",a:["Llamar al 112","Proteger la zona","Socorrer heridos"],ok:1},
     {q:"Orden correcto protocolo PAS:",a:["Socorrer, Avisar, Proteger","Proteger, Avisar, Socorrer","Avisar, Proteger, Socorrer"],ok:1},
     {q:"Para proteger en autopista:",a:["Triángulos 50m","Triángulos 100m + chaleco","Solo luces emergencia"],ok:1},
 
