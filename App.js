@@ -471,7 +471,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO V8.6.5 - SVG + TEST =====
+// ===== BLOQUE 2 COMPLETO V8.6.6 - SVG + TEST CORREGIDO =====
 
 let tipsData = [];
 let currentTip = 0;
@@ -523,15 +523,16 @@ async function init() {
   console.log(`GasDrive DGT ES V${VERSION} cargado`);
   console.log("PREGUNTAS:", Object.keys(PREGUNTAS).map(k => `${k}:${PREGUNTAS[k].length}`));
   console.log("CASOS:", Object.keys(CASOS));
-  console.log("SVG SEÑALES:", Object.keys(window.SENALES_SVG || {}).length); // FIX: era IMAGENES
+  console.log("SVG SEÑALES:", Object.keys(window.SENALES_SVG || {}).length);
 
   mostrarIntro();
   actualizarCoins();
   actualizarMensajeMotivacional();
   cargarTemario();
 
-  if(PREGUNTAS.general && PREGUNTAS.general.length > 0) {
-    cargarPregunta('general');
+  // ESPERA a que carguen módulos antes de pintar primera pregunta
+  if (PREGUNTAS.general && PREGUNTAS.general.length > 0) {
+    setTimeout(() => cargarPregunta('general'), 100);
   }
 }
 
@@ -582,10 +583,10 @@ function cambiarSubTab(e, tab, subtab) {
   if(tab === 'sit') cargarSituacion(subtab);
 }
 
-function cambiarCategoriaSit(cat) {
+function cambiarCategoriaSit(e, cat) { // FIX: añadido parámetro e
   sitCategoriaActiva = cat;
-  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(btn => btn.classList.remove('active')); // FIX: selector
-  event.target.classList.add('active');
+  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(btn => btn.classList.remove('active')); // FIX: selector correcto
+  e.target.classList.add('active');
   const titulos = {
     clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
     urbano: '🏙️ CASOS REALES - URBANO',
@@ -632,7 +633,7 @@ function limpiarExplicacionTest(cat) {
   // Vacío por ahora
 }
 
-// === CARGAR PREGUNTA + SVG ===
+// === CARGAR PREGUNTA + SVG CON ESPERA ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
   if(!s) {
@@ -658,7 +659,14 @@ function cargarPregunta(cat) {
   s.current = p;
 
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
-  pintarImagenTest(cat, p.q); // AHORA PINTA SVG DESDE SENALES_SVG
+
+  // FIX: Espera a que SVG estén cargados antes de pintar
+  if (SVG_CARGADOS) {
+    pintarImagenTest(cat, p.q);
+  } else {
+    document.getElementById(`test-${cat}-imagen`).innerHTML = '<div style="text-align:center;padding:40px;color:#999">Cargando señal...</div>';
+    setTimeout(() => pintarImagenTest(cat, p.q), 300);
+  }
 
   document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`test-${cat}-racha`).textContent = s.racha;
