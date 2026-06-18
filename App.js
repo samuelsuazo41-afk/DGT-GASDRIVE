@@ -1,4 +1,4 @@
-// === GASDRIVE DGT V8.6.5 ES - BLOQUE 1 AUTO-CARGA ===
+// === GASDRIVE DGT V8.6.5 ES - BLOQUE 1 AUTO-CARGA SVG ===
 const VERSION = "8.6.5";
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
@@ -61,13 +61,14 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO V8.6.5 ===
+// === CARGADOR DINÁMICO V8.6.5 SVG ===
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
+window.SENALES_SVG = {}; // NUEVO: aquí cargamos los SVG
 
 async function cargarModulos() {
-  console.log(`🚀 GasDrive V${VERSION} - Cargando módulos...`);
+  console.log(`🚀 GasDrive V${VERSION} - Cargando módulos SVG...`);
 
   // 1. Carga preguntas por tema
   for (const [tema, config] of Object.entries(MODULOS_PREGUNTAS)) {
@@ -114,16 +115,16 @@ async function cargarModulos() {
     Object.keys(MODULOS_CASOS).forEach(caso => CASOS[caso] = []);
   }
 
-  // 4. Carga imágenes - AHORA CUADRA CON preguntas-senales.js
+  // 4. Carga SVG - NUEVO BLOQUE
   try {
-    const mod = await import(`./data/imagenes.js`);
-    window.IMAGENES = mod.IMAGENES || {};
-    console.log(`✅ Imágenes: ${Object.keys(window.IMAGENES).length} rutas cargadas`);
-    console.log(`Ejemplo R-1:`, window.IMAGENES['r-1']); // Debe salir./img/senales/r1.png
-    console.log(`Ejemplo S-109:`, window.IMAGENES['s-109']); // Debe salir./img/senales/s109.png
+    const mod = await import(`./data/senales-svg.js`);
+    window.SENALES_SVG = mod.SENALES_SVG || {};
+    console.log(`✅ SVG Señales: ${Object.keys(window.SENALES_SVG).length} cargados`);
+    console.log(`Ejemplo r-1:`, window.SENALES_SVG['r-1']? 'OK' : 'NO');
+    console.log(`Ejemplo s-118:`, window.SENALES_SVG['s-118']? 'OK' : 'NO');
   } catch (e) {
-    console.error(`❌ Error cargando imagenes.js:`, e);
-    window.IMAGENES = {};
+    console.error(`❌ Error cargando senales-svg.js:`, e);
+    window.SENALES_SVG = {};
   }
 
   // 5. Carga explicaciones
@@ -199,67 +200,30 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA IMAGEN V8.6.5 FINAL - COMPATIBLE CON R/P/S
+// PINTA SVG V8.6.5 FINAL - RENDERIZA SENALES_SVG DIRECTO
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
 
-  // EXTRAE EL CÓDIGO: r-2, p-15, s-50, etiqueta-b, s-840a, etc
-  const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?|etiqueta-[0-9a-z]+|senal-r\d+-[a-z]+|colocacion-etiqueta|tabla-euro)\b/i);
+  // EXTRAE EL CÓDIGO: r-2, p-15, s-50, s-840a, etc
+  const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
   const codigo = match? match[1].toLowerCase() : null;
 
   console.log(`🔍 [${cat}] Pregunta: "${preguntaTexto}"`);
   console.log(`🔍 Código extraído: ${codigo}`);
 
-  let rutaImg = null;
-  if (codigo && window.IMAGENES) {
-    rutaImg = window.IMAGENES[codigo];
+  let svg = null;
+  if (codigo && window.SENALES_SVG) {
+    svg = window.SENALES_SVG[codigo];
   }
 
-  if (rutaImg) {
-    // FIX CRÍTICO: fuerza./img/ por si acaso
-    rutaImg = rutaImg.replace(/^\/img\//, './img/');
-    if (!rutaImg.startsWith('./img/') &&!rutaImg.startsWith('http')) {
-      rutaImg = './img/' + rutaImg.replace(/^\/+/, '');
-    }
-
-    imgCont.innerHTML = `<img src="${rutaImg}" alt="Señal ${codigo.toUpperCase()}" onerror="console.error('❌ 404 imagen:', this.src); this.parentElement.innerHTML='<div style=color:#666;font-size:12px;text-align:center;padding:10px>📷 Imagen no encontrada: ${codigo}</div>'">`;
-    console.log(`✅ Imagen cargada: ${rutaImg}`);
+  if (svg) {
+    imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:160px">${svg}</div>`;
+    console.log(`✅ SVG cargado: ${codigo}`);
   } else {
     imgCont.innerHTML = '';
-    console.log(`❌ No hay imagen para código: ${codigo}`);
+    console.log(`❌ No hay SVG para código: ${codigo}`);
   }
-}
-
-// INICIO
-document.addEventListener('DOMContentLoaded', async () => {
-  await cargarModulos();
-  mostrarIntro();
-});
-
-// INTRO SCREEN
-function mostrarIntro(){
-  const totalPreg = Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0);
-  document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-      <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
-      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 ${Object.keys(MODULOS_PREGUNTAS).length + 1} temarios oficiales + casos reales</p>
-      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-        <div>💰 Gana coins respondiendo bien</div>
-        <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 ${totalPreg} preguntas DGT reales</div>
-        <div>📖 Temarios completos para repasar</div>
-      </div>
-      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
-    </div>
-  `);
-}
-
-function tancarIntro() {
-  const intro = document.getElementById('intro-screen');
-  if(intro) intro.remove();
 }
 
 // INICIO
