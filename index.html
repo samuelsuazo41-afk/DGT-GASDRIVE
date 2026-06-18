@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES V8.8.4</title>
+<title>GasDrive DGT ES V8.8.5</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -269,16 +269,14 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   margin:18px 0;
   text-shadow:0 0 20px rgba(0,217,255,0.3);
 }
-
-/* QUITADO: CSS .intro .btn-start - App.js lo crea dinámico */
 </style>
 </head>
 <body>
 
-<!-- INTRO V8.8.4 - id="intro-screen" + onclick="tancarIntro()" -->
+<!-- INTRO V8.8.5 - id="intro-screen" + onclick="tancarIntro()" -->
 <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
   <div style="font-size:64px;margin-bottom:20px">🚗</div>
-  <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v8.8.4</h1>
+  <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v8.8.5</h1>
   <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
   <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 6 temarios oficiales + casos reales</p>
   <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
@@ -295,8 +293,11 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   <div class="subtitle">187 Señales RD 465/2025</div>
 </div>
 
-<!-- Tab Test - IDs que espera App.js -->
-<div id="tab-test" class="tab-content active">
+<!-- PRIMER TAB = TEMARIO -->
+<div id="tab-temario" class="tab-content active"></div>
+
+<!-- Resto tabs -->
+<div id="tab-test" class="tab-content">
   <div class="card">
     <h2>📝 Test DGT Oficial</h2>
     <div class="stats">
@@ -315,27 +316,25 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   </div>
 </div>
 
-<!-- Resto tabs con IDs correctos -->
 <div id="tab-situaciones" class="tab-content"></div>
 <div id="tab-examen" class="tab-content"></div>
 <div id="tab-progreso" class="tab-content"></div>
 <div id="tab-tips" class="tab-content"></div>
 <div id="tab-garaje" class="tab-content"></div>
 <div id="tab-tienda" class="tab-content"></div>
-<div id="tab-temario" class="tab-content"></div>
 
-<!-- Tabs inferior - Primer botón TEST activo -->
+<!-- Tabs inferior - PRIMER BOTÓN TEMARIO -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
+  <button class="tab-btn active" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
   <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
   <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
   <button class="tab-btn" onclick="cambiarTab(event,'progreso')"><span class="emoji">📊</span>PROGRESO</button>
   <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
   <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<script src="./App.js?v=8.8.4"></script>
+<script src="./App.js?v=8.8.5"></script>
 </body>
 </html>
