@@ -1,4 +1,4 @@
-const CACHE = 'gasdrive-v8.6.2-es'; // Subí versión para forzar update V16.8.8
+const CACHE = 'gasdrive-v8.6.5-es'; // Subí versión para forzar update
 
 const FILES = [
   './',
@@ -9,7 +9,7 @@ const FILES = [
   './icon-512.png',
   './sw.js',
   
-  // === NUEVO V8.6: Módulos dinámicos en /data/ ===
+  // === V8.6.5: Módulos dinámicos en /data/ ===
   './data/imagenes.js',
   './data/preguntas-senales.js',
   './data/preguntas-normas.js',
@@ -23,28 +23,28 @@ const FILES = [
   './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
   './03_Manual_IX_Primeros_Auxilios_2025.pdf',
   './04_Manual_VIII_Mecanica_2024.pdf',
-  './05_Medio_Ambiente_Distintivos_DGT_2025.pdf',
-  
-  // === NUEVO: Todas las imágenes extraídas ===
-  './img/senales/',
-  './img/medioambiente/'
+  './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
+  // NOTA: No metas './img/senales/' aquí porque no es un archivo. Se cachean dinámico abajo
 ];
 
-// Cache dinámico para todo /data/ y /img/
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(cache => {
       return cache.addAll(FILES).then(() => {
-        // Cachea todas las imágenes PNG de señales y medioambiente
+        console.log('✅ Cache base instalado');
+
+        // Cachea todas las imágenes PNG listadas en imagenes.js
         return caches.open(CACHE).then(c => {
           return fetch('./data/imagenes.js')
             .then(r => r.text())
             .then(txt => {
-              // Extrae rutas de imagenes.js con regex
+              // Extrae rutas: "./img/senales/r-1.png"
               const matches = txt.match(/"\.\/img\/[^"]+\.png"/g) || [];
-              const rutas = matches.map(m => m.replace(/"/g, ''));
-              console.log(`Cacheando ${rutas.length} imágenes...`);
-              return c.addAll(rutas);
+              const rutas = [...new Set(matches.map(m => m.replace(/"/g, '')))];
+              console.log(`📷 Cacheando ${rutas.length} imágenes...`);
+              if(rutas.length > 0) {
+                return c.addAll(rutas).catch(err => console.warn('Algunas imágenes fallaron:', err));
+              }
             })
             .catch(() => console.log('imagenes.js aún no existe, se cacheará después'));
         });
@@ -62,6 +62,7 @@ self.addEventListener('activate', e => {
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
+  console.log(`✅ SW ${CACHE} activado`);
 });
 
 self.addEventListener('fetch', e => {
@@ -70,7 +71,7 @@ self.addEventListener('fetch', e => {
       // Si está en cache, devuelve. Si no, fetch y cachea dinámico
       return r || fetch(e.request).then(res => {
         // Cachea imágenes nuevas que no estaban en FILES
-        if (e.request.url.includes('/img/') && res.ok) {
+        if ((e.request.url.includes('/img/') || e.request.url.includes('/data/')) && res.ok) {
           caches.open(CACHE).then(cache => cache.put(e.request, res.clone()));
         }
         return res;
