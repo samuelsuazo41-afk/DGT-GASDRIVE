@@ -1,5 +1,5 @@
-// === GASDRIVE DGT V8.8.3 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
-const VERSION = "8.8.3";
+// === GASDRIVE DGT V8.8.4 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
+const VERSION = "8.8.4"; // <-- CAMBIO 1: Subir versión
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
 const MODULOS_PREGUNTAS = {
@@ -61,7 +61,7 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO V8.8.3 SVG EXPORT ===
+// === CARGADOR DINÁMICO V8.8.4 SVG EXPORT ===
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
@@ -211,7 +211,7 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA SVG V8.8.3 FINAL - SIN WRAPPER + WIDTH/HEIGHT INLINE
+// PINTA SVG V8.8.4 FINAL - SIN WRAPPER + WIDTH/HEIGHT INLINE
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
@@ -227,7 +227,6 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 
   if (svg) {
-    // FIX V8.8.3: Inyecta directo + fuerza tamaño
     imgCont.innerHTML = svg;
     const svgEl = imgCont.querySelector('svg');
     if (svgEl) {
@@ -248,14 +247,20 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 }
 
-// INICIO - TU INTRO IGUAL
+// INICIO - TU INTRO IGUAL PERO CON CHECK
 document.addEventListener('DOMContentLoaded', async () => {
   await cargarModulos();
   mostrarIntro();
 });
 
-// TU INTRO SCREEN - SIN TOCAR NADA
+// TU INTRO SCREEN - FIX V8.8.4: NO DUPLICAR SI INDEX YA LA TIENE
 function mostrarIntro(){
+  // CAMBIO 2: Si index.html ya tiene #intro-screen, no crear otra
+  if(document.getElementById('intro-screen')) {
+    console.log('✅ Intro ya existe en index.html, no duplicar');
+    return;
+  }
+
   const totalPreg = Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0);
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
@@ -274,7 +279,7 @@ function mostrarIntro(){
   `);
 }
 
-// FIX V8.8.3: Quita intro + activa test
+// FIX V8.8.4: Quita intro + activa test
 function tancarIntro() {
   const intro = document.getElementById('intro-screen');
   if(intro) intro.remove();
@@ -284,13 +289,14 @@ function tancarIntro() {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
   document.getElementById('tab-test').classList.add('active');
-  document.querySelector('.tab-btn[onclick*="test"]').classList.add('active');
+  const btnTest = document.querySelector('.tab-btn[onclick*="test"]'); // CAMBIO 3: check null
+  if(btnTest) btnTest.classList.add('active');
 
   // Carga primera pregunta
   setTimeout(() => cargarPregunta('general'), 150);
 }
 
-   
+
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
   {emoji:'🚗', txt:'Regla de los 2 segundos: mantén distancia con el coche de delante'},
