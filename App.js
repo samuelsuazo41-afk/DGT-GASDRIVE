@@ -1,5 +1,5 @@
-// === GASDRIVE DGT V8.8.2 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
-const VERSION = "8.8.2";
+// === GASDRIVE DGT V8.8.3 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
+const VERSION = "8.8.3";
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
 const MODULOS_PREGUNTAS = {
@@ -61,11 +61,11 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO V8.8.2 SVG CON EXPORT ===
+// === CARGADOR DINÁMICO V8.8.3 SVG EXPORT ===
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
-let SENALES_SVG = {}; // Cache local, no window
+window.SENALES_SVG = {}; // Cache para compatibilidad bloque 2
 let SVG_CARGADOS = false;
 
 async function cargarModulos() {
@@ -115,7 +115,7 @@ async function cargarModulos() {
     Object.keys(MODULOS_CASOS).forEach(caso => CASOS[caso] = []);
   }
 
-  // 4. Carga SVG - RD 465/2025 EXPORT
+  // 4. Carga SVG - RD 465/2025 CON EXPORT
   if (!SVG_CARGADOS) {
     try {
       const mod = await import(`./data/senales-svg.js`);
@@ -126,17 +126,14 @@ async function cargarModulos() {
         console.warn(`⚠️ Solo ${total} SVG cargados. Esperado: 187. Revisa senales-svg.js`);
       }
 
-      SENALES_SVG = svgs;
-      window.SENALES_SVG = svgs; // Mantener compatibilidad con bloque 2
+      window.SENALES_SVG = svgs;
       SVG_CARGADOS = true;
       console.log(`✅ SVG RD 465/2025: ${total}/187 cargados`);
-      console.log(`Test r-1: ${SENALES_SVG['r-1']? 'OK' : 'FALTA'}`);
-      console.log(`Test r-101: ${SENALES_SVG['r-101']? 'OK' : 'FALTA'}`);
-      console.log(`Test s-1: ${SENALES_SVG['s-1']? 'OK' : 'FALTA'}`);
+      console.log(`Test r-1: ${window.SENALES_SVG['r-1']? 'OK' : 'FALTA'}`);
+      console.log(`Test r-101: ${window.SENALES_SVG['r-101']? 'OK' : 'FALTA'}`);
     } catch (e) {
       console.error(`❌ Error crítico cargando senales-svg.js:`, e);
       console.error(`Asegúrate que el archivo usa: export const SENALES_SVG = {`);
-      SENALES_SVG = {};
       window.SENALES_SVG = {};
     }
   }
@@ -214,7 +211,7 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA SVG V8.8.2 FINAL - SIN WRAPPER DIV
+// PINTA SVG V8.8.3 FINAL - SIN WRAPPER + WIDTH/HEIGHT INLINE
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
@@ -225,12 +222,12 @@ function pintarImagenTest(cat, preguntaTexto) {
   console.log(`🔍 [${cat}] Código: ${codigo}`);
 
   let svg = null;
-  if (codigo && SENALES_SVG) {
-    svg = SENALES_SVG[codigo];
+  if (codigo && window.SENALES_SVG) {
+    svg = window.SENALES_SVG[codigo];
   }
 
   if (svg) {
-    // FIX V8.8.2: Inyecta directo + fuerza width/height inline
+    // FIX V8.8.3: Inyecta directo + fuerza tamaño
     imgCont.innerHTML = svg;
     const svgEl = imgCont.querySelector('svg');
     if (svgEl) {
@@ -251,13 +248,13 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 }
 
-// INICIO
+// INICIO - TU INTRO IGUAL
 document.addEventListener('DOMContentLoaded', async () => {
   await cargarModulos();
   mostrarIntro();
 });
 
-// INTRO SCREEN
+// TU INTRO SCREEN - SIN TOCAR NADA
 function mostrarIntro(){
   const totalPreg = Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0);
   document.body.insertAdjacentHTML('afterbegin', `
@@ -277,11 +274,23 @@ function mostrarIntro(){
   `);
 }
 
+// FIX V8.8.3: Quita intro + activa test
 function tancarIntro() {
   const intro = document.getElementById('intro-screen');
   if(intro) intro.remove();
+
+  // Activa tab test
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+  document.getElementById('tab-test').classList.add('active');
+  document.querySelector('.tab-btn[onclick*="test"]').classList.add('active');
+
+  // Carga primera pregunta
+  setTimeout(() => cargarPregunta('general'), 150);
 }
 
+   
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
   {emoji:'🚗', txt:'Regla de los 2 segundos: mantén distancia con el coche de delante'},
