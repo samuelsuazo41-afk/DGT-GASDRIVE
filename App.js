@@ -1,5 +1,5 @@
-// === GASDRIVE DGT V8.8.4 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
-const VERSION = "8.8.4"; // <-- CAMBIO 1: Subir versión
+// === GASDRIVE DGT V8.8.5 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
+const VERSION = "8.8.5";
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
 const MODULOS_PREGUNTAS = {
@@ -29,7 +29,7 @@ function crearProgresoVacio() {
   progreso.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
 
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    progreso.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+    progreso.casos = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   });
 
   return progreso;
@@ -52,8 +52,8 @@ function migrarProgreso() {
     cambiado = true;
   }
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    if (!PROGRESO.casos[caso]) {
-      PROGRESO.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+    if (!PROGRESO.casos) {
+      PROGRESO.casos = { total: 0, aciertos: 0, unicas: [], falladas: [] };
       cambiado = true;
     }
   });
@@ -61,39 +61,66 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO V8.8.4 SVG EXPORT ===
+// === CARGADOR DINÁMICO V8.8.5 SVG EXPORT PARALELO ===
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
-window.SENALES_SVG = {}; // Cache para compatibilidad bloque 2
+window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
+let MODULOS_LISTOS = false;
 
 async function cargarModulos() {
   console.log(`🚀 GasDrive V${VERSION} - Cargando módulos RD 465/2025...`);
 
-  // 1. Carga preguntas por tema
-  for (const [tema, config] of Object.entries(MODULOS_PREGUNTAS)) {
-    try {
-      const mod = await import(`./data/${config.archivo}`);
-      const data = mod[config.export];
-
-      if(!data) {
-        console.error(`❌ ${tema}: No existe export "${config.export}" en ${config.archivo}`);
+  await Promise.all([
+    // 1. Preguntas por tema
+   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+      try {
+        const mod = await import(`./data/${config.archivo}`);
+        const data = mod[config.export];
+        PREGUNTAS[tema] = Array.isArray(data)? data : [];
+        console.log(`✅ ${tema}: ${PREGUNTAS[tema].length} preguntas`);
+      } catch (e) {
+        console.error(`❌ ${config.archivo}:`, e.message);
         PREGUNTAS[tema] = [];
-      } else if(!Array.isArray(data) || data.length === 0) {
-        console.error(`❌ ${tema}: El export "${config.export}" está vacío`);
-        PREGUNTAS[tema] = [];
-      } else {
-        PREGUNTAS[tema] = data;
-        console.log(`✅ ${tema}: ${data.length} preguntas cargadas`);
       }
-    } catch (e) {
-      console.error(`❌ Error cargando ${config.archivo}:`, e.message);
-      PREGUNTAS[tema] = [];
-    }
-  }
+    }),
+    // 2. Casos
+    import(`./data/preguntas-situaciones.js`).then(mod => {
+      const SIT = mod.SITUACIONES;
+      Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
+        CASOS = SIT[config.clave] || [];
+        console.log(`✅ Casos ${caso}: ${CASOS.length} preguntas`);
+      });
+    }).catch(e => {
+      console.error(`❌ Error cargando situaciones:`, e);
+      Object.keys(MODULOS_CASOS).forEach(caso => CASOS = []);
+    }),
+    // 3. SVG
+    import(`./data/senales-svg.js`).then(mod => {
+      const svgs = mod.SENALES_SVG || {};
+      const total = Object.keys(svgs).length;
+      if (total < 180) console.warn(`⚠️ Solo ${total} SVG cargados. Esperado: 187`);
+      window.SENALES_SVG = svgs;
+      SVG_CARGADOS = true;
+      console.log(`✅ SVG RD 465/2025: ${total}/187 cargados`);
+      console.log(`Test r-1: ${window.SENALES_SVG['r-1']? 'OK' : 'FALTA'}`);
+      console.log(`Test r-101: ${window.SENALES_SVG['r-101']? 'OK' : 'FALTA'}`);
+    }).catch(e => {
+      console.error(`❌ Error cargando senales-svg.js:`, e);
+      window.SENALES_SVG = {};
+    }),
+    // 4. Explicaciones
+    import(`./data/explicaciones.js`).then(mod => {
+      window.EXPLICACIONES = mod.EXPLICACIONES || {};
+      console.log(`✅ Explicaciones: ${Object.keys(window.EXPLICACIONES).length} cargadas`);
+    }).catch(e => {
+      console.error(`❌ Error cargando explicaciones.js:`, e);
+      window.EXPLICACIONES = {};
+    })
+  ]);
 
-  // 2. Genera "general"
+  // 5. Genera "general"
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr) && arr.length > 0) {
@@ -102,52 +129,7 @@ async function cargarModulos() {
   });
   console.log(`✅ general: ${PREGUNTAS.general.length} preguntas mezcladas`);
 
-  // 3. Carga casos
-  try {
-    const mod = await import(`./data/preguntas-situaciones.js`);
-    const SIT = mod.SITUACIONES;
-    for (const [caso, config] of Object.entries(MODULOS_CASOS)) {
-      CASOS[caso] = SIT[config.clave] || [];
-      console.log(`✅ Casos ${caso}: ${CASOS[caso].length} preguntas`);
-    }
-  } catch (e) {
-    console.error(`❌ Error cargando situaciones:`, e);
-    Object.keys(MODULOS_CASOS).forEach(caso => CASOS[caso] = []);
-  }
-
-  // 4. Carga SVG - RD 465/2025 CON EXPORT
-  if (!SVG_CARGADOS) {
-    try {
-      const mod = await import(`./data/senales-svg.js`);
-      const svgs = mod.SENALES_SVG || {};
-      const total = Object.keys(svgs).length;
-
-      if (total < 180) {
-        console.warn(`⚠️ Solo ${total} SVG cargados. Esperado: 187. Revisa senales-svg.js`);
-      }
-
-      window.SENALES_SVG = svgs;
-      SVG_CARGADOS = true;
-      console.log(`✅ SVG RD 465/2025: ${total}/187 cargados`);
-      console.log(`Test r-1: ${window.SENALES_SVG['r-1']? 'OK' : 'FALTA'}`);
-      console.log(`Test r-101: ${window.SENALES_SVG['r-101']? 'OK' : 'FALTA'}`);
-    } catch (e) {
-      console.error(`❌ Error crítico cargando senales-svg.js:`, e);
-      console.error(`Asegúrate que el archivo usa: export const SENALES_SVG = {`);
-      window.SENALES_SVG = {};
-    }
-  }
-
-  // 5. Carga explicaciones
-  try {
-    const mod = await import(`./data/explicaciones.js`);
-    window.EXPLICACIONES = mod.EXPLICACIONES || {};
-    console.log(`✅ Explicaciones: ${Object.keys(window.EXPLICACIONES).length} cargadas`);
-  } catch (e) {
-    console.error(`❌ Error cargando explicaciones.js:`, e);
-    window.EXPLICACIONES = {};
-  }
-
+  MODULOS_LISTOS = true;
   console.log('📊 RESUMEN FINAL:', Object.entries(PREGUNTAS).map(([k,v]) => `${k}:${v.length}`).join(' | '));
 }
 
@@ -211,7 +193,7 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA SVG V8.8.4 FINAL - SIN WRAPPER + WIDTH/HEIGHT INLINE
+// PINTA SVG V8.8.5 CON ESPERA SI HACE FALTA
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
@@ -221,47 +203,55 @@ function pintarImagenTest(cat, preguntaTexto) {
 
   console.log(`🔍 [${cat}] Código: ${codigo}`);
 
-  let svg = null;
-  if (codigo && window.SENALES_SVG) {
-    svg = window.SENALES_SVG[codigo];
-  }
+  const pintar = () => {
+    let svg = null;
+    if (codigo && window.SENALES_SVG) {
+      svg = window.SENALES_SVG[codigo];
+    }
 
-  if (svg) {
-    imgCont.innerHTML = svg;
-    const svgEl = imgCont.querySelector('svg');
-    if (svgEl) {
-      svgEl.setAttribute('width', '140');
-      svgEl.setAttribute('height', '140');
-      svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-      svgEl.style.display = 'block';
-      svgEl.style.margin = '0 auto';
-    }
-    console.log(`✅ SVG renderizado: ${codigo}`);
-  } else {
-    if (codigo) {
-      imgCont.innerHTML = `<div style="text-align:center;color:#999;font-size:14px">Señal: ${codigo.toUpperCase()}</div>`;
-      console.warn(`⚠️ No hay SVG para: ${codigo}`);
+    if (svg) {
+      imgCont.innerHTML = svg;
+      const svgEl = imgCont.querySelector('svg');
+      if (svgEl) {
+        svgEl.setAttribute('width', '140');
+        svgEl.setAttribute('height', '140');
+        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svgEl.style.display = 'block';
+        svgEl.style.margin = '0 auto';
+      }
+      console.log(`✅ SVG renderizado: ${codigo}`);
     } else {
-      imgCont.innerHTML = '';
+      if (codigo) {
+        imgCont.innerHTML = `<div style="text-align:center;color:#999;font-size:14px">Señal: ${codigo.toUpperCase()}</div>`;
+        console.warn(`⚠️ No hay SVG para: ${codigo}`);
+      } else {
+        imgCont.innerHTML = '';
+      }
     }
+  };
+
+  if (SVG_CARGADOS) {
+    pintar();
+  } else {
+    imgCont.innerHTML = '<div style="text-align:center;padding:40px;color:#999">Cargando señal...</div>';
+    setTimeout(pintar, 300);
   }
 }
 
-// INICIO - TU INTRO IGUAL PERO CON CHECK
-document.addEventListener('DOMContentLoaded', async () => {
-  await cargarModulos();
-  mostrarIntro();
+// INICIO - NO ESPERAR A CARGAR MÓDULOS PARA QUE INTRO SALGA INSTANTÁNEO
+document.addEventListener('DOMContentLoaded', () => {
+  cargarModulos(); // Carga en background
+  mostrarIntro(); // Intro aparece ya
 });
 
-// TU INTRO SCREEN - FIX V8.8.4: NO DUPLICAR SI INDEX YA LA TIENE
+// INTRO SCREEN - FIX V8.8.5: NO DUPLICAR SI INDEX YA LA TIENE
 function mostrarIntro(){
-  // CAMBIO 2: Si index.html ya tiene #intro-screen, no crear otra
   if(document.getElementById('intro-screen')) {
     console.log('✅ Intro ya existe en index.html, no duplicar');
     return;
   }
 
-  const totalPreg = Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0);
+  const totalPreg = 187;
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
@@ -279,23 +269,24 @@ function mostrarIntro(){
   `);
 }
 
-// FIX V8.8.4: Quita intro + activa test
+// FIX V8.8.5: Quita intro + activa PRIMER TAB = TEMARIOS
 function tancarIntro() {
   const intro = document.getElementById('intro-screen');
   if(intro) intro.remove();
 
-  // Activa tab test
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-  document.getElementById('tab-test').classList.add('active');
-  const btnTest = document.querySelector('.tab-btn[onclick*="test"]'); // CAMBIO 3: check null
-  if(btnTest) btnTest.classList.add('active');
+  // Activa temario primero según tu menú
+  document.getElementById('tab-temario').classList.add('active');
+  const btnTemario = document.querySelector('.tab-btn[onclick*="temario"]');
+  if(btnTemario) btnTemario.classList.add('active');
 
-  // Carga primera pregunta
-  setTimeout(() => cargarPregunta('general'), 150);
+  // Carga contenido temario después
+  setTimeout(() => {
+    if(typeof cargarTemario === 'function') cargarTemario();
+  }, 150);
 }
-
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
