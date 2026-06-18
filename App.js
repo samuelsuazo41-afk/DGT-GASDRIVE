@@ -1,4 +1,4 @@
-// === GASDRIVE DGT V8.8.9 ES - CARGA TEMARIO PRIMERO ===
+// === GASDRIVE DGT V8.8.9 ES - CARGA TEMARIO PRIMERO - TODO MINÚSCULAS ===
 const VERSION = "8.8.9";
 let TIEMPO_INICIO = performance.now();
 
@@ -44,7 +44,7 @@ let MODULOS_LISTOS = false;
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos...`);
   await Promise.all([
-  ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
@@ -81,12 +81,18 @@ async function cargarModulos() {
 
 // PASO 1: CARGA TEMARIO HTML INMEDIATO - NO ESPERA DATOS
 document.addEventListener('DOMContentLoaded', () => {
-  // Pinta botones temario al abrir, aunque sin datos
-  if(document.getElementById('temario-lista')) {
-    cargarTemario();
+  try {
+    // Pinta botones temario al abrir, aunque sin datos
+    if(document.getElementById('temario-lista')) {
+      cargarTemario();
+      console.log('✅ Temario HTML pintado');
+    }
+    // PASO 2: Después pinta intro encima
+    mostrarIntro();
+    console.log('✅ Intro pintada');
+  } catch(e) {
+    console.error('❌ CRASH en DOMContentLoaded:', e);
   }
-  // PASO 2: Después pinta intro encima
-  mostrarIntro();
 });
 
 // INTRO
@@ -111,19 +117,22 @@ function mostrarIntro(){
 
 // PASO 3: EMPEZAR = Quita intro + carga datos en background + init
 window.tancarIntro = function() {
+  console.log('1. Quitando intro...');
   const intro = document.getElementById('intro-screen');
   if(intro) intro.remove();
 
-  // Tab temario ya está activo desde HTML. No lo tocamos.
-  // Solo activamos el botón del menú
+  // Tab temario ya está active desde HTML. Solo activamos botón menú
+  console.log('2. Activando botón menú...');
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
 
   // PASO 4: Carga datos AHORA y luego inicia app
+  console.log('3. Cargando módulos...');
   cargarModulos().then(() => {
-    init(); // Pinta coins, test general, etc
+    console.log('4. Módulos listos, llamando init...');
+    init();
     console.log(`📊 Tiempo total carga: ${Math.round(performance.now() - TIEMPO_INICIO)}ms`);
-  });
+  }).catch(e => console.error('ERROR cargarModulos:', e));
 }
 
 function guardarProgreso() {
