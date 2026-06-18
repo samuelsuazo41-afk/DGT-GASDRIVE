@@ -1,7 +1,6 @@
-// === GASDRIVE DGT V8.8.6 ES - BLOQUE 1 DEPLOY LIMPIO SVG RD 465/2025 ===
-const VERSION = "8.8.6";
+// === GASDRIVE DGT V8.8.7 ES - SIMPLE Y DIRECTO ===
+const VERSION = "8.8.7";
 
-// === REGISTRO AUTOMÁTICO DE MÓDULOS ===
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
@@ -17,176 +16,111 @@ const MODULOS_CASOS = {
   emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
 };
 
-// === MOTOR DE PROGRESO DGT ===
 function crearProgresoVacio() {
   const progreso = { tests: {}, casos: {}, examenes: { realizados: 0, aprobados: 0, historial: [] }, temarios: {}, racha: { dias: 0, ultimaFecha: "" } };
-
   Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
     progreso.tests[tema] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
     progreso.temarios[tema] = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
   });
   progreso.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   progreso.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
-
   Object.keys(MODULOS_CASOS).forEach(caso => {
     progreso.casos = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   });
-
   return progreso;
 }
 
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || crearProgresoVacio();
 
-function migrarProgreso() {
-  let cambiado = false;
-  Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
-    if (!PROGRESO.tests[tema]) {
-      PROGRESO.tests[tema] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
-      PROGRESO.temarios[tema] = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
-      cambiado = true;
-    }
-  });
-  if (!PROGRESO.tests.general) {
-    PROGRESO.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
-    PROGRESO.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
-    cambiado = true;
-  }
-  Object.keys(MODULOS_CASOS).forEach(caso => {
-    if (!PROGRESO.casos) {
-      PROGRESO.casos = { total: 0, aciertos: 0, unicas: [], falladas: [] };
-      cambiado = true;
-    }
-  });
-  if (cambiado) guardarProgreso();
-}
-migrarProgreso();
-
-// === CARGADOR DINÁMICO V8.8.6 SVG EXPORT PARALELO ===
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 let MODULOS_LISTOS = false;
-let DATOS_CARGADOS = false;
 
 async function cargarModulos() {
-  console.log(`🚀 GasDrive V${VERSION} - Cargando módulos RD 465/2025...`);
-
+  console.log(`🚀 V${VERSION} - Cargando datos...`);
   await Promise.all([
-    // 1. Preguntas por tema
-   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+  ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
-        const data = mod[config.export];
-        PREGUNTAS[tema] = Array.isArray(data)? data : [];
-        console.log(`✅ ${tema}: ${PREGUNTAS[tema].length} preguntas`);
+        PREGUNTAS[tema] = mod[config.export] || [];
+        console.log(`✅ ${tema}: ${PREGUNTAS[tema].length}`);
       } catch (e) {
-        console.error(`❌ ${config.archivo}:`, e.message);
+        console.error(`❌ ${config.archivo}`, e);
         PREGUNTAS[tema] = [];
       }
     }),
-    // 2. Casos
     import(`./data/preguntas-situaciones.js`).then(mod => {
       const SIT = mod.SITUACIONES;
       Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
         CASOS = SIT[config.clave] || [];
-        console.log(`✅ Casos ${caso}: ${CASOS.length} preguntas`);
       });
-    }).catch(e => {
-      console.error(`❌ Error cargando situaciones:`, e);
-      Object.keys(MODULOS_CASOS).forEach(caso => CASOS = []);
-    }),
-    // 3. SVG
+    }).catch(e => console.error(e)),
     import(`./data/senales-svg.js`).then(mod => {
-      const svgs = mod.SENALES_SVG || {};
-      const total = Object.keys(svgs).length;
-      if (total < 180) console.warn(`⚠️ Solo ${total} SVG cargados. Esperado: 187`);
-      window.SENALES_SVG = svgs;
+      window.SENALES_SVG = mod.SENALES_SVG || {};
       SVG_CARGADOS = true;
-      console.log(`✅ SVG RD 465/2025: ${total}/187 cargados`);
-      console.log(`Test r-1: ${window.SENALES_SVG['r-1']? 'OK' : 'FALTA'}`);
-      console.log(`Test r-101: ${window.SENALES_SVG['r-101']? 'OK' : 'FALTA'}`);
-    }).catch(e => {
-      console.error(`❌ Error cargando senales-svg.js:`, e);
-      window.SENALES_SVG = {};
-    }),
-    // 4. Explicaciones
+      console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length}`);
+    }).catch(e => console.error(e)),
     import(`./data/explicaciones.js`).then(mod => {
       window.EXPLICACIONES = mod.EXPLICACIONES || {};
-      console.log(`✅ Explicaciones: ${Object.keys(window.EXPLICACIONES).length} cargadas`);
-    }).catch(e => {
-      console.error(`❌ Error cargando explicaciones.js:`, e);
-      window.EXPLICACIONES = {};
-    })
+    }).catch(e => console.error(e))
   ]);
 
-  // 5. Genera "general"
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
-    if(Array.isArray(arr) && arr.length > 0) {
-      PREGUNTAS.general.push(...arr);
-    }
+    if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
-  console.log(`✅ general: ${PREGUNTAS.general.length} preguntas mezcladas`);
-
   MODULOS_LISTOS = true;
-  DATOS_CARGADOS = true;
-  console.log('📊 RESUMEN FINAL:', Object.entries(PREGUNTAS).map(([k,v]) => `${k}:${v.length}`).join(' | '));
-
-  // Si la intro ya está mostrada, actualizar contador
-  actualizarContadorIntro();
+  console.log(`✅ LISTO: ${PREGUNTAS.general.length} preguntas`);
 }
 
-// === SUBTEMAS DÉBILES ===
-const SUBTEMAS_DEBILES = {
-  senales: [
-    { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
-    { pct: 20, msg: 'Prohibición Entrada R-101 a R-116 - Pág 68-72' },
-    { pct: 40, msg: 'Prohibición Paso R-300 a R-311 - Pág 73-78' },
-    { pct: 60, msg: 'Obligación R-400 a R-422 - Pág 75-76' },
-    { pct: 80, msg: 'Indicaciones S-50 a S-126 - Pág 80-95' }
-  ],
-  normas: [
-    { pct: 0, msg: 'Normas Generales y Definiciones - Pág 5-15' },
-    { pct: 20, msg: 'Velocidades Máximas - Pág 25-32' },
-    { pct: 40, msg: 'Prioridad Intersecciones - Pág 45-52' },
-    { pct: 60, msg: 'Adelantamientos - Pág 65-75' },
-    { pct: 80, msg: 'Alumbrado y Carriles - Pág 85-92' }
-  ],
-  auxilios: [
-    { pct: 0, msg: 'Conducta PAS - Pág 40-45' },
-    { pct: 25, msg: 'Valoración ABC - Pág 50-55' },
-    { pct: 50, msg: 'RCP Básica - Pág 53-58' },
-    { pct: 75, msg: 'Hemorragias - Pág 65-72' }
-  ],
-  mecanica: [
-    { pct: 0, msg: 'Motor y Elementos - Pág 15-25' },
-    { pct: 25, msg: 'Frenos y ABS - Pág 35-42' },
-    { pct: 50, msg: 'Neumáticos - Pág 55-62' },
-    { pct: 75, msg: 'Niveles Aceite/Refrigerante - Pág 70-76' }
-  ],
-  medioambiente: [
-    { pct: 0, msg: 'Distintivos DGT 0/ECO/C/B - Pág 8-14' },
-    { pct: 25, msg: 'Zonas Bajas Emisiones ZBE - Pág 18-25' },
-    { pct: 50, msg: 'Conducción Eficiente - Pág 30-38' },
-    { pct: 75, msg: 'Contaminación - Pág 45-50' }
-  ],
-  general: [
-    { pct: 0, msg: 'Documentación y Permisos - Pág 5-10' }
-  ]
-};
+// INTRO INSTANTÁNEA - NO ESPERA DATOS
+document.addEventListener('DOMContentLoaded', () => {
+  mostrarIntro();
+});
 
-const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
+// INTRO
+function mostrarIntro(){
+  if(document.getElementById('intro-screen')) return;
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+      <div style="font-size:64px;margin-bottom:20px">🚗</div>
+      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
+      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 6 temarios oficiales + casos reales</p>
+      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+        <div>💰 Gana coins respondiendo bien</div>
+        <div>🏎️ Compra supercoches en el Garaje</div>
+        <div>📚 187 preguntas DGT reales</div>
+        <div>📖 Temarios completos para repasar</div>
+      </div>
+      <button onclick="window.tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;touch-action:manipulation">EMPEZAR</button>
+    </div>
+  `);
+}
+
+// EMPEZAR = Quita intro + carga datos + entra app
+window.tancarIntro = function() {
+  const intro = document.getElementById('intro-screen');
+  if(intro) intro.remove();
+
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-temario').classList.add('active');
+  document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
+
+  // Carga datos AHORA, cuando ya estás dentro
+  cargarModulos().then(() => {
+    setTimeout(() => cargarTemario(), 100);
+  });
+}
 
 function guardarProgreso() {
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
 
-const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
-const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
-
-// BUSCA CLAVE FLEXIBLE
 function buscarClave(obj, texto) {
   if (!obj ||!texto) return null;
   if (obj[texto]) return obj[texto];
@@ -198,116 +132,28 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA SVG V8.8.6 CON ESPERA SI HACE FALTA
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
-
   const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
   const codigo = match? match[1].toLowerCase() : null;
-
-  console.log(`🔍 [${cat}] Código: ${codigo}`);
-
-  const pintar = () => {
-    let svg = null;
-    if (codigo && window.SENALES_SVG) {
-      svg = window.SENALES_SVG[codigo];
-    }
-
-    if (svg) {
-      imgCont.innerHTML = svg;
-      const svgEl = imgCont.querySelector('svg');
-      if (svgEl) {
-        svgEl.setAttribute('width', '140');
-        svgEl.setAttribute('height', '140');
-        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        svgEl.style.display = 'block';
-        svgEl.style.margin = '0 auto';
-      }
-      console.log(`✅ SVG renderizado: ${codigo}`);
-    } else {
-      if (codigo) {
-        imgCont.innerHTML = `<div style="text-align:center;color:#999;font-size:14px">Señal: ${codigo.toUpperCase()}</div>`;
-        console.warn(`⚠️ No hay SVG para: ${codigo}`);
-      } else {
-        imgCont.innerHTML = '';
-      }
-    }
-  };
-
-  if (SVG_CARGADOS) {
-    pintar();
-  } else {
-    imgCont.innerHTML = '<div style="text-align:center;padding:40px;color:#999">Cargando señal...</div>';
-    setTimeout(pintar, 300);
-  }
-}
-
-// DEPLOY LIMPIO V8.8.6: 1.Carga datos 2.Intro 3.EMPEZAR
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('GasDrive V8.8.6 iniciando...');
-
-  // 1. Cargar todos los datos primero en background
-  cargarModulos();
-
-  // 2. Mostrar intro después de 200ms cuando DOM está listo
-  setTimeout(() => mostrarIntro(), 200);
-});
-
-// INTRO SCREEN - V8.8.6: Se crea dinámico, no duplica
-function mostrarIntro(){
-  if(document.getElementById('intro-screen')) {
-    console.log('✅ Intro ya existe, no duplicar');
+  if (!codigo ||!SVG_CARGADOS) {
+    imgCont.innerHTML = codigo? `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}</div>` : '';
     return;
   }
-
-  const totalPreg = PREGUNTAS.general? PREGUNTAS.general.length : 187;
-
-  document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-      <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
-      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 ${Object.keys(MODULOS_PREGUNTAS).length + 1} temarios oficiales + casos reales</p>
-      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-        <div>💰 Gana coins respondiendo bien</div>
-        <div>🏎️ Compra supercoches en el Garaje</div>
-        <div id="intro-contador-preguntas">📚 ${totalPreg} preguntas DGT reales</div>
-        <div>📖 Temarios completos para repasar</div>
-      </div>
-      <button onclick="window.tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;touch-action:manipulation">EMPEZAR</button>
-    </div>
-  `);
-}
-
-// Actualiza contador cuando cargan datos
-function actualizarContadorIntro() {
-  const contador = document.getElementById('intro-contador-preguntas');
-  if(contador && PREGUNTAS.general) {
-    contador.innerHTML = `📚 ${PREGUNTAS.general.length} preguntas DGT reales`;
-  }
-}
-
-// FIX V8.8.6: Quita intro + activa app completa
-window.tancarIntro = function() {
-  console.log('🔘 EMPEZAR pulsado - entrando a app completa');
-  const intro = document.getElementById('intro-screen');
-  if(intro) intro.remove();
-
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-  // Activa TEMARIO primero según tu menú
-  document.getElementById('tab-temario').classList.add('active');
-  const btnTemario = document.querySelector('.tab-btn[onclick*="temario"]');
-  if(btnTemario) btnTemario.classList.add('active');
-
-  // Carga contenido temario después
-  setTimeout(() => {
-    if(typeof cargarTemario === 'function') {
-      cargarTemario();
+  const svg = window.SENALES_SVG[codigo];
+  if (svg) {
+    imgCont.innerHTML = svg;
+    const svgEl = imgCont.querySelector('svg');
+    if (svgEl) {
+      svgEl.setAttribute('width', '140');
+      svgEl.setAttribute('height', '140');
+      svgEl.style.display = 'block';
+      svgEl.style.margin = '0 auto';
     }
-  }, 150);
+  } else {
+    imgCont.innerHTML = `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}</div>`;
+  }
 }
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
