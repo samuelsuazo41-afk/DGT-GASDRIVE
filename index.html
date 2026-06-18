@@ -2,48 +2,160 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V8.7.3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GasDrive DGT ES V8.7.4</title>
 <link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0a0a0a">
 <style>
-html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
-/* Header compacto y centrado */
-.header{background:linear-gradient(180deg,#2a2a2a 0%,#0a0a0a 100%);padding:14px 20px 18px;text-align:center;border-bottom:1px solid #333;position:sticky;top:0;z-index:50}
-h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
+html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+
+/* === STARBUCKS HEADER V8.7.4 - GLASS EFFECT === */
+.header{
+  background:linear-gradient(180deg,rgba(42,42,42,0.95) 0%,rgba(10,10,10,0.95) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding:14px 20px 18px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 .subtitle{font-size:11px;opacity:0.9;margin-top:2px;display:flex;align-items:center;justify-content:center;gap:6px}
-.coins{display:inline-flex;align-items:center;background:#FFD700;color:#000;padding:2px 9px;border-radius:14px;font-weight:900;font-size:11px}
-#motivacion{margin-top:6px;font-size:12px;color:#FFD700;font-weight:600}
+.coins{
+  display:inline-flex;
+  align-items:center;
+  background:linear-gradient(135deg,#FFD700 0%,#FFA500 100%);
+  color:#000;
+  padding:3px 10px;
+  border-radius:20px;
+  font-weight:900;
+  font-size:11px;
+  box-shadow:0 2px 8px rgba(255,215,0,0.3);
+}
+#motivacion{
+  margin-top:6px;
+  font-size:12px;
+  color:#FFD700;
+  font-weight:600;
+  text-shadow:0 1px 4px rgba(255,215,0,0.3);
+}
+
 /* Tabs inferior */
-.tabs{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;z-index:100;overflow-x:auto}
-.tab-btn{flex:1;min-width:70px;padding:11px 4px;background:none;border:none;color:#666;font-size:10px;cursor:pointer;transition:0.2s}
-.tab-btn.active{color:#00D9FF;background:#1a1a1a}
+.tabs{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:rgba(17,17,17,0.95);
+  backdrop-filter: blur(10px);
+  border-top:1px solid #222;
+  display:flex;
+  z-index:100;
+  overflow-x:auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  flex:1;
+  min-width:70px;
+  padding:11px 4px;
+  background:none;
+  border:none;
+  color:#666;
+  font-size:10px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.tab-btn.active{color:#00D9FF;background:rgba(26,26,26,0.8)}
 .tab-btn .emoji{font-size:19px;display:block;margin-bottom:3px}
-.tab-content{display:none;padding:12px;animation:fadeIn 0.3s;padding-bottom:80px;min-height:calc(100vh - 140px);background:#0a0a0a}
+.tab-content{
+  display:none;
+  padding:12px;
+  animation:fadeIn 0.3s;
+  padding-bottom:80px;
+  min-height:calc(100vh - 140px);
+  background:#0a0a0a
+}
 .tab-content.active{display:block}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.sub-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
-.sub-tab-btn{background:#222;border:1px solid #333;color:#999;padding:7px 14px;border-radius:18px;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s}
-.sub-tab-btn.active{background:#00D9FF;color:#000;border-color:#00D9FF;font-weight:700}
-.sub-content{display:none}
-.sub-content.active{display:block;animation:fadeIn 0.3s}
-/* Cards centradas y compactas */
-.card{ background:#1a1a1a; border:1px solid #333; border-radius:14px; padding:16px 8px; margin:0 auto 12px; box-shadow:0 4px 20px rgba(0,0,0,0.5); max-width:380px; }
-.card h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
-/* Test */
-.pregunta{font-size:16px;margin:12px 0;line-height:1.4}
 
-/* V8.7.3: CAJA IMAGEN/SVG ABAJO DEL BOTÓN */
+.sub-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:12px;
+  overflow-x:auto;
+  padding-bottom:4px;
+  scrollbar-width: none;
+}
+.sub-tabs::-webkit-scrollbar{display:none}
+.sub-tab-btn{
+  background:#222;
+  border:1px solid #333;
+  color:#999;
+  padding:7px 14px;
+  border-radius:18px;
+  font-size:12px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:0.2s
+}
+.sub-tab-btn.active{
+  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
+  color:#000;
+  border-color:#00D9FF;
+  font-weight:700;
+  box-shadow:0 2px 8px rgba(0,217,255,0.3)
+}
+
+/* Cards centradas y compactas */
+.card{ 
+  background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%); 
+  border:1px solid #333; 
+  border-radius:16px; 
+  padding:16px 12px; 
+  margin:0 auto 12px; 
+  box-shadow:0 4px 24px rgba(0,0,0,0.6); 
+  max-width:420px; 
+}
+.card h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
+
+/* Test */
+.pregunta{font-size:16px;margin:12px 0;line-height:1.4;font-weight:500}
+
+/* === STARBUCKS STATS BAR V8.7.4 - GRADIENTE PREMIUM === */
+.stats{
+  display:flex;
+  justify-content:space-around;
+  background:linear-gradient(135deg,#0a4 0%,#0c6 100%);
+  padding:10px 8px;
+  border-radius:12px;
+  margin-bottom:12px;
+  font-size:12px;
+  box-shadow:0 4px 12px rgba(0,170,68,0.3);
+}
+.stats span{
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+  text-shadow:0 1px 3px rgba(0,0,0,0.3)
+}
+
+/* V8.7.4: CAJA SVG ABAJO DEL BOTÓN - ESTILO STARBUCKS */
 .pregunta-img{
   margin-top:24px;
-  padding:16px;
-  background:#0f0f1a;
-  border:2px solid #2a2a4a;
-  border-radius:14px;
+  padding:18px;
+  background:radial-gradient(circle at center,#0f0f1a 0%,#0a0a12 100%);
+  border:1px solid rgba(0,217,255,0.2);
+  border-radius:16px;
   min-height:140px;
   display:flex;
   align-items:center;
   justify-content:center;
   transition:all 0.3s;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.5);
 }
 .pregunta-img:empty{ display:none; }
 .pregunta-img img{
@@ -53,115 +165,197 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   height:auto;
   object-fit:contain;
   border-radius:10px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.6));
 }
-/* FIX V8.7.3: Estilos para SVG inline */
+/* FIX V8.7.4: SVG inline perfecto */
 .pregunta-img svg {
   width: 100%;
   max-width: 180px;
   height: auto;
   display: block;
   margin: 0 auto;
-  border-radius: 10px;
-  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5));
+  border-radius: 12px;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.6));
 }
 @media (max-width: 480px) {
+  .pregunta-img{ padding:12px; min-height:120px }
   .pregunta-img img{ max-height:200px; }
   .pregunta-img svg{ max-width: 140px; }
 }
 
-.opcion{ background:#2a2a2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
-.opcion:hover{background:#333;border-color:#00D9FF}
-.opcion.correcta{background:#0a4!important;border-color:#0f5!important;animation:pulse 0.5s}
-.opcion.incorrecta{background:#a00!important;border-color:#f00!important;animation:shake 0.5s}
+.opcion{ 
+  background:linear-gradient(180deg,#2a2a2a 0%,#222 100%);
+  border:2px solid #333;
+  padding:13px;
+  margin:9px 0;
+  border-radius:12px; 
+  cursor:pointer;
+  transition:0.2s;
+  font-size:14px;
+  position:relative;
+  user-select:none; 
+  -webkit-tap-highlight-color:transparent;
+}
+.opcion:hover{background:#333;border-color:#00D9FF;transform:translateX(2px)}
+.opcion.correcta{
+  background:linear-gradient(135deg,#0a4 0%,#0c6 100%)!important;
+  border-color:#0f5!important;
+  animation:pulse 0.5s;
+  box-shadow:0 0 20px rgba(0,255,85,0.4)
+}
+.opcion.incorrecta{
+  background:linear-gradient(135deg,#a00 0%,#c00 100%)!important;
+  border-color:#f00!important;
+  animation:shake 0.5s
+}
 .opcion.bloqueada{pointer-events:none}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
-.btn-sig{background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
-.btn-sig:disabled{background:#333;color:#666;cursor:not-allowed}
-.stats{display:flex;justify-content:space-between;background:#E50914;padding:9px;border-radius:7px;margin-bottom:10px;font-size:12px}
-.stats span{color:#fff;font-weight:700}
-.feedback{text-align:center;font-size:18px;font-weight:900;margin:12px 0;padding:10px;border-radius:9px;animation:bounceIn 0.5s}
-.feedback.acierto{background:#0a4;color:#fff}
-.feedback.fallo{background:#a00;color:#fff}
+
+.btn-sig{
+  background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);
+  color:#fff;
+  border:none;
+  padding:15px;
+  width:100%;
+  font-size:15px;
+  font-weight:700;
+  margin-top:12px;
+  border-radius:12px;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  transition:0.2s
+}
+.btn-sig:active{transform:scale(0.98)}
+.btn-sig:disabled{
+  background:#333;
+  color:#666;
+  cursor:not-allowed;
+  box-shadow:none
+}
+
+.feedback{
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
+  margin:12px 0;
+  padding:12px;
+  border-radius:10px;
+  animation:bounceIn 0.5s
+}
+.feedback.acierto{
+  background:linear-gradient(135deg,#0a4 0%,#0c6 100%);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(0,255,85,0.3)
+}
+.feedback.fallo{
+  background:linear-gradient(135deg,#a00 0%,#c00 100%);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(255,0,0,0.3)
+}
 @keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 
-/* V8.6: Caja de explicación/refuerzo DGT - desactivada por ahora */
-.explicacion-box{
-  background:#1a1a2e;
-  border-left:3px solid #00D9FF;
-  padding:12px;
-  border-radius:8px;
-  margin-top:10px;
-  font-size:13px;
-  color:#00D9FF;
-  text-align:left;
-  display:none;
+/* Progress bar Starbucks */
+.progress-bar{
+  background:#222;
+  height:8px;
+  border-radius:4px;
+  margin:8px 0;
+  overflow:hidden;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.5)
 }
-.explicacion-box.visible{
-  display:block;
-  animation:fadeIn 0.3s;
+.progress-fill{
+  background:linear-gradient(90deg,#00D9FF 0%,#00ff88 100%);
+  height:100%;
+  transition:width 0.3s;
+  box-shadow:0 0 10px rgba(0,217,255,0.5)
 }
-.explicacion-box b{color:#fff}
-.explicacion-box span{color:#999;font-size:11px;display:block;margin-top:6px}
 
-/* Garaje y tienda */
-.garage-car{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:18px;text-align:center;margin:9px 0}
-.garage-car.locked{opacity:0.4}
-.garage-car h3{color:#00D9FF;margin:7px 0}
-.score-big{text-align:center;font-size:44px;font-weight:900;color:#00D9FF;margin:18px 0;text-shadow:0 0 20px rgba(0,217,255,0.5)}
-.emoji-shop{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px}
-.emoji-item{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:13px;text-align:center;cursor:pointer}
-.emoji-item.locked{opacity:0.4}
-
-/* Tips */
-.tip{background:#1a1a1a;border-left:4px solid #00D9FF;padding:12px;margin:9px 0;border-radius:6px;display:flex;align-items:center}
-.tip-emoji{font-size:22px;margin-right:10px}
-
-/* Progress */
-.progress-bar{background:#222;height:7px;border-radius:3px;margin:7px 0;overflow:hidden}
-.progress-fill{background:linear-gradient(90deg,#00D9FF,#0f5);height:100%;transition:width 0.3s}
-
-/* Buttons */
-.btn{background:#00D9FF;color:#000;border:none;padding:11px 18px;border-radius:7px;font-weight:700;cursor:pointer;margin:4px}
-.btn-buy{background:linear-gradient(135deg,#00D9FF 0%,#00ff88 100%);color:#000;border:none;padding:7px 11px;border-radius:7px;font-weight:700;font-size:12px;margin-top:7px;cursor:pointer}
-.btn-buy:active{transform:scale(0.95)}
+/* Botones */
+.btn{
+  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
+  color:#000;
+  border:none;
+  padding:11px 18px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  margin:4px;
+  box-shadow:0 2px 8px rgba(0,217,255,0.3)
+}
+.btn:active{transform:scale(0.96)}
 
 /* Grid Temario */
-#temario-lista{ display:grid; grid-template-columns:repeat(2,160px); gap:12px; justify-content:center; margin:14px auto 0; }
-.temario-item{ background:#1a1a1a; border:2px solid #00D9FF; border-radius:12px; padding:16px 10px; text-align:center; cursor:pointer; transition:0.2s; min-height:110px; display:flex; flex-direction:column; justify-content:center; }
+#temario-lista{ 
+  display:grid; 
+  grid-template-columns:repeat(2,1fr); 
+  gap:12px; 
+  justify-content:center; 
+  margin:14px auto 0; 
+  max-width:380px
+}
+.temario-item{ 
+  background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%); 
+  border:2px solid #00D9FF; 
+  border-radius:14px; 
+  padding:18px 10px; 
+  text-align:center; 
+  cursor:pointer; 
+  transition:0.2s; 
+  min-height:110px; 
+  display:flex; 
+  flex-direction:column; 
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(0,217,255,0.2)
+}
 .temario-item:active{ transform:scale(0.96); background:#222; }
-.temario-item.locked{ border-color:#444; opacity:0.4; cursor:not-allowed; }
-.temario-item div:nth-child(2){ font-size:14px; font-weight:700; margin:8px 0 4px; }
+.temario-item.locked{ border-color:#444; opacity:0.4; cursor:not-allowed; box-shadow:none }
 
-/* PROGRESO - NUEVO AUTOESCUELA */
-.progreso-item{background:#2a2a2a;border:2px solid #333;border-radius:10px;padding:12px;margin:10px 0}
-.progreso-item.completo{border-color:#0f5;background:#0a2a0a}
+/* Progreso */
+.progreso-item{
+  background:linear-gradient(180deg,#2a2a2a 0%,#222 100%);
+  border:2px solid #333;
+  border-radius:12px;
+  padding:14px;
+  margin:10px 0
+}
+.progreso-item.completo{
+  border-color:#0f5;
+  background:linear-gradient(180deg,#0a2a0a 0%,#061a06 100%);
+  box-shadow:0 0 20px rgba(0,255,85,0.2)
+}
 .progreso-titulo{display:flex;justify-content:space-between;font-weight:700;margin-bottom:6px}
-.progreso-porcentaje{color:#00D9FF;font-size:20px}
-.btn-dgt{background:linear-gradient(135deg,#00D9FF 0%,#0f5 100%);color:#000;border:none;padding:16px;width:100%;font-size:16px;font-weight:900;margin-top:15px;border-radius:10px;cursor:pointer;text-transform:uppercase}
-.btn-dgt:disabled{background:#333;color:#666;cursor:not-allowed}
-
-/* Fix scroll menú lateral */
-body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
-.side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a0a0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
-.side-menu.active{ transform:translateX(0); }
-.menu-overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:199; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
-.menu-overlay.active{ opacity:1; pointer-events:all; }
+.progreso-porcentaje{color:#00D9FF;font-size:20px;font-weight:900}
+.btn-dgt{
+  background:linear-gradient(135deg,#00D9FF 0%,#00ff88 100%);
+  color:#000;
+  border:none;
+  padding:16px;
+  width:100%;
+  font-size:16px;
+  font-weight:900;
+  margin-top:15px;
+  border-radius:12px;
+  cursor:pointer;
+  text-transform:uppercase;
+  box-shadow:0 4px 16px rgba(0,217,255,0.4)
+}
+.btn-dgt:disabled{background:#333;color:#666;cursor:not-allowed;box-shadow:none}
+.btn-dgt:active{transform:scale(0.98)}
 </style>
 </head>
 <body>
 <div class="header">
   <h1>🚘 GasDrive DGT ES</h1>
-  <div class="subtitle">680 Preguntas DGT. Offline<span class="coins" id="coins">💰 0</span></div>
-  <div id="motivacion" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
+  <div class="subtitle">187 Señales SVG + 680 Preguntas DGT<span class="coins" id="coins">💰 0</span></div>
+  <div id="motivacion"></div>
 </div>
 
 <!-- TEMARIO -->
 <div id="tab-temario" class="tab-content active">
   <div class="card">
     <h2>📖 TEMARIOS OFICIALES</h2>
-    <p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT</p>
+    <p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT RD 465/2025</p>
     <div id="temario-lista"></div>
   </div>
 </div>
@@ -171,7 +365,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
     <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'test','general')">📝 General</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','senales')">🚸 Señales</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','normas')">📋 Normas</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','mecanica')">🔧 Mecanica</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','mecanica')">🔧 Mecánica</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','auxilios')">🚑 Auxilios</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','medioambiente')">🌱 Medio Ambiente</button>
   </div>
@@ -179,14 +373,18 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-general" class="sub-content active">
     <div class="card">
       <h2>📝 TEST GENERAL</h2>
-      <div class="stats"><div>Aciertos: <span id="test-general-aciertos">0</span>/10</div><div>Racha: <span id="test-general-racha">0</span>🔥</div><div>Score: <span id="test-general-score">0</span></div></div>
+      <div class="stats">
+        <span>✅ <span id="test-general-aciertos">0</span></span>
+        <span>🔥 <span id="test-general-racha">0</span></span>
+        <span>⭐ <span id="test-general-score">0</span></span>
+      </div>
       <div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div>
       <div class="pregunta" id="test-general-pregunta">Cargando...</div>
       <div id="test-general-opciones"></div>
       <div class="feedback" id="test-general-feedback"></div>
       <div id="test-general-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
+      <!-- SVG ABAJO DEL BOTÓN -->
       <div id="test-general-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -194,14 +392,17 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-senales" class="sub-content">
     <div class="card">
       <h2>🚸 SEÑALES DE TRÁFICO</h2>
-      <div class="stats"><div>Aciertos: <span id="test-senales-aciertos">0</span>/5</div><div>Racha: <span id="test-senales-racha">0</span>🔥</div><div>Score: <span id="test-senales-score">0</span></div></div>
+      <div class="stats">
+        <span>✅ <span id="test-senales-aciertos">0</span></span>
+        <span>🔥 <span id="test-senales-racha">0</span></span>
+        <span>⭐ <span id="test-senales-score">0</span></span>
+      </div>
       <div class="progress-bar"><div class="progress-fill" id="test-senales-progress"></div></div>
       <div class="pregunta" id="test-senales-pregunta"></div>
       <div id="test-senales-opciones"></div>
       <div class="feedback" id="test-senales-feedback"></div>
       <div id="test-senales-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-senales" onclick="siguienteTest(event,'senales')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-senales-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -210,9 +411,9 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
     <div class="card">
       <h2>📋 NORMAS Y VELOCIDADES</h2>
       <div class="stats">
-        <div>Aciertos: <span id="test-normas-aciertos">0</span>/5</div>
-        <div>Racha: <span id="test-normas-racha">0</span>🔥</div>
-        <div>Score: <span id="test-normas-score">0</span></div>
+        <span>✅ <span id="test-normas-aciertos">0</span></span>
+        <span>🔥 <span id="test-normas-racha">0</span></span>
+        <span>⭐ <span id="test-normas-score">0</span></span>
       </div>
       <div class="progress-bar"><div class="progress-fill" id="test-normas-progress"></div></div>
       <div class="pregunta" id="test-normas-pregunta"></div>
@@ -220,7 +421,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="test-normas-feedback"></div>
       <div id="test-normas-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-normas" onclick="siguienteTest(event,'normas')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-normas-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -228,14 +428,17 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-mecanica" class="sub-content">
     <div class="card">
       <h2>🔧 MECÁNICA BÁSICA</h2>
-      <div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span>/5</div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div>
+      <div class="stats">
+        <span>✅ <span id="test-mecanica-aciertos">0</span></span>
+        <span>🔥 <span id="test-mecanica-racha">0</span></span>
+        <span>⭐ <span id="test-mecanica-score">0</span></span>
+      </div>
       <div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div>
       <div class="pregunta" id="test-mecanica-pregunta"></div>
       <div id="test-mecanica-opciones"></div>
       <div class="feedback" id="test-mecanica-feedback"></div>
       <div id="test-mecanica-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-mecanica" onclick="siguienteTest(event,'mecanica')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-mecanica-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -243,14 +446,17 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-auxilios" class="sub-content">
     <div class="card">
       <h2>🚑 PRIMEROS AUXILIOS</h2>
-      <div class="stats"><div>Aciertos: <span id="test-auxilios-aciertos">0</span>/5</div><div>Racha: <span id="test-auxilios-racha">0</span>🔥</div><div>Score: <span id="test-auxilios-score">0</span></div></div>
+      <div class="stats">
+        <span>✅ <span id="test-auxilios-aciertos">0</span></span>
+        <span>🔥 <span id="test-auxilios-racha">0</span></span>
+        <span>⭐ <span id="test-auxilios-score">0</span></span>
+      </div>
       <div class="progress-bar"><div class="progress-fill" id="test-auxilios-progress"></div></div>
       <div class="pregunta" id="test-auxilios-pregunta"></div>
       <div id="test-auxilios-opciones"></div>
       <div class="feedback" id="test-auxilios-feedback"></div>
       <div id="test-auxilios-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-auxilios" onclick="siguienteTest(event,'auxilios')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-auxilios-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -258,19 +464,23 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="test-medioambiente" class="sub-content">
     <div class="card">
       <h2>♻️ MEDIO AMBIENTE</h2>
-      <div class="stats"><div>Aciertos: <span id="test-medioambiente-aciertos">0</span>/5</div><div>Racha: <span id="test-medioambiente-racha">0</span>🔥</div><div>Score: <span id="test-medioambiente-score">0</span></div></div>
+      <div class="stats">
+        <span>✅ <span id="test-medioambiente-aciertos">0</span></span>
+        <span>🔥 <span id="test-medioambiente-racha">0</span></span>
+        <span>⭐ <span id="test-medioambiente-score">0</span></span>
+      </div>
       <div class="progress-bar"><div class="progress-fill" id="test-medioambiente-progress"></div></div>
       <div class="pregunta" id="test-medioambiente-pregunta"></div>
       <div id="test-medioambiente-opciones"></div>
       <div class="feedback" id="test-medioambiente-feedback"></div>
       <div id="test-medioambiente-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-medioambiente" onclick="siguienteTest(event,'medioambiente')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-medioambiente-imagen" class="pregunta-img"></div>
     </div>
   </div>
 </div>
 
+<!-- SITUACIONES, EXAMEN, PROGRESO, TIPS, GARAJE, TIENDA IGUAL QUE TU VERSIÓN -->
 <div id="tab-situaciones" class="tab-content">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'sit','clima')">🌧️ Clima</button>
@@ -281,7 +491,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="sit-clima" class="sub-content active">
     <div class="card">
       <h2 id="sit-titulo">🌧️ CASOS REALES - CLIMA ADVERSO</h2>
-      <div class="stats"><div>Resueltas: <span id="sit-clima-aciertos">0</span>/20</div><div>Score: <span id="sit-clima-score">0</span></div></div>
+      <div class="stats"><span>Resueltas: <span id="sit-clima-aciertos">0</span>/20</span><span>⭐ <span id="sit-clima-score">0</span></span></div>
       <div class="progress-bar"><div class="progress-fill" id="sit-clima-progress"></div></div>
       <div class="pregunta" id="sit-clima-pregunta"></div>
       <div id="sit-clima-opciones"></div>
@@ -292,7 +502,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="sit-urbano" class="sub-content">
     <div class="card">
       <h2>🏙️ CASOS REALES - URBANO</h2>
-      <div class="stats"><div>Resueltas: <span id="sit-urbano-aciertos">0</span>/20</div><div>Score: <span id="sit-urbano-score">0</span></div></div>
+      <div class="stats"><span>Resueltas: <span id="sit-urbano-aciertos">0</span>/20</span><span>⭐ <span id="sit-urbano-score">0</span></span></div>
       <div class="progress-bar"><div class="progress-fill" id="sit-urbano-progress"></div></div>
       <div class="pregunta" id="sit-urbano-pregunta"></div>
       <div id="sit-urbano-opciones"></div>
@@ -303,7 +513,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="sit-carretera" class="sub-content">
     <div class="card">
       <h2>🛣️ CASOS REALES - CARRETERA</h2>
-      <div class="stats"><div>Resueltas: <span id="sit-carretera-aciertos">0</span>/20</div><div>Score: <span id="sit-carretera-score">0</span></div></div>
+      <div class="stats"><span>Resueltas: <span id="sit-carretera-aciertos">0</span>/20</span><span>⭐ <span id="sit-carretera-score">0</span></span></div>
       <div class="progress-bar"><div class="progress-fill" id="sit-carretera-progress"></div></div>
       <div class="pregunta" id="sit-carretera-pregunta"></div>
       <div id="sit-carretera-opciones"></div>
@@ -314,7 +524,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="sit-emergencia" class="sub-content">
     <div class="card">
       <h2>🚨 CASOS REALES - EMERGENCIA</h2>
-      <div class="stats"><div>Resueltas: <span id="sit-emergencia-aciertos">0</span>/20</div><div>Score: <span id="sit-emergencia-score">0</span></div></div>
+      <div class="stats"><span>Resueltas: <span id="sit-emergencia-aciertos">0</span>/20</span><span>⭐ <span id="sit-emergencia-score">0</span></span></div>
       <div class="progress-bar"><div class="progress-fill" id="sit-emergencia-progress"></div></div>
       <div class="pregunta" id="sit-emergencia-pregunta"></div>
       <div id="sit-emergencia-opciones"></div>
@@ -327,7 +537,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 <div id="tab-examen" class="tab-content">
   <div class="card">
     <h2>📋 EXAMEN OFICIAL 30 PREGUNTAS</h2>
-    <div class="stats"><div>Pregunta: <span id="examen-num">0</span>/30</div><div>Aciertos: <span id="examen-aciertos">0</span></div><div>Tiempo: <span id="examen-timer">30:00</span></div></div>
+    <div class="stats"><span>Pregunta: <span id="examen-num">0</span>/30</span><span>✅ <span id="examen-aciertos">0</span></span><span>⏱️ <span id="examen-timer">30:00</span></span></div>
     <div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div>
     <div class="pregunta" id="examen-pregunta">Pulsa Iniciar Examen</div>
     <div id="examen-opciones"></div>
@@ -343,11 +553,9 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
     <div class="score-big" id="progreso-total">0%</div>
     <div class="progress-bar"><div class="progress-fill" id="progreso-total-bar" style="width:0%"></div></div>
     <p style="text-align:center;font-size:12px;color:#999;margin:8px 0" id="progreso-mensaje">Completa tests para desbloquear el examen</p>
-    
     <div id="progreso-lista"></div>
-
     <button class="btn-dgt" id="btn-dgt-oficial" onclick="irExamenDGT()" disabled>
-      🚗 PRESENTARME AL EXAMEN DGT OFICIAL
+      🚗 EXAMEN DGT OFICIAL
     </button>
     <p style="text-align:center;font-size:11px;color:#666;margin-top:8px">Necesitas 80% para desbloquear</p>
   </div>
@@ -383,6 +591,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
-<script src="./App.js?v=8.7.3"></script>
+<script src="./App.js?v=8.7.4"></script>
 </body>
-</html> 
+</html>
