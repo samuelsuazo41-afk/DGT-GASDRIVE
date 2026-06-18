@@ -156,7 +156,7 @@ export const IMAGENES = {
   "s-106": "./img/senales/s106.png",
   "s-107": "./img/senales/s107.png",
   "s-108": "./img/senales/s108.png",
-  "s-109": "./img/senales/p109.png",
+  "s-109": "./img/senales/s109.png", // CORREGIDO: antes era p109.png
   "s-110": "./img/senales/s110.png",
   "s-111": "./img/senales/s111.png",
   "s-112": "./img/senales/s112.png",
