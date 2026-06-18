@@ -220,7 +220,13 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 
   if (rutaImg) {
-    imgCont.innerHTML = `<img src="${rutaImg}" alt="Señal ${codigo.toUpperCase()}">`;
+    // FIX CRÍTICO: fuerza./img/ por si en imagenes.js tienes /img/
+    rutaImg = rutaImg.replace(/^\/img\//, './img/');
+    if (!rutaImg.startsWith('./img/') &&!rutaImg.startsWith('http')) {
+      rutaImg = './img/' + rutaImg.replace(/^\/+/, '');
+    }
+
+    imgCont.innerHTML = `<img src="${rutaImg}" alt="Señal ${codigo.toUpperCase()}" onerror="console.error('❌ 404 imagen:', this.src); this.parentElement.innerHTML='<div style=color:#666;font-size:12px;text-align:center;padding:10px>📷 Imagen no encontrada: ${codigo}</div>'">`;
     console.log(`✅ Imagen cargada: ${rutaImg}`);
   } else {
     imgCont.innerHTML = '';
