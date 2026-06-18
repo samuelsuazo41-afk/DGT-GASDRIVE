@@ -64,7 +64,6 @@ migrarProgreso();
 // === CARGADOR DINÁMICO V8.6.5 ===
 const PREGUNTAS = {};
 const CASOS = {};
-// NUEVO: Explicaciones global
 window.EXPLICACIONES = {};
 
 async function cargarModulos() {
@@ -115,18 +114,19 @@ async function cargarModulos() {
     Object.keys(MODULOS_CASOS).forEach(caso => CASOS[caso] = []);
   }
 
-  // 4. Carga imágenes
+  // 4. Carga imágenes - AHORA CUADRA CON preguntas-senales.js
   try {
     const mod = await import(`./data/imagenes.js`);
     window.IMAGENES = mod.IMAGENES || {};
     console.log(`✅ Imágenes: ${Object.keys(window.IMAGENES).length} rutas cargadas`);
-    console.log(`Ejemplo imagen:`, Object.entries(window.IMAGENES)[0]);
+    console.log(`Ejemplo R-1:`, window.IMAGENES['r-1']); // Debe salir./img/senales/r1.png
+    console.log(`Ejemplo S-109:`, window.IMAGENES['s-109']); // Debe salir./img/senales/s109.png
   } catch (e) {
     console.error(`❌ Error cargando imagenes.js:`, e);
     window.IMAGENES = {};
   }
 
-  // 5. NUEVO V8.6.5: Carga explicaciones
+  // 5. Carga explicaciones
   try {
     const mod = await import(`./data/explicaciones.js`);
     window.EXPLICACIONES = mod.EXPLICACIONES || {};
@@ -187,27 +187,24 @@ function guardarProgreso() {
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
-// BUSCA CLAVE FLEXIBLE - mejorado para acentos/espacios
+// BUSCA CLAVE FLEXIBLE
 function buscarClave(obj, texto) {
   if (!obj ||!texto) return null;
   if (obj[texto]) return obj[texto];
-
-  // Normaliza: quita espacios extra, :, acentos, lowercase
   const normalizar = t => t.trim().replace(/:$/, '').replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').toLowerCase();
   const limpio = normalizar(texto);
-
   for (let k in obj) {
     if (normalizar(k) === limpio) return obj[k];
   }
   return null;
 }
 
-// PINTA IMAGEN V8.6.5 CON DEBUG
+// PINTA IMAGEN V8.6.5 FINAL - COMPATIBLE CON R/P/S
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
 
-  // EXTRAE EL CÓDIGO: r-2, p-15, s-50, etiqueta-b, etc
+  // EXTRAE EL CÓDIGO: r-2, p-15, s-50, etiqueta-b, s-840a, etc
   const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?|etiqueta-[0-9a-z]+|senal-r\d+-[a-z]+|colocacion-etiqueta|tabla-euro)\b/i);
   const codigo = match? match[1].toLowerCase() : null;
 
@@ -220,7 +217,7 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 
   if (rutaImg) {
-    // FIX CRÍTICO: fuerza./img/ por si en imagenes.js tienes /img/
+    // FIX CRÍTICO: fuerza./img/ por si acaso
     rutaImg = rutaImg.replace(/^\/img\//, './img/');
     if (!rutaImg.startsWith('./img/') &&!rutaImg.startsWith('http')) {
       rutaImg = './img/' + rutaImg.replace(/^\/+/, '');
@@ -232,6 +229,37 @@ function pintarImagenTest(cat, preguntaTexto) {
     imgCont.innerHTML = '';
     console.log(`❌ No hay imagen para código: ${codigo}`);
   }
+}
+
+// INICIO
+document.addEventListener('DOMContentLoaded', async () => {
+  await cargarModulos();
+  mostrarIntro();
+});
+
+// INTRO SCREEN
+function mostrarIntro(){
+  const totalPreg = Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0);
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+      <div style="font-size:64px;margin-bottom:20px">🚗</div>
+      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
+      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 ${Object.keys(MODULOS_PREGUNTAS).length + 1} temarios oficiales + casos reales</p>
+      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+        <div>💰 Gana coins respondiendo bien</div>
+        <div>🏎️ Compra supercoches en el Garaje</div>
+        <div>📚 ${totalPreg} preguntas DGT reales</div>
+        <div>📖 Temarios completos para repasar</div>
+      </div>
+      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+    </div>
+  `);
+}
+
+function tancarIntro() {
+  const intro = document.getElementById('intro-screen');
+  if(intro) intro.remove();
 }
 
 // INICIO
