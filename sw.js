@@ -1,4 +1,4 @@
-const CACHE = 'gasdrive-v8.7.9-es'; // Subí versión para forzar update SVG
+const CACHE = 'gasdrive-v9.1.2-es'; // Subí versión para forzar update SVG
 
 const FILES = [
   './',
