@@ -81,4 +81,4 @@
     {q:"Herida con objeto clavado:",a:["Quitar objeto","Inmovilizar objeto + 112","Presionar alrededor"],ok:1},
     {q:"Ante amputación dedo:",a:["Poner parte en hielo directo","Envolver gasa estéril + bolsa + hielo externo","Guardar seco"],ok:1},
     {q:"Picadura abeja alergia:",a:["Esperar","Adrenalina si hay + 112","Vinagre"],ok:1}
-],
+];
