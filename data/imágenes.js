@@ -1,4 +1,6 @@
 export const IMAGENES = {
+  // ========== SEÑALES RD 465/2025 - TOMO I ==========
+  
   // PRIORIDAD R-1 a R-6
   "r-1": "/img/senales/r1.png",
   "r-2": "/img/senales/r2.png",
@@ -289,13 +291,12 @@ export const IMAGENES = {
   "s-879": "/img/senales/s879.png",
   "s-880": "/img/senales/s880.png",
 
-  // MEDIOAMBIENTE - Distintivos DGT 2026
+  // ========== MEDIOAMBIENTE RD 465/2025 - TOMO V ==========
   "etiqueta-b": "/img/medioambiente/etiqueta-b.png",
-  "etiqueta-c": "/img/medioambiente/etiqueta-c.png", 
+  "etiqueta-c": "/img/medioambiente/etiqueta-c.png",
   "etiqueta-eco": "/img/medioambiente/etiqueta-eco.png",
   "etiqueta-0": "/img/medioambiente/etiqueta-0.png",
   "senal-r118-zbe": "/img/medioambiente/senal-r118-zbe.png",
   "colocacion-etiqueta": "/img/medioambiente/colocacion-etiqueta.png",
   "tabla-euro": "/img/medioambiente/tabla-euro.png"
 };
-
