@@ -431,7 +431,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO V8.6 - DINÁMICO + IMAGEN + EXPLICACIÓN =====
+// ===== BLOQUE 2 COMPLETO V8.6.4 - DINÁMICO + IMAGEN + EXPLICACIÓN =====
 
 let tipsData = [];
 let currentTip = 0;
@@ -457,6 +457,9 @@ let estado = {
 
 // Genera estado.test y estado.sit dinámico según MODULOS
 function initEstadoDinamico() {
+  // FIX 1: Añade "general" manual porque no está en MODULOS_PREGUNTAS
+  estado.test.general = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
+
   Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
     estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
   });
@@ -465,6 +468,7 @@ function initEstadoDinamico() {
   });
 }
 
+// FIX 3: NO llames cargarModulos aquí, ya se llama en bloque 1
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
@@ -474,11 +478,10 @@ if (document.readyState === 'loading') {
 let sitCategoriaActiva = 'clima';
 
 async function init() {
-  await cargarModulos(); // Viene del bloque 1
   initEstadoDinamico();
 
-  console.log("GasDrive DGT ES V8.6 cargado");
-  console.log("PREGUNTAS:", Object.keys(PREGUNTAS));
+  console.log(`GasDrive DGT ES V${VERSION} cargado`);
+  console.log("PREGUNTAS:", Object.keys(PREGUNTAS).map(k => `${k}:${PREGUNTAS[k].length}`));
   console.log("CASOS:", Object.keys(CASOS));
   console.log("IMAGENES:", Object.keys(window.IMAGENES || {}).length);
 
@@ -486,7 +489,9 @@ async function init() {
   actualizarCoins();
   actualizarMensajeMotivacional();
   cargarTemario();
-  if(PREGUNTAS.general) {
+
+  // Espera a que carguen módulos antes de pintar
+  if(PREGUNTAS.general && PREGUNTAS.general.length > 0) {
     cargarPregunta('general');
   }
 }
@@ -548,7 +553,8 @@ function cambiarCategoriaSit(cat) {
     carretera: '🛣️ CASOS REALES - CARRETERA',
     emergencia: '🚨 CASOS REALES - EMERGENCIA'
   };
-  document.getElementById('sit-titulo').textContent = titulos[cat];
+  const titEl = document.getElementById('sit-titulo');
+  if(titEl) titEl.textContent = titulos[cat];
   estado.sit[cat].idx = 0;
   cargarSituacion(cat);
 }
@@ -578,24 +584,45 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
+// === EXPLICACIÓN DGT - FIX 2 ===
+function pintarExplicacionTest(cat, preguntaTexto) {
+  const box = document.getElementById(`test-${cat}-explicacion`);
+  if (!box) return;
+
+  const exp = buscarClave(window.EXPLICACIONES || {}, preguntaTexto);
+
+  if (exp) {
+    box.innerHTML = `<b>💡 Explicación DGT:</b> ${exp.texto}<span>Fuente: ${exp.fuente}</span>`;
+    box.classList.add('visible');
+  } else {
+    box.classList.remove('visible');
+    box.innerHTML = '';
+  }
+}
+
+function limpiarExplicacionTest(cat) {
+  const box = document.getElementById(`test-${cat}-explicacion`);
+  if (box) {
+    box.classList.remove('visible');
+    box.innerHTML = '';
+  }
+}
+
 // === CARGAR PREGUNTA + IMAGEN ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
-  let preguntas;
-
-  if (cat === 'general') {
-    // Mezcla todos los temas dinámicos
-    preguntas = [];
-    Object.values(PREGUNTAS).forEach(arr => {
-      if(Array.isArray(arr)) preguntas.push(...arr);
-    });
-    preguntas = barajarArray(preguntas);
-  } else {
-    preguntas = barajarArray(PREGUNTAS[cat] || []);
+  if(!s) {
+    console.error(`❌ estado.test[${cat}] no existe. Llama initEstadoDinamico()`);
+    return;
   }
 
+  let preguntas = PREGUNTAS[cat] || [];
+
   if(!preguntas || preguntas.length === 0) {
-    document.getElementById(`test-${cat}-pregunta`).textContent = 'No hay preguntas en esta categoria';
+    const preguntaEl = document.getElementById(`test-${cat}-pregunta`);
+    const opcionesEl = document.getElementById(`test-${cat}-opciones`);
+    if(preguntaEl) preguntaEl.textContent = `No hay preguntas en ${cat}`;
+    if(opcionesEl) opcionesEl.innerHTML = `<div style="color:#ff5555;font-size:13px;text-align:center;padding:20px">Revisa consola F12. El export de ${cat} está vacío.</div>`;
     return;
   }
 
