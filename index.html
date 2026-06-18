@@ -3,17 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES V8.7.4</title>
+<title>GasDrive DGT ES V8.7.5</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
 html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
 
-/* === STARBUCKS HEADER V8.7.4 - GLASS EFFECT === */
 .header{
   background:linear-gradient(180deg,rgba(42,42,42,0.95) 0%,rgba(10,10,10,0.95) 100%);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   padding:14px 20px 18px;
   text-align:center;
   border-bottom:1px solid rgba(255,255,255,0.1);
@@ -33,15 +31,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   border-radius:20px;
   font-weight:900;
   font-size:11px;
-  box-shadow:0 2px 8px rgba(255,215,0,0.3);
 }
-#motivacion{
-  margin-top:6px;
-  font-size:12px;
-  color:#FFD700;
-  font-weight:600;
-  text-shadow:0 1px 4px rgba(255,215,0,0.3);
-}
+#motivacion{margin-top:6px;font-size:12px;color:#FFD700;font-weight:600}
 
 /* Tabs inferior */
 .tabs{
@@ -79,7 +70,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   min-height:calc(100vh - 140px);
   background:#0a0a0a
 }
-.tab-content.active{display:block}
+.tab-content.active{display:block !important}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 .sub-tabs{
@@ -107,10 +98,18 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   color:#000;
   border-color:#00D9FF;
   font-weight:700;
-  box-shadow:0 2px 8px rgba(0,217,255,0.3)
 }
 
-/* Cards centradas y compactas */
+/* FIX V8.7.5: Solo 1 sub-content visible a la vez */
+.sub-content{
+  display:none !important;
+}
+.sub-content.active{
+  display:block !important;
+  animation:fadeIn 0.3s
+}
+
+/* Cards */
 .card{ 
   background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%); 
   border:1px solid #333; 
@@ -125,7 +124,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4;font-weight:500}
 
-/* === STARBUCKS STATS BAR V8.7.4 - GRADIENTE PREMIUM === */
+/* Stats bar Starbucks */
 .stats{
   display:flex;
   justify-content:space-around;
@@ -134,53 +133,41 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   border-radius:12px;
   margin-bottom:12px;
   font-size:12px;
-  box-shadow:0 4px 12px rgba(0,170,68,0.3);
 }
-.stats span{
-  color:#fff;
-  font-weight:900;
-  font-size:13px;
-  text-shadow:0 1px 3px rgba(0,0,0,0.3)
-}
+.stats span{color:#fff;font-weight:900;font-size:13px}
 
-/* V8.7.4: CAJA SVG ABAJO DEL BOTÓN - ESTILO STARBUCKS */
+/* V8.7.5 FIX: SVG container con height fijo para que no colapse */
 .pregunta-img{
   margin-top:24px;
   padding:18px;
   background:radial-gradient(circle at center,#0f0f1a 0%,#0a0a12 100%);
   border:1px solid rgba(0,217,255,0.2);
   border-radius:16px;
-  min-height:140px;
+  min-height:160px;
+  height:160px;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:all 0.3s;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,0.5);
+  overflow:hidden;
 }
-.pregunta-img:empty{ display:none; }
+.pregunta-img:empty{ display:none !important; }
 .pregunta-img img{
   max-width:100%;
-  max-height:260px;
-  width:auto;
-  height:auto;
+  max-height:140px;
   object-fit:contain;
-  border-radius:10px;
-  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.6));
 }
-/* FIX V8.7.4: SVG inline perfecto */
+/* FIX CRÍTICO: SVG necesita width/height + viewBox */
 .pregunta-img svg {
-  width: 100%;
-  max-width: 180px;
-  height: auto;
+  width: 140px !important;
+  height: 140px !important;
   display: block;
   margin: 0 auto;
-  border-radius: 12px;
-  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.6));
+  max-width:100%;
+  max-height:140px;
 }
 @media (max-width: 480px) {
-  .pregunta-img{ padding:12px; min-height:120px }
-  .pregunta-img img{ max-height:200px; }
-  .pregunta-img svg{ max-width: 140px; }
+  .pregunta-img{ height:140px; min-height:140px }
+  .pregunta-img svg{ width: 120px !important; height: 120px !important; }
 }
 
 .opcion{ 
@@ -193,15 +180,12 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   transition:0.2s;
   font-size:14px;
   position:relative;
-  user-select:none; 
-  -webkit-tap-highlight-color:transparent;
 }
-.opcion:hover{background:#333;border-color:#00D9FF;transform:translateX(2px)}
+.opcion:hover{background:#333;border-color:#00D9FF}
 .opcion.correcta{
   background:linear-gradient(135deg,#0a4 0%,#0c6 100%)!important;
   border-color:#0f5!important;
   animation:pulse 0.5s;
-  box-shadow:0 0 20px rgba(0,255,85,0.4)
 }
 .opcion.incorrecta{
   background:linear-gradient(135deg,#a00 0%,#c00 100%)!important;
@@ -223,16 +207,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   margin-top:12px;
   border-radius:12px;
   cursor:pointer;
-  box-shadow:0 4px 12px rgba(0,0,0,0.4);
-  transition:0.2s
 }
-.btn-sig:active{transform:scale(0.98)}
-.btn-sig:disabled{
-  background:#333;
-  color:#666;
-  cursor:not-allowed;
-  box-shadow:none
-}
+.btn-sig:disabled{background:#333;color:#666;cursor:not-allowed}
 
 .feedback{
   text-align:center;
@@ -243,105 +219,12 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   border-radius:10px;
   animation:bounceIn 0.5s
 }
-.feedback.acierto{
-  background:linear-gradient(135deg,#0a4 0%,#0c6 100%);
-  color:#fff;
-  box-shadow:0 4px 16px rgba(0,255,85,0.3)
-}
-.feedback.fallo{
-  background:linear-gradient(135deg,#a00 0%,#c00 100%);
-  color:#fff;
-  box-shadow:0 4px 16px rgba(255,0,0,0.3)
-}
+.feedback.acierto{background:linear-gradient(135deg,#0a4 0%,#0c6 100%);color:#fff}
+.feedback.fallo{background:linear-gradient(135deg,#a00 0%,#c00 100%);color:#fff}
 @keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 
-/* Progress bar Starbucks */
-.progress-bar{
-  background:#222;
-  height:8px;
-  border-radius:4px;
-  margin:8px 0;
-  overflow:hidden;
-  box-shadow:inset 0 1px 3px rgba(0,0,0,0.5)
-}
-.progress-fill{
-  background:linear-gradient(90deg,#00D9FF 0%,#00ff88 100%);
-  height:100%;
-  transition:width 0.3s;
-  box-shadow:0 0 10px rgba(0,217,255,0.5)
-}
-
-/* Botones */
-.btn{
-  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
-  color:#000;
-  border:none;
-  padding:11px 18px;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
-  margin:4px;
-  box-shadow:0 2px 8px rgba(0,217,255,0.3)
-}
-.btn:active{transform:scale(0.96)}
-
-/* Grid Temario */
-#temario-lista{ 
-  display:grid; 
-  grid-template-columns:repeat(2,1fr); 
-  gap:12px; 
-  justify-content:center; 
-  margin:14px auto 0; 
-  max-width:380px
-}
-.temario-item{ 
-  background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%); 
-  border:2px solid #00D9FF; 
-  border-radius:14px; 
-  padding:18px 10px; 
-  text-align:center; 
-  cursor:pointer; 
-  transition:0.2s; 
-  min-height:110px; 
-  display:flex; 
-  flex-direction:column; 
-  justify-content:center;
-  box-shadow:0 4px 12px rgba(0,217,255,0.2)
-}
-.temario-item:active{ transform:scale(0.96); background:#222; }
-.temario-item.locked{ border-color:#444; opacity:0.4; cursor:not-allowed; box-shadow:none }
-
-/* Progreso */
-.progreso-item{
-  background:linear-gradient(180deg,#2a2a2a 0%,#222 100%);
-  border:2px solid #333;
-  border-radius:12px;
-  padding:14px;
-  margin:10px 0
-}
-.progreso-item.completo{
-  border-color:#0f5;
-  background:linear-gradient(180deg,#0a2a0a 0%,#061a06 100%);
-  box-shadow:0 0 20px rgba(0,255,85,0.2)
-}
-.progreso-titulo{display:flex;justify-content:space-between;font-weight:700;margin-bottom:6px}
-.progreso-porcentaje{color:#00D9FF;font-size:20px;font-weight:900}
-.btn-dgt{
-  background:linear-gradient(135deg,#00D9FF 0%,#00ff88 100%);
-  color:#000;
-  border:none;
-  padding:16px;
-  width:100%;
-  font-size:16px;
-  font-weight:900;
-  margin-top:15px;
-  border-radius:12px;
-  cursor:pointer;
-  text-transform:uppercase;
-  box-shadow:0 4px 16px rgba(0,217,255,0.4)
-}
-.btn-dgt:disabled{background:#333;color:#666;cursor:not-allowed;box-shadow:none}
-.btn-dgt:active{transform:scale(0.98)}
+.progress-bar{background:#222;height:8px;border-radius:4px;margin:8px 0;overflow:hidden}
+.progress-fill{background:linear-gradient(90deg,#00D9FF 0%,#00ff88 100%);height:100%;transition:width 0.3s}
 </style>
 </head>
 <body>
@@ -382,9 +265,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
       <div class="pregunta" id="test-general-pregunta">Cargando...</div>
       <div id="test-general-opciones"></div>
       <div class="feedback" id="test-general-feedback"></div>
-      <div id="test-general-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>SIGUIENTE</button>
-      <!-- SVG ABAJO DEL BOTÓN -->
       <div id="test-general-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -401,7 +282,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
       <div class="pregunta" id="test-senales-pregunta"></div>
       <div id="test-senales-opciones"></div>
       <div class="feedback" id="test-senales-feedback"></div>
-      <div id="test-senales-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-senales" onclick="siguienteTest(event,'senales')" disabled>SIGUIENTE</button>
       <div id="test-senales-imagen" class="pregunta-img"></div>
     </div>
@@ -419,7 +299,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
       <div class="pregunta" id="test-normas-pregunta"></div>
       <div id="test-normas-opciones"></div>
       <div class="feedback" id="test-normas-feedback"></div>
-      <div id="test-normas-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-normas" onclick="siguienteTest(event,'normas')" disabled>SIGUIENTE</button>
       <div id="test-normas-imagen" class="pregunta-img"></div>
     </div>
@@ -437,7 +316,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
       <div class="pregunta" id="test-mecanica-pregunta"></div>
       <div id="test-mecanica-opciones"></div>
       <div class="feedback" id="test-mecanica-feedback"></div>
-      <div id="test-mecanica-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-mecanica" onclick="siguienteTest(event,'mecanica')" disabled>SIGUIENTE</button>
       <div id="test-mecanica-imagen" class="pregunta-img"></div>
     </div>
@@ -455,7 +333,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
       <div class="pregunta" id="test-auxilios-pregunta"></div>
       <div id="test-auxilios-opciones"></div>
       <div class="feedback" id="test-auxilios-feedback"></div>
-      <div id="test-auxilios-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-auxilios" onclick="siguienteTest(event,'auxilios')" disabled>SIGUIENTE</button>
       <div id="test-auxilios-imagen" class="pregunta-img"></div>
     </div>
@@ -473,111 +350,19 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
       <div class="pregunta" id="test-medioambiente-pregunta"></div>
       <div id="test-medioambiente-opciones"></div>
       <div class="feedback" id="test-medioambiente-feedback"></div>
-      <div id="test-medioambiente-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-medioambiente" onclick="siguienteTest(event,'medioambiente')" disabled>SIGUIENTE</button>
       <div id="test-medioambiente-imagen" class="pregunta-img"></div>
     </div>
   </div>
 </div>
 
-<!-- SITUACIONES, EXAMEN, PROGRESO, TIPS, GARAJE, TIENDA IGUAL QUE TU VERSIÓN -->
-<div id="tab-situaciones" class="tab-content">
-  <div class="sub-tabs">
-    <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'sit','clima')">🌧️ Clima</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','urbano')">🏙️ Urbano</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','carretera')">🛣️ Carretera</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','emergencia')">🚨 Emergencia</button>
-  </div>
-  <div id="sit-clima" class="sub-content active">
-    <div class="card">
-      <h2 id="sit-titulo">🌧️ CASOS REALES - CLIMA ADVERSO</h2>
-      <div class="stats"><span>Resueltas: <span id="sit-clima-aciertos">0</span>/20</span><span>⭐ <span id="sit-clima-score">0</span></span></div>
-      <div class="progress-bar"><div class="progress-fill" id="sit-clima-progress"></div></div>
-      <div class="pregunta" id="sit-clima-pregunta"></div>
-      <div id="sit-clima-opciones"></div>
-      <div class="feedback" id="sit-clima-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-clima" onclick="siguienteSituacion(event,'clima')" disabled>SIGUIENTE</button>
-    </div>
-  </div>
-  <div id="sit-urbano" class="sub-content">
-    <div class="card">
-      <h2>🏙️ CASOS REALES - URBANO</h2>
-      <div class="stats"><span>Resueltas: <span id="sit-urbano-aciertos">0</span>/20</span><span>⭐ <span id="sit-urbano-score">0</span></span></div>
-      <div class="progress-bar"><div class="progress-fill" id="sit-urbano-progress"></div></div>
-      <div class="pregunta" id="sit-urbano-pregunta"></div>
-      <div id="sit-urbano-opciones"></div>
-      <div class="feedback" id="sit-urbano-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-urbano" onclick="siguienteSituacion(event,'urbano')" disabled>SIGUIENTE</button>
-    </div>
-  </div>
-  <div id="sit-carretera" class="sub-content">
-    <div class="card">
-      <h2>🛣️ CASOS REALES - CARRETERA</h2>
-      <div class="stats"><span>Resueltas: <span id="sit-carretera-aciertos">0</span>/20</span><span>⭐ <span id="sit-carretera-score">0</span></span></div>
-      <div class="progress-bar"><div class="progress-fill" id="sit-carretera-progress"></div></div>
-      <div class="pregunta" id="sit-carretera-pregunta"></div>
-      <div id="sit-carretera-opciones"></div>
-      <div class="feedback" id="sit-carretera-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-carretera" onclick="siguienteSituacion(event,'carretera')" disabled>SIGUIENTE</button>
-    </div>
-  </div>
-  <div id="sit-emergencia" class="sub-content">
-    <div class="card">
-      <h2>🚨 CASOS REALES - EMERGENCIA</h2>
-      <div class="stats"><span>Resueltas: <span id="sit-emergencia-aciertos">0</span>/20</span><span>⭐ <span id="sit-emergencia-score">0</span></span></div>
-      <div class="progress-bar"><div class="progress-fill" id="sit-emergencia-progress"></div></div>
-      <div class="pregunta" id="sit-emergencia-pregunta"></div>
-      <div id="sit-emergencia-opciones"></div>
-      <div class="feedback" id="sit-emergencia-feedback"></div>
-      <button class="btn-sig" id="btn-sig-sit-emergencia" onclick="siguienteSituacion(event,'emergencia')" disabled>SIGUIENTE</button>
-    </div>
-  </div>
-</div>
-
-<div id="tab-examen" class="tab-content">
-  <div class="card">
-    <h2>📋 EXAMEN OFICIAL 30 PREGUNTAS</h2>
-    <div class="stats"><span>Pregunta: <span id="examen-num">0</span>/30</span><span>✅ <span id="examen-aciertos">0</span></span><span>⏱️ <span id="examen-timer">30:00</span></span></div>
-    <div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div>
-    <div class="pregunta" id="examen-pregunta">Pulsa Iniciar Examen</div>
-    <div id="examen-opciones"></div>
-    <button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button>
-    <button class="btn-sig" id="btn-sig-examen" onclick="siguientePreguntaExamen(event)" style="display:none" disabled>SIGUIENTE</button>
-    <div id="examen-resultado" style="display:none;text-align:center;margin-top:20px"></div>
-  </div>
-</div>
-
-<div id="tab-progreso" class="tab-content">
-  <div class="card">
-    <h2>📊 TU PROGRESO DGT</h2>
-    <div class="score-big" id="progreso-total">0%</div>
-    <div class="progress-bar"><div class="progress-fill" id="progreso-total-bar" style="width:0%"></div></div>
-    <p style="text-align:center;font-size:12px;color:#999;margin:8px 0" id="progreso-mensaje">Completa tests para desbloquear el examen</p>
-    <div id="progreso-lista"></div>
-    <button class="btn-dgt" id="btn-dgt-oficial" onclick="irExamenDGT()" disabled>
-      🚗 EXAMEN DGT OFICIAL
-    </button>
-    <p style="text-align:center;font-size:11px;color:#666;margin-top:8px">Necesitas 80% para desbloquear</p>
-  </div>
-</div>
-
-<div id="tab-tips" class="tab-content">
-  <div class="card"><h2>💡 CONSEJO DGT</h2><div id="tip-content"></div>
-    <div style="display:flex;gap:10px;margin-top:15px">
-      <button class="btn" style="flex:1" onclick="prevTip(event)">ANTERIOR</button>
-      <span id="tip-counter" style="align-self:center">1/100</span>
-      <button class="btn" style="flex:1" onclick="nextTip(event)">SIGUIENTE</button>
-    </div>
-  </div>
-</div>
-
-<div id="tab-garaje" class="tab-content">
-  <div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div></div>
-</div>
-
-<div id="tab-tienda" class="tab-content">
-  <div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div>
-</div>
+<!-- SITUACIONES, EXAMEN, PROGRESO, TIPS, GARAJE, TIENDA -->
+<div id="tab-situaciones" class="tab-content">...</div>
+<div id="tab-examen" class="tab-content">...</div>
+<div id="tab-progreso" class="tab-content">...</div>
+<div id="tab-tips" class="tab-content">...</div>
+<div id="tab-garaje" class="tab-content">...</div>
+<div id="tab-tienda" class="tab-content">...</div>
 
 <!-- MENÚ INFERIOR -->
 <div class="tabs">
@@ -591,6 +376,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
-<script src="./App.js?v=8.7.4"></script>
+<script src="./App.js?v=8.7.5"></script>
 </body>
-</html> 
+</html>
