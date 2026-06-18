@@ -32,29 +32,41 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4}
 
-/* NUEVO V8.6.5: Imagen de pregunta abajo + oculta si vacía */
-.pregunta-img:empty { display: none; }
+/* V8.6.5: CAJA IMAGEN ABAJO DEL BOTÓN */
 .pregunta-img{
-  margin-top:14px;
-  padding-bottom:8px;
-  min-height: 20px;
+  margin-top:24px;
+  padding:16px;
+  background:#0f0f1a;
+  border:2px solid #2a2a4a;
+  border-radius:14px;
+  min-height:140px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.3s;
 }
+.pregunta-img:empty{ display:none; }
 .pregunta-img img{
   max-width:100%;
+  max-height:260px;
+  width:auto;
+  height:auto;
+  object-fit:contain;
   border-radius:10px;
-  display:block;
-  box-shadow:0 4px 15px rgba(0,0,0,0.6);
-  border:2px solid #00D9FF;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+}
+@media (max-width: 480px) {
+  .pregunta-img img{ max-height:200px; }
 }
 
-.opcion{ background:#2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
+.opcion{ background:#2a2a2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
 .opcion:hover{background:#333;border-color:#00D9FF}
 .opcion.correcta{background:#0a4!important;border-color:#0f5!important;animation:pulse 0.5s}
 .opcion.incorrecta{background:#a00!important;border-color:#f00!important;animation:shake 0.5s}
 .opcion.bloqueada{pointer-events:none}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
-.btn-sig{background:linear-gradient(180deg,#4a 0%,#2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
+.btn-sig{background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);color:#fff;border:none;padding:14px;width:100%;font-size:15px;font-weight:700;margin-top:10px;border-radius:10px;cursor:pointer}
 .btn-sig:disabled{background:#333;color:#666;cursor:not-allowed}
 .stats{display:flex;justify-content:space-between;background:#E50914;padding:9px;border-radius:7px;margin-bottom:10px;font-size:12px}
 .stats span{color:#fff;font-weight:700}
@@ -63,7 +75,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .feedback.fallo{background:#a00;color:#fff}
 @keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
 
-/* NUEVO V8.6: Caja de explicación/refuerzo DGT */
+/* V8.6: Caja de explicación/refuerzo DGT - desactivada por ahora */
 .explicacion-box{
   background:#1a1a2e;
   border-left:3px solid #00D9FF;
@@ -86,7 +98,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .garage-car{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:18px;text-align:center;margin:9px 0}
 .garage-car.locked{opacity:0.4}
 .garage-car h3{color:#00D9FF;margin:7px 0}
-.score-big{text-align:center;font-size:44px;font-weight:900;color:#00D9FF;margin:18px 0;text-shadow:0 20px rgba(0,217,255,0.5)}
+.score-big{text-align:center;font-size:44px;font-weight:900;color:#00D9FF;margin:18px 0;text-shadow:0 0 20px rgba(0,217,255,0.5)}
 .emoji-shop{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px}
 .emoji-item{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:13px;text-align:center;cursor:pointer}
 .emoji-item.locked{opacity:0.4}
@@ -121,7 +133,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 
 /* Fix scroll menú lateral */
 body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
-.side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
+.side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a0a0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
 .side-menu.active{ transform:translateX(0); }
 .menu-overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:199; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
 .menu-overlay.active{ opacity:1; pointer-events:all; }
@@ -134,7 +146,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div id="motivacion" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
 </div>
 
-<!-- TEMARIO - AHORA ES LA PRIMERA TAB -->
+<!-- TEMARIO -->
 <div id="tab-temario" class="tab-content active">
   <div class="card">
     <h2>📖 TEMARIOS OFICIALES</h2>
@@ -159,11 +171,12 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="stats"><div>Aciertos: <span id="test-general-aciertos">0</span>/10</div><div>Racha: <span id="test-general-racha">0</span>🔥</div><div>Score: <span id="test-general-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div>
       <div class="pregunta" id="test-general-pregunta">Cargando...</div>
-      <div id="test-general-imagen" class="pregunta-img"></div>
       <div id="test-general-opciones"></div>
       <div class="feedback" id="test-general-feedback"></div>
       <div id="test-general-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>SIGUIENTE</button>
+      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <div id="test-general-imagen" class="pregunta-img"></div>
     </div>
   </div>
 
@@ -173,11 +186,12 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="stats"><div>Aciertos: <span id="test-senales-aciertos">0</span>/5</div><div>Racha: <span id="test-senales-racha">0</span>🔥</div><div>Score: <span id="test-senales-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-senales-progress"></div></div>
       <div class="pregunta" id="test-senales-pregunta"></div>
-      <div id="test-senales-imagen" class="pregunta-img"></div>
       <div id="test-senales-opciones"></div>
       <div class="feedback" id="test-senales-feedback"></div>
       <div id="test-senales-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-senales" onclick="siguienteTest(event,'senales')" disabled>SIGUIENTE</button>
+      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <div id="test-senales-imagen" class="pregunta-img"></div>
     </div>
   </div>
 
@@ -191,11 +205,12 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       </div>
       <div class="progress-bar"><div class="progress-fill" id="test-normas-progress"></div></div>
       <div class="pregunta" id="test-normas-pregunta"></div>
-      <div id="test-normas-imagen" class="pregunta-img"></div>
       <div id="test-normas-opciones"></div>
       <div class="feedback" id="test-normas-feedback"></div>
       <div id="test-normas-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-normas" onclick="siguienteTest(event,'normas')" disabled>SIGUIENTE</button>
+      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <div id="test-normas-imagen" class="pregunta-img"></div>
     </div>
   </div>
 
@@ -205,11 +220,12 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span>/5</div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div>
       <div class="pregunta" id="test-mecanica-pregunta"></div>
-      <div id="test-mecanica-imagen" class="pregunta-img"></div>
       <div id="test-mecanica-opciones"></div>
       <div class="feedback" id="test-mecanica-feedback"></div>
       <div id="test-mecanica-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-mecanica" onclick="siguienteTest(event,'mecanica')" disabled>SIGUIENTE</button>
+      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <div id="test-mecanica-imagen" class="pregunta-img"></div>
     </div>
   </div>
 
@@ -219,11 +235,12 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="stats"><div>Aciertos: <span id="test-auxilios-aciertos">0</span>/5</div><div>Racha: <span id="test-auxilios-racha">0</span>🔥</div><div>Score: <span id="test-auxilios-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-auxilios-progress"></div></div>
       <div class="pregunta" id="test-auxilios-pregunta"></div>
-      <div id="test-auxilios-imagen" class="pregunta-img"></div>
       <div id="test-auxilios-opciones"></div>
       <div class="feedback" id="test-auxilios-feedback"></div>
       <div id="test-auxilios-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-auxilios" onclick="siguienteTest(event,'auxilios')" disabled>SIGUIENTE</button>
+      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <div id="test-auxilios-imagen" class="pregunta-img"></div>
     </div>
   </div>
 
@@ -233,11 +250,12 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="stats"><div>Aciertos: <span id="test-medioambiente-aciertos">0</span>/5</div><div>Racha: <span id="test-medioambiente-racha">0</span>🔥</div><div>Score: <span id="test-medioambiente-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-medioambiente-progress"></div></div>
       <div class="pregunta" id="test-medioambiente-pregunta"></div>
-      <div id="test-medioambiente-imagen" class="pregunta-img"></div>
       <div id="test-medioambiente-opciones"></div>
       <div class="feedback" id="test-medioambiente-feedback"></div>
       <div id="test-medioambiente-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-medioambiente" onclick="siguienteTest(event,'medioambiente')" disabled>SIGUIENTE</button>
+      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <div id="test-medioambiente-imagen" class="pregunta-img"></div>
     </div>
   </div>
 </div>
@@ -342,7 +360,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div>
 </div>
 
-<!-- MENÚ INFERIOR REORDENADO: TEMARIO → TEST → CASOS → EXAMEN → PROGRESO → TIPS → GARAJE → TIENDA -->
+<!-- MENÚ INFERIOR -->
 <div class="tabs">
   <button class="tab-btn active" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
   <button class="tab-btn" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
@@ -354,7 +372,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
-<!-- V8.6.5: Solo App.js. Los datos se cargan dinámico desde /data/ con import() -->
 <script src="./App.js?v=8.6.5"></script>
 </body>
 </html>
