@@ -1,15 +1,16 @@
-// GASDRIVE DGT V8.6 ES - AUTO-CARGA DE MÓDULOS
-const VERSION = "8.6";
+// === GASDRIVE DGT V8.6.4 ES - BLOQUE 1 AUTO-CARGA ===
+// Cambia VERSION en cada deploy para forzar update SW
+const VERSION = "8.6.4";
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
 // Solo tienes que añadir aquí el nombre del archivo y la clave exportada
 const MODULOS_PREGUNTAS = {
-  general: { archivo: 'preguntas-general.js', export: 'PREGUNTAS_GENERAL' },
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
   mecanica: { archivo: 'preguntas-mecanica.js', export: 'PREGUNTAS_MECANICA' },
   auxilios: { archivo: 'preguntas-auxilios.js', export: 'PREGUNTAS_AUXILIOS' },
   medioambiente: { archivo: 'preguntas-medioambiente.js', export: 'PREGUNTAS_MEDIOAMBIENTE' }
+  // "general" se genera mezclando todos, no necesita archivo
 };
 
 const MODULOS_CASOS = {
@@ -23,13 +24,14 @@ const MODULOS_CASOS = {
 function crearProgresoVacio() {
   const progreso = { tests: {}, casos: {}, examenes: { realizados: 0, aprobados: 0, historial: [] }, temarios: {}, racha: { dias: 0, ultimaFecha: "" } };
 
-  // Genera estructura tests automáticamente
   Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
     progreso.tests[tema] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
     progreso.temarios[tema] = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
   });
+  // Añade "general" manualmente para progreso
+  progreso.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+  progreso.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
 
-  // Genera estructura casos automáticamente
   Object.keys(MODULOS_CASOS).forEach(caso => {
     progreso.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   });
@@ -39,7 +41,6 @@ function crearProgresoVacio() {
 
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || crearProgresoVacio();
 
-// Si hay nuevos temas desde la última versión, los añade sin borrar datos
 function migrarProgreso() {
   let cambiado = false;
   Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
@@ -49,6 +50,11 @@ function migrarProgreso() {
       cambiado = true;
     }
   });
+  if (!PROGRESO.tests.general) {
+    PROGRESO.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+    PROGRESO.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
+    cambiado = true;
+  }
   Object.keys(MODULOS_CASOS).forEach(caso => {
     if (!PROGRESO.casos[caso]) {
       PROGRESO.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
@@ -59,48 +65,73 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO DE PREGUNTAS ===
+// === CARGADOR DINÁMICO DE PREGUNTAS V8.6.4 ===
 const PREGUNTAS = {};
 const CASOS = {};
 
-// Carga todos los módulos de preguntas
+// Carga todos los módulos de preguntas con validación fuerte
 async function cargarModulos() {
+  console.log(`🚀 GasDrive V${VERSION} - Cargando módulos...`);
+
+  // 1. Carga preguntas por tema
   for (const [tema, config] of Object.entries(MODULOS_PREGUNTAS)) {
     try {
       const mod = await import(`./data/${config.archivo}`);
-      PREGUNTAS[tema] = mod[config.export];
-      console.log(`✅ Cargado ${tema}: ${PREGUNTAS[tema].length} preguntas`);
+      const data = mod[config.export];
+
+      if(!data) {
+        console.error(`❌ ${tema}: No existe export "${config.export}" en ${config.archivo}`);
+        console.log(` Exports disponibles:`, Object.keys(mod));
+        PREGUNTAS[tema] = [];
+      } else if(!Array.isArray(data) || data.length === 0) {
+        console.error(`❌ ${tema}: El export "${config.export}" está vacío en ${config.archivo}`);
+        PREGUNTAS[tema] = [];
+      } else {
+        PREGUNTAS[tema] = data;
+        console.log(`✅ ${tema}: ${data.length} preguntas cargadas`);
+      }
     } catch (e) {
-      console.error(`❌ Error cargando ${config.archivo}:`, e);
+      console.error(`❌ Error cargando ${config.archivo}:`, e.message);
       PREGUNTAS[tema] = [];
     }
   }
 
-  // Carga módulo de situaciones 1 sola vez
+  // 2. Genera "general" mezclando todos los temas con preguntas
+  PREGUNTAS.general = [];
+  Object.values(PREGUNTAS).forEach(arr => {
+    if(Array.isArray(arr) && arr.length > 0) {
+      PREGUNTAS.general.push(...arr);
+    }
+  });
+  console.log(`✅ general: ${PREGUNTAS.general.length} preguntas mezcladas`);
+
+  // 3. Carga casos - FIX: usar config.clave, no MODULOS_CASOS.clave
   try {
     const mod = await import(`./data/preguntas-situaciones.js`);
     const SIT = mod.SITUACIONES;
-    Object.keys(MODULOS_CASOS).forEach(caso => {
-      CASOS[caso] = SIT[MODULOS_CASOS[caso].clave];
-      console.log(`✅ Cargado casos ${caso}: ${CASOS[caso].length} preguntas`);
-    });
+    for (const [caso, config] of Object.entries(MODULOS_CASOS)) {
+      CASOS[caso] = SIT[config.clave] || [];
+      console.log(`✅ Casos ${caso}: ${CASOS[caso].length} preguntas`);
+    }
   } catch (e) {
     console.error(`❌ Error cargando situaciones:`, e);
+    Object.keys(MODULOS_CASOS).forEach(caso => CASOS[caso] = []);
   }
 
-  // Carga imágenes
+  // 4. Carga imágenes
   try {
     const mod = await import(`./data/imagenes.js`);
-    window.IMAGENES = mod.IMAGENES;
-    console.log(`✅ Cargadas ${Object.keys(window.IMAGENES).length} imágenes`);
+    window.IMAGENES = mod.IMAGENES || {};
+    console.log(`✅ Imágenes: ${Object.keys(window.IMAGENES).length} rutas cargadas`);
   } catch (e) {
     console.error(`❌ Error cargando imagenes.js:`, e);
     window.IMAGENES = {};
   }
+
+  console.log('📊 RESUMEN FINAL:', Object.entries(PREGUNTAS).map(([k,v]) => `${k}:${v.length}`).join(' | '));
 }
 
-// === SUBTEMAS DEBILES DINÁMICO ===
-// Ahora puedes añadir temas nuevos aquí y se auto-genera el mensaje
+// === SUBTEMAS DÉBILES DINÁMICO ===
 const SUBTEMAS_DEBILES = {
   senales: [
     { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
@@ -139,7 +170,6 @@ const SUBTEMAS_DEBILES = {
   ]
 };
 
-// === RESTO DE TU CÓDIGO IGUAL ===
 const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
 
 function guardarProgreso() {
@@ -149,30 +179,6 @@ function guardarProgreso() {
 // COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
-
-// INTRO SCREEN
-function mostrarIntro(){
-  document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-      <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
-      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 ${Object.keys(MODULOS_PREGUNTAS).length} temarios oficiales + casos reales</p>
-      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-        <div>💰 Gana coins respondiendo bien</div>
-        <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 ${Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0)} preguntas DGT reales</div>
-        <div>📖 Temarios completos para repasar</div>
-      </div>
-      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
-    </div>
-  `);
-}
-
-function tancarIntro() {
-  const intro = document.getElementById('intro-screen');
-  if(intro) intro.remove();
-}
 
 // BUSCA CLAVE FLEXIBLE
 function buscarClave(obj, texto) {
@@ -185,14 +191,14 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA IMAGEN
+// PINTA IMAGEN - V8.6.4 con imagen abajo
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont ||!window.IMAGENES) return;
 
   const rutaImg = buscarClave(window.IMAGENES, preguntaTexto);
   if (rutaImg) {
-    imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML='<div style=color:#666;font-size:12px>📷 Imagen no encontrada</div>'" style="max-width:100%;border-radius:8px;margin:10px auto;display:block;border:2px solid #333">`;
+    imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML='<div style=color:#666;font-size:12px;text-align:center;padding:10px>📷 Imagen no encontrada</div>'" alt="Imagen pregunta">`;
   } else {
     imgCont.innerHTML = '';
   }
@@ -203,6 +209,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   await cargarModulos();
   mostrarIntro();
 });
+
+// INTRO SCREEN - usa Object.keys(MODULOS_PREGUNTAS).length real
+function mostrarIntro(){
+  const totalPreg = Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0);
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+      <div style="font-size:64px;margin-bottom:20px">🚗</div>
+      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
+      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 ${Object.keys(MODULOS_PREGUNTAS).length + 1} temarios oficiales + casos reales</p>
+      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+        <div>💰 Gana coins respondiendo bien</div>
+        <div>🏎️ Compra supercoches en el Garaje</div>
+        <div>📚 ${totalPreg} preguntas DGT reales</div>
+        <div>📖 Temarios completos para repasar</div>
+      </div>
+      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+    </div>
+  `);
+}
+
+function tancarIntro() {
+  const intro = document.getElementById('intro-screen');
+  if(intro) intro.remove();
+}
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
