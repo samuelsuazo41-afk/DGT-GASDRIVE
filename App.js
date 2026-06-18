@@ -1,16 +1,13 @@
-// === GASDRIVE DGT V8.6.4 ES - BLOQUE 1 AUTO-CARGA ===
-// Cambia VERSION en cada deploy para forzar update SW
-const VERSION = "8.6.4";
+// === GASDRIVE DGT V8.6.5 ES - BLOQUE 1 AUTO-CARGA ===
+const VERSION = "8.6.5";
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
-// Solo tienes que añadir aquí el nombre del archivo y la clave exportada
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
   mecanica: { archivo: 'preguntas-mecanica.js', export: 'PREGUNTAS_MECANICA' },
   auxilios: { archivo: 'preguntas-auxilios.js', export: 'PREGUNTAS_AUXILIOS' },
   medioambiente: { archivo: 'preguntas-medioambiente.js', export: 'PREGUNTAS_MEDIOAMBIENTE' }
-  // "general" se genera mezclando todos, no necesita archivo
 };
 
 const MODULOS_CASOS = {
@@ -20,7 +17,7 @@ const MODULOS_CASOS = {
   emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
 };
 
-// === MOTOR DE PROGRESO DGT - AUTO-GENERADO ===
+// === MOTOR DE PROGRESO DGT ===
 function crearProgresoVacio() {
   const progreso = { tests: {}, casos: {}, examenes: { realizados: 0, aprobados: 0, historial: [] }, temarios: {}, racha: { dias: 0, ultimaFecha: "" } };
 
@@ -28,7 +25,6 @@ function crearProgresoVacio() {
     progreso.tests[tema] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
     progreso.temarios[tema] = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
   });
-  // Añade "general" manualmente para progreso
   progreso.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   progreso.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
 
@@ -65,11 +61,12 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO DE PREGUNTAS V8.6.4 ===
+// === CARGADOR DINÁMICO V8.6.5 ===
 const PREGUNTAS = {};
 const CASOS = {};
+// NUEVO: Explicaciones global
+window.EXPLICACIONES = {};
 
-// Carga todos los módulos de preguntas con validación fuerte
 async function cargarModulos() {
   console.log(`🚀 GasDrive V${VERSION} - Cargando módulos...`);
 
@@ -81,10 +78,10 @@ async function cargarModulos() {
 
       if(!data) {
         console.error(`❌ ${tema}: No existe export "${config.export}" en ${config.archivo}`);
-        console.log(` Exports disponibles:`, Object.keys(mod));
+        console.log(`Exports disponibles:`, Object.keys(mod));
         PREGUNTAS[tema] = [];
       } else if(!Array.isArray(data) || data.length === 0) {
-        console.error(`❌ ${tema}: El export "${config.export}" está vacío en ${config.archivo}`);
+        console.error(`❌ ${tema}: El export "${config.export}" está vacío`);
         PREGUNTAS[tema] = [];
       } else {
         PREGUNTAS[tema] = data;
@@ -96,7 +93,7 @@ async function cargarModulos() {
     }
   }
 
-  // 2. Genera "general" mezclando todos los temas con preguntas
+  // 2. Genera "general"
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr) && arr.length > 0) {
@@ -105,7 +102,7 @@ async function cargarModulos() {
   });
   console.log(`✅ general: ${PREGUNTAS.general.length} preguntas mezcladas`);
 
-  // 3. Carga casos - FIX: usar config.clave, no MODULOS_CASOS.clave
+  // 3. Carga casos
   try {
     const mod = await import(`./data/preguntas-situaciones.js`);
     const SIT = mod.SITUACIONES;
@@ -123,15 +120,26 @@ async function cargarModulos() {
     const mod = await import(`./data/imagenes.js`);
     window.IMAGENES = mod.IMAGENES || {};
     console.log(`✅ Imágenes: ${Object.keys(window.IMAGENES).length} rutas cargadas`);
+    console.log(`Ejemplo imagen:`, Object.entries(window.IMAGENES)[0]);
   } catch (e) {
     console.error(`❌ Error cargando imagenes.js:`, e);
     window.IMAGENES = {};
   }
 
+  // 5. NUEVO V8.6.5: Carga explicaciones
+  try {
+    const mod = await import(`./data/explicaciones.js`);
+    window.EXPLICACIONES = mod.EXPLICACIONES || {};
+    console.log(`✅ Explicaciones: ${Object.keys(window.EXPLICACIONES).length} cargadas`);
+  } catch (e) {
+    console.error(`❌ Error cargando explicaciones.js:`, e);
+    window.EXPLICACIONES = {};
+  }
+
   console.log('📊 RESUMEN FINAL:', Object.entries(PREGUNTAS).map(([k,v]) => `${k}:${v.length}`).join(' | '));
 }
 
-// === SUBTEMAS DÉBILES DINÁMICO ===
+// === SUBTEMAS DÉBILES ===
 const SUBTEMAS_DEBILES = {
   senales: [
     { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
@@ -176,41 +184,56 @@ function guardarProgreso() {
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
 
-// COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
-// BUSCA CLAVE FLEXIBLE
+// BUSCA CLAVE FLEXIBLE - mejorado para acentos/espacios
 function buscarClave(obj, texto) {
   if (!obj ||!texto) return null;
   if (obj[texto]) return obj[texto];
-  const limpio = texto.trim().replace(/:$/, '').toLowerCase();
+
+  // Normaliza: quita espacios extra, :, acentos, lowercase
+  const normalizar = t => t.trim().replace(/:$/, '').replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').toLowerCase();
+  const limpio = normalizar(texto);
+
   for (let k in obj) {
-    if (k.trim().replace(/:$/, '').toLowerCase() === limpio) return obj[k];
+    if (normalizar(k) === limpio) return obj[k];
   }
   return null;
 }
 
-// PINTA IMAGEN - V8.6.4 con imagen abajo
+// PINTA IMAGEN V8.6.5 CON DEBUG
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if (!imgCont ||!window.IMAGENES) return;
+  if (!imgCont) {
+    console.error(`❌ No existe div test-${cat}-imagen`);
+    return;
+  }
+  if (!window.IMAGENES) {
+    console.error(`❌ window.IMAGENES no cargado`);
+    imgCont.innerHTML = '';
+    return;
+  }
 
   const rutaImg = buscarClave(window.IMAGENES, preguntaTexto);
+  console.log(`🔍 [${cat}] Buscando: "${preguntaTexto}" → ${rutaImg || 'NO ENCONTRADA'}`);
+
   if (rutaImg) {
-    imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML='<div style=color:#666;font-size:12px;text-align:center;padding:10px>📷 Imagen no encontrada</div>'" alt="Imagen pregunta">`;
+    // Verifica que la ruta empiece por./img/
+    const rutaFinal = rutaImg.startsWith('./img/')? rutaImg : `./img/${rutaImg}`;
+    imgCont.innerHTML = `<img src="${rutaFinal}" onerror="console.error('Error 404 imagen:',this.src);this.parentElement.innerHTML='<div style=color:#666;font-size:12px;text-align:center;padding:10px>📷 Imagen no encontrada</div>'" alt="Imagen pregunta">`;
   } else {
     imgCont.innerHTML = '';
   }
 }
 
-// INICIO: carga módulos antes de mostrar nada
+// INICIO
 document.addEventListener('DOMContentLoaded', async () => {
   await cargarModulos();
   mostrarIntro();
 });
 
-// INTRO SCREEN - usa Object.keys(MODULOS_PREGUNTAS).length real
+// INTRO SCREEN
 function mostrarIntro(){
   const totalPreg = Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0);
   document.body.insertAdjacentHTML('afterbegin', `
