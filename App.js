@@ -1,5 +1,6 @@
-// === GASDRIVE DGT V8.8.8 ES - SIMPLE Y DIRECTO ===
-const VERSION = "8.8.8";
+// === GASDRIVE DGT V8.8.9 ES - CARGA TEMARIO PRIMERO ===
+const VERSION = "8.8.9";
+let TIEMPO_INICIO = performance.now();
 
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
@@ -24,8 +25,9 @@ function crearProgresoVacio() {
   });
   progreso.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   progreso.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
+  progreso.casos = {};
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    progreso.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] }; // FIX 3
+    progreso.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   });
   return progreso;
 }
@@ -42,7 +44,7 @@ let MODULOS_LISTOS = false;
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos...`);
   await Promise.all([
-   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+  ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
@@ -55,7 +57,7 @@ async function cargarModulos() {
     import(`./data/preguntas-situaciones.js`).then(mod => {
       const SIT = mod.SITUACIONES;
       Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
-        CASOS[config.clave] = SIT[config.clave] || []; // FIX 1
+        CASOS[config.clave] = SIT[config.clave] || [];
       });
     }).catch(e => console.error(e)),
     import(`./data/senales-svg.js`).then(mod => {
@@ -73,14 +75,21 @@ async function cargarModulos() {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
   MODULOS_LISTOS = true;
-  console.log(`✅ LISTO: ${PREGUNTAS.general.length} preguntas`);
+  const tiempoTotal = Math.round(performance.now() - TIEMPO_INICIO);
+  console.log(`✅ LISTO en ${tiempoTotal}ms: ${PREGUNTAS.general.length} preguntas`);
 }
 
-// INTRO INSTANTÁNEA - NO ESPERA DATOS
+// PASO 1: CARGA TEMARIO HTML INMEDIATO - NO ESPERA DATOS
 document.addEventListener('DOMContentLoaded', () => {
+  // Pinta botones temario al abrir, aunque sin datos
+  if(document.getElementById('temario-lista')) {
+    cargarTemario();
+  }
+  // PASO 2: Después pinta intro encima
   mostrarIntro();
 });
 
+// INTRO
 function mostrarIntro(){
   if(document.getElementById('intro-screen')) return;
   document.body.insertAdjacentHTML('afterbegin', `
@@ -100,21 +109,20 @@ function mostrarIntro(){
   `);
 }
 
-// EMPEZAR = Quita intro + carga datos + entra app
+// PASO 3: EMPEZAR = Quita intro + carga datos en background + init
 window.tancarIntro = function() {
   const intro = document.getElementById('intro-screen');
   if(intro) intro.remove();
 
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  // Tab temario ya está activo desde HTML. No lo tocamos.
+  // Solo activamos el botón del menú
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-temario').classList.add('active');
   document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
 
+  // PASO 4: Carga datos AHORA y luego inicia app
   cargarModulos().then(() => {
-    setTimeout(() => {
-      init(); // FIX 2
-      cargarTemario();
-    }, 100);
+    init(); // Pinta coins, test general, etc
+    console.log(`📊 Tiempo total carga: ${Math.round(performance.now() - TIEMPO_INICIO)}ms`);
   });
 }
 
