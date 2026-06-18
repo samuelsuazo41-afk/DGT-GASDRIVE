@@ -352,7 +352,49 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO V8.8.3 - SIN INTRO DUPLICADA =====
+// ===== BLOQUE 2 V8.8.8 - COMPLETO CON 3 CAMBIOS AUTORIZADOS =====
+
+// === CAMBIO 1: AÑADIDO AL INICIO ===
+const SUBTEMAS_DEBILES = {
+  senales: [
+    { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
+    { pct: 20, msg: 'Prohibición Entrada R-101 a R-116 - Pág 68-72' },
+    { pct: 40, msg: 'Prohibición Paso R-300 a R-311 - Pág 73-78' },
+    { pct: 60, msg: 'Obligación R-400 a R-422 - Pág 75-76' },
+    { pct: 80, msg: 'Indicaciones S-50 a S-126 - Pág 80-95' }
+  ],
+  normas: [
+    { pct: 0, msg: 'Normas Generales y Definiciones - Pág 5-15' },
+    { pct: 20, msg: 'Velocidades Máximas - Pág 25-32' },
+    { pct: 40, msg: 'Prioridad Intersecciones - Pág 45-52' },
+    { pct: 60, msg: 'Adelantamientos - Pág 65-75' },
+    { pct: 80, msg: 'Alumbrado y Carriles - Pág 85-92' }
+  ],
+  auxilios: [
+    { pct: 0, msg: 'Conducta PAS - Pág 40-45' },
+    { pct: 25, msg: 'Valoración ABC - Pág 50-55' },
+    { pct: 50, msg: 'RCP Básica - Pág 53-58' },
+    { pct: 75, msg: 'Hemorragias - Pág 65-72' }
+  ],
+  mecanica: [
+    { pct: 0, msg: 'Motor y Elementos - Pág 15-25' },
+    { pct: 25, msg: 'Frenos y ABS - Pág 35-42' },
+    { pct: 50, msg: 'Neumáticos - Pág 55-62' },
+    { pct: 75, msg: 'Niveles Aceite/Refrigerante - Pág 70-76' }
+  ],
+  medioambiente: [
+    { pct: 0, msg: 'Distintivos DGT 0/ECO/C/B - Pág 8-14' },
+    { pct: 25, msg: 'Zonas Bajas Emisiones ZBE - Pág 18-25' },
+    { pct: 50, msg: 'Conducción Eficiente - Pág 30-38' },
+    { pct: 75, msg: 'Contaminación - Pág 45-50' }
+  ],
+  general: [
+    { pct: 0, msg: 'Documentación y Permisos - Pág 5-10' }
+  ]
+};
+
+const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
+// === FIN CAMBIO 1 ===
 
 let tipsData = [];
 let currentTip = 0;
@@ -389,9 +431,13 @@ function initEstadoDinamico() {
   Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
     estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
   });
+
+  // === CAMBIO 2: FIX BUG CASOS ===
+  estado.sit = {};
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    estado.sit = {idx:0, aciertos:0, puntuacion:0, current:null};
+    estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null};
   });
+  // === FIN CAMBIO 2 ===
 }
 
 // NO llames cargarModulos aquí, ya se llama en bloque 1
@@ -406,12 +452,11 @@ let sitCategoriaActiva = 'clima';
 async function init() {
   initEstadoDinamico();
 
-  console.log(`GasDrive DGT ES V8.8.3 cargado`);
+  console.log(`GasDrive DGT ES V8.8.8 cargado`);
   console.log("PREGUNTAS:", Object.keys(PREGUNTAS).map(k => `${k}:${PREGUNTAS[k].length}`));
   console.log("CASOS:", Object.keys(CASOS));
   console.log("SVG SEÑALES:", Object.keys(window.SENALES_SVG || {}).length);
 
-  // QUITADO: mostrarIntro(); ← La intro solo va en bloque 1
   actualizarCoins();
   actualizarMensajeMotivacional();
   cargarTemario();
@@ -1176,10 +1221,12 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-  .then(reg => console.log('SW registrado'))
-  .catch(err => console.log('SW error:', err));
+ .then(reg => console.log('SW registrado'))
+ .catch(err => console.log('SW error:', err));
   });
 }
+ 
+
     
 
   
