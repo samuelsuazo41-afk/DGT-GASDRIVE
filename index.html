@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES V8.8.2</title>
+<title>GasDrive DGT ES V8.8.4</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -67,7 +67,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4;font-weight:500}
 
-/* Stats bar Starbucks */
+/* Stats bar */
 .stats{
   display:flex;
   justify-content:space-around;
@@ -79,7 +79,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 .stats span{color:#fff;font-weight:900;font-size:13px}
 
-/* FIX CRÍTICO V8.8.2: SVG Container */
+/* SVG Container */
 .pregunta-img{
   margin-top:24px;
   padding:18px;
@@ -94,7 +94,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 .pregunta-img:empty{display:none !important}
 
-/* FIX CRÍTICO V8.8.2: SVG render perfecto */
 .pregunta-img svg{
   width:140px !important;
   height:140px !important;
@@ -271,105 +270,72 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   text-shadow:0 0 20px rgba(0,217,255,0.3);
 }
 
-.intro{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background:rgba(10,10,10,0.95);
-  backdrop-filter: blur(10px);
-  z-index:9999;
-  align-items:center;
-  justify-content:center;
-  animation:fadeIn 0.3s;
-}
-.intro.active{display:flex !important}
-.intro-content{
-  background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%);
-  border:1px solid #333;
-  border-radius:16px;
-  padding:16px 12px;
-  margin:0 auto 12px;
-  box-shadow:0 4px 24px rgba(0,0,0,0.6);
-  max-width:420px;
-  text-align:center;
-}
-.intro-content h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
-.intro-content p{font-size:16px;margin:12px 0;line-height:1.4;font-weight:500}
-
-.btn-start{
-  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
-  color:#000;
-  border:none;
-  padding:16px 48px;
-  border-radius:12px;
-  font-size:18px;
-  font-weight:900;
-  cursor:pointer;
-  margin-top:15px;
-  box-shadow:0 4px 20px rgba(0,217,255,0.3);
-}
-.btn-start:active{transform:scale(0.98)}
+/* QUITADO: CSS .intro .btn-start - App.js lo crea dinámico */
 </style>
 </head>
 <body>
 
+<!-- INTRO V8.8.4 - id="intro-screen" + onclick="tancarIntro()" -->
+<div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+  <div style="font-size:64px;margin-bottom:20px">🚗</div>
+  <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v8.8.4</h1>
+  <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+  <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 6 temarios oficiales + casos reales</p>
+  <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+    <div>💰 Gana coins respondiendo bien</div>
+    <div>🏎️ Compra supercoches en el Garaje</div>
+    <div>📚 187 preguntas DGT reales</div>
+    <div>📖 Temarios completos para repasar</div>
+  </div>
+  <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+</div>
+
 <div class="header">
   <h1>🚗 GasDrive DGT ES</h1>
-  <div class="subtitle">187 Señales RD 465/2025 • Modo Examen</div>
+  <div class="subtitle">187 Señales RD 465/2025</div>
 </div>
 
-<!-- Intro -->
-<div id="intro" class="intro active">
-  <div class="intro-content">
-    <h2>🎯 Bienvenido a GasDrive</h2>
-    <p>187 preguntas oficiales DGT con señales vectoriales SVG</p>
-    <p>Colores RD 465/2025 aplicados</p>
-    <button class="btn-start" onclick="startApp()">EMPEZAR</button>
-  </div>
-</div>
-
-<!-- Tab Test -->
+<!-- Tab Test - IDs que espera App.js -->
 <div id="tab-test" class="tab-content active">
   <div class="card">
     <h2>📝 Test DGT Oficial</h2>
     <div class="stats">
-      <span>Aciertos: <span id="aciertos">0</span></span>
-      <span>Fallos: <span id="fallos">0</span></span>
-      <span>Pregunta: <span id="num-pregunta">1</span>/187</span>
+      <span>Aciertos: <span id="test-general-aciertos">0</span></span>
+      <span>Racha: <span id="test-general-racha">0</span></span>
+      <span>Score: <span id="test-general-score">0</span></span>
     </div>
     <div class="progress-bar">
-      <div class="progress-fill" id="progress" style="width:0%"></div>
+      <div class="progress-fill" id="test-general-progress" style="width:0%"></div>
     </div>
-    <div class="pregunta" id="pregunta-text">Cargando...</div>
-    <div class="pregunta-img" id="pregunta-img"></div>
-    <div id="opciones"></div>
-    <div class="feedback" id="feedback" style="display:none"></div>
-    <button class="btn-sig" id="btn-sig" onclick="siguientePregunta()" disabled>SIGUIENTE</button>
+    <div class="pregunta" id="test-general-pregunta">Pulsa EMPEZAR...</div>
+    <div class="pregunta-img" id="test-general-imagen"></div>
+    <div id="test-general-opciones"></div>
+    <div class="feedback" id="test-general-feedback"></div>
+    <button class="btn-sig" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>SIGUIENTE</button>
   </div>
 </div>
 
-<!-- Otros tabs vacíos para que no rompa -->
-<div id="tab-situaciones" class="tab-content">...</div>
-<div id="tab-examen" class="tab-content">...</div>
-<div id="tab-progreso" class="tab-content">...</div>
-<div id="tab-tips" class="tab-content">...</div>
-<div id="tab-garage" class="tab-content">...</div>
-<div id="tab-tienda" class="tab-content">...</div>
+<!-- Resto tabs con IDs correctos -->
+<div id="tab-situaciones" class="tab-content"></div>
+<div id="tab-examen" class="tab-content"></div>
+<div id="tab-progreso" class="tab-content"></div>
+<div id="tab-tips" class="tab-content"></div>
+<div id="tab-garaje" class="tab-content"></div>
+<div id="tab-tienda" class="tab-content"></div>
+<div id="tab-temario" class="tab-content"></div>
 
-<!-- Tabs inferior -->
+<!-- Tabs inferior - Primer botón TEST activo -->
 <div class="tabs">
   <button class="tab-btn active" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
   <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
   <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
   <button class="tab-btn" onclick="cambiarTab(event,'progreso')"><span class="emoji">📊</span>PROGRESO</button>
   <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'garage')"><span class="emoji">🏁</span>GARAJE</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<script src="./App.js?v=8.8.2"></script>
+<script src="./App.js?v=8.8.4"></script>
 </body>
 </html>
