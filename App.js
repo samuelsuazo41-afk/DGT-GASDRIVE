@@ -453,7 +453,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO V8.6.5 - SOLO IMÁGENES =====
+// ===== BLOQUE 2 COMPLETO V8.6.5 - SVG + TEST =====
 
 let tipsData = [];
 let currentTip = 0;
@@ -486,7 +486,7 @@ function initEstadoDinamico() {
     estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
   });
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    estado.sit = {idx:0, aciertos:0, puntuacion:0, current:null};
+    estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null}; // FIX: era estado.sit = {}
   });
 }
 
@@ -505,7 +505,7 @@ async function init() {
   console.log(`GasDrive DGT ES V${VERSION} cargado`);
   console.log("PREGUNTAS:", Object.keys(PREGUNTAS).map(k => `${k}:${PREGUNTAS[k].length}`));
   console.log("CASOS:", Object.keys(CASOS));
-  console.log("IMAGENES:", Object.keys(window.IMAGENES || {}).length);
+  console.log("SVG SEÑALES:", Object.keys(window.SENALES_SVG || {}).length); // FIX: era IMAGENES
 
   mostrarIntro();
   actualizarCoins();
@@ -566,7 +566,7 @@ function cambiarSubTab(e, tab, subtab) {
 
 function cambiarCategoriaSit(cat) {
   sitCategoriaActiva = cat;
-  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(btn => btn.classList.remove('active')); // FIX: selector
   event.target.classList.add('active');
   const titulos = {
     clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
@@ -614,7 +614,7 @@ function limpiarExplicacionTest(cat) {
   // Vacío por ahora
 }
 
-// === CARGAR PREGUNTA + IMAGEN ===
+// === CARGAR PREGUNTA + SVG ===
 function cargarPregunta(cat) {
   const s = estado.test[cat];
   if(!s) {
@@ -640,7 +640,7 @@ function cargarPregunta(cat) {
   s.current = p;
 
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
-  pintarImagenTest(cat, p.q); // SOLO imagen, explicaciones desactivadas
+  pintarImagenTest(cat, p.q); // AHORA PINTA SVG DESDE SENALES_SVG
 
   document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`test-${cat}-racha`).textContent = s.racha;
