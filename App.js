@@ -205,25 +205,26 @@ function buscarClave(obj, texto) {
 // PINTA IMAGEN V8.6.5 CON DEBUG
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if (!imgCont) {
-    console.error(`❌ No existe div test-${cat}-imagen`);
-    return;
-  }
-  if (!window.IMAGENES) {
-    console.error(`❌ window.IMAGENES no cargado`);
-    imgCont.innerHTML = '';
-    return;
-  }
+  if (!imgCont) return;
 
-  const rutaImg = buscarClave(window.IMAGENES, preguntaTexto);
-  console.log(`🔍 [${cat}] Buscando: "${preguntaTexto}" → ${rutaImg || 'NO ENCONTRADA'}`);
+  // EXTRAE EL CÓDIGO: r-2, p-15, s-50, etiqueta-b, etc
+  const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?|etiqueta-[0-9a-z]+|senal-r\d+-[a-z]+|colocacion-etiqueta|tabla-euro)\b/i);
+  const codigo = match? match[1].toLowerCase() : null;
+
+  console.log(`🔍 [${cat}] Pregunta: "${preguntaTexto}"`);
+  console.log(`🔍 Código extraído: ${codigo}`);
+
+  let rutaImg = null;
+  if (codigo && window.IMAGENES) {
+    rutaImg = window.IMAGENES[codigo];
+  }
 
   if (rutaImg) {
-    // Verifica que la ruta empiece por./img/
-    const rutaFinal = rutaImg.startsWith('./img/')? rutaImg : `./img/${rutaImg}`;
-    imgCont.innerHTML = `<img src="${rutaFinal}" onerror="console.error('Error 404 imagen:',this.src);this.parentElement.innerHTML='<div style=color:#666;font-size:12px;text-align:center;padding:10px>📷 Imagen no encontrada</div>'" alt="Imagen pregunta">`;
+    imgCont.innerHTML = `<img src="${rutaImg}" alt="Señal ${codigo.toUpperCase()}">`;
+    console.log(`✅ Imagen cargada: ${rutaImg}`);
   } else {
     imgCont.innerHTML = '';
+    console.log(`❌ No hay imagen para código: ${codigo}`);
   }
 }
 
