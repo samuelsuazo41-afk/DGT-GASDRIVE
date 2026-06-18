@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V8.5</title>
+<title>GasDrive DGT ES V8.6.5</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
@@ -31,8 +31,22 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .card h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4}
-/* NUEVO: Estilo para imágenes de preguntas */
-.pregunta-img img{max-width:100%;border-radius:8px;margin:10px auto;display:block;box-shadow:0 2px 10px rgba(0,0,0,0.4);border:2px solid #333}
+
+/* NUEVO V8.6.5: Imagen de pregunta abajo + oculta si vacía */
+.pregunta-img:empty { display: none; }
+.pregunta-img{
+  margin-top:14px;
+  padding-bottom:8px;
+  min-height: 20px;
+}
+.pregunta-img img{
+  max-width:100%;
+  border-radius:10px;
+  display:block;
+  box-shadow:0 4px 15px rgba(0,0,0,0.6);
+  border:2px solid #00D9FF;
+}
+
 .opcion{ background:#2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
 .opcion:hover{background:#333;border-color:#00D9FF}
 .opcion.correcta{background:#0a4!important;border-color:#0f5!important;animation:pulse 0.5s}
@@ -48,7 +62,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .feedback.acierto{background:#0a4;color:#fff}
 .feedback.fallo{background:#a00;color:#fff}
 @keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
-/* NUEVO V8.5: Caja de explicación/refuerzo DGT */
+
+/* NUEVO V8.6: Caja de explicación/refuerzo DGT */
 .explicacion-box{
   background:#1a1a2e;
   border-left:3px solid #00D9FF;
@@ -66,6 +81,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 }
 .explicacion-box b{color:#fff}
 .explicacion-box span{color:#999;font-size:11px;display:block;margin-top:6px}
+
 /* Garaje y tienda */
 .garage-car{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:18px;text-align:center;margin:9px 0}
 .garage-car.locked{opacity:0.4}
@@ -74,22 +90,27 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .emoji-shop{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:8px}
 .emoji-item{background:#1a1a1a;border:2px solid #333;border-radius:11px;padding:13px;text-align:center;cursor:pointer}
 .emoji-item.locked{opacity:0.4}
+
 /* Tips */
 .tip{background:#1a1a1a;border-left:4px solid #00D9FF;padding:12px;margin:9px 0;border-radius:6px;display:flex;align-items:center}
 .tip-emoji{font-size:22px;margin-right:10px}
+
 /* Progress */
 .progress-bar{background:#222;height:7px;border-radius:3px;margin:7px 0;overflow:hidden}
 .progress-fill{background:linear-gradient(90deg,#00D9FF,#0f5);height:100%;transition:width 0.3s}
+
 /* Buttons */
 .btn{background:#00D9FF;color:#000;border:none;padding:11px 18px;border-radius:7px;font-weight:700;cursor:pointer;margin:4px}
 .btn-buy{background:linear-gradient(135deg,#00D9FF 0%,#00ff88 100%);color:#000;border:none;padding:7px 11px;border-radius:7px;font-weight:700;font-size:12px;margin-top:7px;cursor:pointer}
 .btn-buy:active{transform:scale(0.95)}
+
 /* Grid Temario */
 #temario-lista{ display:grid; grid-template-columns:repeat(2,160px); gap:12px; justify-content:center; margin:14px auto 0; }
 .temario-item{ background:#1a1a1a; border:2px solid #00D9FF; border-radius:12px; padding:16px 10px; text-align:center; cursor:pointer; transition:0.2s; min-height:110px; display:flex; flex-direction:column; justify-content:center; }
 .temario-item:active{ transform:scale(0.96); background:#222; }
 .temario-item.locked{ border-color:#444; opacity:0.4; cursor:not-allowed; }
 .temario-item div:nth-child(2){ font-size:14px; font-weight:700; margin:8px 0 4px; }
+
 /* PROGRESO - NUEVO AUTOESCUELA */
 .progreso-item{background:#2a2a2a;border:2px solid #333;border-radius:10px;padding:12px;margin:10px 0}
 .progreso-item.completo{border-color:#0f5;background:#0a2a0a}
@@ -97,6 +118,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .progreso-porcentaje{color:#00D9FF;font-size:20px}
 .btn-dgt{background:linear-gradient(135deg,#00D9FF 0%,#0f5 100%);color:#000;border:none;padding:16px;width:100%;font-size:16px;font-weight:900;margin-top:15px;border-radius:10px;cursor:pointer;text-transform:uppercase}
 .btn-dgt:disabled{background:#333;color:#666;cursor:not-allowed}
+
 /* Fix scroll menú lateral */
 body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 .side-menu{ position:fixed; top:0; right:0; width:85%; max-width:320px; height:100vh; background:#0a; z-index:200; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; transform:translateX(100%); transition:transform 0.3s ease; }
@@ -332,12 +354,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
-<!-- CRÍTICO: Cargar datos ANTES que App.js - RUTAS CORRECTAS PARA TU REPO -->
-<script src="./temario.js"></script>
-<script src="./PREGUNTAS.js"></script>
-<script src="./SITUACIONES.js"></script>
-<script src="./assets/explicaciones.js"></script>
-<script src="./assets/imagenes.js"></script>
-<script src="./App.js?v=8.5.5"></script>
+<!-- V8.6.5: Solo App.js. Los datos se cargan dinámico desde /data/ con import() -->
+<script src="./App.js?v=8.6.5"></script>
 </body>
 </html>
