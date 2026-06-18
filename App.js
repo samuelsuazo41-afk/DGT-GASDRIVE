@@ -1,5 +1,5 @@
-// === GASDRIVE DGT V8.6.6 ES - BLOQUE 1 AUTO-CARGA SVG MEJORADO ===
-const VERSION = "8.6.6";
+// === GASDRIVE DGT V8.8.2 ES - BLOQUE 1 AUTO-CARGA SVG RD 465/2025 ===
+const VERSION = "8.8.2";
 
 // === REGISTRO AUTOMÁTICO DE MÓDULOS ===
 const MODULOS_PREGUNTAS = {
@@ -61,15 +61,15 @@ function migrarProgreso() {
 }
 migrarProgreso();
 
-// === CARGADOR DINÁMICO V8.6.6 SVG CON CACHE ===
+// === CARGADOR DINÁMICO V8.8.2 SVG CON EXPORT ===
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
-window.SENALES_SVG = {}; // Cache SVG en memoria
-let SVG_CARGADOS = false; // Flag para no recargar
+let SENALES_SVG = {}; // Cache local, no window
+let SVG_CARGADOS = false;
 
 async function cargarModulos() {
-  console.log(`🚀 GasDrive V${VERSION} - Cargando módulos SVG...`);
+  console.log(`🚀 GasDrive V${VERSION} - Cargando módulos RD 465/2025...`);
 
   // 1. Carga preguntas por tema
   for (const [tema, config] of Object.entries(MODULOS_PREGUNTAS)) {
@@ -79,7 +79,6 @@ async function cargarModulos() {
 
       if(!data) {
         console.error(`❌ ${tema}: No existe export "${config.export}" en ${config.archivo}`);
-        console.log(`Exports disponibles:`, Object.keys(mod));
         PREGUNTAS[tema] = [];
       } else if(!Array.isArray(data) || data.length === 0) {
         console.error(`❌ ${tema}: El export "${config.export}" está vacío`);
@@ -116,7 +115,7 @@ async function cargarModulos() {
     Object.keys(MODULOS_CASOS).forEach(caso => CASOS[caso] = []);
   }
 
-  // 4. Carga SVG - MEJORADO CON VALIDACIÓN
+  // 4. Carga SVG - RD 465/2025 EXPORT
   if (!SVG_CARGADOS) {
     try {
       const mod = await import(`./data/senales-svg.js`);
@@ -127,15 +126,17 @@ async function cargarModulos() {
         console.warn(`⚠️ Solo ${total} SVG cargados. Esperado: 187. Revisa senales-svg.js`);
       }
 
-      window.SENALES_SVG = svgs;
+      SENALES_SVG = svgs;
+      window.SENALES_SVG = svgs; // Mantener compatibilidad con bloque 2
       SVG_CARGADOS = true;
-      console.log(`✅ SVG Señales: ${total}/187 cargados`);
-      console.log(`Test r-1: ${window.SENALES_SVG['r-1']? 'OK' : 'FALTA'}`);
-      console.log(`Test s-118: ${window.SENALES_SVG['s-118']? 'OK' : 'FALTA'}`);
-      console.log(`Test s-840a: ${window.SENALES_SVG['s-840a']? 'OK' : 'FALTA'}`);
+      console.log(`✅ SVG RD 465/2025: ${total}/187 cargados`);
+      console.log(`Test r-1: ${SENALES_SVG['r-1']? 'OK' : 'FALTA'}`);
+      console.log(`Test r-101: ${SENALES_SVG['r-101']? 'OK' : 'FALTA'}`);
+      console.log(`Test s-1: ${SENALES_SVG['s-1']? 'OK' : 'FALTA'}`);
     } catch (e) {
       console.error(`❌ Error crítico cargando senales-svg.js:`, e);
-      console.error(`Asegúrate que el archivo existe en./data/senales-svg.js y exporta SENALES_SVG`);
+      console.error(`Asegúrate que el archivo usa: export const SENALES_SVG = {`);
+      SENALES_SVG = {};
       window.SENALES_SVG = {};
     }
   }
@@ -213,31 +214,37 @@ function buscarClave(obj, texto) {
   return null;
 }
 
-// PINTA SVG V8.6.6 FINAL - RENDERIZA SENALES_SVG DIRECTO + FALLBACK
+// PINTA SVG V8.8.2 FINAL - SIN WRAPPER DIV
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
 
-  // EXTRAE EL CÓDIGO: r-2, p-15, s-50, s-840a, s-118d
   const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
   const codigo = match? match[1].toLowerCase() : null;
 
-  console.log(`🔍 [${cat}] Pregunta: "${preguntaTexto.substring(0,50)}..."`);
-  console.log(`🔍 Código extraído: ${codigo}`);
+  console.log(`🔍 [${cat}] Código: ${codigo}`);
 
   let svg = null;
-  if (codigo && window.SENALES_SVG) {
-    svg = window.SENALES_SVG[codigo];
+  if (codigo && SENALES_SVG) {
+    svg = SENALES_SVG[codigo];
   }
 
   if (svg) {
-    imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:160px">${svg}</div>`;
+    // FIX V8.8.2: Inyecta directo + fuerza width/height inline
+    imgCont.innerHTML = svg;
+    const svgEl = imgCont.querySelector('svg');
+    if (svgEl) {
+      svgEl.setAttribute('width', '140');
+      svgEl.setAttribute('height', '140');
+      svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      svgEl.style.display = 'block';
+      svgEl.style.margin = '0 auto';
+    }
     console.log(`✅ SVG renderizado: ${codigo}`);
   } else {
-    // FALLBACK: muestra texto del código si no hay SVG
     if (codigo) {
-      imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:160px;color:#999;font-size:14px">Señal: ${codigo.toUpperCase()}</div>`;
-      console.warn(`⚠️ No hay SVG para: ${codigo}. Revisa senales-svg.js`);
+      imgCont.innerHTML = `<div style="text-align:center;color:#999;font-size:14px">Señal: ${codigo.toUpperCase()}</div>`;
+      console.warn(`⚠️ No hay SVG para: ${codigo}`);
     } else {
       imgCont.innerHTML = '';
     }
