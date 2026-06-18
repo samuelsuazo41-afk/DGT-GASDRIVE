@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V8.6.5</title>
+<title>GasDrive DGT ES V8.7.3</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
@@ -32,7 +32,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 /* Test */
 .pregunta{font-size:16px;margin:12px 0;line-height:1.4}
 
-/* V8.6.5: CAJA IMAGEN ABAJO DEL BOTÓN */
+/* V8.7.3: CAJA IMAGEN/SVG ABAJO DEL BOTÓN */
 .pregunta-img{
   margin-top:24px;
   padding:16px;
@@ -55,8 +55,19 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   border-radius:10px;
   box-shadow:0 6px 20px rgba(0,0,0,0.5);
 }
+/* FIX V8.7.3: Estilos para SVG inline */
+.pregunta-img svg {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5));
+}
 @media (max-width: 480px) {
   .pregunta-img img{ max-height:200px; }
+  .pregunta-img svg{ max-width: 140px; }
 }
 
 .opcion{ background:#2a2a2a;border:2px solid #333;padding:12px;margin:9px 0;border-radius:10px; cursor:pointer;transition:0.2s;font-size:14px;position:relative;user-select:none; -webkit-tap-highlight-color:transparent; }
@@ -158,7 +169,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 <div id="tab-test" class="tab-content">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'test','general')">📝 General</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','senales')">🚸 Senales</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','senales')">🚸 Señales</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','normas')">📋 Normas</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','mecanica')">🔧 Mecanica</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','auxilios')">🚑 Auxilios</button>
@@ -175,14 +186,14 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="test-general-feedback"></div>
       <div id="test-general-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-general-imagen" class="pregunta-img"></div>
     </div>
   </div>
 
   <div id="test-senales" class="sub-content">
     <div class="card">
-      <h2>🚸 SENALES DE TRAFICO</h2>
+      <h2>🚸 SEÑALES DE TRÁFICO</h2>
       <div class="stats"><div>Aciertos: <span id="test-senales-aciertos">0</span>/5</div><div>Racha: <span id="test-senales-racha">0</span>🔥</div><div>Score: <span id="test-senales-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-senales-progress"></div></div>
       <div class="pregunta" id="test-senales-pregunta"></div>
@@ -190,7 +201,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="test-senales-feedback"></div>
       <div id="test-senales-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-senales" onclick="siguienteTest(event,'senales')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-senales-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -209,14 +220,14 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="test-normas-feedback"></div>
       <div id="test-normas-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-normas" onclick="siguienteTest(event,'normas')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-normas-imagen" class="pregunta-img"></div>
     </div>
   </div>
 
   <div id="test-mecanica" class="sub-content">
     <div class="card">
-      <h2>🔧 MECANICA BASICA</h2>
+      <h2>🔧 MECÁNICA BÁSICA</h2>
       <div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span>/5</div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div>
       <div class="pregunta" id="test-mecanica-pregunta"></div>
@@ -224,7 +235,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="test-mecanica-feedback"></div>
       <div id="test-mecanica-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-mecanica" onclick="siguienteTest(event,'mecanica')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-mecanica-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -239,7 +250,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="test-auxilios-feedback"></div>
       <div id="test-auxilios-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-auxilios" onclick="siguienteTest(event,'auxilios')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-auxilios-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -254,7 +265,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="feedback" id="test-medioambiente-feedback"></div>
       <div id="test-medioambiente-explicacion" class="explicacion-box"></div>
       <button class="btn-sig" id="btn-sig-test-medioambiente" onclick="siguienteTest(event,'medioambiente')" disabled>SIGUIENTE</button>
-      <!-- IMAGEN ABAJO DEL BOTÓN -->
+      <!-- IMAGEN/SVG ABAJO DEL BOTÓN -->
       <div id="test-medioambiente-imagen" class="pregunta-img"></div>
     </div>
   </div>
@@ -372,6 +383,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
-<script src="./App.js?v=8.6.5"></script>
+<script src="./App.js?v=8.7.3"></script>
 </body>
-</html> 
+</html>
