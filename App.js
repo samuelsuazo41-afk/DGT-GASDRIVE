@@ -487,12 +487,12 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO V8.8.2 - SVG RD 465/2025 + TEST CORREGIDO =====
+// ===== BLOQUE 2 COMPLETO V8.8.3 - SIN INTRO DUPLICADA =====
 
 let tipsData = [];
 let currentTip = 0;
 
-// Arrays vacíos por defecto para que no rompa si no tienes los datos
+// Arrays vacíos por defecto para que no rompa
 const COCHES = window.COCHES || [];
 const ACCESORIOS = window.ACCESORIOS || [];
 const EMOJI_TIENDA = window.EMOJI_TIENDA || [];
@@ -525,7 +525,7 @@ function initEstadoDinamico() {
     estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
   });
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null};
+    estado.sit = {idx:0, aciertos:0, puntuacion:0, current:null};
   });
 }
 
@@ -541,12 +541,12 @@ let sitCategoriaActiva = 'clima';
 async function init() {
   initEstadoDinamico();
 
-  console.log(`GasDrive DGT ES V${VERSION} cargado`);
+  console.log(`GasDrive DGT ES V8.8.3 cargado`);
   console.log("PREGUNTAS:", Object.keys(PREGUNTAS).map(k => `${k}:${PREGUNTAS[k].length}`));
   console.log("CASOS:", Object.keys(CASOS));
-  console.log("SVG SEÑALES:", Object.keys(SENALES_SVG || {}).length);
+  console.log("SVG SEÑALES:", Object.keys(window.SENALES_SVG || {}).length);
 
-  mostrarIntro();
+  // QUITADO: mostrarIntro(); ← La intro solo va en bloque 1
   actualizarCoins();
   actualizarMensajeMotivacional();
   cargarTemario();
@@ -674,7 +674,6 @@ function cargarPregunta(cat) {
 
   document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // FIX V8.8.2: Espera a que SVG estén cargados
   if (SVG_CARGADOS) {
     pintarImagenTest(cat, p.q);
   } else {
@@ -1312,10 +1311,11 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-   .then(reg => console.log('SW registrado'))
-   .catch(err => console.log('SW error:', err));
+  .then(reg => console.log('SW registrado'))
+  .catch(err => console.log('SW error:', err));
   });
 }
+    
 
   
 
