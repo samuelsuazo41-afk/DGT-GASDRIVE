@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES V8.7.5</title>
+<title>GasDrive DGT ES V8.8.2</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -21,18 +21,7 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
-.subtitle{font-size:11px;opacity:0.9;margin-top:2px;display:flex;align-items:center;justify-content:center;gap:6px}
-.coins{
-  display:inline-flex;
-  align-items:center;
-  background:linear-gradient(135deg,#FFD700 0%,#FFA500 100%);
-  color:#000;
-  padding:3px 10px;
-  border-radius:20px;
-  font-weight:900;
-  font-size:11px;
-}
-#motivacion{margin-top:6px;font-size:12px;color:#FFD700;font-weight:600}
+.subtitle{font-size:11px;opacity:0.9;margin-top:2px}
 
 /* Tabs inferior */
 .tabs{
@@ -62,52 +51,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 .tab-btn.active{color:#00D9FF;background:rgba(26,26,26,0.8)}
 .tab-btn .emoji{font-size:19px;display:block;margin-bottom:3px}
-.tab-content{
-  display:none;
-  padding:12px;
-  animation:fadeIn 0.3s;
-  padding-bottom:80px;
-  min-height:calc(100vh - 140px);
-  background:#0a0a0a
-}
-.tab-content.active{display:block !important}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-.sub-tabs{
-  display:flex;
-  gap:6px;
-  margin-bottom:12px;
-  overflow-x:auto;
-  padding-bottom:4px;
-  scrollbar-width: none;
-}
-.sub-tabs::-webkit-scrollbar{display:none}
-.sub-tab-btn{
-  background:#222;
-  border:1px solid #333;
-  color:#999;
-  padding:7px 14px;
-  border-radius:18px;
-  font-size:12px;
-  cursor:pointer;
-  white-space:nowrap;
-  transition:0.2s
-}
-.sub-tab-btn.active{
-  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
-  color:#000;
-  border-color:#00D9FF;
-  font-weight:700;
-}
-
-/* FIX V8.7.5: Solo 1 sub-content visible a la vez */
-.sub-content{
-  display:none !important;
-}
-.sub-content.active{
-  display:block !important;
-  animation:fadeIn 0.3s
-}
 
 /* Cards */
 .card{ 
@@ -136,38 +79,42 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 .stats span{color:#fff;font-weight:900;font-size:13px}
 
-/* V8.7.5 FIX: SVG container con height fijo para que no colapse */
+/* FIX CRÍTICO V8.8.2: SVG Container */
 .pregunta-img{
   margin-top:24px;
   padding:18px;
   background:radial-gradient(circle at center,#0f0f1a 0%,#0a0a12 100%);
   border:1px solid rgba(0,217,255,0.2);
   border-radius:16px;
-  min-height:160px;
-  height:160px;
+  min-height:180px;
+  height:180px;
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
 }
-.pregunta-img:empty{ display:none !important; }
-.pregunta-img img{
-  max-width:100%;
-  max-height:140px;
-  object-fit:contain;
+.pregunta-img:empty{display:none !important}
+
+/* FIX CRÍTICO V8.8.2: SVG render perfecto */
+.pregunta-img svg{
+  width:140px !important;
+  height:140px !important;
+  display:block !important;
+  margin:0 auto !important;
+  flex-shrink:0 !important;
+  max-width:100% !important;
+  max-height:100% !important;
 }
-/* FIX CRÍTICO: SVG necesita width/height + viewBox */
-.pregunta-img svg {
-  width: 140px !important;
-  height: 140px !important;
-  display: block;
-  margin: 0 auto;
-  max-width:100%;
-  max-height:140px;
-}
+
 @media (max-width: 480px) {
-  .pregunta-img{ height:140px; min-height:140px }
-  .pregunta-img svg{ width: 120px !important; height: 120px !important; }
+  .pregunta-img{
+    height:160px;
+    min-height:160px;
+    padding:12px;
+  }
+  .pregunta-img svg{
+    width:120px !important;
+    height:120px !important;
+  }
 }
 
 .opcion{ 
@@ -183,18 +130,16 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 }
 .opcion:hover{background:#333;border-color:#00D9FF}
 .opcion.correcta{
-  background:linear-gradient(135deg,#0a4 0%,#0c6 100%)!important;
-  border-color:#0f5!important;
-  animation:pulse 0.5s;
+  background:linear-gradient(135deg,#0a4 0%,#0c6 100%) !important;
+  border-color:#0f5 !important;
+  box-shadow:0 0 20px rgba(0,255,85,0.3);
 }
 .opcion.incorrecta{
-  background:linear-gradient(135deg,#a00 0%,#c00 100%)!important;
-  border-color:#f00!important;
-  animation:shake 0.5s
+  background:linear-gradient(135deg,#a00 0%,#c00 100%) !important;
+  border-color:#f05 !important;
+  box-shadow:0 0 20px rgba(255,0,85,0.3);
 }
 .opcion.bloqueada{pointer-events:none}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
 
 .btn-sig{
   background:linear-gradient(180deg,#4a4a4a 0%,#2a2a2a 100%);
@@ -217,165 +162,214 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   margin:12px 0;
   padding:12px;
   border-radius:10px;
-  animation:bounceIn 0.5s
+  animation:bounceIn 0.5s;
 }
-.feedback.acierto{background:linear-gradient(135deg,#0a4 0%,#0c6 100%);color:#fff}
-.feedback.fallo{background:linear-gradient(135deg,#a00 0%,#c00 100%);color:#fff}
-@keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+.feedback.acierto{
+  background:linear-gradient(135deg,#0a4 0%,#0c6 100%);
+  box-shadow:0 0 20px rgba(0,255,85,0.3);
+}
+.feedback.fallo{
+  background:linear-gradient(135deg,#a00 0%,#c00 100%);
+  box-shadow:0 0 20px rgba(255,0,85,0.3);
+}
 
-.progress-bar{background:#222;height:8px;border-radius:4px;margin:8px 0;overflow:hidden}
-.progress-fill{background:linear-gradient(90deg,#00D9FF 0%,#00ff88 100%);height:100%;transition:width 0.3s}
+@keyframes bounceIn{
+ 0%{transform:scale(0)}
+ 50%{transform:scale(1.2)}
+ 100%{transform:scale(1)}
+}
+
+.progress-bar{
+  background:#222;
+  height:8px;
+  border-radius:4px;
+  margin:8px 0;
+  overflow:hidden;
+}
+.progress-fill{
+  background:linear-gradient(90deg,#00D9FF 0%,#00ff88 100%);
+  height:100%;
+  transition:width 0.3s;
+}
+
+/* Subtabs */
+.sub-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:12px;
+  overflow-x:auto;
+  scrollbar-width: none;
+}
+.sub-tabs::-webkit-scrollbar{display:none}
+.sub-tab-btn{
+  background:#222;
+  border:1px solid #333;
+  color:#999;
+  padding:7px 14px;
+  border-radius:18px;
+  font-size:12px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:0.2s;
+}
+.sub-tab-btn.active{
+  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
+  color:#000;
+  border-color:#00D9FF;
+  font-weight:700;
+}
+
+/* Content */
+.tab-content{
+  display:none;
+  padding:12px;
+  animation:fadeIn 0.3s;
+  padding-bottom:80px;
+  min-height:calc(100vh - 140px);
+  background:#0a0a0a;
+}
+.tab-content.active{display:block !important;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.garage-car{
+  background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%);
+  border:2px solid #333;
+  border-radius:11px;
+  padding:18px;
+  text-align:center;
+  margin:9px 0;
+}
+.garage-car.locked{opacity:0.4}
+.garage-car h3{color:#00D9FF;margin:7px 0}
+
+.emoji-shop{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  padding:8px;
+}
+
+.btn-buy{
+  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
+  color:#000;
+  border:none;
+  padding:7px 11px;
+  border-radius:7px;
+  font-weight:700;
+  font-size:12px;
+  margin-top:7px;
+  cursor:pointer;
+}
+.btn-buy:disabled{background:#333;color:#666;cursor:not-allowed}
+
+.score-big{
+  text-align:center;
+  font-size:44px;
+  font-weight:900;
+  color:#00D9FF;
+  margin:18px 0;
+  text-shadow:0 0 20px rgba(0,217,255,0.3);
+}
+
+.intro{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(10,10,10,0.95);
+  backdrop-filter: blur(10px);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  animation:fadeIn 0.3s;
+}
+.intro.active{display:flex !important}
+.intro-content{
+  background:linear-gradient(180deg,#1a1a1a 0%,#141414 100%);
+  border:1px solid #333;
+  border-radius:16px;
+  padding:16px 12px;
+  margin:0 auto 12px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.6);
+  max-width:420px;
+  text-align:center;
+}
+.intro-content h2{color:#00D9FF;font-size:17px;margin-bottom:10px;text-align:center}
+.intro-content p{font-size:16px;margin:12px 0;line-height:1.4;font-weight:500}
+
+.btn-start{
+  background:linear-gradient(135deg,#00D9FF 0%,#0099cc 100%);
+  color:#000;
+  border:none;
+  padding:16px 48px;
+  border-radius:12px;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:15px;
+  box-shadow:0 4px 20px rgba(0,217,255,0.3);
+}
+.btn-start:active{transform:scale(0.98)}
 </style>
 </head>
 <body>
+
 <div class="header">
-  <h1>🚘 GasDrive DGT ES</h1>
-  <div class="subtitle">187 Señales SVG + 680 Preguntas DGT<span class="coins" id="coins">💰 0</span></div>
-  <div id="motivacion"></div>
+  <h1>🚗 GasDrive DGT ES</h1>
+  <div class="subtitle">187 Señales RD 465/2025 • Modo Examen</div>
 </div>
 
-<!-- TEMARIO -->
-<div id="tab-temario" class="tab-content active">
+<!-- Intro -->
+<div id="intro" class="intro active">
+  <div class="intro-content">
+    <h2>🎯 Bienvenido a GasDrive</h2>
+    <p>187 preguntas oficiales DGT con señales vectoriales SVG</p>
+    <p>Colores RD 465/2025 aplicados</p>
+    <button class="btn-start" onclick="startApp()">EMPEZAR</button>
+  </div>
+</div>
+
+<!-- Tab Test -->
+<div id="tab-test" class="tab-content active">
   <div class="card">
-    <h2>📖 TEMARIOS OFICIALES</h2>
-    <p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT RD 465/2025</p>
-    <div id="temario-lista"></div>
+    <h2>📝 Test DGT Oficial</h2>
+    <div class="stats">
+      <span>Aciertos: <span id="aciertos">0</span></span>
+      <span>Fallos: <span id="fallos">0</span></span>
+      <span>Pregunta: <span id="num-pregunta">1</span>/187</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress" style="width:0%"></div>
+    </div>
+    <div class="pregunta" id="pregunta-text">Cargando...</div>
+    <div class="pregunta-img" id="pregunta-img"></div>
+    <div id="opciones"></div>
+    <div class="feedback" id="feedback" style="display:none"></div>
+    <button class="btn-sig" id="btn-sig" onclick="siguientePregunta()" disabled>SIGUIENTE</button>
   </div>
 </div>
 
-<div id="tab-test" class="tab-content">
-  <div class="sub-tabs">
-    <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'test','general')">📝 General</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','senales')">🚸 Señales</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','normas')">📋 Normas</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','mecanica')">🔧 Mecánica</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','auxilios')">🚑 Auxilios</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','medioambiente')">🌱 Medio Ambiente</button>
-  </div>
-
-  <div id="test-general" class="sub-content active">
-    <div class="card">
-      <h2>📝 TEST GENERAL</h2>
-      <div class="stats">
-        <span>✅ <span id="test-general-aciertos">0</span></span>
-        <span>🔥 <span id="test-general-racha">0</span></span>
-        <span>⭐ <span id="test-general-score">0</span></span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div>
-      <div class="pregunta" id="test-general-pregunta">Cargando...</div>
-      <div id="test-general-opciones"></div>
-      <div class="feedback" id="test-general-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>SIGUIENTE</button>
-      <div id="test-general-imagen" class="pregunta-img"></div>
-    </div>
-  </div>
-
-  <div id="test-senales" class="sub-content">
-    <div class="card">
-      <h2>🚸 SEÑALES DE TRÁFICO</h2>
-      <div class="stats">
-        <span>✅ <span id="test-senales-aciertos">0</span></span>
-        <span>🔥 <span id="test-senales-racha">0</span></span>
-        <span>⭐ <span id="test-senales-score">0</span></span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="test-senales-progress"></div></div>
-      <div class="pregunta" id="test-senales-pregunta"></div>
-      <div id="test-senales-opciones"></div>
-      <div class="feedback" id="test-senales-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-senales" onclick="siguienteTest(event,'senales')" disabled>SIGUIENTE</button>
-      <div id="test-senales-imagen" class="pregunta-img"></div>
-    </div>
-  </div>
-
-  <div id="test-normas" class="sub-content">
-    <div class="card">
-      <h2>📋 NORMAS Y VELOCIDADES</h2>
-      <div class="stats">
-        <span>✅ <span id="test-normas-aciertos">0</span></span>
-        <span>🔥 <span id="test-normas-racha">0</span></span>
-        <span>⭐ <span id="test-normas-score">0</span></span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="test-normas-progress"></div></div>
-      <div class="pregunta" id="test-normas-pregunta"></div>
-      <div id="test-normas-opciones"></div>
-      <div class="feedback" id="test-normas-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-normas" onclick="siguienteTest(event,'normas')" disabled>SIGUIENTE</button>
-      <div id="test-normas-imagen" class="pregunta-img"></div>
-    </div>
-  </div>
-
-  <div id="test-mecanica" class="sub-content">
-    <div class="card">
-      <h2>🔧 MECÁNICA BÁSICA</h2>
-      <div class="stats">
-        <span>✅ <span id="test-mecanica-aciertos">0</span></span>
-        <span>🔥 <span id="test-mecanica-racha">0</span></span>
-        <span>⭐ <span id="test-mecanica-score">0</span></span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div>
-      <div class="pregunta" id="test-mecanica-pregunta"></div>
-      <div id="test-mecanica-opciones"></div>
-      <div class="feedback" id="test-mecanica-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-mecanica" onclick="siguienteTest(event,'mecanica')" disabled>SIGUIENTE</button>
-      <div id="test-mecanica-imagen" class="pregunta-img"></div>
-    </div>
-  </div>
-
-  <div id="test-auxilios" class="sub-content">
-    <div class="card">
-      <h2>🚑 PRIMEROS AUXILIOS</h2>
-      <div class="stats">
-        <span>✅ <span id="test-auxilios-aciertos">0</span></span>
-        <span>🔥 <span id="test-auxilios-racha">0</span></span>
-        <span>⭐ <span id="test-auxilios-score">0</span></span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="test-auxilios-progress"></div></div>
-      <div class="pregunta" id="test-auxilios-pregunta"></div>
-      <div id="test-auxilios-opciones"></div>
-      <div class="feedback" id="test-auxilios-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-auxilios" onclick="siguienteTest(event,'auxilios')" disabled>SIGUIENTE</button>
-      <div id="test-auxilios-imagen" class="pregunta-img"></div>
-    </div>
-  </div>
-
-  <div id="test-medioambiente" class="sub-content">
-    <div class="card">
-      <h2>♻️ MEDIO AMBIENTE</h2>
-      <div class="stats">
-        <span>✅ <span id="test-medioambiente-aciertos">0</span></span>
-        <span>🔥 <span id="test-medioambiente-racha">0</span></span>
-        <span>⭐ <span id="test-medioambiente-score">0</span></span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="test-medioambiente-progress"></div></div>
-      <div class="pregunta" id="test-medioambiente-pregunta"></div>
-      <div id="test-medioambiente-opciones"></div>
-      <div class="feedback" id="test-medioambiente-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-medioambiente" onclick="siguienteTest(event,'medioambiente')" disabled>SIGUIENTE</button>
-      <div id="test-medioambiente-imagen" class="pregunta-img"></div>
-    </div>
-  </div>
-</div>
-
-<!-- SITUACIONES, EXAMEN, PROGRESO, TIPS, GARAJE, TIENDA -->
+<!-- Otros tabs vacíos para que no rompa -->
 <div id="tab-situaciones" class="tab-content">...</div>
 <div id="tab-examen" class="tab-content">...</div>
 <div id="tab-progreso" class="tab-content">...</div>
 <div id="tab-tips" class="tab-content">...</div>
-<div id="tab-garaje" class="tab-content">...</div>
+<div id="tab-garage" class="tab-content">...</div>
 <div id="tab-tienda" class="tab-content">...</div>
 
-<!-- MENÚ INFERIOR -->
+<!-- Tabs inferior -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
+  <button class="tab-btn active" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
   <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
   <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
   <button class="tab-btn" onclick="cambiarTab(event,'progreso')"><span class="emoji">📊</span>PROGRESO</button>
   <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'garage')"><span class="emoji">🏁</span>GARAJE</button>
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
-<script src="./App.js?v=8.7.5"></script>
+<script src="./App.js?v=8.8.2"></script>
 </body>
 </html>
