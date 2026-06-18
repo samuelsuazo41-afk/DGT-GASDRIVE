@@ -273,7 +273,37 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
 </head>
 <body>
 
-<!-- INTRO V8.8.5 - id="intro-screen" + onclick="tancarIntro()" -->
+<!-- 
+
+DIAGRAMA DE FUNCIONAMIENTO BOTONES
+
+FLUJO INICIAL:
+1. App.js carga → mostrarIntro() crea #intro-screen
+2. Usuario pulsa EMPEZAR → window.tancarIntro()
+3. Quita intro → Activa tab-temario → cargarTemario()
+
+MENÚ INFERIOR - TODOS CONECTADOS A cambiarTab():
+[📖 TEMARIO] onclick="cambiarTab(event,'temario')" → cargarTemario()
+[📝 TEST] onclick="cambiarTab(event,'test')" → cargarTest('general') 
+[🚦 CASOS] onclick="cambiarTab(event,'situaciones')" → cargarSituaciones()
+[📋 EXAMEN] onclick="cambiarTab(event,'examen')" → iniciarExamen()
+[📊 PROGRESO] onclick="cambiarTab(event,'progreso')" → mostrarProgreso()
+[💡 TIPS] onclick="cambiarTab(event,'tips')" → cargarTips()
+[🏁 GARAJE] onclick="cambiarTab(event,'garaje')" → cargarGaraje()
+[🛒 TIENDA] onclick="cambiarTab(event,'tienda')" → cargarTienda()
+
+BOTONES INTERNOS:
+[EMPEZAR] onclick="window.tancarIntro()" → Quita intro + activa TEMARIO
+[SIGUIENTE] onclick="siguienteTest(event,'general')" → Siguiente pregunta
+[OPCIONES A/B/C/D] → onclick dinámico verificarRespuesta(idx)
+[SUBTABS] onclick="cambiarSubTab(event,'basico')" → Cambia temario
+[COMPRAR] onclick="comprarCoche(id)" → Descuenta coins + desbloquea
+
+TODO ESTÁ CONTEMPLADO EN APP.JS V8.8.5
+
+-->
+
+<!-- INTRO V8.8.5 - FIX: window.tancarIntro() + touch-action -->
 <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
   <div style="font-size:64px;margin-bottom:20px">🚗</div>
   <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v8.8.5</h1>
@@ -285,7 +315,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
     <div>📚 187 preguntas DGT reales</div>
     <div>📖 Temarios completos para repasar</div>
   </div>
-  <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+  <button onclick="window.tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;touch-action:manipulation">EMPEZAR</button>
 </div>
 
 <div class="header">
@@ -293,10 +323,10 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   <div class="subtitle">187 Señales RD 465/2025</div>
 </div>
 
-<!-- PRIMER TAB = TEMARIO -->
+<!-- TAB 1: TEMARIO - Activo por defecto -->
 <div id="tab-temario" class="tab-content active"></div>
 
-<!-- Resto tabs -->
+<!-- TAB 2: TEST -->
 <div id="tab-test" class="tab-content">
   <div class="card">
     <h2>📝 Test DGT Oficial</h2>
@@ -316,23 +346,65 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin:0 0 3px}
   </div>
 </div>
 
+<!-- TAB 3: SITUACIONES/CASOS -->
 <div id="tab-situaciones" class="tab-content"></div>
+
+<!-- TAB 4: EXAMEN -->
 <div id="tab-examen" class="tab-content"></div>
+
+<!-- TAB 5: PROGRESO -->
 <div id="tab-progreso" class="tab-content"></div>
+
+<!-- TAB 6: TIPS -->
 <div id="tab-tips" class="tab-content"></div>
+
+<!-- TAB 7: GARAJE -->
 <div id="tab-garaje" class="tab-content"></div>
+
+<!-- TAB 8: TIENDA -->
 <div id="tab-tienda" class="tab-content"></div>
 
-<!-- Tabs inferior - PRIMER BOTÓN TEMARIO -->
+<!-- MENÚ INFERIOR - 8 BOTONES TODOS CONECTADOS -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'progreso')"><span class="emoji">📊</span>PROGRESO</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
+  <!-- 1. TEMARIO -->
+  <button class="tab-btn active" onclick="cambiarTab(event,'temario')">
+    <span class="emoji">📖</span>TEMARIO
+  </button>
+  
+  <!-- 2. TEST -->
+  <button class="tab-btn" onclick="cambiarTab(event,'test')">
+    <span class="emoji">📝</span>TEST
+  </button>
+  
+  <!-- 3. CASOS -->
+  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')">
+    <span class="emoji">🚦</span>CASOS
+  </button>
+  
+  <!-- 4. EXAMEN -->
+  <button class="tab-btn" onclick="cambiarTab(event,'examen')">
+    <span class="emoji">📋</span>EXAMEN
+  </button>
+  
+  <!-- 5. PROGRESO -->
+  <button class="tab-btn" onclick="cambiarTab(event,'progreso')">
+    <span class="emoji">📊</span>PROGRESO
+  </button>
+  
+  <!-- 6. TIPS -->
+  <button class="tab-btn" onclick="cambiarTab(event,'tips')">
+    <span class="emoji">💡</span>TIPS
+  </button>
+  
+  <!-- 7. GARAJE -->
+  <button class="tab-btn" onclick="cambiarTab(event,'garaje')">
+    <span class="emoji">🏁</span>GARAJE
+  </button>
+  
+  <!-- 8. TIENDA -->
+  <button class="tab-btn" onclick="cambiarTab(event,'tienda')">
+    <span class="emoji">🛒</span>TIENDA
+  </button>
 </div>
 
 <script src="./App.js?v=8.8.5"></script>
