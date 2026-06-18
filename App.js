@@ -1,5 +1,5 @@
-// === GASDRIVE DGT V8.8.7 ES - SIMPLE Y DIRECTO ===
-const VERSION = "8.8.7";
+// === GASDRIVE DGT V8.8.8 ES - SIMPLE Y DIRECTO ===
+const VERSION = "8.8.8";
 
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
@@ -25,7 +25,7 @@ function crearProgresoVacio() {
   progreso.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
   progreso.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
   Object.keys(MODULOS_CASOS).forEach(caso => {
-    progreso.casos = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+    progreso.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] }; // FIX 3
   });
   return progreso;
 }
@@ -42,7 +42,7 @@ let MODULOS_LISTOS = false;
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos...`);
   await Promise.all([
-  ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
@@ -55,7 +55,7 @@ async function cargarModulos() {
     import(`./data/preguntas-situaciones.js`).then(mod => {
       const SIT = mod.SITUACIONES;
       Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
-        CASOS = SIT[config.clave] || [];
+        CASOS[config.clave] = SIT[config.clave] || []; // FIX 1
       });
     }).catch(e => console.error(e)),
     import(`./data/senales-svg.js`).then(mod => {
@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
   mostrarIntro();
 });
 
-// INTRO
 function mostrarIntro(){
   if(document.getElementById('intro-screen')) return;
   document.body.insertAdjacentHTML('afterbegin', `
@@ -111,9 +110,11 @@ window.tancarIntro = function() {
   document.getElementById('tab-temario').classList.add('active');
   document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
 
-  // Carga datos AHORA, cuando ya estás dentro
   cargarModulos().then(() => {
-    setTimeout(() => cargarTemario(), 100);
+    setTimeout(() => {
+      init(); // FIX 2
+      cargarTemario();
+    }, 100);
   });
 }
 
