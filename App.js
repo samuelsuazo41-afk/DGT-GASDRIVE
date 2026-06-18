@@ -93,7 +93,7 @@ function mostrarIntro(){
       <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
         <div>💰 Gana coins respondiendo bien</div>
         <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 187 preguntas DGT reales</div>
+        <div>📚 687 preguntas DGT reales</div>
         <div>📖 Temarios completos para repasar</div>
       </div>
       <button onclick="window.tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;touch-action:manipulation">EMPEZAR</button>
