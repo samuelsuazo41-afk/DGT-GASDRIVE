@@ -353,9 +353,9 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 V8.8.8 - COMPLETO CON 3 CAMBIOS AUTORIZADOS =====
+// ===== BLOQUE 2 V8.8.8 - FINAL CUADABLE =====
 
-// === CAMBIO 1: AÑADIDO AL INICIO ===
+// === CAMBIO 1: SUBTEMAS + EMOJIS + LINK DGT ===
 const SUBTEMAS_DEBILES = {
   senales: [
     { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
@@ -393,6 +393,9 @@ const SUBTEMAS_DEBILES = {
     { pct: 0, msg: 'Documentación y Permisos - Pág 5-10' }
   ]
 };
+
+const EMOJIS_ACIERTO = ['🎉','💪','🔥','🚀','👏','💎','⚡','✅'];
+const EMOJIS_FALLO = ['😅','💥','🤔','💔','😬','⚠️'];
 
 const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
 // === FIN CAMBIO 1 ===
@@ -1222,11 +1225,12 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
- .then(reg => console.log('SW registrado'))
- .catch(err => console.log('SW error:', err));
+     .then(reg => console.log('SW registrado'))
+     .catch(err => console.log('SW error:', err));
   });
 }
- 
+
+
 
     
 
