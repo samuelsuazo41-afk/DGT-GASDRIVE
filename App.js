@@ -1,73 +1,146 @@
-// GASDRIVE DGT V8.5 ES - 680 PREGUNTAS DGT 2026 + AUTOESCUELA ONLINE
-const VERSION = "8.5";
+// GASDRIVE DGT V8.6 ES - AUTO-CARGA DE MÓDULOS
+const VERSION = "8.6";
 
-// === MOTOR DE PROGRESO DGT - AUTOESCUELA ONLINE ===
-let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
-  tests: {
-    general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    senales: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    normas: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    mecanica: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    auxilios: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    medioambiente: { total: 0, aciertos: 0, unicas: [], falladas: [] }
-  },
-  casos: {
-    clima: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    urbano: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    carretera: { total: 0, aciertos: 0, unicas: [], falladas: [] },
-    emergencia: { total: 0, aciertos: 0, unicas: [], falladas: [] }
-  },
-  examenes: { realizados: 0, aprobados: 0, historial: [] },
-  temarios: {
-    senales: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
-    normas: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
-    mecanica: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
-    auxilios: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
-    medioambiente: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 }
-  },
-  racha: { dias: 0, ultimaFecha: "" }
+// === REGISTRO AUTOMÁTICO DE MÓDULOS ===
+// Solo tienes que añadir aquí el nombre del archivo y la clave exportada
+const MODULOS_PREGUNTAS = {
+  general: { archivo: 'preguntas-general.js', export: 'PREGUNTAS_GENERAL' },
+  senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
+  normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
+  mecanica: { archivo: 'preguntas-mecanica.js', export: 'PREGUNTAS_MECANICA' },
+  auxilios: { archivo: 'preguntas-auxilios.js', export: 'PREGUNTAS_AUXILIOS' },
+  medioambiente: { archivo: 'preguntas-medioambiente.js', export: 'PREGUNTAS_MEDIOAMBIENTE' }
 };
 
-// === MENSAJES INTELIGENTES POR TEMARIO - PÁGINAS REALES DGT 2025/2026 ===
+const MODULOS_CASOS = {
+  clima: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'clima' },
+  urbano: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'urbano' },
+  carretera: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'carretera' },
+  emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
+};
+
+// === MOTOR DE PROGRESO DGT - AUTO-GENERADO ===
+function crearProgresoVacio() {
+  const progreso = { tests: {}, casos: {}, examenes: { realizados: 0, aprobados: 0, historial: [] }, temarios: {}, racha: { dias: 0, ultimaFecha: "" } };
+
+  // Genera estructura tests automáticamente
+  Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
+    progreso.tests[tema] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+    progreso.temarios[tema] = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
+  });
+
+  // Genera estructura casos automáticamente
+  Object.keys(MODULOS_CASOS).forEach(caso => {
+    progreso.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+  });
+
+  return progreso;
+}
+
+let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || crearProgresoVacio();
+
+// Si hay nuevos temas desde la última versión, los añade sin borrar datos
+function migrarProgreso() {
+  let cambiado = false;
+  Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
+    if (!PROGRESO.tests[tema]) {
+      PROGRESO.tests[tema] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+      PROGRESO.temarios[tema] = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
+      cambiado = true;
+    }
+  });
+  Object.keys(MODULOS_CASOS).forEach(caso => {
+    if (!PROGRESO.casos[caso]) {
+      PROGRESO.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
+      cambiado = true;
+    }
+  });
+  if (cambiado) guardarProgreso();
+}
+migrarProgreso();
+
+// === CARGADOR DINÁMICO DE PREGUNTAS ===
+const PREGUNTAS = {};
+const CASOS = {};
+
+// Carga todos los módulos de preguntas
+async function cargarModulos() {
+  for (const [tema, config] of Object.entries(MODULOS_PREGUNTAS)) {
+    try {
+      const mod = await import(`./data/${config.archivo}`);
+      PREGUNTAS[tema] = mod[config.export];
+      console.log(`✅ Cargado ${tema}: ${PREGUNTAS[tema].length} preguntas`);
+    } catch (e) {
+      console.error(`❌ Error cargando ${config.archivo}:`, e);
+      PREGUNTAS[tema] = [];
+    }
+  }
+
+  // Carga módulo de situaciones 1 sola vez
+  try {
+    const mod = await import(`./data/preguntas-situaciones.js`);
+    const SIT = mod.SITUACIONES;
+    Object.keys(MODULOS_CASOS).forEach(caso => {
+      CASOS[caso] = SIT[MODULOS_CASOS[caso].clave];
+      console.log(`✅ Cargado casos ${caso}: ${CASOS[caso].length} preguntas`);
+    });
+  } catch (e) {
+    console.error(`❌ Error cargando situaciones:`, e);
+  }
+
+  // Carga imágenes
+  try {
+    const mod = await import(`./data/imagenes.js`);
+    window.IMAGENES = mod.IMAGENES;
+    console.log(`✅ Cargadas ${Object.keys(window.IMAGENES).length} imágenes`);
+  } catch (e) {
+    console.error(`❌ Error cargando imagenes.js:`, e);
+    window.IMAGENES = {};
+  }
+}
+
+// === SUBTEMAS DEBILES DINÁMICO ===
+// Ahora puedes añadir temas nuevos aquí y se auto-genera el mensaje
 const SUBTEMAS_DEBILES = {
   senales: [
-    { pct: 0, msg: 'Señales de Prioridad (R-1 a R-6: Stop, Ceda) - Pág 65-66' },
-    { pct: 20, msg: 'Señales de Prohibición de Entrada - Pág 68-72' },
-    { pct: 40, msg: 'Señales de Prohibición de Paso/Adelantar - Pág 73-78' },
-    { pct: 60, msg: 'Señales de Obligación (R-413 a R-422) - Pág 75-76' },
-    { pct: 80, msg: 'Señales de Indicación General - Pág 80-95' }
+    { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
+    { pct: 20, msg: 'Prohibición Entrada R-101 a R-116 - Pág 68-72' },
+    { pct: 40, msg: 'Prohibición Paso R-300 a R-311 - Pág 73-78' },
+    { pct: 60, msg: 'Obligación R-400 a R-422 - Pág 75-76' },
+    { pct: 80, msg: 'Indicaciones S-50 a S-126 - Pág 80-95' }
   ],
   normas: [
     { pct: 0, msg: 'Normas Generales y Definiciones - Pág 5-15' },
-    { pct: 20, msg: 'Velocidades Máximas por Vía - Pág 25-32' },
-    { pct: 40, msg: 'Prioridad en Intersecciones y Pasos Estrechos - Pág 45-52' },
-    { pct: 60, msg: 'Adelantamientos y Cambios de Sentido - Pág 65-75' },
-    { pct: 80, msg: 'Alumbrado y Uso de Carriles - Pág 85-92' }
+    { pct: 20, msg: 'Velocidades Máximas - Pág 25-32' },
+    { pct: 40, msg: 'Prioridad Intersecciones - Pág 45-52' },
+    { pct: 60, msg: 'Adelantamientos - Pág 65-75' },
+    { pct: 80, msg: 'Alumbrado y Carriles - Pág 85-92' }
   ],
   auxilios: [
-    { pct: 0, msg: 'Conducta PAS: Proteger, Avisar, Socorrer - Pág 40-45' },
-    { pct: 25, msg: 'Valoración Inicial del Herido (ABC) - Pág 50-55' },
-    { pct: 50, msg: 'RCP: Reanimación Cardiopulmonar Básica - Pág 53-58' },
-    { pct: 75, msg: 'Hemorragias y Heridas - Pág 65-72' }
+    { pct: 0, msg: 'Conducta PAS - Pág 40-45' },
+    { pct: 25, msg: 'Valoración ABC - Pág 50-55' },
+    { pct: 50, msg: 'RCP Básica - Pág 53-58' },
+    { pct: 75, msg: 'Hemorragias - Pág 65-72' }
   ],
   mecanica: [
-    { pct: 0, msg: 'Motor: Elementos y Funcionamiento - Pág 15-25' },
-    { pct: 25, msg: 'Sistema de Frenos y ABS - Pág 35-42' },
-    { pct: 50, msg: 'Neumáticos: Presión y Desgaste - Pág 55-62' },
-    { pct: 75, msg: 'Niveles: Aceite, Refrigerante, Líquido Frenos - Pág 70-76' }
+    { pct: 0, msg: 'Motor y Elementos - Pág 15-25' },
+    { pct: 25, msg: 'Frenos y ABS - Pág 35-42' },
+    { pct: 50, msg: 'Neumáticos - Pág 55-62' },
+    { pct: 75, msg: 'Niveles Aceite/Refrigerante - Pág 70-76' }
   ],
   medioambiente: [
-    { pct: 0, msg: 'Distintivos Ambientales DGT (0, ECO, C, B) - Pág 8-14' },
-    { pct: 25, msg: 'Zonas de Bajas Emisiones ZBE - Pág 18-25' },
-    { pct: 50, msg: 'Conducción Eficiente: Marchas y RPM - Pág 30-38' },
-    { pct: 75, msg: 'Contaminación Acústica y Atmosférica - Pág 45-50' }
+    { pct: 0, msg: 'Distintivos DGT 0/ECO/C/B - Pág 8-14' },
+    { pct: 25, msg: 'Zonas Bajas Emisiones ZBE - Pág 18-25' },
+    { pct: 50, msg: 'Conducción Eficiente - Pág 30-38' },
+    { pct: 75, msg: 'Contaminación - Pág 45-50' }
   ],
   general: [
     { pct: 0, msg: 'Documentación y Permisos - Pág 5-10' }
   ]
 };
 
-const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/obtencion-renovacion-duplicados-permiso/permiso-conducir/';
+// === RESTO DE TU CÓDIGO IGUAL ===
+const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
 
 function guardarProgreso() {
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
@@ -77,18 +150,18 @@ function guardarProgreso() {
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
-// INTRO SCREEN - APARECE SIEMPRE AL ABRIR
+// INTRO SCREEN
 function mostrarIntro(){
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026</h1>
+      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
       <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 ${Object.keys(MODULOS_PREGUNTAS).length} temarios oficiales + casos reales</p>
       <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
         <div>💰 Gana coins respondiendo bien</div>
         <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 630 preguntas DGT reales</div>
+        <div>📚 ${Object.values(PREGUNTAS).reduce((a,b) => a + (b?.length || 0), 0)} preguntas DGT reales</div>
         <div>📖 Temarios completos para repasar</div>
       </div>
       <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
@@ -101,62 +174,35 @@ function tancarIntro() {
   if(intro) intro.remove();
 }
 
-// === NUEVO V8.5: BUSCA CLAVE FLEXIBLE ===
-// Busca aunque falle el ":" o mayúsculas/espacios
+// BUSCA CLAVE FLEXIBLE
 function buscarClave(obj, texto) {
   if (!obj ||!texto) return null;
-  if (obj[texto]) return obj[texto]; // 1. Exacta
+  if (obj[texto]) return obj[texto];
   const limpio = texto.trim().replace(/:$/, '').toLowerCase();
   for (let k in obj) {
-    if (k.trim().replace(/:$/, '').toLowerCase() === limpio) return obj[k]; // 2. Flexible
+    if (k.trim().replace(/:$/, '').toLowerCase() === limpio) return obj[k];
   }
-  console.log('No encontrada:', texto);
   return null;
 }
 
-// === NUEVO V8.5: FUNCIONES HELPER PARA IMAGEN + REFUERZO ===
-// Estas 3 funciones usan los contenedores fijos del HTML
-
-// 1. PINTA IMAGEN: Se llama al cargar pregunta. Usa test-XXX-imagen
+// PINTA IMAGEN
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if (!imgCont) return;
-  
-  const rutaImg = buscarClave(IMAGENES, preguntaTexto);
-  console.log('Buscando imagen:', preguntaTexto, '→', rutaImg);
-  
+  if (!imgCont ||!window.IMAGENES) return;
+
+  const rutaImg = buscarClave(window.IMAGENES, preguntaTexto);
   if (rutaImg) {
     imgCont.innerHTML = `<img src="${rutaImg}" onerror="this.parentElement.innerHTML='<div style=color:#666;font-size:12px>📷 Imagen no encontrada</div>'" style="max-width:100%;border-radius:8px;margin:10px auto;display:block;border:2px solid #333">`;
   } else {
-    imgCont.innerHTML = ''; // Si no hay imagen, deja el hueco vacío
+    imgCont.innerHTML = '';
   }
 }
 
-// 2. PINTA EXPLICACIÓN/REFUERZO: Usa el contenedor fijo test-XXX-explicacion
-function pintarExplicacionTest(cat, preguntaTexto) {
-  const expBox = document.getElementById(`test-${cat}-explicacion`);
-  if (!expBox) return;
-
-  const exp = buscarClave(EXPLICACIONES, preguntaTexto);
-  if (exp) {
-    if (exp.motivo) {
-      // Formato nuevo: {motivo, refuerzo, pdf, pag}
-      expBox.innerHTML = `💡 <b>Explicación DGT:</b> ${exp.motivo}<span>${exp.refuerzo} - ${exp.pdf} Pág ${exp.pag}</span>`;
-    } else {
-      // Formato viejo: string directo
-      expBox.innerHTML = `💡 <b>Explicación:</b> ${exp}`;
-    }
-    expBox.classList.add('visible');
-  } else {
-    expBox.classList.remove('visible');
-  }
-}
-
-// 3. LIMPIA EXPLICACIÓN: Oculta la caja al cambiar de pregunta
-function limpiarExplicacionTest(cat) {
-  const expBox = document.getElementById(`test-${cat}-explicacion`);
-  if (expBox) expBox.classList.remove('visible');
-}
+// INICIO: carga módulos antes de mostrar nada
+document.addEventListener('DOMContentLoaded', async () => {
+  await cargarModulos();
+  mostrarIntro();
+});
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
