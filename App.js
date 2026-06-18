@@ -400,7 +400,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 COMPLETO - IMAGEN + EXPLICACIÓN V8.5 FINAL =====
+// ===== BLOQUE 2 COMPLETO V8.6 - DINÁMICO + IMAGEN + EXPLICACIÓN =====
 
 let tipsData = [];
 let currentTip = 0;
@@ -410,14 +410,7 @@ let estado = {
   coches: JSON.parse(localStorage.getItem('gd_coches')) || ['c1'],
   accesorios: JSON.parse(localStorage.getItem('gd_accesorios')) || [],
   emojis: JSON.parse(localStorage.getItem('gd_emojis')) || [],
-  test: {
-    general: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    senales: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    normas: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    mecanica: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    auxilios: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    medioambiente: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null}
-  },
+  test: {},
   examen: {
     activa: false,
     preguntas: [],
@@ -428,13 +421,18 @@ let estado = {
     tiempo: 1800,
     categoria: 'general'
   },
-  sit: {
-    clima: {idx:0,aciertos:0,puntuacion:0,current:null},
-    urbano: {idx:0,aciertos:0,puntuacion:0,current:null},
-    carretera: {idx:0,aciertos:0,puntuacion:0,current:null},
-    emergencia: {idx:0,aciertos:0,puntuacion:0,current:null}
-  }
+  sit: {}
 };
+
+// Genera estado.test y estado.sit dinámico según MODULOS
+function initEstadoDinamico() {
+  Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
+    estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
+  });
+  Object.keys(MODULOS_CASOS).forEach(caso => {
+    estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null};
+  });
+}
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
@@ -444,18 +442,20 @@ if (document.readyState === 'loading') {
 
 let sitCategoriaActiva = 'clima';
 
-function init() {
-  console.log("GasDrive DGT ES V8.5 cargado");
-  console.log("PREGUNTAS:", typeof PREGUNTAS!== 'undefined'? 'OK' : 'FALTA');
-  console.log("SITUACIONES:", typeof SITUACIONES!== 'undefined'? 'OK' : 'FALTA');
-  console.log("EXPLICACIONES:", typeof EXPLICACIONES!== 'undefined'? 'OK' : 'FALTA');
-  console.log("IMAGENES:", typeof IMAGENES!== 'undefined'? 'OK' : 'FALTA');
+async function init() {
+  await cargarModulos(); // Viene del bloque 1
+  initEstadoDinamico();
+
+  console.log("GasDrive DGT ES V8.6 cargado");
+  console.log("PREGUNTAS:", Object.keys(PREGUNTAS));
+  console.log("CASOS:", Object.keys(CASOS));
+  console.log("IMAGENES:", Object.keys(window.IMAGENES || {}).length);
 
   mostrarIntro();
   actualizarCoins();
   actualizarMensajeMotivacional();
   cargarTemario();
-  if(typeof PREGUNTAS!== 'undefined') {
+  if(PREGUNTAS.general) {
     cargarPregunta('general');
   }
 }
@@ -479,22 +479,6 @@ function barajarArray(arr) {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
-}
-
-// CLAVE: Normaliza para que coincida aunque falte ":" o haya espacios
-function buscarClave(obj, texto) {
-  if (!obj ||!texto) return null;
-  // 1. Busca exacta
-  if (obj[texto]) return obj[texto];
-  // 2. Busca sin : final
-  const sinDosPuntos = texto.trim().replace(/:$/, '');
-  if (obj[sinDosPuntos]) return obj[sinDosPuntos];
-  // 3. Busca sin : y en minúsculas
-  const normalizada = sinDosPuntos.toLowerCase();
-  for (let k in obj) {
-    if (k.trim().replace(/:$/, '').toLowerCase() === normalizada) return obj[k];
-  }
-  return null;
 }
 
 function cambiarTab(e, tab) {
@@ -569,13 +553,12 @@ function cargarPregunta(cat) {
   let preguntas;
 
   if (cat === 'general') {
-    preguntas = barajarArray([
-...PREGUNTAS.senales,
-...PREGUNTAS.normas,
-...PREGUNTAS.mecanica,
-...PREGUNTAS.auxilios,
-...PREGUNTAS.medioambiente
-    ]);
+    // Mezcla todos los temas dinámicos
+    preguntas = [];
+    Object.values(PREGUNTAS).forEach(arr => {
+      if(Array.isArray(arr)) preguntas.push(...arr);
+    });
+    preguntas = barajarArray(preguntas);
   } else {
     preguntas = barajarArray(PREGUNTAS[cat] || []);
   }
@@ -584,26 +567,28 @@ function cargarPregunta(cat) {
     document.getElementById(`test-${cat}-pregunta`).textContent = 'No hay preguntas en esta categoria';
     return;
   }
+
   const pOriginal = preguntas[s.idx % preguntas.length];
   const opcionesBarajadas = barajarArray(pOriginal.a);
   const textoCorrecto = pOriginal.a[pOriginal.ok];
   const nuevoIndexCorrecto = opcionesBarajadas.indexOf(textoCorrecto);
   const p = {...pOriginal, a: opcionesBarajadas, ok: nuevoIndexCorrecto};
   s.current = p;
-  document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
 
-  // PINTA IMAGEN SIEMPRE - aunque no exista pone placeholder
-  pintarImagenTest(cat, p.q);
+  document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
+  pintarImagenTest(cat, p.q); // Pinta imagen si existe
   limpiarExplicacionTest(cat);
 
   document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`test-${cat}-racha`).textContent = s.racha;
   document.getElementById(`test-${cat}-score`).textContent = s.puntuacion;
   document.getElementById(`test-${cat}-progress`).style.width = `${((s.idx % preguntas.length)/preguntas.length)*100}%`;
+
   const cont = document.getElementById(`test-${cat}-opciones`);
   cont.innerHTML = '';
   document.getElementById(`test-${cat}-feedback`).textContent = '';
   document.getElementById(`btn-sig-test-${cat}`).disabled = true;
+
   p.a.forEach((txt, i) => {
     const div = document.createElement('div');
     div.className = 'opcion';
@@ -619,8 +604,10 @@ function responderTest(cat, idx, el) {
   const p = s.current;
   const cont = document.getElementById(`test-${cat}-opciones`);
   if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+
   cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
   const correcto = idx === p.ok;
+
   if(correcto) {
     el.classList.add('correcta');
     s.aciertos++;
@@ -639,7 +626,6 @@ function responderTest(cat, idx, el) {
     s.racha = 0;
   }
 
-  // PINTA EXPLICACIÓN SIEMPRE
   pintarExplicacionTest(cat, p.q);
 
   // REGISTRAR PROGRESO DGT
@@ -664,25 +650,30 @@ function siguienteTest(e, cat) {
 function cargarSituacion(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estado.sit[cat];
-  const casos = barajarArray(SITUACIONES[cat] || []);
+  const casos = barajarArray(CASOS[cat] || []);
+
   if(!casos || casos.length === 0) {
     document.getElementById(`sit-${cat}-pregunta`).textContent = 'No hay casos en esta categoria';
     return;
   }
+
   const pOriginal = casos[s.idx % casos.length];
   const opcionesBarajadas = barajarArray(pOriginal.a);
   const textoCorrecto = pOriginal.a[pOriginal.ok];
   const nuevoIndexCorrecto = opcionesBarajadas.indexOf(textoCorrecto);
   const p = {...pOriginal, a: opcionesBarajadas, ok: nuevoIndexCorrecto};
   s.current = p;
+
   document.getElementById(`sit-${cat}-pregunta`).textContent = p.q;
   document.getElementById(`sit-${cat}-aciertos`).textContent = s.aciertos;
   document.getElementById(`sit-${cat}-score`).textContent = s.puntuacion;
   document.getElementById(`sit-${cat}-progress`).style.width = `${((s.idx % casos.length)/casos.length)*100}%`;
+
   const cont = document.getElementById(`sit-${cat}-opciones`);
   cont.innerHTML = '';
   document.getElementById(`sit-${cat}-feedback`).textContent = '';
   document.getElementById(`btn-sig-sit-${cat}`).disabled = true;
+
   p.a.forEach((txt, i) => {
     const div = document.createElement('div');
     div.className = 'opcion';
@@ -697,8 +688,10 @@ function responderSituacion(cat, idx, el) {
   const p = s.current;
   const cont = document.getElementById(`sit-${cat}-opciones`);
   if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+
   cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
   const correcto = idx === p.ok;
+
   if(correcto) {
     el.classList.add('correcta');
     s.aciertos++;
@@ -734,23 +727,23 @@ function siguienteSituacion(e, cat) {
 
 // === EXAMEN ===
 function iniciarExamen(e) {
-  const todas = [
-...PREGUNTAS.senales,
-...PREGUNTAS.normas,
-...PREGUNTAS.mecanica,
-...PREGUNTAS.auxilios,
-...PREGUNTAS.medioambiente
-  ];
+  let todas = [];
+  Object.values(PREGUNTAS).forEach(arr => {
+    if(Array.isArray(arr)) todas.push(...arr);
+  });
+
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 minimo.');
     return;
   }
+
   estado.examen.preguntas = barajarArray(todas).slice(0, 30);
   estado.examen.activa = true;
   estado.examen.index = 0;
   estado.examen.aciertos = 0;
   estado.examen.fallos = 0;
   estado.examen.categoria = 'general';
+
   document.getElementById('btn-iniciar-examen').style.display = 'none';
   document.getElementById('btn-sig-examen').style.display = 'block';
   iniciarTimerExamen();
