@@ -1,5 +1,14 @@
-// GASDRIVE DGT V8.8.9 ESP - 630 PREGUNTAS DGT 2026
-const VERSION = "8.8.9";
+// GASDRIVE DGT V8.9.0 ESP - 630 PREGUNTAS DGT 2026
+const VERSION = "8.9.0";
+
+// 8.9.0: Control de flujo para evitar bucle intro+tema
+let ESTADO_APP = 'LOADING'; // LOADING -> CARGANDO -> READY -> APP
+
+// 8.9.0: Guardias - si ya existen tus arrays COCHES/ACCESORIOS/TIPS de más abajo, úsalos
+if(typeof COCHES === 'undefined') var COCHES = [];
+if(typeof ACCESORIOS === 'undefined') var ACCESORIOS = [];
+if(typeof EMOJI_TIENDA === 'undefined') var EMOJI_TIENDA = [];
+if(typeof TIPS === 'undefined') var TIPS = [];
 
 // COMBO DOPAMINA ACTUALIZADO
 const EMOJIS_ACIERTO = ['🎉','💪','🔥','🚀','👏','💎','⚡','✅'];
@@ -93,6 +102,18 @@ window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 
+// 8.9.0: Función que faltaba - la usas en responderTest/Examen/Situacion
+function mostrarEmoji(acierto, elemento){
+  const emojis = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+  const div = document.createElement('div');
+  div.textContent = emoji;
+  div.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;z-index:999;animation:flotar 1s ease-out forwards;pointer-events:none';
+  elemento.style.position = 'relative';
+  elemento.appendChild(div);
+  setTimeout(() => div.remove(), 1000);
+}
+
 // TEMARIO PRIMERO
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
@@ -134,14 +155,18 @@ function mostrarIntro(){
   `);
 }
 
+// 8.9.0: tancarIntro con secuencia forzada para romper bucle
 function tancarIntro(){
   document.getElementById('intro-screen').remove();
+  ESTADO_APP = 'CARGANDO';
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
   document.getElementById('tab-temario').classList.add('active');
   cargarModulos().then(() => {
+    ESTADO_APP = 'READY';
     cargarTemarioHTML();
-    init();
+    init(); // 1 SOLO init después de cargar
+    ESTADO_APP = 'APP';
   });
 }
 
@@ -149,7 +174,6 @@ function tancarIntro(){
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
   const t0 = performance.now();
-
   await Promise.all([
    ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
@@ -178,7 +202,6 @@ async function cargarModulos() {
       console.log(`✅ Explicaciones cargadas`);
     })
   ]);
-
   // Crear general juntando todas
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
