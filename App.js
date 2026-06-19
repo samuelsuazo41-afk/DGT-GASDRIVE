@@ -417,7 +417,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// ===== BLOQUE 2 V8.8.8 - FINAL CUADABLE =====
+// ===== BLOQUE 2 V8.8.9 - FINAL CON COINS FIX =====
 
 // === CAMBIO 1: SUBTEMAS + EMOJIS + LINK DGT ===
 const SUBTEMAS_DEBILES = {
@@ -500,12 +500,10 @@ function initEstadoDinamico() {
     estado.test[tema] = {idx:0, aciertos:0, racha:0, puntuacion:0, current:null};
   });
 
-  // === CAMBIO 2: FIX BUG CASOS ===
   estado.sit = {};
   Object.keys(MODULOS_CASOS).forEach(caso => {
     estado.sit[caso] = {idx:0, aciertos:0, puntuacion:0, current:null};
   });
-  // === FIN CAMBIO 2 ===
 }
 
 // NO llames cargarModulos aquí, ya se llama en bloque 1
@@ -519,13 +517,12 @@ let sitCategoriaActiva = 'clima';
 
 async function init() {
   initEstadoDinamico();
-
-  console.log(`GasDrive DGT ES V8.8.8 cargado`);
+  console.log(`GasDrive DGT ES V8.8.9 cargado`);
   console.log("PREGUNTAS:", Object.keys(PREGUNTAS).map(k => `${k}:${PREGUNTAS[k].length}`));
   console.log("CASOS:", Object.keys(CASOS));
   console.log("SVG SEÑALES:", Object.keys(window.SENALES_SVG || {}).length);
 
-  actualizarCoins();
+  // actualitzarCoins(); // BORRA SI NO TIENES #coins EN HTML
   actualizarMensajeMotivacional();
   cargarTemario();
 
@@ -678,7 +675,7 @@ function cargarPregunta(cat) {
   });
 }
 
-// === RESPONDER TEST ===
+// === RESPONDER TEST - COINS SOLO SI ACIERTA ===
 function responderTest(cat, idx, el) {
   const s = estado.test[cat];
   const p = s.current;
@@ -693,15 +690,15 @@ function responderTest(cat, idx, el) {
     s.aciertos++;
     s.racha++;
     s.puntuacion += 10 + (s.racha * 2);
-    estado.coins += 5;
+    estado.coins += 5; // SOLO SI ACIERTA
     document.getElementById(`test-${cat}-feedback`).className = 'feedback acierto';
-    document.getElementById(`test-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +${10+(s.racha*2)} pts`;
+    document.getElementById(`test-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +${10+(s.racha*2)} pts +5💰`;
     mostrarEmoji(true, el);
   } else {
     el.classList.add('incorrecta');
     cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
     document.getElementById(`test-${cat}-feedback`).className = 'feedback fallo';
-    document.getElementById(`test-${cat}-feedback`).textContent = '❌ FALLO';
+    document.getElementById(`test-${cat}-feedback`).textContent = '❌ FALLO +0💰';
     mostrarEmoji(false, el);
     s.racha = 0;
   }
@@ -723,7 +720,7 @@ function siguienteTest(e, cat) {
   cargarPregunta(cat);
 }
 
-// === SITUACIONES ===
+// === SITUACIONES - COINS SOLO SI ACIERTA ===
 function cargarSituacion(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const s = estado.sit[cat];
@@ -773,15 +770,15 @@ function responderSituacion(cat, idx, el) {
     el.classList.add('correcta');
     s.aciertos++;
     s.puntuacion += 15;
-    estado.coins += 10;
+    estado.coins += 10; // SOLO SI ACIERTA
     document.getElementById(`sit-${cat}-feedback`).className = 'feedback acierto';
-    document.getElementById(`sit-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +15 pts`;
+    document.getElementById(`sit-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +15 pts +10💰`;
     mostrarEmoji(true, el);
   } else {
     el.classList.add('incorrecta');
     cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
     document.getElementById(`sit-${cat}-feedback`).className = 'feedback fallo';
-    document.getElementById(`sit-${cat}-feedback`).textContent = '❌ FALLO';
+    document.getElementById(`sit-${cat}-feedback`).textContent = '❌ FALLO +0💰';
     mostrarEmoji(false, el);
   }
 
@@ -802,7 +799,7 @@ function siguienteSituacion(e, cat) {
   cargarSituacion(cat);
 }
 
-// === EXAMEN ===
+// === EXAMEN - COINS SOLO SI ACIERTA ===
 function iniciarExamen(e) {
   let todas = [];
   Object.values(PREGUNTAS).forEach(arr => {
@@ -870,10 +867,11 @@ function responderExamen(idx, el) {
   if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
   cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
   const correcto = idx === p.ok;
+
   if(correcto) {
     el.classList.add('correcta');
     estado.examen.aciertos++;
-    estado.coins += 20;
+    estado.coins += 20; // SOLO SI ACIERTA
     mostrarEmoji(true, el);
   } else {
     el.classList.add('incorrecta');
@@ -881,6 +879,7 @@ function responderExamen(idx, el) {
     estado.examen.fallos++;
     mostrarEmoji(false, el);
   }
+
   document.getElementById('btn-sig-examen').disabled = false;
   document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
   actualizarCoins();
@@ -910,6 +909,7 @@ function finalizarExamen() {
   guardarProgreso();
 
   if(aprobado) {
+    estado.coins += nota * 20; // BONUS SOLO SI APRUEBA
     res.innerHTML = `
       <h2 style="color:#2ecc71">✅ ¡APROBADO!</h2>
       <p style="font-size:24px">${nota}/30</p>
@@ -917,7 +917,6 @@ function finalizarExamen() {
       <p>Has ganado +${nota*20} coins</p>
       <button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>
     `;
-    estado.coins += nota * 20;
   } else {
     res.innerHTML = `
       <h2 style="color:#e74c3c">❌ SUSPENSO</h2>
@@ -1289,10 +1288,11 @@ function irExamenDGT() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-     .then(reg => console.log('SW registrado'))
-     .catch(err => console.log('SW error:', err));
+    .then(reg => console.log('SW registrado'))
+    .catch(err => console.log('SW error:', err));
   });
 }
+  
  
 
 
