@@ -430,742 +430,568 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
+// 8.9.0: init sin repeticiones - solo se llama 1 vez después de cargarModulos
 function init() {
-  console.log('=== INIT EJECUTANDO ===');
-  
-  try {
-    actualizarCoins();
-  } catch(e) {
-    console.error('Error coins:', e);
-  }
-  
-  try {
-    actualizarMensajeMotivacional();
-  } catch(e) {
-    console.error('Error motivacion:', e);
-  }
-  
-  try {
-    cargarTemarioHTML();
-  } catch(e) {
-    console.error('ERROR CRITICO EN TEMARIO:', e);
-    document.getElementById('temario-lista').innerHTML = 
-      '<div style="color:red;padding:20px">ERROR: '+e.message+'<br>Revisa consola F12</div>';
-  }
-  
-  console.log('=== INIT TERMINADO ===');
-}
-
-
-// ===== BLOQUE 2: LÓGICA + ACTUALIZACIONES V8.8.9 FINAL =====
-
-// 0. DEFINIR PROGRESO SI NO EXISTE - ESTO EVITA QUE PETE LA APP
-if(typeof PROGRESO === 'undefined') {
-  window.PROGRESO = {
-    temarios: {
-      senales: {tiempo:0,porcentaje:0,ultimaEntrada:0},
-      normas: {tiempo:0,porcentaje:0,ultimaEntrada:0},
-      auxilios: {tiempo:0,porcentaje:0,ultimaEntrada:0},
-      mecanica: {tiempo:0,porcentaje:0,ultimaEntrada:0},
-      medioambiente: {tiempo:0,porcentaje:0,ultimaEntrada:0}
-    },
-    tests: {
-      general:{total:0,aciertos:0,unicas:[],falladas:[]},
-      senales:{total:0,aciertos:0,unicas:[],falladas:[]},
-      normas:{total:0,aciertos:0,unicas:[],falladas:[]},
-      mecanica:{total:0,aciertos:0,unicas:[],falladas:[]},
-      auxilios:{total:0,aciertos:0,unicas:[],falladas:[]},
-      medioambiente:{total:0,aciertos:0,unicas:[],falladas:[]}
-    },
-    examenes: {realizados:0,aprobados:0,historial:[]}
-  };
-}
-
-let tipsData = [];
-let currentTip = 0;
-
-let estado = {
-  coins: parseInt(localStorage.getItem('gd_coins')) || 0,
-  coches: JSON.parse(localStorage.getItem('gd_coches')) || ['c1'],
-  accesorios: JSON.parse(localStorage.getItem('gd_accesorios')) || [],
-  emojis: JSON.parse(localStorage.getItem('gd_emojis')) || [],
-  test: {
-    general: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    senales: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    normas: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    mecanica: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    auxilios: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null},
-    medioambiente: {idx:0,aciertos:0,racha:0,puntuacion:0,current:null}
-  },
-  examen: {
-    activo: false,
-    preguntas: [],
-    index: 0,
-    aciertos: 0,
-    fallos: 0,
-    timer: null,
-    tiempo: 1800,
-    categoria: 'general'
-  },
-  situacion: {
-    clima: {idx:0,aciertos:0,puntuacion:0,current:null},
-    urbano: {idx:0,aciertos:0,puntuacion:0,current:null},
-    carretera: {idx:0,aciertos:0,puntuacion:0,current:null},
-    emergencia: {idx:0,aciertos:0,puntuacion:0,current:null}
-  }
-};
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
-
-let situacionCategoriaActiva = 'clima';
-
-// 8.8.9: init ya NO carga tests. Espera a que carguen los módulos del bloque 1
-function init() {
-  console.log(`GasDrive 8.8.9 ESP cargado`);
+  activarTabs();
   actualizarCoins();
   actualizarMensajeMotivacional();
-  cargarTemarioHTML(); // NUEVO: pinta los 5 temarios al iniciar
-  activarTabs(); // NUEVO: activa todos los botones del menú
+  // NO llamar cargarPregunta aquí. Se llama al activar tab
 }
 
-function guardar() {
-  localStorage.setItem('gd_coins', estado.coins);
-  localStorage.setItem('gd_coches', JSON.stringify(estado.coches));
-  localStorage.setItem('gd_accesorios', JSON.stringify(estado.accesorios));
-  localStorage.setItem('gd_emojis', JSON.stringify(estado.emojis));
-  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
-}
-
-function actualizarCoins() {
-  const el = document.getElementById('coins');
-  if(el) el.textContent = `💰 ${estado.coins}`;
-}
-
-function barajarArray(arr) {
-  const a = arr.slice();
-  for(let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// 8.8.9: ACTIVAR TABS SIN closest() - ARREGLO CLAVE PARA QUE FUNCIONEN LOS BOTONES
+// 8.9.0: activarTabs con guardia ESTADO_APP
 function activarTabs() {
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const tab = this.getAttribute('data-tab');
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + tab).classList.add('active');
-      this.classList.add('active');
-
-      if(tab === 'temario') cargarTemarioHTML();
-      if(tab === 'test') cargarPregunta('general');
-      if(tab === 'situaciones') cargarSituacion(situacionCategoriaActiva);
-      if(tab === 'garaje') cargarGaraje();
-      if(tab === 'tienda') cargarTienda();
-      if(tab === 'tips') cargarTips();
-      if(tab === 'progreso') pintarProgreso();
-    });
+    btn.onclick = (e) => {
+      if(ESTADO_APP!== 'APP') {
+        console.log('App aún cargando...');
+        return;
+      }
+      const match = btn.getAttribute('onclick');
+      if(match) {
+        const tab = match.match(/'([^']+)'/)[1];
+        cambiarTab(e, tab);
+      }
+    };
   });
 }
 
-// 8.8.9: TEMARIO es el primer tab - MANTENER POR COMPATIBILIDAD
 function cambiarTab(e, tab) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  if(ESTADO_APP!== 'APP') return;
+
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
   e.currentTarget.classList.add('active');
 
-  if(tab === 'temario') cargarTemarioHTML();
-  if(tab === 'test') cargarPregunta('general');
-  if(tab === 'situaciones') cargarSituacion(situacionCategoriaActiva);
-  if(tab === 'garaje') cargarGaraje();
-  if(tab === 'tienda') cargarTienda();
-  if(tab === 'tips') cargarTips();
-  if(tab === 'progreso') pintarProgreso();
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+
+  // Cargar contenido según tab
+  if(tab === 'test') {
+    cambiarSubTab(e, 'test', 'general');
+  } else if(tab === 'situaciones') {
+    cambiarCategoriaSit('clima');
+  } else if(tab === 'garaje') {
+    cargarGaraje();
+  } else if(tab === 'tienda') {
+    cargarTienda();
+  } else if(tab === 'tips') {
+    cargarTips();
+  } else if(tab === 'progreso') {
+    cargarProgreso();
+  }
 }
 
-function cambiarSubTab(e, tab, subtab) {
-  const tabId = tab === 'sit'? 'situaciones' : tab;
-  const contenedor = document.getElementById('tab-' + tabId);
-  contenedor.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-  contenedor.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
-  e.target.classList.add('active');
-  document.getElementById(`${tab === 'test'? 'test' : 'sit'}-${subtab}`).classList.add('active');
-  if(tab === 'test') cargarPregunta(subtab);
-  if(tab === 'sit') cargarSituacion(subtab);
+function cambiarSubTab(e, tab, sub) {
+  if(ESTADO_APP!== 'APP') return;
+
+  document.querySelectorAll(`#tab-${tab}.sub-tab-btn`).forEach(b => b.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+
+  document.querySelectorAll(`#tab-${tab}.sub-content`).forEach(c => c.classList.remove('active'));
+  document.getElementById(`${tab}-${sub}`).classList.add('active');
+
+  cargarPregunta(sub);
 }
 
 function cambiarCategoriaSit(cat) {
-  situacionCategoriaActiva = cat;
-  document.querySelectorAll('#tab-situaciones.category-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-  const titulos = {
-    clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
-    urbano: '🏙️ CASOS REALES - URBANO',
-    carretera: '🛣️ CASOS REALES - CARRETERA',
-    emergencia: '🚨 CASOS REALES - EMERGENCIA'
-  };
-  document.getElementById('sit-titulo').textContent = titulos[cat];
-  estado.situacion[cat].idx = 0;
+  if(ESTADO_APP!== 'APP') return;
+
+  document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  document.querySelectorAll('#tab-situaciones.sub-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(`sit-${cat}`).classList.add('active');
+
   cargarSituacion(cat);
 }
 
-// 8.8.9: Pintar los 5 temarios en grid con rutas exactas
-function cargarTemarioHTML() {
-  const cont = document.getElementById('temario-lista');
-  if(!cont) return;
-
-  const temarios = [
-    {id:'senales', emoji:'🚦', nombre:'Señales', desc:'Tomo I RD 465/2025'},
-    {id:'normas', emoji:'📖', nombre:'Normas Circulación', desc:'Tomo II Edición 2024'},
-    {id:'auxilios', emoji:'🚑', nombre:'Primeros Auxilios', desc:'Manual IX 2025'},
-    {id:'mecanica', emoji:'🔧', nombre:'Mecánica', desc:'Manual VIII 2024'},
-    {id:'medioambiente', emoji:'🌱', nombre:'Medio Ambiente', desc:'Distintivos DGT 2025'}
-  ];
-
-  cont.innerHTML = '';
-  temarios.forEach(t => {
-    const pct = PROGRESO.temarios[t.id]?.porcentaje || 0;
-    const div = document.createElement('div');
-    div.className = 'temario-item';
-    div.onclick = () => abrirPDF(t.id);
-    div.innerHTML = `
-      <div style="font-size:40px;margin-bottom:8px">${t.emoji}</div>
-      <div style="font-weight:700;font-size:14px;margin-bottom:4px">${t.nombre}</div>
-      <div style="color:#999;font-size:11px;margin-bottom:8px">${t.desc}</div>
-      <div style="background:#333;height:6px;border-radius:3px;overflow:hidden">
-        <div style="background:#00D9FF;height:100%;width:${pct}%"></div>
-      </div>
-      <div style="font-size:11px;color:#00D9FF;margin-top:4px">${pct}% leído</div>
-    `;
-    cont.appendChild(div);
-  });
-}
-
-// 8.8.9: Guardar progreso por tema y pregunta
-function guardarProgreso(tema, acierto, idPregunta) {
-  PROGRESO.tests[tema].total++;
-  if(acierto) PROGRESO.tests[tema].aciertos++;
-  if(!PROGRESO.tests[tema].unicas.includes(idPregunta)) {
-    PROGRESO.tests[tema].unicas.push(idPregunta);
-  }
-  if(!acierto &&!PROGRESO.tests[tema].falladas.includes(idPregunta)) {
-    PROGRESO.tests[tema].falladas.push(idPregunta);
-  }
-  guardar();
-}
-
-// 8.8.9: Abrir PDF con timer para medir progreso temario
-function abrirPDF(id) {
-  const temario = PROGRESO.temarios[id];
-  if (temario) temario.ultimaEntrada = Date.now();
-  guardar();
-
-  const rutas = {
-    senales: './01_Senales_Tomo_I_RD_465_2025.pdf',
-    normas: './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
-    auxilios: './03_Manual_IX_Primers_Auxilios_2025.pdf',
-    mecanica: './04_Manual_VIII_Mecanica_2024.pdf',
-    medioambiente: './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
-  };
-
-  const modal = document.createElement('div');
-  modal.id = 'pdf-modal';
-  modal.style.cssText = `position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;`;
-  modal.innerHTML = `
-    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
-      <button onclick="cerrarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
-      <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
-      <div style="width:60px"></div>
-    </div>
-    <iframe src="${rutas[id]}" style="flex:1;border:none;width:100%"></iframe>
-  `;
-  document.body.appendChild(modal);
-}
-
-function cerrarPDF() {
-  Object.keys(PROGRESO.temarios).forEach(id => {
-    const temario = PROGRESO.temarios[id];
-    if (temario.ultimaEntrada) {
-      const tiempoSesion = Math.floor((Date.now() - temario.ultimaEntrada) / 1000);
-      temario.tiempo += tiempoSesion;
-      temario.porcentaje = Math.min(100, Math.floor((temario.tiempo / 10200) * 100));
-      temario.ultimaEntrada = 0;
-    }
-  });
-  document.getElementById('pdf-modal')?.remove();
-  if(document.getElementById('tab-progreso')?.classList.contains('active')) {
-    pintarProgreso();
-  }
-}
-
-// 8.8.9: Cargar pregunta con imagen SVG + barajado
+// 8.9.0: cargarPregunta con guardias para evitar peta si no hay datos
 function cargarPregunta(categoria) {
-  const s = estado.test[categoria];
-  const preguntas = PREGUNTAS[categoria] || [];
-  if(!preguntas || preguntas.length === 0) return;
+  if(ESTADO_APP!== 'APP') return;
+  if(!PREGUNTAS[categoria] || PREGUNTAS[categoria].length === 0) {
+    console.log(`No hay preguntas para ${categoria}`);
+    document.getElementById(`test-${categoria}-pregunta`).textContent = 'Cargando preguntas...';
+    return;
+  }
 
-  const pOriginal = preguntas[s.idx % preguntas.length];
-  const opcionesBarajadas = barajarArray([pOriginal.a, pOriginal.b, pOriginal.c]);
-  const p = {...pOriginal, a: opcionesBarajadas};
-  s.current = p;
+  const test = estado.test[categoria];
+  const preguntas = PREGUNTAS[categoria];
+
+  if(test.idx >= preguntas.length) test.idx = 0;
+
+  test.current = preguntas[test.idx];
+  const p = test.current;
 
   document.getElementById(`test-${categoria}-pregunta`).textContent = p.pregunta;
-  document.getElementById(`test-${categoria}-aciertos`).textContent = s.aciertos;
-  document.getElementById(`test-${categoria}-racha`).textContent = s.racha;
-
   pintarImagenTest(categoria, p.pregunta);
 
-  const cont = document.getElementById(`test-${categoria}-opciones`);
-  cont.innerHTML = '';
-  p.a.forEach((texto, i) => {
+  const contOpciones = document.getElementById(`test-${categoria}-opciones`);
+  contOpciones.innerHTML = '';
+
+  p.opciones.forEach((op, idx) => {
     const div = document.createElement('div');
     div.className = 'opcion';
-    div.textContent = texto;
-    div.onclick = function() { responderTest(categoria, texto, this); };
-    cont.appendChild(div);
+    div.textContent = op;
+    div.onclick = (e) => responderTest(e, categoria, idx);
+    contOpciones.appendChild(div);
   });
-}
 
-// 8.8.9: Coins SOLO si aciertas + guardar progreso
-function responderTest(categoria, respuesta, elemento) {
-  const s = estado.test[categoria];
-  const p = s.current;
-  const cont = document.getElementById(`test-${categoria}-opciones`);
-  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
-
-  cont.querySelectorAll('.opcion').forEach(o => o.onclick = null);
-  const acierto = respuesta === p.correcta;
-  const idPregunta = `${categoria}-${s.idx}`;
-
-  if(acierto) {
-    elemento.classList.add('correcta');
-    s.aciertos++;
-    s.racha++;
-    s.puntuacion += 10 + (s.racha * 2);
-    estado.coins += 5;
-    mostrarEmoji(true, elemento);
-  } else {
-    elemento.classList.add('incorrecta');
-    cont.querySelectorAll('.opcion').forEach(o => {
-      if(o.textContent === p.correcta) o.classList.add('correcta');
-    });
-    mostrarEmoji(false, elemento);
-    s.racha = 0;
-  }
-
-  guardarProgreso(categoria, acierto, idPregunta);
-  actualizarCoins();
+  document.getElementById(`test-${categoria}-aciertos`).textContent = test.aciertos;
+  document.getElementById(`test-${categoria}-racha`).textContent = test.racha;
 }
 
 function siguienteTest(e, categoria) {
+  if(ESTADO_APP!== 'APP') return;
   estado.test[categoria].idx++;
   cargarPregunta(categoria);
 }
 
-// 8.8.9: SITUACIONES con imágenes también
+// 8.9.0: cargarSituacion con guardias
 function cargarSituacion(cat) {
-  if(!cat) cat = situacionCategoriaActiva;
-  const s = estado.situacion[cat];
-  const casos = CASOS[cat] || [];
-  if(!casos || casos.length === 0) return;
+  if(ESTADO_APP!== 'APP') return;
+  if(!CASOS[cat] || CASOS[cat].length === 0) {
+    console.log(`No hay casos para ${cat}`);
+    document.getElementById(`situacion-${cat}-pregunta`).textContent = 'Cargando casos...';
+    return;
+  }
 
-  const pOriginal = casos[s.idx % casos.length];
-  const opcionesBarajadas = barajarArray([pOriginal.a, pOriginal.b, pOriginal.c]);
-  const p = {...pOriginal, a: opcionesBarajadas};
-  s.current = p;
+  const sit = estado.situacion[cat];
+  const casos = CASOS[cat];
+
+  if(sit.idx >= casos.length) sit.idx = 0;
+
+  sit.current = casos[sit.idx];
+  const p = sit.current;
 
   document.getElementById(`situacion-${cat}-pregunta`).textContent = p.pregunta;
-  document.getElementById(`situacion-${cat}-aciertos`).textContent = s.aciertos;
-  pintarImagenTest(`situacion-${cat}`, p.pregunta);
+  const imgCont = document.getElementById(`situacion-${cat}-imagen`);
+  if(p.imagen) {
+    imgCont.innerHTML = `<img src="${p.imagen}" style="max-width:100%;border-radius:10px;margin-bottom:15px">`;
+  } else {
+    imgCont.innerHTML = '';
+  }
 
-  const cont = document.getElementById(`situacion-${cat}-opciones`);
-  cont.innerHTML = '';
-  p.a.forEach((texto, i) => {
+  const contOpciones = document.getElementById(`situacion-${cat}-opciones`);
+  contOpciones.innerHTML = '';
+
+  p.opciones.forEach((op, idx) => {
     const div = document.createElement('div');
     div.className = 'opcion';
-    div.textContent = texto;
-    div.onclick = function() { responderSituacion(cat, texto, this); };
-    cont.appendChild(div);
+    div.textContent = op;
+    div.onclick = (e) => responderSituacion(e, cat, idx);
+    contOpciones.appendChild(div);
   });
-}
 
-function responderSituacion(cat, respuesta, elemento) {
-  const s = estado.situacion[cat];
-  const p = s.current;
-  const cont = document.getElementById(`situacion-${cat}-opciones`);
-  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
-
-  cont.querySelectorAll('.opcion').forEach(o => o.onclick = null);
-  const acierto = respuesta === p.correcta;
-
-  if(acierto) {
-    elemento.classList.add('correcta');
-    s.aciertos++;
-    s.puntuacion += 15;
-    estado.coins += 10;
-    mostrarEmoji(true, elemento);
-  } else {
-    elemento.classList.add('incorrecta');
-    cont.querySelectorAll('.opcion').forEach(o => {
-      if(o.textContent === p.correcta) o.classList.add('correcta');
-    });
-    mostrarEmoji(false, elemento);
-  }
-  actualizarCoins();
-  guardar();
+  document.getElementById(`situacion-${cat}-aciertos`).textContent = sit.aciertos;
 }
 
 function siguienteSituacion(e, cat) {
+  if(ESTADO_APP!== 'APP') return;
   estado.situacion[cat].idx++;
   cargarSituacion(cat);
 }
 
-// 8.8.9: EXAMEN 30 preguntas, mínimo 27 para aprobar
+// 8.9.0: responderTest usando mostrarEmoji
+function responderTest(e, categoria, idx) {
+  if(ESTADO_APP!== 'APP') return;
+
+  const test = estado.test[categoria];
+  const p = test.current;
+  const opciones = e.currentTarget.parentElement.children;
+
+  // Bloquear clicks
+  Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
+
+  const acierto = idx === p.correcta;
+
+  if(acierto) {
+    opciones[idx].classList.add('correcta');
+    test.aciertos++;
+    test.racha++;
+    estado.coins += 10;
+    mostrarEmoji(true, e.currentTarget);
+  } else {
+    opciones[idx].classList.add('incorrecta');
+    opciones[p.correcta].classList.add('correcta');
+    test.racha = 0;
+    mostrarEmoji(false, e.currentTarget);
+  }
+
+  // Actualizar progreso
+  PROGRESO.tests[categoria].total++;
+  if(acierto) PROGRESO.tests[categoria].aciertos++;
+  guardar();
+  actualizarCoins();
+
+  // Mostrar explicación si existe
+  if(window.EXPLICACIONES && window.EXPLICACIONES[p.id]) {
+    setTimeout(() => {
+      alert(`💡 Explicación: ${window.EXPLICACIONES[p.id]}`);
+    }, 500);
+  }
+}
+
+// 8.9.0: responderSituacion usando mostrarEmoji
+function responderSituacion(e, cat, idx) {
+  if(ESTADO_APP!== 'APP') return;
+
+  const sit = estado.situacion[cat];
+  const p = sit.current;
+  const opciones = e.currentTarget.parentElement.children;
+
+  Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
+
+  const acierto = idx === p.correcta;
+
+  if(acierto) {
+    opciones[idx].classList.add('correcta');
+    sit.aciertos++;
+    estado.coins += 15;
+    mostrarEmoji(true, e.currentTarget);
+  } else {
+    opciones[idx].classList.add('incorrecta');
+    opciones[p.correcta].classList.add('correcta');
+    mostrarEmoji(false, e.currentTarget);
+  }
+
+  PROGRESO.casos[cat].total++;
+  if(acierto) PROGRESO.casos[cat].aciertos++;
+  guardar();
+  actualizarCoins();
+}
+
+// 8.9.0: Examen DGT con guardias
 function iniciarExamen(e) {
-  const todas = PREGUNTAS.general || [];
-  if(todas.length < 30) {
-    alert('Faltan preguntas. Necesitas 30 mínimo.');
+  if(ESTADO_APP!== 'APP') return;
+
+  const todasPreguntas = PREGUNTAS.general;
+  if(!todasPreguntas || todasPreguntas.length < 30) {
+    alert('Faltan preguntas para generar examen');
     return;
   }
-  estado.examen.preguntas = barajarArray(todas).slice(0, 30);
+
   estado.examen.activo = true;
   estado.examen.index = 0;
   estado.examen.aciertos = 0;
   estado.examen.fallos = 0;
   estado.examen.tiempo = 1800;
+  estado.examen.preguntas = [...todasPreguntas].sort(() => Math.random() - 0.5).slice(0, 30);
 
   document.getElementById('btn-iniciar-examen').style.display = 'none';
   document.getElementById('btn-siguiente-examen').style.display = 'block';
+  document.getElementById('examen-resultado').style.display = 'none';
+
+  cargarPreguntaExamen();
   iniciarTimerExamen();
+}
+
+function cargarPreguntaExamen() {
+  if(ESTADO_APP!== 'APP') return;
+  if(!estado.examen.activo) return;
+
+  const p = estado.examen.preguntas[estado.examen.index];
+  document.getElementById('examen-num').textContent = estado.examen.index + 1;
+  document.getElementById('examen-pregunta').textContent = p.pregunta;
+
+  const imgCont = document.getElementById('examen-imagen');
+  if(p.imagen) {
+    imgCont.innerHTML = `<img src="${p.imagen}" style="max-width:100%;border-radius:10px;margin-bottom:15px">`;
+  } else {
+    imgCont.innerHTML = '';
+  }
+
+  const contOpciones = document.getElementById('examen-opciones');
+  contOpciones.innerHTML = '';
+
+  p.opciones.forEach((op, idx) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.textContent = op;
+    div.onclick = (e) => responderExamen(e, idx);
+    contOpciones.appendChild(div);
+  });
+
+  actualizarProgresoExamen();
+}
+
+function responderExamen(e, idx) {
+  if(ESTADO_APP!== 'APP' ||!estado.examen.activo) return;
+
+  const p = estado.examen.preguntas[estado.examen.index];
+  const opciones = e.currentTarget.parentElement.children;
+
+  Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
+
+  const acierto = idx === p.correcta;
+
+  if(acierto) {
+    opciones[idx].classList.add('correcta');
+    estado.examen.aciertos++;
+    mostrarEmoji(true, e.currentTarget);
+  } else {
+    opciones[idx].classList.add('incorrecta');
+    opciones[p.correcta].classList.add('correcta');
+    estado.examen.fallos++;
+    mostrarEmoji(false, e.currentTarget);
+  }
+
+  setTimeout(() => {
+    siguientePreguntaExamen(e);
+  }, 1500);
+}
+
+function siguientePreguntaExamen(e) {
+  if(ESTADO_APP!== 'APP') return;
+
+  estado.examen.index++;
+
+  if(estado.examen.index >= estado.examen.preguntas.length) {
+    finalizarExamen();
+    return;
+  }
+
   cargarPreguntaExamen();
 }
 
 function iniciarTimerExamen() {
   clearInterval(estado.examen.timer);
-  estado.examen.tiempo = 1800;
   estado.examen.timer = setInterval(() => {
     estado.examen.tiempo--;
     const min = Math.floor(estado.examen.tiempo / 60);
     const seg = estado.examen.tiempo % 60;
     document.getElementById('examen-timer').textContent =
-      `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`;
-    if(estado.examen.tiempo <= 0) finalizarExamen();
+      `${min}:${seg.toString().padStart(2,'0')}`;
+
+    if(estado.examen.tiempo <= 0) {
+      clearInterval(estado.examen.timer);
+      finalizarExamen();
+    }
   }, 1000);
 }
 
-function cargarPreguntaExamen() {
-  if(estado.examen.index >= 30) return finalizarExamen();
-  const pOriginal = estado.examen.preguntas[estado.examen.index];
-  const opcionesBarajadas = barajarArray([pOriginal.a, pOriginal.b, pOriginal.c]);
-  const p = {...pOriginal, a: opcionesBarajadas};
-  estado.examen.preguntas[estado.examen.index] = p;
-
-  document.getElementById('examen-num').textContent = estado.examen.index + 1;
-  document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
-  document.getElementById('examen-progreso').style.width = `${(estado.examen.index/30)*100}%`;
-  document.getElementById('examen-pregunta').textContent = p.pregunta;
-  pintarImagenTest('examen', p.pregunta);
-
-  const cont = document.getElementById('examen-opciones');
-  cont.innerHTML = '';
-  document.getElementById('btn-siguiente-examen').disabled = true;
-  p.a.forEach((texto, i) => {
-    const div = document.createElement('div');
-    div.className = 'opcion';
-    div.textContent = texto;
-    div.onclick = function() { responderExamen(texto, this); };
-    cont.appendChild(div);
-  });
-}
-
-function responderExamen(respuesta, elemento) {
-  const p = estado.examen.preguntas[estado.examen.index];
-  const cont = document.getElementById('examen-opciones');
-  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
-
-  cont.querySelectorAll('.opcion').forEach(o => o.onclick = null);
-  const acierto = respuesta === p.correcta;
-
-  if(acierto) {
-    elemento.classList.add('correcta');
-    estado.examen.aciertos++;
-    estado.coins += 20;
-    mostrarEmoji(true, elemento);
-  } else {
-    elemento.classList.add('incorrecta');
-    cont.querySelectorAll('.opcion').forEach(o => {
-      if(o.textContent === p.correcta) o.classList.add('correcta');
-    });
-    estado.examen.fallos++;
-    mostrarEmoji(false, elemento);
-  }
-  document.getElementById('btn-siguiente-examen').disabled = false;
-  document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
-  actualizarCoins();
-  guardar();
-}
-
-function siguientePreguntaExamen(e) {
-  estado.examen.index++;
-  if(estado.examen.index >= 30) {
-    finalizarExamen();
-  } else {
-    cargarPreguntaExamen();
-  }
-}
-
-// 8.8.9: Guardar historial de exámenes
 function finalizarExamen() {
   clearInterval(estado.examen.timer);
   estado.examen.activo = false;
-  const nota = estado.examen.aciertos;
-  const aprobado = nota >= 27;
+
+  const aprobado = estado.examen.aciertos >= 27;
 
   PROGRESO.examenes.realizados++;
   if(aprobado) PROGRESO.examenes.aprobados++;
-  PROGRESO.examenes.historial.unshift({
-    fecha: new Date().toLocaleDateString('es-ES'),
-    aciertos: nota,
-    porcentaje: Math.round((nota/30)*100),
-    aprobado: aprobado
-  });
-  if(PROGRESO.examenes.historial.length > 10) PROGRESO.examenes.historial.pop();
-  guardar();
 
-  const res = document.getElementById('examen-resultado');
-  res.style.display = 'block';
-  if(aprobado) {
-    res.innerHTML = `
-      <h2 style="color:#2ecc71">✅ ¡APROBADO!</h2>
-      <p style="font-size:24px">${nota}/30</p>
-      <p>Aciertos: ${nota} | Fallos: ${estado.examen.fallos}</p>
-      <p>Has ganado +${nota*20} coins</p>
-      <button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>
-    `;
-    estado.coins += nota * 20;
-  } else {
-    res.innerHTML = `
-      <h2 style="color:#e74c3c">❌ SUSPENSO</h2>
-      <p style="font-size:24px">${nota}/30</p>
-      <p>Aciertos: ${nota} | Fallos: ${estado.examen.fallos}</p>
-      <p>Necesitas 27 aciertos mínimo</p>
-      <button class="btn" onclick="reiniciarExamen()">Volver a intentar</button>
-    `;
-  }
-  actualizarCoins();
-}
-
-function reiniciarExamen() {
-  document.getElementById('examen-resultado').style.display = 'none';
-  document.getElementById('btn-iniciar-examen').style.display = 'block';
-  document.getElementById('btn-siguiente-examen').style.display = 'none';
-  document.getElementById('examen-pregunta').textContent = "Pulsa Iniciar Examen";
-  document.getElementById('examen-opciones').innerHTML = '';
-  document.getElementById('examen-num').textContent = '0';
-  document.getElementById('examen-aciertos').textContent = '0';
-  document.getElementById('examen-progreso').style.width = '0%';
-  document.getElementById('examen-timer').textContent = '30:00';
-}
-
-// 8.8.9: Pintar pantalla progreso con subtemas débiles
-function pintarProgreso() {
-  const cont = document.getElementById('progreso-contenido');
-  if(!cont) return;
-
-  let html = `<div style="background:#1a1a1a;padding:20px;border-radius:12px;margin-bottom:15px">
-    <div style="font-size:18px;font-weight:700;margin-bottom:10px">📊 Estadísticas Generales</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;text-align:center">
-      <div><div style="font-size:24px;font-weight:700;color:#00D9FF">${PROGRESO.examenes.realizados}</div><div style="font-size:12px;color:#999">Exámenes</div></div>
-      <div><div style="font-size:24px;font-weight:700;color:#00ff00">${PROGRESO.examenes.aprobados}</div><div style="font-size:12px;color:#999">Aprobados</div></div>
+  document.getElementById('examen-resultado').style.display = 'block';
+  document.getElementById('examen-resultado').innerHTML = `
+    <div style="font-size:48px">${aprobado? '🎉' : '💔'}</div>
+    <div style="font-size:24px;font-weight:700;margin:10px 0">
+      ${aprobado? 'APROBADO' : 'SUSPENSO'}
     </div>
-  </div>`;
+    <div style="font-size:18px">Aciertos: ${estado.examen.aciertos}/30</div>
+    <div style="color:#999;margin-top:10px">Mínimo: 27 aciertos</div>
+  `;
 
-  html += `<div style="background:#1a1a1a;padding:20px;border-radius:12px;margin-bottom:15px">
-    <div style="font-size:18px;font-weight:700;margin-bottom:15px">📚 Progreso por Tema</div>`;
+  document.getElementById('btn-siguiente-examen').style.display = 'none';
+  document.getElementById('btn-iniciar-examen').style.display = 'block';
+  document.getElementById('btn-iniciar-examen').textContent = 'REPETIR EXAMEN';
 
-  Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
-    const p = PROGRESO.tests[tema];
-    const pct = p.total > 0? Math.round((p.aciertos / p.total) * 100) : 0;
-    const barra = `<div style="background:#333;height:8px;border-radius:4px;overflow:hidden"><div style="background:#00D9FF;height:100%;width:${pct}%"></div></div>`;
-    html += `
-      <div style="margin-bottom:15px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-          <span style="font-weight:700">${tema.charAt(0).toUpperCase() + tema.slice(1)}</span>
-          <span style="color:#00D9FF">${p.aciertos}/${p.total} - ${pct}%</span>
-        </div>
-        ${barra}
-      </div>
-    `;
-  });
-  html += `</div>`;
-
-  html += `<div style="background:#1a1a1a;padding:20px;border-radius:12px;margin-bottom:15px">
-    <div style="font-size:18px;font-weight:700;margin-bottom:15px">🎯 Subtemas a Repasar</div>`;
-  Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
-    const p = PROGRESO.tests[tema];
-    const pct = p.total > 0? Math.round((p.aciertos / p.total) * 100) : 0;
-    const debil = SUBTEMAS_DEBILES[tema].find(s => pct <= s.pct);
-    if(debil) {
-      html += `<div style="background:#2a2a2a;padding:10px;border-radius:8px;margin-bottom:8px;border-left:3px solid #ff8c00">
-        <div style="font-weight:700;font-size:14px">${tema.toUpperCase()}</div>
-        <div style="font-size:12px;color:#ccc">${debil.msg}</div>
-      </div>`;
-    }
-  });
-  html += `</div>`;
-  cont.innerHTML = html;
+  guardar();
 }
 
-// GARAJE, TIENDA, TIPS: tu código traducido igual
+function actualizarProgresoExamen() {
+  const pct = (estado.examen.index / estado.examen.preguntas.length) * 100;
+  document.getElementById('examen-progreso').style.width = pct + '%';
+  document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
+}
+
+// 8.9.0: Funciones auxiliares con guardias
+function guardar() {
+  localStorage.setItem('gd_estado', JSON.stringify(estado));
+  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
+}
+
+function actualizarCoins() {
+  document.getElementById('coins').textContent = `💰 ${estado.coins}`;
+}
+
+function actualizarMensajeMotivacional() {
+  const tips = ['15 min al día y apruebas', 'Revisa señales débiles', 'Practica el examen diario'];
+  const msg = tips[Math.floor(Math.random() * tips.length)];
+  document.getElementById('mensaje-motivacional').textContent = msg;
+}
+
+function abrirPDF(tema) {
+  window.open(LINK_DGT_OFICIAL, '_blank');
+}
+
+// 8.9.0: Garaje con guardias
 function cargarGaraje() {
+  if(ESTADO_APP!== 'APP') return;
+  if(!COCHES || COCHES.length === 0) {
+    document.getElementById('garaje-lista').innerHTML = '<p style="color:#999">Cargando coches...</p>';
+    return;
+  }
+
   const cont = document.getElementById('garaje-lista');
   cont.innerHTML = '';
-  let hpTotal = 90;
-  estado.accesorios.forEach(id => {
-    const acc = ACCESORIOS.find(a => a.id === id);
-    if(acc) hpTotal += acc.hp;
-  });
-  document.getElementById('garaje-score').textContent = `🏎️ ${hpTotal} CV`;
+
   COCHES.forEach(coche => {
-    const desbloqueado = estado.coches.includes(coche.id);
     const div = document.createElement('div');
-    div.className = 'garaje-coche' + (desbloqueado? '' : ' bloqueado');
+    div.className = 'coche-item';
+    const comprado = estado.coches.includes(coche.id);
     div.innerHTML = `
-      <div style="font-size:40px; filter:${coche.color}">${coche.emoji}</div>
-      <div>${coche.nombre}</div>
-      <div style="color:#667eea">${coche.cv} CV</div>
-      ${!desbloqueado? `<button class="btn-comprar" onclick="comprarCoche('${coche.id}')">Comprar ${coche.precio}💰</button>` : '<div style="color:#2ecc71">✓ Propietario</div>'}
+      <div style="font-size:40px">${coche.emoji || '🏎️'}</div>
+      <div style="font-weight:600">${coche.nombre}</div>
+      <div style="font-size:12px;color:#999">${coche.cv}cv</div>
+      <div style="margin-top:8px">
+        ${comprado? 
+          '<span style="color:#4ade80">✓ Comprado</span>' : 
+          `<button onclick="comprarCoche('${coche.id}')" style="background:#ff8c00;border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:12px">${coche.precio} coins</button>`
+        }
+      </div>
     `;
     cont.appendChild(div);
   });
 }
 
 function comprarCoche(id) {
+  if(ESTADO_APP!== 'APP') return;
   const coche = COCHES.find(c => c.id === id);
   if(!coche) return;
-  if(estado.coins < coche.precio) {
-    alert('No tienes suficientes coins');
-    return;
+  if(estado.coins >= coche.precio &&!estado.coches.includes(id)) {
+    estado.coins -= coche.precio;
+    estado.coches.push(id);
+    guardar();
+    actualizarCoins();
+    cargarGaraje();
+  } else {
+    alert('Coins insuficientes o ya lo tienes');
   }
-  estado.coins -= coche.precio;
-  estado.coches.push(id);
-  guardar();
-  actualizarCoins();
-  cargarGaraje();
 }
 
+// 8.9.0: Tienda con guardias
 function cargarTienda() {
-  const cont = document.getElementById('emoji-tienda');
-  cont.innerHTML = '';
-  ACCESORIOS.forEach(acc => {
-    const comprado = estado.accesorios.includes(acc.id);
-    const div = document.createElement('div');
-    div.className = 'emoji-item' + (comprado? ' bloqueado' : '');
-    div.innerHTML = `
-      <div style="font-size:40px">${acc.emoji}</div>
-      <div>${acc.nombre}</div>
-      <div style="color:#667eea">+${acc.hp} CV</div>
-      ${!comprado? `<button class="btn-comprar" onclick="comprarAccesorios('${acc.id}')">Comprar ${acc.precio}💰</button>` : '<div style="color:#2ecc71">✓ Comprado</div>'}
-    `;
-    cont.appendChild(div);
-  });
-  EMOJI_TIENDA.forEach(emoji => {
-    const comprado = estado.emojis.includes(emoji.id);
-    const div = document.createElement('div');
-    div.className = 'emoji-item' + (comprado? ' bloqueado' : '');
-    div.innerHTML = `
-      <div style="font-size:40px">${emoji.emoji}</div>
-      <div>${emoji.nombre}</div>
-      <div style="color:#667eea">Cosmético</div>
-      ${!comprado? `<button class="btn-comprar" onclick="comprarEmoji('${emoji.id}')">Comprar ${emoji.precio}💰</button>` : '<div style="color:#2ecc71">✓ Comprado</div>'}
-    `;
-    cont.appendChild(div);
-  });
+  if(ESTADO_APP!== 'APP') return;
+  
+  // Accesorios
+  if(ACCESORIOS && ACCESORIOS.length > 0) {
+    const contAcc = document.getElementById('tienda-accesorios');
+    if(contAcc) {
+      contAcc.innerHTML = '';
+      ACCESORIOS.forEach(acc => {
+        const div = document.createElement('div');
+        div.className = 'accesorio-item';
+        const comprado = estado.accesorios.includes(acc.id);
+        div.innerHTML = `
+          <div style="font-size:30px">${acc.emoji || '⚙️'}</div>
+          <div style="font-weight:600;font-size:14px">${acc.nombre}</div>
+          <div style="font-size:11px;color:#999">+${acc.hp}hp</div>
+          <div style="margin-top:6px">
+            ${comprado? 
+              '<span style="color:#4ade80;font-size:12px">✓</span>' : 
+              `<button onclick="comprarAccesorio('${acc.id}')" style="background:#ff8c00;border:none;color:#fff;padding:4px 8px;border-radius:6px;font-size:11px">${acc.precio}</button>`
+            }
+          </div>
+        `;
+        contAcc.appendChild(div);
+      });
+    }
+  }
+
+  // Emojis
+  if(EMOJI_TIENDA && EMOJI_TIENDA.length > 0) {
+    const contEmoji = document.getElementById('tienda-emojis');
+    if(contEmoji) {
+      contEmoji.innerHTML = '';
+      EMOJI_TIENDA.forEach(emoji => {
+        const div = document.createElement('div');
+        div.className = 'emoji-item';
+        const comprado = estado.emojis.includes(emoji.id);
+        div.innerHTML = `
+          <div style="font-size:35px">${emoji.emoji}</div>
+          <div style="font-size:12px">${emoji.nombre}</div>
+          <div style="margin-top:5px">
+            ${comprado? 
+              '<span style="color:#4ade80;font-size:11px">✓</span>' : 
+              `<button onclick="comprarEmoji('${emoji.id}')" style="background:#ff8c00;border:none;color:#fff;padding:4px 8px;border-radius:6px;font-size:11px">${emoji.precio}</button>`
+            }
+          </div>
+        `;
+        contEmoji.appendChild(div);
+      });
+    }
+  }
 }
 
-function comprarAccesorios(id) {
+function comprarAccesorio(id) {
+  if(ESTADO_APP!== 'APP') return;
   const acc = ACCESORIOS.find(a => a.id === id);
   if(!acc) return;
-  if(estado.coins < acc.precio) {
-    alert('No tienes suficientes coins');
-    return;
+  if(estado.coins >= acc.precio &&!estado.accesorios.includes(id)) {
+    estado.coins -= acc.precio;
+    estado.accesorios.push(id);
+    guardar();
+    actualizarCoins();
+    cargarTienda();
   }
-  estado.coins -= acc.precio;
-  estado.accesorios.push(id);
-  guardar();
-  actualizarCoins();
-  cargarTienda();
 }
 
 function comprarEmoji(id) {
+  if(ESTADO_APP!== 'APP') return;
   const emoji = EMOJI_TIENDA.find(e => e.id === id);
   if(!emoji) return;
-  if(estado.coins < emoji.precio) {
-    alert('No tienes suficientes coins');
+  if(estado.coins >= emoji.precio &&!estado.emojis.includes(id)) {
+    estado.coins -= emoji.precio;
+    estado.emojis.push(id);
+    guardar();
+    actualizarCoins();
+    cargarTienda();
+  }
+}
+
+// 8.9.0: Tips con guardias
+function cargarTips() {
+  if(ESTADO_APP!== 'APP') return;
+  if(!TIPS || TIPS.length === 0) {
+    document.getElementById('tips-lista').innerHTML = '<p style="color:#999">Cargando tips...</p>';
     return;
   }
-  estado.coins -= emoji.precio;
-  estado.emojis.push(id);
-  guardar();
-  actualizarCoins();
-  cargarTienda();
-}
 
-function cargarTips() {
-  tipsData = TIPS;
-  currentTip = 0;
-  mostrarTip();
-}
+  const cont = document.getElementById('tips-lista');
+  cont.innerHTML = '';
 
-function mostrarTip() {
-  if (tipsData.length === 0) return;
-  const tip = tipsData[currentTip];
-  document.getElementById('tip-content').innerHTML = `
-    <div class="tip-emoji">${tip.emoji}</div>
-    <div class="tip-text">${tip.txt}</div>
-  `;
-  document.getElementById('tip-counter').textContent = `${currentTip + 1} / ${tipsData.length}`;
-}
-
-function nextTip(e) {
-  currentTip = (currentTip + 1) % tipsData.length;
-  mostrarTip();
-}
-
-function prevTip(e) {
-  currentTip = (currentTip - 1 + tipsData.length) % tipsData.length;
-  mostrarTip();
-}
-
-function actualizarMensajeMotivacional() {
-  const mensajes = [
-    "Vas por buen camino 💪",
-    "Cada fallo te hace más fuerte 🔥",
-    "El examen DGT es tuyo 🚗",
-    "No pares ahora 💎",
-    "Concéntrate y aprobarás 👑"
-  ];
-  const msg = mensajes[Math.floor(Math.random() * mensajes.length)];
-  const el = document.getElementById('motivacion');
-  if(el) el.textContent = msg;
-}
-
-// SERVICE WORKER REGISTRO
-if('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-.then(reg => console.log('SW registrado'))
-.catch(err => console.log('SW error:', err));
+  TIPS.forEach(tip => {
+    const div = document.createElement('div');
+    div.className = 'tip-item';
+    div.textContent = tip;
+    cont.appendChild(div);
   });
 }
+
+// 8.9.0: Progreso con guardias
+function cargarProgreso() {
+  if(ESTADO_APP!== 'APP') return;
+
+  const cont = document.getElementById('progreso-stats');
+  if(!cont) return;
+
+  let html = '<div style="display:grid;gap:15px">';
+
+  Object.entries(PROGRESO.tests).forEach(([cat, data]) => {
+    const pct = data.total > 0? Math.round((data.aciertos / data.total) * 100) : 0;
+    html += `
+      <div style="background:#2a2a3e;padding:15px;border-radius:12px">
+        <div style="font-weight:600;margin-bottom:8px">${cat.toUpperCase()}</div>
+        <div style="font-size:24px;font-weight:700">${pct}%</div>
+        <div style="font-size:12px;color:#999">${data.aciertos}/${data.total} aciertos</div>
+        <div style="height:6px;background:#1a1a2e;border-radius:3px;margin-top:8px;overflow:hidden">
+          <div style="height:100%;background:linear-gradient(90deg,#ff8c00,#ff2d55);width:${pct}%"></div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  cont.innerHTML = html;
+}
+
+
 
  
  
