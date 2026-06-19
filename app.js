@@ -407,6 +407,32 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
+function init() {
+  console.log('=== INIT EJECUTANDO ===');
+  
+  try {
+    actualizarCoins();
+  } catch(e) {
+    console.error('Error coins:', e);
+  }
+  
+  try {
+    actualizarMensajeMotivacional();
+  } catch(e) {
+    console.error('Error motivacion:', e);
+  }
+  
+  try {
+    cargarTemarioHTML();
+  } catch(e) {
+    console.error('ERROR CRITICO EN TEMARIO:', e);
+    document.getElementById('temario-lista').innerHTML = 
+      '<div style="color:red;padding:20px">ERROR: '+e.message+'<br>Revisa consola F12</div>';
+  }
+  
+  console.log('=== INIT TERMINADO ===');
+}
+
 
 // ===== BLOQUE 2: LÓGICA + ACTUALIZACIONES V8.8.9 FINAL =====
 
