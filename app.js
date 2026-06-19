@@ -1,10 +1,10 @@
-// GASDRIVE DGT V8.9.0 ESP - 630 PREGUNTAS DGT 2026
-const VERSION = "8.9.0";
+// GASDRIVE DGT V8.9.1 ESP - 630 PREGUNTAS DGT 2026
+const VERSION = "8.9.1";
 
-// 8.9.0: Control de flujo para evitar bucle intro+tema
+// 8.9.1: Control de flujo para evitar bucle intro+tema
 let ESTADO_APP = 'LOADING'; // LOADING -> CARGANDO -> READY -> APP
 
-// 8.9.0: Guardias - si ya existen tus arrays COCHES/ACCESORIOS/TIPS de más abajo, úsalos
+// 8.9.1: Guardias - si ya existen tus arrays COCHES/ACCESORIOS/TIPS de más abajo, úsalos
 if(typeof COCHES === 'undefined') var COCHES = [];
 if(typeof ACCESORIOS === 'undefined') var ACCESORIOS = [];
 if(typeof EMOJI_TIENDA === 'undefined') var EMOJI_TIENDA = [];
@@ -102,7 +102,7 @@ window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 
-// 8.9.0: Función que faltaba - la usas en responderTest/Examen/Situacion
+// 8.9.1: Función que faltaba - la usas en responderTest/Examen/Situacion
 function mostrarEmoji(acierto, elemento){
   const emojis = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
   const emoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -155,25 +155,46 @@ function mostrarIntro(){
   `);
 }
 
-// 8.9.0: tancarIntro con secuencia forzada para romper bucle
-function tancarIntro(){
-  document.getElementById('intro-screen').remove();
-  ESTADO_APP = 'CARGANDO';
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
-  document.getElementById('tab-temario').classList.add('active');
-  cargarModulos().then(() => {
+// 8.9.1: tancarIntro BLINDADO con try/catch y logs para detectar error
+async function tancarIntro(){
+  try {
+    console.log('1. Quitando intro...');
+    const intro = document.getElementById('intro-screen');
+    if(intro) intro.remove();
+
+    ESTADO_APP = 'CARGANDO';
+
+    console.log('2. Activando tab temario visual...');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const btnTemario = document.querySelector('.tab-btn[onclick*="temario"]');
+    if(btnTemario) btnTemario.classList.add('active');
+    document.getElementById('tab-temario').classList.add('active');
+
+    console.log('3. Cargando módulos...');
+    await cargarModulos();
+
+    console.log('4. Llamando init...');
+    init();
+
     ESTADO_APP = 'READY';
+    console.log('5. Cargando temario HTML...');
     cargarTemarioHTML();
-    init(); // 1 SOLO init después de cargar
+
     ESTADO_APP = 'APP';
-  });
+    console.log('6. ✅ APP LISTA V8.9.1');
+
+  } catch(e) {
+    console.error('❌ ERROR en tancarIntro:', e);
+    alert('Error cargando app: ' + e.message + '\n\nAbre F12 > Consola para más detalle');
+    ESTADO_APP = 'LOADING';
+  }
 }
 
 // CARGADOR DE ARCHIVOS.JS CON EXPORT CONST DESDE /data/
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
   const t0 = performance.now();
+
   await Promise.all([
    ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
@@ -202,11 +223,13 @@ async function cargarModulos() {
       console.log(`✅ Explicaciones cargadas`);
     })
   ]);
+
   // Crear general juntando todas
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
+
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total general: ${PREGUNTAS.general.length}`);
 }
 
