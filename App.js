@@ -408,7 +408,30 @@ const EMOJI_TIENDA = [
 ];
 
 
-// ===== BLOQUE 2: LÓGICA + ACTUALIZACIONES V8.8.9 =====
+// ===== BLOQUE 2: LÓGICA + ACTUALIZACIONES V8.8.9 FINAL =====
+
+// 0. DEFINIR PROGRESO SI NO EXISTE - ESTO EVITA QUE PETE LA APP
+if(typeof PROGRESO === 'undefined') {
+  window.PROGRESO = {
+    temarios: {
+      senales: {tiempo:0,porcentaje:0,ultimaEntrada:0},
+      normas: {tiempo:0,porcentaje:0,ultimaEntrada:0},
+      auxilios: {tiempo:0,porcentaje:0,ultimaEntrada:0},
+      mecanica: {tiempo:0,porcentaje:0,ultimaEntrada:0},
+      medioambiente: {tiempo:0,porcentaje:0,ultimaEntrada:0}
+    },
+    tests: {
+      general:{total:0,aciertos:0,unicas:[],falladas:[]},
+      senales:{total:0,aciertos:0,unicas:[],falladas:[]},
+      normas:{total:0,aciertos:0,unicas:[],falladas:[]},
+      mecanica:{total:0,aciertos:0,unicas:[],falladas:[]},
+      auxilios:{total:0,aciertos:0,unicas:[],falladas:[]},
+      medioambiente:{total:0,aciertos:0,unicas:[],falladas:[]}
+    },
+    examenes: {realizados:0,aprobados:0,historial:[]}
+  };
+}
+
 let tipsData = [];
 let currentTip = 0;
 
@@ -457,6 +480,7 @@ function init() {
   actualizarCoins();
   actualizarMensajeMotivacional();
   cargarTemarioHTML(); // NUEVO: pinta los 5 temarios al iniciar
+  activarTabs(); // NUEVO: activa todos los botones del menú
 }
 
 function guardar() {
@@ -481,12 +505,33 @@ function barajarArray(arr) {
   return a;
 }
 
-// 8.8.9: TEMARIO es el primer tab
+// 8.8.9: ACTIVAR TABS SIN closest() - ARREGLO CLAVE PARA QUE FUNCIONEN LOS BOTONES
+function activarTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const tab = this.getAttribute('data-tab');
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      this.classList.add('active');
+
+      if(tab === 'temario') cargarTemarioHTML();
+      if(tab === 'test') cargarPregunta('general');
+      if(tab === 'situaciones') cargarSituacion(situacionCategoriaActiva);
+      if(tab === 'garaje') cargarGaraje();
+      if(tab === 'tienda') cargarTienda();
+      if(tab === 'tips') cargarTips();
+      if(tab === 'progreso') pintarProgreso();
+    });
+  });
+}
+
+// 8.8.9: TEMARIO es el primer tab - MANTENER POR COMPATIBILIDAD
 function cambiarTab(e, tab) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
-  e.target.closest('.tab-btn').classList.add('active');
+  e.currentTarget.classList.add('active');
 
   if(tab === 'temario') cargarTemarioHTML();
   if(tab === 'test') cargarPregunta('general');
@@ -1071,7 +1116,9 @@ if('serviceWorker' in navigator) {
 .then(reg => console.log('SW registrado'))
 .catch(err => console.log('SW error:', err));
   });
-} 
+}
+
+ 
  
 
 
