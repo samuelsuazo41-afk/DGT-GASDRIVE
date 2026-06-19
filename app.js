@@ -477,7 +477,7 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// 8.9.4: init - se llama al cargar DOM
+// 8.9.6: init - se llama al cargar DOM
 function init() {
   activarTabs();
   actualizarCoins();
@@ -485,7 +485,7 @@ function init() {
   // NO bloqueamos nada. La app siempre funciona
 }
 
-// 8.9.4: activarTabs simple, sin tocar EMPEZAR
+// 8.9.6: activarTabs simple, sin tocar EMPEZAR
 function activarTabs() {
   document.querySelectorAll('.tab-btn').forEach(btn => {
     // Solo añadir listener si no lo tiene ya
@@ -540,7 +540,7 @@ function cambiarCategoriaSit(cat) {
   cargarSituacion(cat);
 }
 
-// 8.9.4: cargarPregunta con guardia suave
+// 8.9.6: cargarPregunta con guardia suave
 function cargarPregunta(categoria) {
   if(!PREGUNTAS[categoria] || PREGUNTAS[categoria].length === 0) {
     document.getElementById(`test-${categoria}-pregunta`).textContent = 'Cargando preguntas... espera 1s';
@@ -629,7 +629,9 @@ function responderTest(e, categoria, idx) {
   if(acierto) PROGRESO.tests[categoria].aciertos++;
   guardar();
   actualizarCoins();
-  if(window.EXPLICACIONES && window.EXPLICACIONES[p.id]) {
+
+  // 8.9.6: Explicaciones solo si flag activo
+  if(EXPLICACIONES_ACTIVAS && window.EXPLICACIONES && window.EXPLICACIONES[p.id]) {
     setTimeout(() => {
       alert(`💡 Explicación: ${window.EXPLICACIONES[p.id]}`);
     }, 500);
@@ -748,7 +750,8 @@ function iniciarTimerExamen() {
 function finalizarExamen() {
   clearInterval(estado.examen.timer);
   estado.examen.activo = false;
-  const aprobado = estado.examen.aciertos >= 27;
+  // 8.9.6: 80% = 24 aciertos de 30 para aprobar
+  const aprobado = estado.examen.aciertos >= 24;
   PROGRESO.examenes.realizados++;
   if(aprobado) PROGRESO.examenes.aprobados++;
   document.getElementById('examen-resultado').style.display = 'block';
@@ -758,7 +761,7 @@ function finalizarExamen() {
       ${aprobado? 'APROBADO' : 'SUSPENSO'}
     </div>
     <div style="font-size:18px">Aciertos: ${estado.examen.aciertos}/30</div>
-    <div style="color:#999;margin-top:10px">Mínimo: 27 aciertos</div>
+    <div style="color:#999;margin-top:10px">Mínimo 80%: 24 aciertos</div>
   `;
   document.getElementById('btn-siguiente-examen').style.display = 'none';
   document.getElementById('btn-iniciar-examen').style.display = 'block';
@@ -788,38 +791,46 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
+// 8.9.6: abrirPDF locales desde raíz, no link externo
 function abrirPDF(tema) {
   const PDFs = {
-    senales: './01_Senales_Tomo_I_RD_465_2025.pdf', // ← raíz del repo
+    senales: './01_Senales_Tomo_I_RD_465_2025.pdf',
     normas: './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
     auxilios: './03_Manual_IX_Primeiros_Auxilios_2025.pdf',
     mecanica: './04_Manual_VIII_Mecanica_2024.pdf',
     medioambiente: './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
   };
-  window.open(PDFs[tema], '_blank'); // abre local, no sale fuera
+  const url = PDFs[tema] || PDFs.senales;
+  window.open(url, '_blank');
 }
 
-function cargarGaraje() {
-  if(!COCHES || COCHES.length === 0) {
-    document.getElementById('garaje-lista').innerHTML = '<p style="color:#999">Cargando coches...</p>';
-    return;
-  }
-  const cont = document.getElementById('garaje-lista');
-  cont.innerHTML = '';
-  COCHES.forEach(coche => {
-    const div = document.createElement('div');
-    div.className = 'coche-item';
-    const comprado = estado.coches.includes(coche.id);
-    div.innerHTML = `
-      <div style="font-size:40px">${coche.emoji || '🏎️'}</div>
-      <div style="font-weight:600">${coche.nombre}</div>
-      <div style="font-size:12px;color:#999">${coche.cv}cv</div>
-      <div style="margin-top:8px">
-        ${comprado? '<span style="color:#4ade80">✓ Comprado</span>' : `<button onclick="comprarCoche('${coche.id}')" style="background:#ff8c00;border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:12px">${coche.precio} coins</button>`}
-      </div>
-    `;
-    cont.appendChild(div);
-  });
+// 8.9.6: Funciones vacías para que no pete si llamas a los tabs
+function cargarTienda() {
+  document.getElementById('tienda-accesorios').innerHTML = '<div class="loading-placeholder">Próximamente</div>';
+  document.getElementById('tienda-emojis').innerHTML = '<div class="loading-placeholder">Próximamente</div>';
+}
+
+function cargarTips() {
+  const cont = document.getElementById('tips-lista');
+  cont.innerHTML = '<div class="tip-item"><div style="font-size:30px">💡</div><div>15 min al día y apruebas</div></div>';
+}
+
+function cargarProgreso() {
+  const cont = document.getElementById('progreso-stats');
+  const total = PROGRESO.tests.general.total || 1;
+  const pct = Math.round((PROGRESO.tests.general.aciertos / total) * 100);
+  cont.innerHTML = `
+    <div style="background:#1a1a2e;padding:20px;border-radius:12px;margin-bottom:15px">
+      <div style="font-size:18px;margin-bottom:10px">📊 Tests General</div>
+      <div style="font-size:32px;font-weight:700">${pct}%</div>
+      <div style="color:#999">${PROGRESO.tests.general.aciertos}/${total} aciertos</div>
+    </div>
+    <div style="background:#1a1a2e;padding:20px;border-radius:12px">
+      <div style="font-size:18px;margin-bottom:10px">📋 Exámenes</div>
+      <div style="font-size:32px;font-weight:700">${PROGRESO.examenes.aprobados}/${PROGRESO.examenes.realizados}</div>
+      <div style="color:#999">Aprobados/Realizados</div>
+    </div>
+  `;
 }
 
 function comprarCoche(id) {
