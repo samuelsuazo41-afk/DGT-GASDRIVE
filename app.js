@@ -789,7 +789,14 @@ function actualizarMensajeMotivacional() {
 }
 
 function abrirPDF(tema) {
-  window.open(LINK_DGT_OFICIAL, '_blank');
+  const PDFs = {
+    senales: './01_Senales_Tomo_I_RD_465_2025.pdf', // ← raíz del repo
+    normas: './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
+    auxilios: './03_Manual_IX_Primeiros_Auxilios_2025.pdf',
+    mecanica: './04_Manual_VIII_Mecanica_2024.pdf',
+    medioambiente: './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
+  };
+  window.open(PDFs[tema], '_blank'); // abre local, no sale fuera
 }
 
 function cargarGaraje() {
