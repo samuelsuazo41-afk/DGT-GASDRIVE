@@ -1,246 +1,118 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES V8.9.0</title>
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0a0a0a">
-<link rel="stylesheet" href="./style.css?v=8.9.0">
-<style>
-html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; padding-bottom: 80px; }
-.header { background: #1a1a1a; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
-.header h1 { font-size: 18px; margin: 0; }
-.coins { font-size: 16px; font-weight: 700; color: #ff8c00; }
-.tabs { display: flex; background: #1a1a1a; border-top: 1px solid #333; overflow-x: auto; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; }
-.tab-btn { flex: 1; padding: 10px 4px; background: none; border: none; color: #999; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.tab-btn.active { color: #00D9FF; border-top: 2px solid #00D9FF; }
-.tab-content { display: none; padding: 16px; min-height: calc(100vh - 140px); }
-.tab-content.active { display: block; }
-.sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
-.sub-tab-btn { padding: 8px 12px; background: #2a2a2a; border: none; border-radius: 8px; color: #999; font-size: 12px; cursor: pointer; }
-.sub-tab-btn.active { background: #00D9FF; color: #000; }
-.opcion { background: #1a1a1a; padding: 16px; margin-bottom: 10px; border-radius: 10px; cursor: pointer; border: 2px solid #333; }
-.opcion.correcta { border-color: #2ecc71; background: #1a2e1a; }
-.opcion.incorrecta { border-color: #e74c3c; background: #2e1a1a; }
-.btn { background: linear-gradient(135deg,#ff8c00,#ff2d55); border: none; color: #fff; padding: 14px 24px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 15px; }
-.btn:disabled { opacity: 0.5; }
-.stats { display: flex; gap: 15px; margin-bottom: 15px; }
-.stat-box { flex: 1; background: #1a1a1a; padding: 12px; border-radius: 10px; text-align: center; }
-.stat-num { font-size: 24px; font-weight: 700; color: #00D9FF; }
-.progress-bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin: 10px 0; }
-.progress-fill { background: #00D9FF; height: 100%; width: 0%; transition: width 0.3s; }
-.garaje-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.temario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.temario-item { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 2px solid #333; }
-.temario-item:hover { border-color: #00D9FF; }
-.category-btn { padding: 10px 16px; background: #2a2a2a; border: none; border-radius: 8px; color: #999; font-weight: 600; cursor: pointer; }
-.category-btn.active { background: #00D9FF; color: #000; }
-.emoji-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.tip-item { background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 10px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>GasDrive DGT ES V8.9.1</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#0f0f1e; color:#fff; overflow-x:hidden; }
+    .app { max-width:600px; margin:0 auto; min-height:100vh; padding-bottom:80px; }
+    
+    /* Header */
+    .header { background:linear-gradient(135deg,#1a1a2e,#16213e); padding:20px; text-align:center; border-bottom:2px solid #ff8c00; }
+    .header h1 { font-size:24px; margin-bottom:5px; }
+    .coins { font-size:18px; color:#ffd700; font-weight:700; }
+    
+    /* Tabs contenido */
+    .tab-content { display:none; padding:20px; }
+    .tab-content.active { display:block; animation:fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    
+    /* Temario */
+    .temario-lista { display:grid; gap:12px; }
+    .temario-item { background:#1a1a2e; padding:20px; border-radius:12px; cursor:pointer; border:2px solid #2a2a3e; transition:all 0.2s; }
+    .temario-item:active { transform:scale(0.98); border-color:#ff8c00; }
+    
+    /* Test */
+    .pregunta-box { background:#1a1a2e; padding:25px; border-radius:15px; margin-bottom:20px; }
+    .opciones button { width:100%; padding:15px; margin:8px 0; background:#2a2a3e; border:2px solid #3a3a4e; border-radius:10px; color:#fff; font-size:16px; cursor:pointer; transition:all 0.2s; }
+    .opciones button:active { transform:scale(0.98); }
+    .opciones button.correcta { background:#4ade80; border-color:#22c55e; }
+    .opciones button.incorrecta { background:#ef4444; border-color:#dc2626; }
+    
+    /* Menú abajo */
+    .tabs { position:fixed; bottom:0; left:0; right:0; background:#1a1a2e; display:flex; overflow-x:auto; border-top:2px solid #2a2a3e; z-index:1000; }
+    .tab-btn { flex:1; min-width:80px; padding:12px 8px; background:none; border:none; color:#999; font-size:11px; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
+    .tab-btn.active { color:#ff8c00; border-top:2px solid #ff8c00; }
+    .tab-btn:active { background:#2a2a3e; }
+    
+    /* Garaje/Tienda */
+    .garaje-lista, .tienda-lista, .tips-lista { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+    .coche-item, .accesorio-item, .emoji-item, .tip-item { background:#1a1a2e; padding:15px; border-radius:12px; text-align:center; border:2px solid #2a2a3e; }
+    
+    /* Animación emoji */
+    @keyframes flotar { 0% { opacity:0; transform:translate(-50%,-50%) scale(0.5); } 50% { opacity:1; transform:translate(-50%,-50%) scale(1.2); } 100% { opacity:0; transform:translate(-50%,-50%) scale(0.8) translateY(-30px); } }
+  </style>
 </head>
 <body>
-
-<!-- 8.9.0: INTRO SCREEN - va primero para que aparezca antes que todo -->
-<div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-  <div style="font-size:64px;margin-bottom:20px">🚗</div>
-  <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT ES 2026 v8.9.0</h1>
-  <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-  <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
-  <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-    <div>💰 Gana coins respondiendo bien</div>
-    <div>🏎️ Compra supercotxes en el Garaje</div>
-    <div>📚 630 preguntas DGT reales</div>
-    <div>📖 Temarios completos para repasar</div>
-  </div>
-  <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
-</div>
-
-<div class="header">
-  <h1>🚗 GasDrive DGT ES</h1>
-  <div class="coins" id="coins">💰 0</div>
-</div>
-
-<!-- 8.9.0: Mensaje motivacional - lo usa app.js -->
-<div id="mensaje-motivacional" style="background:#1a1a1a;margin:16px;border-radius:12px;padding:12px;text-align:center;color:#ff8c00;font-size:13px;font-weight:600">Cargando...</div>
-
-<!-- CONTENIDO -->
-<!-- 8.9.0: QUITADO 'active' de temario - se activa desde tancarIntro -->
-<div id="tab-temario" class="tab-content">
-  <div style="font-size:20px;font-weight:700;margin-bottom:15px">📚 Temarios Oficiales DGT 2026</div>
-  <div style="color:#999;font-size:13px;margin-bottom:15px">Toca para abrir el PDF completo. El progreso se guarda automáticamente.</div>
-  <div id="temario-lista" class="temario-grid"></div>
-</div>
-
-<div id="tab-test" class="tab-content">
-  <div class="sub-tabs">
-    <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'test','general')">General</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','senales')">Señales</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','normas')">Normas</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','mecanica')">Mecánica</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','auxilios')">Auxilios</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','medioambiente')">Medio Ambiente</button>
-  </div>
-  <div id="test-general" class="sub-content active">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-general-aciertos">0</div><div>Aciertos</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-general-racha">0</div><div>Racha</div></div>
+  <!-- 8.9.1: Intro pantalla completa - el JS la genera con mostrarIntro() -->
+  
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <h1>GasDrive DGT ES V8.9.1</h1>
+      <div class="coins">💰 <span id="coins-display">0</span> coins</div>
     </div>
-    <div id="test-general-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="test-general-imagen"></div>
-    <div id="test-general-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'general')">Siguiente →</button>
-  </div>
-  <!-- resto de sub-tabs test igual que lo tienes -->
-  <div id="test-senales" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-senales-aciertos">0</div><div>Aciertos</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-senales-racha">0</div><div>Racha</div></div>
-    </div>
-    <div id="test-senales-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="test-senales-imagen"></div>
-    <div id="test-senales-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'senales')">Siguiente →</button>
-  </div>
-  <div id="test-normas" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-normas-aciertos">0</div><div>Aciertos</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-normas-racha">0</div><div>Racha</div></div>
-    </div>
-    <div id="test-normas-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="test-normas-imagen"></div>
-    <div id="test-normas-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'normas')">Siguiente →</button>
-  </div>
-  <div id="test-mecanica" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-mecanica-aciertos">0</div><div>Aciertos</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-mecanica-racha">0</div><div>Racha</div></div>
-    </div>
-    <div id="test-mecanica-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="test-mecanica-imagen"></div>
-    <div id="test-mecanica-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'mecanica')">Siguiente →</button>
-  </div>
-  <div id="test-auxilios" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-auxilios-aciertos">0</div><div>Aciertos</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-auxilios-racha">0</div><div>Racha</div></div>
-    </div>
-    <div id="test-auxilios-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="test-auxilios-imagen"></div>
-    <div id="test-auxilios-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'auxilios')">Siguiente →</button>
-  </div>
-  <div id="test-medioambiente" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-medioambiente-aciertos">0</div><div>Aciertos</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-medioambiente-racha">0</div><div>Racha</div></div>
-    </div>
-    <div id="test-medioambiente-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="test-medioambiente-imagen"></div>
-    <div id="test-medioambiente-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'medioambiente')">Siguiente →</button>
-  </div>
-</div>
 
-<div id="tab-situaciones" class="tab-content">
-  <div style="display:flex;gap:8px;margin-bottom:15px;overflow-x:auto">
-    <button class="category-btn active" onclick="cambiarCategoriaSit('clima')">🌧️ Clima</button>
-    <button class="category-btn" onclick="cambiarCategoriaSit('urbano')">🏙️ Urbano</button>
-    <button class="category-btn" onclick="cambiarCategoriaSit('carretera')">🛣️ Carretera</button>
-    <button class="category-btn" onclick="cambiarCategoriaSit('emergencia')">🚨 Emergencia</button>
-  </div>
-  <div id="sit-titulo" style="font-size:18px;font-weight:700;margin-bottom:15px">🌧️ CASOS REALES - CLIMA ADVERSO</div>
-  <div id="sit-clima" class="sub-content active">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="situacion-clima-aciertos">0</div><div>Aciertos</div></div>
+    <!-- TAB TEMARIO - 8.9.1: SIN active para que no arranque aquí -->
+    <div id="tab-temario" class="tab-content">
+      <h2 style="margin-bottom:20px">📚 Temarios Oficiales DGT</h2>
+      <div id="temario-lista" class="temario-lista">
+        <!-- Se rellena con cargarTemarioHTML() -->
+      </div>
     </div>
-    <div id="situacion-clima-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="situacion-clima-imagen"></div>
-    <div id="situacion-clima-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'clima')">Siguiente →</button>
-  </div>
-  <div id="sit-urbano" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="situacion-urbano-aciertos">0</div><div>Aciertos</div></div>
+
+    <!-- TAB TEST -->
+    <div id="tab-test" class="tab-content">
+      <div class="pregunta-box">
+        <div id="test-general-imagen" style="margin-bottom:15px"></div>
+        <div id="test-general-pregunta" style="font-size:18px;margin-bottom:20px;font-weight:600"></div>
+        <div class="opciones" id="test-general-opciones"></div>
+      </div>
     </div>
-    <div id="situacion-urbano-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="situacion-urbano-imagen"></div>
-    <div id="situacion-urbano-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'urbano')">Siguiente →</button>
-  </div>
-  <div id="sit-carretera" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="situacion-carretera-aciertos">0</div><div>Aciertos</div></div>
+
+    <!-- TAB SITUACIONES -->
+    <div id="tab-situaciones" class="tab-content">
+      <h2 style="margin-bottom:20px">🚦 Situaciones de Tráfico</h2>
+      <div id="situaciones-lista"></div>
     </div>
-    <div id="situacion-carretera-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="situacion-carretera-imagen"></div>
-    <div id="situacion-carretera-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'carretera')">Siguiente →</button>
-  </div>
-  <div id="sit-emergencia" class="sub-content">
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="situacion-emergencia-aciertos">0</div><div>Aciertos</div></div>
+
+    <!-- TAB EXAMEN -->
+    <div id="tab-examen" class="tab-content">
+      <h2 style="margin-bottom:20px">📋 Examen DGT 30 preguntas</h2>
+      <button onclick="iniciarExamen()" style="width:100%;padding:18px;background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">INICIAR EXAMEN</button>
+      <div id="examen-contenedor" style="margin-top:20px"></div>
     </div>
-    <div id="situacion-emergencia-pregunta" style="font-size:18px;font-weight:700;margin-bottom:15px">Cargando...</div>
-    <div id="situacion-emergencia-imagen"></div>
-    <div id="situacion-emergencia-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'emergencia')">Siguiente →</button>
-  </div>
-</div>
 
-<div id="tab-examen" class="tab-content">
-  <div style="background:#1a1a1a;padding:20px;border-radius:12px;text-align:center">
-    <div style="font-size:20px;font-weight:700;margin-bottom:10px">🏆 Examen DGT Oficial</div>
-    <div style="color:#999;margin-bottom:15px">30 preguntas • 30 minutos • Mínimo 27 aciertos</div>
-    <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="examen-num">0</div><div>Pregunta</div></div>
-      <div class="stat-box"><div class="stat-num" id="examen-aciertos">0</div><div>Aciertos</div></div>
-      <div class="stat-box"><div class="stat-num" id="examen-timer">30:00</div><div>Tiempo</div></div>
+    <!-- TAB GARAJE -->
+    <div id="tab-garaje" class="tab-content">
+      <h2 style="margin-bottom:20px">🏎️ Garaje</h2>
+      <div id="garaje-lista" class="garaje-lista"></div>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="examen-progreso"></div></div>
-    <div id="examen-pregunta" style="font-size:18px;font-weight:700;margin:20px 0">Pulsa Iniciar Examen</div>
-    <div id="examen-imagen"></div>
-    <div id="examen-opciones"></div>
-    <button class="btn" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button>
-    <button class="btn" id="btn-siguiente-examen" onclick="siguientePreguntaExamen(event)" style="display:none">Siguiente →</button>
-    <div id="examen-resultado" style="display:none;margin-top:20px"></div>
-  </div>
-</div>
 
-<div id="tab-progreso" class="tab-content">
-  <div style="font-size:20px;font-weight:700;margin-bottom:15px">📊 Tu Progreso</div>
-  <!-- 8.9.0: ID corregido - app.js usa 'progreso-stats' -->
-  <div id="progreso-stats"></div>
-</div>
+    <!-- TAB TIENDA -->
+    <div id="tab-tienda" class="tab-content">
+      <h2 style="margin-bottom:20px">🛒 Tienda</h2>
+      <h3 style="margin:20px 0 10px">Accesorios</h3>
+      <div id="tienda-accesorios" class="tienda-lista"></div>
+      <h3 style="margin:20px 0 10px">Emojis</h3>
+      <div id="tienda-emojis" class="tienda-lista"></div>
+    </div>
 
-<div id="tab-garaje" class="tab-content">
-  <div style="font-size:20px;font-weight:700;margin-bottom:15px">🏎️ Mi Garaje</div>
-  <div style="background:#1a1a1a;padding:15px;border-radius:12px;margin-bottom:15px;text-align:center">
-    <div id="garaje-score" style="font-size:24px;font-weight:700">🏎️ 90 CV</div>
-    <div style="color:#999;font-size:13px">Potencia total de tu garaje</div>
-  </div>
-  <div id="garaje-lista" class="garaje-lista"></div>
-</div>
+    <!-- TAB TIPS -->
+    <div id="tab-tips" class="tab-content">
+      <h2 style="margin-bottom:20px">💡 Tips DGT</h2>
+      <div id="tips-lista" class="tips-lista"></div>
+    </div>
 
-<div id="tab-tienda" class="tab-content">
-  <div style="font-size:20px;font-weight:700;margin-bottom:15px">🛍️ Tienda</div>
-  <!-- 8.9.0: IDs que usa app.js -->
-  <div style="font-size:16px;font-weight:600;margin:15px 0">⚙️ Accesorios</div>
-  <div id="tienda-accesorios" class="emoji-grid"></div>
-  <div style="font-size:16px;font-weight:600;margin:25px 0 15px 0">😀 Emojis</div>
-  <div id="tienda-emojis" class="emoji-grid"></div>
-</div>
+    <!-- TAB PROGRESO -->
+    <div id="tab-progreso" class="tab-content">
+      <h2 style="margin-bottom:20px">📊 Tu Progreso</h2>
+      <div id="progreso-stats"></div>
+    </div>
 
-<div id="tab-tips" class="tab-content">
-  <div style="font-size:20px;font-weight:700;margin-bottom:15px">💡 Tips DGT</div>
-  <!-- 8.9.0: ID corregido - app.js usa 'tips-lista' -->
-  <div id="tips-lista"></div>
-</div>
-
-    <!-- MENÚ ABAJO -->
+    <!-- 8.9.1: MENÚ ABAJO - TODOS CON onclick -->
     <div class="tabs">
       <div class="tab-btn active" onclick="cambiarTab(event, 'temario')">📚 Temario</div>
       <div class="tab-btn" onclick="cambiarTab(event, 'test')">📝 Test</div>
@@ -253,7 +125,7 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     </div>
   </div>
 
-  <!-- 8.9.0: Scripts al final -->
+  <!-- 8.9.1: Scripts al final -->
   <script src="app.js"></script>
 </body>
 </html>
