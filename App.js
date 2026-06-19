@@ -456,6 +456,7 @@ function init() {
   console.log(`GasDrive 8.8.9 ESP cargado`);
   actualizarCoins();
   actualizarMensajeMotivacional();
+  cargarTemarioHTML(); // NUEVO: pinta los 5 temarios al iniciar
 }
 
 function guardar() {
@@ -520,6 +521,38 @@ function cambiarCategoriaSit(cat) {
   document.getElementById('sit-titulo').textContent = titulos[cat];
   estado.situacion[cat].idx = 0;
   cargarSituacion(cat);
+}
+
+// 8.8.9: Pintar los 5 temarios en grid con rutas exactas
+function cargarTemarioHTML() {
+  const cont = document.getElementById('temario-lista');
+  if(!cont) return;
+
+  const temarios = [
+    {id:'senales', emoji:'🚦', nombre:'Señales', desc:'Tomo I RD 465/2025'},
+    {id:'normas', emoji:'📖', nombre:'Normas Circulación', desc:'Tomo II Edición 2024'},
+    {id:'auxilios', emoji:'🚑', nombre:'Primeros Auxilios', desc:'Manual IX 2025'},
+    {id:'mecanica', emoji:'🔧', nombre:'Mecánica', desc:'Manual VIII 2024'},
+    {id:'medioambiente', emoji:'🌱', nombre:'Medio Ambiente', desc:'Distintivos DGT 2025'}
+  ];
+
+  cont.innerHTML = '';
+  temarios.forEach(t => {
+    const pct = PROGRESO.temarios[t.id]?.porcentaje || 0;
+    const div = document.createElement('div');
+    div.className = 'temario-item';
+    div.onclick = () => abrirPDF(t.id);
+    div.innerHTML = `
+      <div style="font-size:40px;margin-bottom:8px">${t.emoji}</div>
+      <div style="font-weight:700;font-size:14px;margin-bottom:4px">${t.nombre}</div>
+      <div style="color:#999;font-size:11px;margin-bottom:8px">${t.desc}</div>
+      <div style="background:#333;height:6px;border-radius:3px;overflow:hidden">
+        <div style="background:#00D9FF;height:100%;width:${pct}%"></div>
+      </div>
+      <div style="font-size:11px;color:#00D9FF;margin-top:4px">${pct}% leído</div>
+    `;
+    cont.appendChild(div);
+  });
 }
 
 // 8.8.9: Guardar progreso por tema y pregunta
@@ -1038,7 +1071,7 @@ if('serviceWorker' in navigator) {
 .then(reg => console.log('SW registrado'))
 .catch(err => console.log('SW error:', err));
   });
-}  
+} 
  
 
 
