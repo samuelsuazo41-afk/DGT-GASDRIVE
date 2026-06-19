@@ -455,54 +455,32 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// 8.9.2: ESTADO GLOBAL - Se declara aquí para que exista en init/responderTest
-const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
-  coins: 0,
-  coches: [],
-  test: {
-    general: { idx:0, aciertos:0, racha:0, current:null },
-    senales: { idx:0, aciertos:0, racha:0, current:null },
-    normas: { idx:0, aciertos:0, racha:0, current:null },
-    mecanica: { idx:0, aciertos:0, racha:0, current:null },
-    auxilios: { idx:0, aciertos:0, racha:0, current:null },
-    medioambiente: { idx:0, aciertos:0, racha:0, current:null }
-  },
-  situacion: {
-    clima: { idx:0, aciertos:0, current:null },
-    urbano: { idx:0, aciertos:0, current:null },
-    carretera: { idx:0, aciertos:0, current:null },
-    emergencia: { idx:0, aciertos:0, current:null }
-  },
-  examen: { activo:false, index:0, aciertos:0, fallos:0, tiempo:0, timer:null, preguntas:[] }
-};
-
-// 8.9.2: init sin repeticiones - solo se llama 1 vez después de cargarModulos
+// 8.9.4: init - se llama al cargar DOM
 function init() {
   activarTabs();
   actualizarCoins();
   actualizarMensajeMotivacional();
-  // NO llamar cargarPregunta aquí. Se llama al activar tab
+  // NO bloqueamos nada. La app siempre funciona
 }
 
-// 8.9.2: activarTabs SOLO para tabs del menú abajo, NO toca botón EMPEZAR
+// 8.9.4: activarTabs simple, sin tocar EMPEZAR
 function activarTabs() {
-  document.querySelectorAll('.tabs.tab-btn').forEach(btn => {
-    btn.onclick = (e) => {
-      if(ESTADO_APP!== 'APP') {
-        console.log('App aún cargando...');
-        return;
-      }
-      const match = btn.getAttribute('onclick');
-      if(match) {
-        const tab = match.match(/'([^']+)'/)[1];
-        cambiarTab(e, tab);
-      }
-    };
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    // Solo añadir listener si no lo tiene ya
+    if(!btn.dataset.listener) {
+      btn.addEventListener('click', (e) => {
+        const match = btn.getAttribute('onclick');
+        if(match) {
+          const tab = match.match(/'([^']+)'/)[1];
+          cambiarTab(e, tab);
+        }
+      });
+      btn.dataset.listener = '1';
+    }
   });
 }
 
 function cambiarTab(e, tab) {
-  if(ESTADO_APP!== 'APP') return;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   e.currentTarget.classList.add('active');
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -525,7 +503,6 @@ function cambiarTab(e, tab) {
 }
 
 function cambiarSubTab(e, tab, sub) {
-  if(ESTADO_APP!== 'APP') return;
   document.querySelectorAll(`#tab-${tab}.sub-tab-btn`).forEach(b => b.classList.remove('active'));
   e.currentTarget.classList.add('active');
   document.querySelectorAll(`#tab-${tab}.sub-content`).forEach(c => c.classList.remove('active'));
@@ -534,20 +511,18 @@ function cambiarSubTab(e, tab, sub) {
 }
 
 function cambiarCategoriaSit(cat) {
-  if(ESTADO_APP!== 'APP') return;
   document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active'); // 8.9.2: FIX usar e en vez de event global
+  event.currentTarget.classList.add('active');
   document.querySelectorAll('#tab-situaciones.sub-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`sit-${cat}`).classList.add('active');
   cargarSituacion(cat);
 }
 
-// 8.9.2: cargarPregunta con guardias para evitar peta si no hay datos
+// 8.9.4: cargarPregunta con guardia suave
 function cargarPregunta(categoria) {
-  if(ESTADO_APP!== 'APP') return;
   if(!PREGUNTAS[categoria] || PREGUNTAS[categoria].length === 0) {
-    console.log(`No hay preguntas para ${categoria}`);
-    document.getElementById(`test-${categoria}-pregunta`).textContent = 'Cargando preguntas...';
+    document.getElementById(`test-${categoria}-pregunta`).textContent = 'Cargando preguntas... espera 1s';
+    setTimeout(() => cargarPregunta(categoria), 500); // Reintenta en 500ms
     return;
   }
   const test = estado.test[categoria];
@@ -571,17 +546,14 @@ function cargarPregunta(categoria) {
 }
 
 function siguienteTest(e, categoria) {
-  if(ESTADO_APP!== 'APP') return;
   estado.test[categoria].idx++;
   cargarPregunta(categoria);
 }
 
-// 8.9.2: cargarSituacion con guardias
 function cargarSituacion(cat) {
-  if(ESTADO_APP!== 'APP') return;
   if(!CASOS[cat] || CASOS[cat].length === 0) {
-    console.log(`No hay casos para ${cat}`);
-    document.getElementById(`situacion-${cat}-pregunta`).textContent = 'Cargando casos...';
+    document.getElementById(`situacion-${cat}-pregunta`).textContent = 'Cargando casos... espera 1s';
+    setTimeout(() => cargarSituacion(cat), 500);
     return;
   }
   const sit = estado.situacion[cat];
@@ -609,18 +581,14 @@ function cargarSituacion(cat) {
 }
 
 function siguienteSituacion(e, cat) {
-  if(ESTADO_APP!== 'APP') return;
   estado.situacion[cat].idx++;
   cargarSituacion(cat);
 }
 
-// 8.9.2: responderTest usando mostrarEmoji
 function responderTest(e, categoria, idx) {
-  if(ESTADO_APP!== 'APP') return;
   const test = estado.test[categoria];
   const p = test.current;
   const opciones = e.currentTarget.parentElement.children;
-  // Bloquear clicks
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
   const acierto = idx === p.correcta;
   if(acierto) {
@@ -635,12 +603,10 @@ function responderTest(e, categoria, idx) {
     test.racha = 0;
     mostrarEmoji(false, e.currentTarget);
   }
-  // Actualizar progreso
   PROGRESO.tests[categoria].total++;
   if(acierto) PROGRESO.tests[categoria].aciertos++;
   guardar();
   actualizarCoins();
-  // Mostrar explicación si existe
   if(window.EXPLICACIONES && window.EXPLICACIONES[p.id]) {
     setTimeout(() => {
       alert(`💡 Explicación: ${window.EXPLICACIONES[p.id]}`);
@@ -648,9 +614,7 @@ function responderTest(e, categoria, idx) {
   }
 }
 
-// 8.9.2: responderSituacion usando mostrarEmoji
 function responderSituacion(e, cat, idx) {
-  if(ESTADO_APP!== 'APP') return;
   const sit = estado.situacion[cat];
   const p = sit.current;
   const opciones = e.currentTarget.parentElement.children;
@@ -672,12 +636,11 @@ function responderSituacion(e, cat, idx) {
   actualizarCoins();
 }
 
-// 8.9.2: Examen DGT con guardias
 function iniciarExamen(e) {
-  if(ESTADO_APP!== 'APP') return;
   const todasPreguntas = PREGUNTAS.general;
   if(!todasPreguntas || todasPreguntas.length < 30) {
-    alert('Faltan preguntas para generar examen');
+    alert('Cargando preguntas... espera 2 segundos');
+    setTimeout(() => iniciarExamen(e), 1000);
     return;
   }
   estado.examen.activo = true;
@@ -694,7 +657,6 @@ function iniciarExamen(e) {
 }
 
 function cargarPreguntaExamen() {
-  if(ESTADO_APP!== 'APP') return;
   if(!estado.examen.activo) return;
   const p = estado.examen.preguntas[estado.examen.index];
   document.getElementById('examen-num').textContent = estado.examen.index + 1;
@@ -718,7 +680,7 @@ function cargarPreguntaExamen() {
 }
 
 function responderExamen(e, idx) {
-  if(ESTADO_APP!== 'APP' ||!estado.examen.activo) return;
+  if(!estado.examen.activo) return;
   const p = estado.examen.preguntas[estado.examen.index];
   const opciones = e.currentTarget.parentElement.children;
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
@@ -739,7 +701,6 @@ function responderExamen(e, idx) {
 }
 
 function siguientePreguntaExamen(e) {
-  if(ESTADO_APP!== 'APP') return;
   estado.examen.index++;
   if(estado.examen.index >= estado.examen.preguntas.length) {
     finalizarExamen();
@@ -789,13 +750,11 @@ function actualizarProgresoExamen() {
   document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
 }
 
-// 8.9.2: Funciones auxiliares con guardias
 function guardar() {
   localStorage.setItem('gd_estado', JSON.stringify(estado));
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
 
-// 8.9.2: FIX - usar coins-display como en index.html
 function actualizarCoins() {
   document.getElementById('coins-display').textContent = estado.coins;
 }
@@ -811,9 +770,7 @@ function abrirPDF(tema) {
   window.open(LINK_DGT_OFICIAL, '_blank');
 }
 
-// 8.9.2: Garaje con guardias
 function cargarGaraje() {
-  if(ESTADO_APP!== 'APP') return;
   if(!COCHES || COCHES.length === 0) {
     document.getElementById('garaje-lista').innerHTML = '<p style="color:#999">Cargando coches...</p>';
     return;
