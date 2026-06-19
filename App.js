@@ -6,7 +6,7 @@ const EMOJIS_ACIERTO = ['🎉','💪','🔥','🚀','👏','💎','⚡','✅'];
 const EMOJIS_FALLO = ['😅','💥','🤔','💔','😬','⚠️'];
 const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
 
-// NUEVO V8.8.9: SUBTEMAS DÉBILES PARA PROGRESO
+// SUBTEMAS DÉBILES PARA PROGRESO
 const SUBTEMAS_DEBILES = {
   senales: [
     { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
@@ -45,7 +45,7 @@ const SUBTEMAS_DEBILES = {
   ]
 };
 
-// NUEVO V8.8.9: CONFIG MÓDULOS PARA CARGAR IMÁGENES SVG
+// RUTAS DE ARCHIVOS.JS CON EXPORT CONST
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
@@ -61,7 +61,7 @@ const MODULOS_CASOS = {
   emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
 };
 
-// NUEVO V8.8.9: DATOS GLOBALES PARA IMÁGENES + PROGRESO
+// DATOS GLOBALES PARA CARGAR DESDE /data/
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
     general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
@@ -93,7 +93,7 @@ window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 
-// CAMBIO V8.8.9: TEMARIO PRIMERO
+// TEMARIO PRIMERO
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
   if(!container) return;
@@ -136,7 +136,6 @@ function mostrarIntro(){
 
 function tancarIntro(){
   document.getElementById('intro-screen').remove();
-  // CAMBIO V8.8.9: Activar tab TEMARIO al empezar
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
   document.getElementById('tab-temario').classList.add('active');
@@ -146,15 +145,19 @@ function tancarIntro(){
   });
 }
 
+// CARGADOR DE ARCHIVOS.JS CON EXPORT CONST DESDE /data/
 async function cargarModulos() {
-  console.log(`🚀 V${VERSION} - Cargando datos...`);
+  console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
+  const t0 = performance.now();
+
   await Promise.all([
-  ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
+        console.log(`✅ ${tema}: ${PREGUNTAS[tema].length} preguntas`);
       } catch (e) {
-        console.error(`❌ ${config.archivo}`, e);
+        console.error(`❌ Error cargando ${config.archivo}`, e);
         PREGUNTAS[tema] = [];
       }
     }),
@@ -162,20 +165,26 @@ async function cargarModulos() {
       const SIT = mod.SITUACIONES;
       Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
         CASOS[config.clave] = SIT[config.clave] || [];
+        console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
       });
     }),
     import(`./data/senales-svg.js`).then(mod => {
       window.SENALES_SVG = mod.SENALES_SVG || {};
       SVG_CARGADOS = true;
+      console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
     }),
     import(`./data/explicaciones.js`).then(mod => {
       window.EXPLICACIONES = mod.EXPLICACIONES || {};
+      console.log(`✅ Explicaciones cargadas`);
     })
   ]);
+
+  // Crear general juntando todas
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
+  console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total general: ${PREGUNTAS.general.length}`);
 }
 
 function pintarImagenTest(cat, preguntaTexto) {
@@ -197,6 +206,8 @@ function pintarImagenTest(cat, preguntaTexto) {
       svgEl.style.display = 'block';
       svgEl.style.margin = '0 auto';
     }
+  } else {
+    imgCont.innerHTML = `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}</div>`;
   }
 }
 
