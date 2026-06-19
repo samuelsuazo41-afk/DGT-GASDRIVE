@@ -3,17 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES V8.8.9</title>
+<title>GasDrive DGT ES V8.9.0</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
-<link rel="stylesheet" href="./style.css?v=8.8.9">
+<link rel="stylesheet" href="./style.css?v=8.9.0">
 <style>
 html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; padding-bottom: 80px; }
 .header { background: #1a1a1a; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
 .header h1 { font-size: 18px; margin: 0; }
 .coins { font-size: 16px; font-weight: 700; color: #ff8c00; }
-
-/* MENÚ ABAJO */
 .tabs { display: flex; background: #1a1a1a; border-top: 1px solid #333; overflow-x: auto; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; }
 .tab-btn { flex: 1; padding: 10px 4px; background: none; border: none; color: #999; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .tab-btn.active { color: #00D9FF; border-top: 2px solid #00D9FF; }
@@ -33,28 +31,43 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
 .progress-bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin: 10px 0; }
 .progress-fill { background: #00D9FF; height: 100%; width: 0%; transition: width 0.3s; }
 .garaje-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.garaje-coche { background: #1a1a1a; padding: 15px; border-radius: 12px; text-align: center; }
-.garaje-coche.bloqueado { opacity: 0.5; }
-.btn-comprar { background: #00D9FF; border: none; color: #000; padding: 8px 16px; border-radius: 8px; font-weight: 700; margin-top: 8px; cursor: pointer; }
-.emoji-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.emoji-item { background: #1a1a1a; padding: 15px; border-radius: 12px; text-align: center; }
-.emoji-item.bloqueado { opacity: 0.5; }
 .temario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .temario-item { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 2px solid #333; }
 .temario-item:hover { border-color: #00D9FF; }
 .category-btn { padding: 10px 16px; background: #2a2a2a; border: none; border-radius: 8px; color: #999; font-weight: 600; cursor: pointer; }
 .category-btn.active { background: #00D9FF; color: #000; }
+.emoji-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.tip-item { background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
+
+<!-- 8.9.0: INTRO SCREEN - va primero para que aparezca antes que todo -->
+<div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+  <div style="font-size:64px;margin-bottom:20px">🚗</div>
+  <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT ES 2026 v8.9.0</h1>
+  <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+  <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
+  <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+    <div>💰 Gana coins respondiendo bien</div>
+    <div>🏎️ Compra supercotxes en el Garaje</div>
+    <div>📚 630 preguntas DGT reales</div>
+    <div>📖 Temarios completos para repasar</div>
+  </div>
+  <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+</div>
 
 <div class="header">
   <h1>🚗 GasDrive DGT ES</h1>
   <div class="coins" id="coins">💰 0</div>
 </div>
 
+<!-- 8.9.0: Mensaje motivacional - lo usa app.js -->
+<div id="mensaje-motivacional" style="background:#1a1a1a;margin:16px;border-radius:12px;padding:12px;text-align:center;color:#ff8c00;font-size:13px;font-weight:600">Cargando...</div>
+
 <!-- CONTENIDO -->
-<div id="tab-temario" class="tab-content active">
+<!-- 8.9.0: QUITADO 'active' de temario - se activa desde tancarIntro -->
+<div id="tab-temario" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">📚 Temarios Oficiales DGT 2026</div>
   <div style="color:#999;font-size:13px;margin-bottom:15px">Toca para abrir el PDF completo. El progreso se guarda automáticamente.</div>
   <div id="temario-lista" class="temario-grid"></div>
@@ -69,7 +82,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','auxilios')">Auxilios</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','medioambiente')">Medio Ambiente</button>
   </div>
-  
   <div id="test-general" class="sub-content active">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="test-general-aciertos">0</div><div>Aciertos</div></div>
@@ -80,7 +92,7 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="test-general-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'general')">Siguiente →</button>
   </div>
-
+  <!-- resto de sub-tabs test igual que lo tienes -->
   <div id="test-senales" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="test-senales-aciertos">0</div><div>Aciertos</div></div>
@@ -91,7 +103,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="test-senales-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'senales')">Siguiente →</button>
   </div>
-
   <div id="test-normas" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="test-normas-aciertos">0</div><div>Aciertos</div></div>
@@ -102,7 +113,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="test-normas-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'normas')">Siguiente →</button>
   </div>
-
   <div id="test-mecanica" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="test-mecanica-aciertos">0</div><div>Aciertos</div></div>
@@ -113,7 +123,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="test-mecanica-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'mecanica')">Siguiente →</button>
   </div>
-
   <div id="test-auxilios" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="test-auxilios-aciertos">0</div><div>Aciertos</div></div>
@@ -124,7 +133,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="test-auxilios-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'auxilios')">Siguiente →</button>
   </div>
-
   <div id="test-medioambiente" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="test-medioambiente-aciertos">0</div><div>Aciertos</div></div>
@@ -145,7 +153,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <button class="category-btn" onclick="cambiarCategoriaSit('emergencia')">🚨 Emergencia</button>
   </div>
   <div id="sit-titulo" style="font-size:18px;font-weight:700;margin-bottom:15px">🌧️ CASOS REALES - CLIMA ADVERSO</div>
-  
   <div id="sit-clima" class="sub-content active">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="situacion-clima-aciertos">0</div><div>Aciertos</div></div>
@@ -155,7 +162,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="situacion-clima-opciones"></div>
     <button class="btn" onclick="siguienteSituacion(event,'clima')">Siguiente →</button>
   </div>
-
   <div id="sit-urbano" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="situacion-urbano-aciertos">0</div><div>Aciertos</div></div>
@@ -165,7 +171,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="situacion-urbano-opciones"></div>
     <button class="btn" onclick="siguienteSituacion(event,'urbano')">Siguiente →</button>
   </div>
-
   <div id="sit-carretera" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="situacion-carretera-aciertos">0</div><div>Aciertos</div></div>
@@ -175,7 +180,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <div id="situacion-carretera-opciones"></div>
     <button class="btn" onclick="siguienteSituacion(event,'carretera')">Siguiente →</button>
   </div>
-
   <div id="sit-emergencia" class="sub-content">
     <div class="stats">
       <div class="stat-box"><div class="stat-num" id="situacion-emergencia-aciertos">0</div><div>Aciertos</div></div>
@@ -208,7 +212,8 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
 
 <div id="tab-progreso" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">📊 Tu Progreso</div>
-  <div id="progreso-contenido"></div>
+  <!-- 8.9.0: ID corregido - app.js usa 'progreso-stats' -->
+  <div id="progreso-stats"></div>
 </div>
 
 <div id="tab-garaje" class="tab-content">
@@ -222,31 +227,33 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
 
 <div id="tab-tienda" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">🛍️ Tienda</div>
-  <div id="emoji-tienda" class="emoji-grid"></div>
+  <!-- 8.9.0: IDs que usa app.js -->
+  <div style="font-size:16px;font-weight:600;margin:15px 0">⚙️ Accesorios</div>
+  <div id="tienda-accesorios" class="emoji-grid"></div>
+  <div style="font-size:16px;font-weight:600;margin:25px 0 15px 0">😀 Emojis</div>
+  <div id="tienda-emojis" class="emoji-grid"></div>
 </div>
 
 <div id="tab-tips" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">💡 Tips DGT</div>
-  <div id="tip-content" style="background:#1a1a1a;padding:30px;border-radius:12px;text-align:center;min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center"></div>
-  <div style="display:flex;gap:10px;margin-top:15px">
-    <button class="btn" style="flex:1" onclick="prevTip(event)">← Anterior</button>
-    <button class="btn" style="flex:1" onclick="nextTip(event)">Siguiente →</button>
+  <!-- 8.9.0: ID corregido - app.js usa 'tips-lista' -->
+  <div id="tips-lista"></div>
+</div>
+
+    <!-- MENÚ ABAJO -->
+    <div class="tabs">
+      <div class="tab-btn active" onclick="cambiarTab(event, 'temario')">📚 Temario</div>
+      <div class="tab-btn" onclick="cambiarTab(event, 'test')">📝 Test</div>
+      <div class="tab-btn" onclick="cambiarTab(event, 'situaciones')">🚦 Situaciones</div>
+      <div class="tab-btn" onclick="cambiarTab(event, 'examen')">📋 Examen</div>
+      <div class="tab-btn" onclick="cambiarTab(event, 'garaje')">🏎️ Garaje</div>
+      <div class="tab-btn" onclick="cambiarTab(event, 'tienda')">🛒 Tienda</div>
+      <div class="tab-btn" onclick="cambiarTab(event, 'tips')">💡 Tips</div>
+      <div class="tab-btn" onclick="cambiarTab(event, 'progreso')">📊 Progreso</div>
+    </div>
   </div>
-  <div id="tip-counter" style="text-align:center;color:#999;margin-top:10px;font-size:13px">1 / 50</div>
-</div>
 
-<!-- MENÚ ABAJO ORDEN CORRECTO -->
-<div class="tabs">
-  <button class="tab-btn active" onclick="cambiarTab(event,'temario')">📚<span>Temario</span></button>
-  <button class="tab-btn" onclick="cambiarTab(event,'test')">📝<span>Test</span></button>
-  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')">🚨<span>Casos</span></button>
-  <button class="tab-btn" onclick="cambiarTab(event,'examen')">🏆<span>Examen</span></button>
-  <button class="tab-btn" onclick="cambiarTab(event,'progreso')">📊<span>Progreso</span></button>
-  <button class="tab-btn" onclick="cambiarTab(event,'garaje')">🏎️<span>Garaje</span></button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tienda')">🛍️<span>Tienda</span></button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tips')">💡<span>Tips</span></button>
-</div>
-
-<script type="module" src="./app.js?v=8.8.9"></script>
+  <!-- 8.9.0: Scripts al final -->
+  <script src="app.js"></script>
 </body>
 </html>
