@@ -8,14 +8,16 @@
 <meta name="theme-color" content="#0a0a0a">
 <link rel="stylesheet" href="./style.css?v=8.8.9">
 <style>
-html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; padding-bottom: 80px; }
 .header { background: #1a1a1a; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
 .header h1 { font-size: 18px; margin: 0; }
 .coins { font-size: 16px; font-weight: 700; color: #ff8c00; }
-.tabs { display: flex; background: #1a1a1a; border-bottom: 1px solid #333; overflow-x: auto; }
-.tab-btn { flex: 1; padding: 12px 8px; background: none; border: none; color: #999; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-.tab-btn.active { color: #00D9FF; border-bottom: 2px solid #00D9FF; }
-.tab-content { display: none; padding: 16px; min-height: calc(100vh - 120px); }
+
+/* MENÚ ABAJO */
+.tabs { display: flex; background: #1a1a1a; border-top: 1px solid #333; overflow-x: auto; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; }
+.tab-btn { flex: 1; padding: 10px 4px; background: none; border: none; color: #999; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.tab-btn.active { color: #00D9FF; border-top: 2px solid #00D9FF; }
+.tab-content { display: none; padding: 16px; min-height: calc(100vh - 140px); }
 .tab-content.active { display: block; }
 .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
 .sub-tab-btn { padding: 8px 12px; background: #2a2a2a; border: none; border-radius: 8px; color: #999; font-size: 12px; cursor: pointer; }
@@ -51,25 +53,13 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
   <div class="coins" id="coins">💰 0</div>
 </div>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="cambiarTab(event,'temario')">📚 Temario</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'test')">📝 Test</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')">🚨 Casos</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'examen')">🏆 Examen</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'progreso')">📊 Progreso</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'garaje')">🏎️ Garaje</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tienda')">🛍️ Tienda</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tips')">💡 Tips</button>
-</div>
-
-<!-- TEMARIO PRIMERO -->
+<!-- CONTENIDO -->
 <div id="tab-temario" class="tab-content active">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">📚 Temarios Oficiales DGT 2026</div>
   <div style="color:#999;font-size:13px;margin-bottom:15px">Toca para abrir el PDF completo. El progreso se guarda automáticamente.</div>
   <div id="temario-lista" class="temario-grid"></div>
 </div>
 
-<!-- TEST -->
 <div id="tab-test" class="tab-content">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'test','general')">General</button>
@@ -147,7 +137,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
   </div>
 </div>
 
-<!-- SITUACIONES -->
 <div id="tab-situaciones" class="tab-content">
   <div style="display:flex;gap:8px;margin-bottom:15px;overflow-x:auto">
     <button class="category-btn active" onclick="cambiarCategoriaSit('clima')">🌧️ Clima</button>
@@ -198,7 +187,6 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
   </div>
 </div>
 
-<!-- EXAMEN -->
 <div id="tab-examen" class="tab-content">
   <div style="background:#1a1a1a;padding:20px;border-radius:12px;text-align:center">
     <div style="font-size:20px;font-weight:700;margin-bottom:10px">🏆 Examen DGT Oficial</div>
@@ -218,13 +206,11 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
   </div>
 </div>
 
-<!-- PROGRESO -->
 <div id="tab-progreso" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">📊 Tu Progreso</div>
   <div id="progreso-contenido"></div>
 </div>
 
-<!-- GARAJE -->
 <div id="tab-garaje" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">🏎️ Mi Garaje</div>
   <div style="background:#1a1a1a;padding:15px;border-radius:12px;margin-bottom:15px;text-align:center">
@@ -234,13 +220,11 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
   <div id="garaje-lista" class="garaje-lista"></div>
 </div>
 
-<!-- TIENDA -->
 <div id="tab-tienda" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">🛍️ Tienda</div>
   <div id="emoji-tienda" class="emoji-grid"></div>
 </div>
 
-<!-- TIPS -->
 <div id="tab-tips" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">💡 Tips DGT</div>
   <div id="tip-content" style="background:#1a1a1a;padding:30px;border-radius:12px;text-align:center;min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center"></div>
@@ -249,6 +233,18 @@ html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-famil
     <button class="btn" style="flex:1" onclick="nextTip(event)">Siguiente →</button>
   </div>
   <div id="tip-counter" style="text-align:center;color:#999;margin-top:10px;font-size:13px">1 / 50</div>
+</div>
+
+<!-- MENÚ ABAJO ORDEN CORRECTO -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="cambiarTab(event,'temario')">📚<span>Temario</span></button>
+  <button class="tab-btn" onclick="cambiarTab(event,'test')">📝<span>Test</span></button>
+  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')">🚨<span>Casos</span></button>
+  <button class="tab-btn" onclick="cambiarTab(event,'examen')">🏆<span>Examen</span></button>
+  <button class="tab-btn" onclick="cambiarTab(event,'progreso')">📊<span>Progreso</span></button>
+  <button class="tab-btn" onclick="cambiarTab(event,'garaje')">🏎️<span>Garaje</span></button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tienda')">🛍️<span>Tienda</span></button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tips')">💡<span>Tips</span></button>
 </div>
 
 <script type="module" src="./app.js?v=8.8.9"></script>
