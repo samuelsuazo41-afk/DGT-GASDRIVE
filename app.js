@@ -1,21 +1,21 @@
-// GASDRIVE DGT V8.9.1 ESP - 630 PREGUNTAS DGT 2026
-const VERSION = "8.9.1";
+// GASDRIVE DGT V8.9.4 ESP - 630 PREGUNTAS DGT 2026
+const VERSION = "8.9.4";
 
-// 8.9.1: Control de flujo para evitar bucle intro+tema
-let ESTADO_APP = 'LOADING'; // LOADING -> CARGANDO -> READY -> APP
+// 8.9.4: SIN ESTADO_APP bloqueando. La app siempre está visible
+let ESTADO_APP = 'APP'; // Siempre APP, no bloqueamos clicks
 
-// 8.9.1: Guardias - si ya existen tus arrays COCHES/ACCESORIOS/TIPS de más abajo, úsalos
+// Guardias arrays
 if(typeof COCHES === 'undefined') var COCHES = [];
 if(typeof ACCESORIOS === 'undefined') var ACCESORIOS = [];
 if(typeof EMOJI_TIENDA === 'undefined') var EMOJI_TIENDA = [];
 if(typeof TIPS === 'undefined') var TIPS = [];
 
-// COMBO DOPAMINA ACTUALIZADO
+// COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🎉','💪','🔥','🚀','👏','💎','⚡','✅'];
 const EMOJIS_FALLO = ['😅','💥','🤔','💔','😬','⚠️'];
 const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
 
-// SUBTEMAS DÉBILES PARA PROGRESO
+// SUBTEMAS DÉBILES
 const SUBTEMAS_DEBILES = {
   senales: [
     { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
@@ -54,7 +54,7 @@ const SUBTEMAS_DEBILES = {
   ]
 };
 
-// RUTAS DE ARCHIVOS.JS CON EXPORT CONST
+// RUTAS MÓDULOS
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
@@ -70,7 +70,7 @@ const MODULOS_CASOS = {
   emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
 };
 
-// DATOS GLOBALES PARA CARGAR DESDE /data/
+// DATOS GLOBALES
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
     general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
@@ -102,7 +102,27 @@ window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 
-// 8.9.1: Función que faltaba - la usas en responderTest/Examen/Situacion
+// 8.9.4: ESTADO - Se declara aquí como en CAT
+const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
+  coins: 0,
+  coches: [],
+  test: {
+    general: { idx:0, aciertos:0, racha:0, current:null },
+    senales: { idx:0, aciertos:0, racha:0, current:null },
+    normas: { idx:0, aciertos:0, racha:0, current:null },
+    mecanica: { idx:0, aciertos:0, racha:0, current:null },
+    auxilios: { idx:0, aciertos:0, racha:0, current:null },
+    medioambiente: { idx:0, aciertos:0, racha:0, current:null }
+  },
+  situacion: {
+    clima: { idx:0, aciertos:0, current:null },
+    urbano: { idx:0, aciertos:0, current:null },
+    carretera: { idx:0, aciertos:0, current:null },
+    emergencia: { idx:0, aciertos:0, current:null }
+  },
+  examen: { activo:false, index:0, aciertos:0, fallos:0, tiempo:0, timer:null, preguntas:[] }
+};
+
 function mostrarEmoji(acierto, elemento){
   const emojis = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
   const emoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -114,7 +134,7 @@ function mostrarEmoji(acierto, elemento){
   setTimeout(() => div.remove(), 1000);
 }
 
-// TEMARIO PRIMERO
+// TEMARIO PRIMERO - Ya pintado en HTML, solo rellenamos
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
   if(!container) return;
@@ -137,7 +157,11 @@ function cargarTemarioHTML() {
   `;
 }
 
+// 8.9.4: INTRO SOLO LA 1ª VEZ - Lógica copiada CAT V8.2
 function mostrarIntro(){
+  // Si ya hay estado guardado = usuario ya entró antes → no mostrar intro
+  if(localStorage.getItem('gd_estado')) return;
+
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
@@ -150,87 +174,58 @@ function mostrarIntro(){
         <div>📚 630 preguntas DGT reales</div>
         <div>📖 Temarios completos para repasar</div>
       </div>
-      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;position:relative;z-index:10000">EMPEZAR</button>
     </div>
   `);
 }
 
-// 8.9.1: tancarIntro BLINDADO con try/catch y logs para detectar error
-async function tancarIntro(){
-  try {
-    console.log('1. Quitando intro...');
-    const intro = document.getElementById('intro-screen');
-    if(intro) intro.remove();
-
-    ESTADO_APP = 'CARGANDO';
-
-    console.log('2. Activando tab temario visual...');
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    const btnTemario = document.querySelector('.tab-btn[onclick*="temario"]');
-    if(btnTemario) btnTemario.classList.add('active');
-    document.getElementById('tab-temario').classList.add('active');
-
-    console.log('3. Cargando módulos...');
-    await cargarModulos();
-
-    console.log('4. Llamando init...');
-    init();
-
-    ESTADO_APP = 'READY';
-    console.log('5. Cargando temario HTML...');
-    cargarTemarioHTML();
-
-    ESTADO_APP = 'APP';
-    console.log('6. ✅ APP LISTA V8.9.1');
-
-  } catch(e) {
-    console.error('❌ ERROR en tancarIntro:', e);
-    alert('Error cargando app: ' + e.message + '\n\nAbre F12 > Consola para más detalle');
-    ESTADO_APP = 'LOADING';
-  }
+// 8.9.4: tancarIntro SOLO quita overlay - igual que CAT
+function tancarIntro(){
+  document.getElementById('intro-screen')?.remove();
+  // Guardar que ya vio intro para que no salga más
+  localStorage.setItem('gd_visto_intro', '1');
 }
 
-// CARGADOR DE ARCHIVOS.JS CON EXPORT CONST DESDE /data/
+// 8.9.4: Cargar módulos en background sin bloquear
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
   const t0 = performance.now();
 
-  await Promise.all([
-   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
-      try {
+  try {
+    await Promise.all([
+     ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
         console.log(`✅ ${tema}: ${PREGUNTAS[tema].length} preguntas`);
-      } catch (e) {
-        console.error(`❌ Error cargando ${config.archivo}`, e);
-        PREGUNTAS[tema] = [];
-      }
-    }),
-    import(`./data/preguntas-situaciones.js`).then(mod => {
-      const SIT = mod.SITUACIONES;
-      Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
-        CASOS[config.clave] = SIT[config.clave] || [];
-        console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
-      });
-    }),
-    import(`./data/senales-svg.js`).then(mod => {
-      window.SENALES_SVG = mod.SENALES_SVG || {};
-      SVG_CARGADOS = true;
-      console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
-    }),
-    import(`./data/explicaciones.js`).then(mod => {
-      window.EXPLICACIONES = mod.EXPLICACIONES || {};
-      console.log(`✅ Explicaciones cargadas`);
-    })
-  ]);
+      }),
+      import(`./data/preguntas-situaciones.js`).then(mod => {
+        const SIT = mod.SITUACIONES;
+        Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
+          CASOS[config.clave] = SIT[config.clave] || [];
+          console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
+        });
+      }),
+      import(`./data/senales-svg.js`).then(mod => {
+        window.SENALES_SVG = mod.SENALES_SVG || {};
+        SVG_CARGADOS = true;
+        console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
+      }),
+      import(`./data/explicaciones.js`).then(mod => {
+        window.EXPLICACIONES = mod.EXPLICACIONES || {};
+        console.log(`✅ Explicaciones cargadas`);
+      })
+    ]);
 
-  // Crear general juntando todas
-  PREGUNTAS.general = [];
-  Object.values(PREGUNTAS).forEach(arr => {
-    if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
-  });
+    PREGUNTAS.general = [];
+    Object.values(PREGUNTAS).forEach(arr => {
+      if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
+    });
 
-  console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total general: ${PREGUNTAS.general.length}`);
+    console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
+    cargarTemarioHTML(); // Rellenar temario cuando datos listos
+  } catch(e) {
+    console.error('❌ Error cargando módulos:', e);
+  }
 }
 
 function pintarImagenTest(cat, preguntaTexto) {
@@ -256,6 +251,13 @@ function pintarImagenTest(cat, preguntaTexto) {
     imgCont.innerHTML = `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}</div>`;
   }
 }
+
+// 8.9.4: Auto-arranque al cargar DOM - como CAT
+window.addEventListener('DOMContentLoaded', () => {
+  init(); // Pinta coins, activa tabs
+  cargarModulos(); // Carga datos en background
+  mostrarIntro(); // Si toca, pone overlay encima
+});
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
