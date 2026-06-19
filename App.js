@@ -1,4 +1,4 @@
-// === GASDRIVE DGT V8.8.9 ES - CARGA TEMARIO PRIMERO - TODO MINÚSCULAS ===
+// === GASDRIVE DGT V8.8.9 ES - CERO PANTALLA NEGRA ===
 const VERSION = "8.8.9";
 let TIEMPO_INICIO = performance.now();
 
@@ -41,10 +41,45 @@ window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 let MODULOS_LISTOS = false;
 
+// PASO 0: Pintar temario HTML INMEDIATO antes que nada
+function cargarTemarioHTML() {
+  const container = document.getElementById('temario-lista');
+  if(!container) return;
+  container.innerHTML = `
+    <div class="temario-item" onclick="abrirPDF('./data/01_senales.pdf')">
+      <div style="font-size:40px">🚦</div>
+      <div>Señales</div>
+      <div style="font-size:11px;color:#999">RD 465/2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./data/02_normas.pdf')">
+      <div style="font-size:40px">📋</div>
+      <div>Normas Circulación</div>
+      <div style="font-size:11px;color:#999">Edición 2024</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./data/03_auxilios.pdf')">
+      <div style="font-size:40px">🚑</div>
+      <div>Primeros Auxilios</div>
+      <div style="font-size:11px;color:#999">Manual IX 2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./data/04_mecanica.pdf')">
+      <div style="font-size:40px">⚙️</div>
+      <div>Mecánica</div>
+      <div style="font-size:11px;color:#999">Manual VIII 2024</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./data/05_medioambiente.pdf')">
+      <div style="font-size:40px">♻️</div>
+      <div>Medio Ambiente</div>
+      <div style="font-size:11px;color:#999">Distintius DGT 2025</div>
+    </div>
+  `;
+}
+
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos...`);
+  const t0 = performance.now();
+
   await Promise.all([
-   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+  ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
@@ -75,24 +110,16 @@ async function cargarModulos() {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
   MODULOS_LISTOS = true;
-  const tiempoTotal = Math.round(performance.now() - TIEMPO_INICIO);
-  console.log(`✅ LISTO en ${tiempoTotal}ms: ${PREGUNTAS.general.length} preguntas`);
+  const tiempoTotal = Math.round(performance.now() - t0);
+  console.log(`✅ DATOS LISTOS en ${tiempoTotal}ms: ${PREGUNTAS.general.length} preguntas`);
+  console.log(`✅ TIEMPO TOTAL DESDE INICIO: ${Math.round(performance.now() - TIEMPO_INICIO)}ms`);
 }
 
-// PASO 1: CARGA TEMARIO HTML INMEDIATO - NO ESPERA DATOS
+// PASO 1: DOMContentLoaded = Pintar temario + Mostrar intro
 document.addEventListener('DOMContentLoaded', () => {
-  try {
-    // Pinta botones temario al abrir, aunque sin datos
-    if(document.getElementById('temario-lista')) {
-      cargarTemario();
-      console.log('✅ Temario HTML pintado');
-    }
-    // PASO 2: Después pinta intro encima
-    mostrarIntro();
-    console.log('✅ Intro pintada');
-  } catch(e) {
-    console.error('❌ CRASH en DOMContentLoaded:', e);
-  }
+  cargarTemarioHTML(); // 0.1ms - Temario ya visible
+  mostrarIntro(); // 0.2ms - Tapa con intro
+  console.log('✅ HTML + Intro listos en 0.3ms');
 });
 
 // INTRO
@@ -115,24 +142,21 @@ function mostrarIntro(){
   `);
 }
 
-// PASO 3: EMPEZAR = Quita intro + carga datos en background + init
+// PASO 2: EMPEZAR = Solo quita intro. Temario ya estaba pintado
 window.tancarIntro = function() {
-  console.log('1. Quitando intro...');
-  const intro = document.getElementById('intro-screen');
-  if(intro) intro.remove();
+  const t0 = performance.now();
+  document.getElementById('intro-screen')?.remove();
 
-  // Tab temario ya está active desde HTML. Solo activamos botón menú
-  console.log('2. Activando botón menú...');
+  // Botón menú activo
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
 
-  // PASO 4: Carga datos AHORA y luego inicia app
-  console.log('3. Cargando módulos...');
+  console.log(`⚡ INTRO QUITADA en ${Math.round(performance.now() - t0)}ms - Temario ya visible`);
+
+  // PASO 3: Cargar datos en background
   cargarModulos().then(() => {
-    console.log('4. Módulos listos, llamando init...');
     init();
-    console.log(`📊 Tiempo total carga: ${Math.round(performance.now() - TIEMPO_INICIO)}ms`);
-  }).catch(e => console.error('ERROR cargarModulos:', e));
+  });
 }
 
 function guardarProgreso() {
@@ -170,8 +194,31 @@ function pintarImagenTest(cat, preguntaTexto) {
       svgEl.style.margin = '0 auto';
     }
   } else {
-    imgCont.innerHTML = `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}</div>`;
+    imgCont.innerHTML = `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}/div>`;
   }
+}
+
+function abrirPDF(ruta) {
+  const modal = document.createElement('div');
+  modal.id = 'pdf-modal';
+  modal.style.cssText = `
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:#0a0a0a;z-index:9999;
+    display:flex;flex-direction:column;
+  `;
+  modal.innerHTML = `
+    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
+      <button onclick="tancarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
+      <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
+      <div style="width:60px"></div>
+    </div>
+    <iframe src="${ruta}" style="flex:1;border:none;width:100%"></iframe>
+  `;
+  document.body.appendChild(modal);
+}
+
+function tancarPDF() {
+  document.getElementById('pdf-modal')?.remove();
 }
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
