@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>GasDrive DGT ES V8.9.1</title>
+  <title>GasDrive DGT ES V8.9.4</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#0f0f1e; color:#fff; overflow-x:hidden; }
     .app { max-width:600px; margin:0 auto; min-height:100vh; padding-bottom:80px; }
     
     /* Header */
-    .header { background:linear-gradient(135deg,#1a1a2e,#16213e); padding:20px; text-align:center; border-bottom:2px solid #ff8c00; }
+    .header { background:linear-gradient(135deg,#1a1a2e,#16213e); padding:20px; text-align:center; border-bottom:2px solid #ff8c00; position:sticky;top:0;z-index:100; }
     .header h1 { font-size:24px; margin-bottom:5px; }
     .coins { font-size:18px; color:#ffd700; font-weight:700; }
     
@@ -41,25 +41,39 @@
     .garaje-lista, .tienda-lista, .tips-lista { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
     .coche-item, .accesorio-item, .emoji-item, .tip-item { background:#1a1a2e; padding:15px; border-radius:12px; text-align:center; border:2px solid #2a2a3e; }
     
+    /* 8.9.4: Placeholder cargando para evitar pantalla negra */
+    .loading-placeholder { opacity:0.6; text-align:center; padding:40px 20px; color:#666; }
+    
     /* Animación emoji */
     @keyframes flotar { 0% { opacity:0; transform:translate(-50%,-50%) scale(0.5); } 50% { opacity:1; transform:translate(-50%,-50%) scale(1.2); } 100% { opacity:0; transform:translate(-50%,-50%) scale(0.8) translateY(-30px); } }
   </style>
 </head>
 <body>
-  <!-- 8.9.1: Intro pantalla completa - el JS la genera con mostrarIntro() -->
-  
   <div class="app">
     <!-- Header -->
     <div class="header">
-      <h1>GasDrive DGT ES V8.9.1</h1>
+      <h1>GasDrive DGT ES V8.9.4</h1>
       <div class="coins">💰 <span id="coins-display">0</span> coins</div>
     </div>
 
-    <!-- TAB TEMARIO - 8.9.1: SIN active para que no arranque aquí -->
-    <div id="tab-temario" class="tab-content">
+    <!-- TAB TEMARIO - 8.9.4: ACTIVO DESDE EL INICIO + PLACEHOLDER -->
+    <div id="tab-temario" class="tab-content active">
       <h2 style="margin-bottom:20px">📚 Temarios Oficiales DGT</h2>
       <div id="temario-lista" class="temario-lista">
-        <!-- Se rellena con cargarTemarioHTML() -->
+        <!-- 8.9.4: Placeholder para que nunca haya pantalla negra -->
+        <div class="temario-item loading-placeholder">
+          <div style="font-size:40px">⏳</div>
+          <div>Cargando temarios...</div>
+          <div style="font-size:12px;margin-top:8px">Espera 1 segundo</div>
+        </div>
+        <div class="temario-item loading-placeholder">
+          <div style="font-size:40px">⏳</div>
+          <div>Cargando temarios...</div>
+        </div>
+        <div class="temario-item loading-placeholder">
+          <div style="font-size:40px">⏳</div>
+          <div>Cargando temarios...</div>
+        </div>
       </div>
     </div>
 
@@ -67,52 +81,76 @@
     <div id="tab-test" class="tab-content">
       <div class="pregunta-box">
         <div id="test-general-imagen" style="margin-bottom:15px"></div>
-        <div id="test-general-pregunta" style="font-size:18px;margin-bottom:20px;font-weight:600"></div>
+        <div id="test-general-pregunta" style="font-size:18px;margin-bottom:20px;font-weight:600">Cargando pregunta...</div>
         <div class="opciones" id="test-general-opciones"></div>
+        <div id="test-general-aciertos" style="display:none"></div>
+        <div id="test-general-racha" style="display:none"></div>
       </div>
     </div>
 
     <!-- TAB SITUACIONES -->
     <div id="tab-situaciones" class="tab-content">
       <h2 style="margin-bottom:20px">🚦 Situaciones de Tráfico</h2>
-      <div id="situaciones-lista"></div>
+      <div id="situaciones-lista">
+        <div class="loading-placeholder">Cargando situaciones...</div>
+      </div>
     </div>
 
     <!-- TAB EXAMEN -->
     <div id="tab-examen" class="tab-content">
       <h2 style="margin-bottom:20px">📋 Examen DGT 30 preguntas</h2>
-      <button onclick="iniciarExamen()" style="width:100%;padding:18px;background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">INICIAR EXAMEN</button>
-      <div id="examen-contenedor" style="margin-top:20px"></div>
+      <button id="btn-iniciar-examen" onclick="iniciarExamen()" style="width:100%;padding:18px;background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">INICIAR EXAMEN</button>
+      <button id="btn-siguiente-examen" onclick="siguientePreguntaExamen()" style="display:none;width:100%;padding:18px;background:#4ade80;border:none;color:#fff;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:10px">SIGUIENTE</button>
+      <div id="examen-contenedor" style="margin-top:20px">
+        <div id="examen-num" style="display:none"></div>
+        <div id="examen-pregunta"></div>
+        <div id="examen-imagen"></div>
+        <div id="examen-opciones" class="opciones"></div>
+        <div id="examen-timer" style="text-align:center;margin-top:15px;font-size:20px;font-weight:700"></div>
+        <div id="examen-progreso" style="height:4px;background:#ff8c00;width:0%;transition:width 0.3s;margin-top:10px"></div>
+        <div id="examen-aciertos" style="display:none"></div>
+        <div id="examen-resultado" style="display:none;text-align:center;padding:40px 20px"></div>
+      </div>
     </div>
 
     <!-- TAB GARAJE -->
     <div id="tab-garaje" class="tab-content">
       <h2 style="margin-bottom:20px">🏎️ Garaje</h2>
-      <div id="garaje-lista" class="garaje-lista"></div>
+      <div id="garaje-lista" class="garaje-lista">
+        <div class="loading-placeholder">Cargando garaje...</div>
+      </div>
     </div>
 
     <!-- TAB TIENDA -->
     <div id="tab-tienda" class="tab-content">
       <h2 style="margin-bottom:20px">🛒 Tienda</h2>
       <h3 style="margin:20px 0 10px">Accesorios</h3>
-      <div id="tienda-accesorios" class="tienda-lista"></div>
+      <div id="tienda-accesorios" class="tienda-lista">
+        <div class="loading-placeholder">Cargando...</div>
+      </div>
       <h3 style="margin:20px 0 10px">Emojis</h3>
-      <div id="tienda-emojis" class="tienda-lista"></div>
+      <div id="tienda-emojis" class="tienda-lista">
+        <div class="loading-placeholder">Cargando...</div>
+      </div>
     </div>
 
     <!-- TAB TIPS -->
     <div id="tab-tips" class="tab-content">
       <h2 style="margin-bottom:20px">💡 Tips DGT</h2>
-      <div id="tips-lista" class="tips-lista"></div>
+      <div id="tips-lista" class="tips-lista">
+        <div class="loading-placeholder">Cargando tips...</div>
+      </div>
     </div>
 
     <!-- TAB PROGRESO -->
     <div id="tab-progreso" class="tab-content">
       <h2 style="margin-bottom:20px">📊 Tu Progreso</h2>
-      <div id="progreso-stats"></div>
+      <div id="progreso-stats">
+        <div class="loading-placeholder">Calculando progreso...</div>
+      </div>
     </div>
 
-    <!-- 8.9.1: MENÚ ABAJO - TODOS CON onclick -->
+    <!-- 8.9.4: MENÚ ABAJO - Todos con onclick -->
     <div class="tabs">
       <div class="tab-btn active" onclick="cambiarTab(event, 'temario')">📚 Temario</div>
       <div class="tab-btn" onclick="cambiarTab(event, 'test')">📝 Test</div>
@@ -125,7 +163,7 @@
     </div>
   </div>
 
-  <!-- 8.9.1: Scripts al final -->
+  <!-- 8.9.4: Scripts al final -->
   <script src="app.js"></script>
 </body>
 </html>
