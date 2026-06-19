@@ -1,7 +1,51 @@
-// === GASDRIVE DGT V8.8.9 ES - CERO PANTALLA NEGRA ===
+// GASDRIVE DGT V8.8.9 ESP - 630 PREGUNTAS DGT 2026
 const VERSION = "8.8.9";
-let TIEMPO_INICIO = performance.now();
 
+// COMBO DOPAMINA ACTUALIZADO
+const EMOJIS_ACIERTO = ['🎉','💪','🔥','🚀','👏','💎','⚡','✅'];
+const EMOJIS_FALLO = ['😅','💥','🤔','💔','😬','⚠️'];
+const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
+
+// NUEVO V8.8.9: SUBTEMAS DÉBILES PARA PROGRESO
+const SUBTEMAS_DEBILES = {
+  senales: [
+    { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
+    { pct: 20, msg: 'Prohibición Entrada R-101 a R-116 - Pág 68-72' },
+    { pct: 40, msg: 'Prohibición Paso R-300 a R-311 - Pág 73-78' },
+    { pct: 60, msg: 'Obligación R-400 a R-422 - Pág 75-76' },
+    { pct: 80, msg: 'Indicaciones S-50 a S-126 - Pág 80-95' }
+  ],
+  normas: [
+    { pct: 0, msg: 'Normas Generales y Definiciones - Pág 5-15' },
+    { pct: 20, msg: 'Velocidades Máximas - Pág 25-32' },
+    { pct: 40, msg: 'Prioridad Intersecciones - Pág 45-52' },
+    { pct: 60, msg: 'Adelantamientos - Pág 65-75' },
+    { pct: 80, msg: 'Alumbrado y Carriles - Pág 85-92' }
+  ],
+  auxilios: [
+    { pct: 0, msg: 'Conducta PAS - Pág 40-45' },
+    { pct: 25, msg: 'Valoración ABC - Pág 50-55' },
+    { pct: 50, msg: 'RCP Básica - Pág 53-58' },
+    { pct: 75, msg: 'Hemorragias - Pág 65-72' }
+  ],
+  mecanica: [
+    { pct: 0, msg: 'Motor y Elementos - Pág 15-25' },
+    { pct: 25, msg: 'Frenos y ABS - Pág 35-42' },
+    { pct: 50, msg: 'Neumáticos - Pág 55-62' },
+    { pct: 75, msg: 'Niveles Aceite/Refrigerante - Pág 70-76' }
+  ],
+  medioambiente: [
+    { pct: 0, msg: 'Distintivos DGT 0/ECO/C/B - Pág 8-14' },
+    { pct: 25, msg: 'Zonas Bajas Emisiones ZBE - Pág 18-25' },
+    { pct: 50, msg: 'Conducción Eficiente - Pág 30-38' },
+    { pct: 75, msg: 'Contaminación - Pág 45-50' }
+  ],
+  general: [
+    { pct: 0, msg: 'Documentación y Permisos - Pág 5-10' }
+  ]
+};
+
+// NUEVO V8.8.9: CONFIG MÓDULOS PARA CARGAR IMÁGENES SVG
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
@@ -17,73 +61,98 @@ const MODULOS_CASOS = {
   emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
 };
 
-function crearProgresoVacio() {
-  const progreso = { tests: {}, casos: {}, examenes: { realizados: 0, aprobados: 0, historial: [] }, temarios: {}, racha: { dias: 0, ultimaFecha: "" } };
-  Object.keys(MODULOS_PREGUNTAS).forEach(tema => {
-    progreso.tests[tema] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
-    progreso.temarios[tema] = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
-  });
-  progreso.tests.general = { total: 0, aciertos: 0, unicas: [], falladas: [] };
-  progreso.temarios.general = { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 };
-  progreso.casos = {};
-  Object.keys(MODULOS_CASOS).forEach(caso => {
-    progreso.casos[caso] = { total: 0, aciertos: 0, unicas: [], falladas: [] };
-  });
-  return progreso;
-}
-
-let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || crearProgresoVacio();
+// NUEVO V8.8.9: DATOS GLOBALES PARA IMÁGENES + PROGRESO
+let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
+  tests: {
+    general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    senales: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    normas: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    mecanica: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    auxilios: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    medioambiente: { total: 0, aciertos: 0, unicas: [], falladas: [] }
+  },
+  casos: {
+    clima: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    urbano: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    carretera: { total: 0, aciertos: 0, unicas: [], falladas: [] },
+    emergencia: { total: 0, aciertos: 0, unicas: [], falladas: [] }
+  },
+  examenes: { realizados: 0, aprobados: 0, historial: [] },
+  temarios: {
+    senales: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    normas: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    auxilios: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    mecanica: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 },
+    medioambiente: { tiempo: 0, porcentaje: 0, ultimaEntrada: 0 }
+  }
+};
 
 const PREGUNTAS = {};
 const CASOS = {};
 window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
-let MODULOS_LISTOS = false;
 
-// PASO 0: Pintar temario HTML INMEDIATO antes que nada
+// CAMBIO V8.8.9: TEMARIO PRIMERO
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
   if(!container) return;
   container.innerHTML = `
-    <div class="temario-item" onclick="abrirPDF('./data/01_senales.pdf')">
-      <div style="font-size:40px">🚦</div>
-      <div>Señales</div>
-      <div style="font-size:11px;color:#999">RD 465/2025</div>
+    <div class="temario-item" onclick="abrirPDF('senales')">
+      <div style="font-size:40px">🚦</div><div>Señales</div><div style="font-size:11px;color:#999">RD 465/2025</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./data/02_normas.pdf')">
-      <div style="font-size:40px">📋</div>
-      <div>Normas Circulación</div>
-      <div style="font-size:11px;color:#999">Edición 2024</div>
+    <div class="temario-item" onclick="abrirPDF('normas')">
+      <div style="font-size:40px">📋</div><div>Normas Circulación</div><div style="font-size:11px;color:#999">Edición 2024</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./data/03_auxilios.pdf')">
-      <div style="font-size:40px">🚑</div>
-      <div>Primeros Auxilios</div>
-      <div style="font-size:11px;color:#999">Manual IX 2025</div>
+    <div class="temario-item" onclick="abrirPDF('auxilios')">
+      <div style="font-size:40px">🚑</div><div>Primeros Auxilios</div><div style="font-size:11px;color:#999">Manual IX 2025</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./data/04_mecanica.pdf')">
-      <div style="font-size:40px">⚙️</div>
-      <div>Mecánica</div>
-      <div style="font-size:11px;color:#999">Manual VIII 2024</div>
+    <div class="temario-item" onclick="abrirPDF('mecanica')">
+      <div style="font-size:40px">⚙️</div><div>Mecánica</div><div style="font-size:11px;color:#999">Manual VIII 2024</div>
     </div>
-    <div class="temario-item" onclick="abrirPDF('./data/05_medioambiente.pdf')">
-      <div style="font-size:40px">♻️</div>
-      <div>Medio Ambiente</div>
-      <div style="font-size:11px;color:#999">Distintius DGT 2025</div>
+    <div class="temario-item" onclick="abrirPDF('medioambiente')">
+      <div style="font-size:40px">♻️</div><div>Medio Ambiente</div><div style="font-size:11px;color:#999">Distintivos DGT 2025</div>
     </div>
   `;
 }
 
+function mostrarIntro(){
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
+      <div style="font-size:64px;margin-bottom:20px">🚗</div>
+      <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT ESP 2026 v${VERSION}</h1>
+      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
+      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
+        <div>💰 Gana coins respondiendo bien</div>
+        <div>🏎️ Compra supercotxes en el Garaje</div>
+        <div>📚 630 preguntas DGT reales</div>
+        <div>📖 Temarios completos para repasar</div>
+      </div>
+      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+    </div>
+  `);
+}
+
+function tancarIntro(){
+  document.getElementById('intro-screen').remove();
+  // CAMBIO V8.8.9: Activar tab TEMARIO al empezar
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
+  document.getElementById('tab-temario').classList.add('active');
+  cargarModulos().then(() => {
+    cargarTemarioHTML();
+    init();
+  });
+}
+
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos...`);
-  const t0 = performance.now();
-
   await Promise.all([
   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
-        console.log(`✅ ${tema}: ${PREGUNTAS[tema].length}`);
       } catch (e) {
         console.error(`❌ ${config.archivo}`, e);
         PREGUNTAS[tema] = [];
@@ -94,84 +163,19 @@ async function cargarModulos() {
       Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
         CASOS[config.clave] = SIT[config.clave] || [];
       });
-    }).catch(e => console.error(e)),
+    }),
     import(`./data/senales-svg.js`).then(mod => {
       window.SENALES_SVG = mod.SENALES_SVG || {};
       SVG_CARGADOS = true;
-      console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length}`);
-    }).catch(e => console.error(e)),
+    }),
     import(`./data/explicaciones.js`).then(mod => {
       window.EXPLICACIONES = mod.EXPLICACIONES || {};
-    }).catch(e => console.error(e))
+    })
   ]);
-
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
-  MODULOS_LISTOS = true;
-  const tiempoTotal = Math.round(performance.now() - t0);
-  console.log(`✅ DATOS LISTOS en ${tiempoTotal}ms: ${PREGUNTAS.general.length} preguntas`);
-  console.log(`✅ TIEMPO TOTAL DESDE INICIO: ${Math.round(performance.now() - TIEMPO_INICIO)}ms`);
-}
-
-// PASO 1: DOMContentLoaded = Pintar temario + Mostrar intro
-document.addEventListener('DOMContentLoaded', () => {
-  cargarTemarioHTML(); // 0.1ms - Temario ya visible
-  mostrarIntro(); // 0.2ms - Tapa con intro
-  console.log('✅ HTML + Intro listos en 0.3ms');
-});
-
-// INTRO
-function mostrarIntro(){
-  if(document.getElementById('intro-screen')) return;
-  document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-      <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 10px">GasDrive DGT 2026 v${VERSION}</h1>
-      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 6 temarios oficiales + casos reales</p>
-      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-        <div>💰 Gana coins respondiendo bien</div>
-        <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 687 preguntas DGT reales</div>
-        <div>📖 Temarios completos para repasar</div>
-      </div>
-      <button onclick="window.tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;touch-action:manipulation">EMPEZAR</button>
-    </div>
-  `);
-}
-
-// PASO 2: EMPEZAR = Solo quita intro. Temario ya estaba pintado
-window.tancarIntro = function() {
-  const t0 = performance.now();
-  document.getElementById('intro-screen')?.remove();
-
-  // Botón menú activo
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.tab-btn[onclick*="temario"]').classList.add('active');
-
-  console.log(`⚡ INTRO QUITADA en ${Math.round(performance.now() - t0)}ms - Temario ya visible`);
-
-  // PASO 3: Cargar datos en background
-  cargarModulos().then(() => {
-    init();
-  });
-}
-
-function guardarProgreso() {
-  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
-}
-
-function buscarClave(obj, texto) {
-  if (!obj ||!texto) return null;
-  if (obj[texto]) return obj[texto];
-  const normalizar = t => t.trim().replace(/:$/, '').replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').toLowerCase();
-  const limpio = normalizar(texto);
-  for (let k in obj) {
-    if (normalizar(k) === limpio) return obj[k];
-  }
-  return null;
 }
 
 function pintarImagenTest(cat, preguntaTexto) {
@@ -193,32 +197,7 @@ function pintarImagenTest(cat, preguntaTexto) {
       svgEl.style.display = 'block';
       svgEl.style.margin = '0 auto';
     }
-  } else {
-    imgCont.innerHTML = `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}/div>`;
   }
-}
-
-function abrirPDF(ruta) {
-  const modal = document.createElement('div');
-  modal.id = 'pdf-modal';
-  modal.style.cssText = `
-    position:fixed;top:0;left:0;right:0;bottom:0;
-    background:#0a0a0a;z-index:9999;
-    display:flex;flex-direction:column;
-  `;
-  modal.innerHTML = `
-    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
-      <button onclick="tancarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
-      <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
-      <div style="width:60px"></div>
-    </div>
-    <iframe src="${ruta}" style="flex:1;border:none;width:100%"></iframe>
-  `;
-  document.body.appendChild(modal);
-}
-
-function tancarPDF() {
-  document.getElementById('pdf-modal')?.remove();
 }
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
