@@ -1,9 +1,9 @@
-// sw.js - V19.2.7 GasDrive DGT ESP - CACHE BUSTER AGRESIVO
-const CACHE = 'gasdrive-v19.2.7'; // CAMBIA ESTE NÚMERO EN CADA DEPLOY
+// sw.js - V19.2.7 GasDrive DGT ESP - Solo archivos que SÍ existen
+const CACHE = 'gasdrive-v19.2.8';
 
 self.addEventListener('install', e => {
   console.log('🚀 SW V19.2.7 instalando...');
-  self.skipWaiting(); // MATA el SW viejo al instante
+  self.skipWaiting();
   
   e.waitUntil(
     caches.open(CACHE).then(cache => {
@@ -12,9 +12,8 @@ self.addEventListener('install', e => {
         './index.html?v=19.2.7',
         './manifest.json?v=19.2.7',
         './style.css?v=19.2.7',
-        './temario.js?v=19.2.7',
-        './data/senales-svg.js?v=19.2.7',
         './app.js?v=19.2.7',
+        './data/senales-svg.js?v=19.2.7',
         './data/preguntas-senales.js?v=19.2.7',
         './data/preguntas-normas.js?v=19.2.7',
         './data/preguntas-mecanica.js?v=19.2.7',
@@ -36,16 +35,14 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   console.log('✅ SW V19.2.7 activado');
   e.waitUntil(
-    caches.keys().then(keys => 
-      Promise.all(
-        keys.map(k => {
-          if (k !== CACHE) {
-            console.log('🗑️ Borrando cache viejo:', k);
-            return caches.delete(k);
-          }
-        })
-      )
-    ).then(() => self.clients.claim()) // Toma control inmediato
+    caches.keys().then(keys => Promise.all(
+      keys.map(k => {
+        if (k !== CACHE) {
+          console.log('🗑️ Borrando cache viejo:', k);
+          return caches.delete(k);
+        }
+      })
+    )).then(() => self.clients.claim())
   );
 });
 
