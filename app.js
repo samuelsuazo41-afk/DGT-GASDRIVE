@@ -509,18 +509,21 @@ const EMOJI_TIENDA = [
   {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
 ];
 
-// 8.9.6: init - se llama al cargar DOM
+// ============================================
+// BLOQUE 2 V8.9.7 - Lógica de navegación y tests
+// ORDEN DESDE FINALIZAREXAMEN: Progreso -> Tips -> Garaje -> Tienda
+// ============================================
+
+// INIT - Se llama al cargar DOM
 function init() {
   activarTabs();
   actualizarCoins();
   actualizarMensajeMotivacional();
-  // NO bloqueamos nada. La app siempre funciona
 }
 
-// 8.9.6: activarTabs simple, sin tocar EMPEZAR
+// Tabs principales
 function activarTabs() {
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    // Solo añadir listener si no lo tiene ya
     if(!btn.dataset.listener) {
       btn.addEventListener('click', (e) => {
         const match = btn.getAttribute('onclick');
@@ -540,20 +543,12 @@ function cambiarTab(e, tab) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
 
-  // Cargar contenido según tab
-  if(tab === 'test') {
-    cambiarSubTab(e, 'test', 'general');
-  } else if(tab === 'situaciones') {
-    cambiarCategoriaSit('clima');
-  } else if(tab === 'garaje') {
-    cargarGaraje();
-  } else if(tab === 'tienda') {
-    cargarTienda();
-  } else if(tab === 'tips') {
-    cargarTips();
-  } else if(tab === 'progreso') {
-    cargarProgreso();
-  }
+  if(tab === 'test') cambiarSubTab(e, 'test', 'general');
+  else if(tab === 'situaciones') cambiarCategoriaSit('clima');
+  else if(tab === 'garaje') cargarGaraje();
+  else if(tab === 'tienda') cargarTienda();
+  else if(tab === 'tips') cargarTips();
+  else if(tab === 'progreso') cargarProgreso();
 }
 
 function cambiarSubTab(e, tab, sub) {
@@ -572,20 +567,23 @@ function cambiarCategoriaSit(cat) {
   cargarSituacion(cat);
 }
 
-// 8.9.6: cargarPregunta con guardia suave
+// TESTS
 function cargarPregunta(categoria) {
   if(!PREGUNTAS[categoria] || PREGUNTAS[categoria].length === 0) {
     document.getElementById(`test-${categoria}-pregunta`).textContent = 'Cargando preguntas... espera 1s';
-    setTimeout(() => cargarPregunta(categoria), 500); // Reintenta en 500ms
+    setTimeout(() => cargarPregunta(categoria), 500);
     return;
   }
+
   const test = estado.test[categoria];
   const preguntas = PREGUNTAS[categoria];
   if(test.idx >= preguntas.length) test.idx = 0;
   test.current = preguntas[test.idx];
   const p = test.current;
+
   document.getElementById(`test-${categoria}-pregunta`).textContent = p.pregunta;
   pintarImagenTest(categoria, p.pregunta);
+
   const contOpciones = document.getElementById(`test-${categoria}-opciones`);
   contOpciones.innerHTML = '';
   p.opciones.forEach((op, idx) => {
@@ -595,6 +593,7 @@ function cargarPregunta(categoria) {
     div.onclick = (e) => responderTest(e, categoria, idx);
     contOpciones.appendChild(div);
   });
+
   document.getElementById(`test-${categoria}-aciertos`).textContent = test.aciertos;
   document.getElementById(`test-${categoria}-racha`).textContent = test.racha;
 }
@@ -604,46 +603,12 @@ function siguienteTest(e, categoria) {
   cargarPregunta(categoria);
 }
 
-function cargarSituacion(cat) {
-  if(!CASOS[cat] || CASOS[cat].length === 0) {
-    document.getElementById(`situacion-${cat}-pregunta`).textContent = 'Cargando casos... espera 1s';
-    setTimeout(() => cargarSituacion(cat), 500);
-    return;
-  }
-  const sit = estado.situacion[cat];
-  const casos = CASOS[cat];
-  if(sit.idx >= casos.length) sit.idx = 0;
-  sit.current = casos[sit.idx];
-  const p = sit.current;
-  document.getElementById(`situacion-${cat}-pregunta`).textContent = p.pregunta;
-  const imgCont = document.getElementById(`situacion-${cat}-imagen`);
-  if(p.imagen) {
-    imgCont.innerHTML = `<img src="${p.imagen}" style="max-width:100%;border-radius:10px;margin-bottom:15px">`;
-  } else {
-    imgCont.innerHTML = '';
-  }
-  const contOpciones = document.getElementById(`situacion-${cat}-opciones`);
-  contOpciones.innerHTML = '';
-  p.opciones.forEach((op, idx) => {
-    const div = document.createElement('div');
-    div.className = 'opcion';
-    div.textContent = op;
-    div.onclick = (e) => responderSituacion(e, cat, idx);
-    contOpciones.appendChild(div);
-  });
-  document.getElementById(`situacion-${cat}-aciertos`).textContent = sit.aciertos;
-}
-
-function siguienteSituacion(e, cat) {
-  estado.situacion[cat].idx++;
-  cargarSituacion(cat);
-}
-
 function responderTest(e, categoria, idx) {
   const test = estado.test[categoria];
   const p = test.current;
   const opciones = e.currentTarget.parentElement.children;
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
+
   const acierto = idx === p.correcta;
   if(acierto) {
     opciones[idx].classList.add('correcta');
@@ -657,17 +622,54 @@ function responderTest(e, categoria, idx) {
     test.racha = 0;
     mostrarEmoji(false, e.currentTarget);
   }
-  PROGRESO.tests[categoria].total++;
-  if(acierto) PROGRESO.tests[categoria].aciertos++;
+
+  actualizarMetricasTest(categoria, acierto, p.id);
   guardar();
   actualizarCoins();
+}
 
+// SITUACIONES
+function cargarSituacion(cat) {
+  if(!CASOS[cat] || CASOS[cat].length === 0) {
+    document.getElementById(`situacion-${cat}-pregunta`).textContent = 'Cargando casos... espera 1s';
+    setTimeout(() => cargarSituacion(cat), 500);
+    return;
+  }
+
+  const sit = estado.situacion[cat];
+  const casos = CASOS[cat];
+  if(sit.idx >= casos.length) sit.idx = 0;
+  sit.current = casos[sit.idx];
+  const p = sit.current;
+
+  document.getElementById(`situacion-${cat}-pregunta`).textContent = p.pregunta;
+  const imgCont = document.getElementById(`situacion-${cat}-imagen`);
+  imgCont.innerHTML = p.imagen? `<img src="${p.imagen}" class="sit-img">` : '';
+
+  const contOpciones = document.getElementById(`situacion-${cat}-opciones`);
+  contOpciones.innerHTML = '';
+  p.opciones.forEach((op, idx) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.textContent = op;
+    div.onclick = (e) => responderSituacion(e, cat, idx);
+    contOpciones.appendChild(div);
+  });
+
+  document.getElementById(`situacion-${cat}-aciertos`).textContent = sit.aciertos;
+}
+
+function siguienteSituacion(e, cat) {
+  estado.situacion[cat].idx++;
+  cargarSituacion(cat);
+}
 
 function responderSituacion(e, cat, idx) {
   const sit = estado.situacion[cat];
   const p = sit.current;
   const opciones = e.currentTarget.parentElement.children;
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
+
   const acierto = idx === p.correcta;
   if(acierto) {
     opciones[idx].classList.add('correcta');
@@ -679,12 +681,14 @@ function responderSituacion(e, cat, idx) {
     opciones[p.correcta].classList.add('correcta');
     mostrarEmoji(false, e.currentTarget);
   }
+
   PROGRESO.casos[cat].total++;
   if(acierto) PROGRESO.casos[cat].aciertos++;
   guardar();
   actualizarCoins();
 }
 
+// EXAMEN DGT
 function iniciarExamen(e) {
   const todasPreguntas = PREGUNTAS.general;
   if(!todasPreguntas || todasPreguntas.length < 30) {
@@ -692,15 +696,18 @@ function iniciarExamen(e) {
     setTimeout(() => iniciarExamen(e), 1000);
     return;
   }
+
   estado.examen.activo = true;
   estado.examen.index = 0;
   estado.examen.aciertos = 0;
   estado.examen.fallos = 0;
   estado.examen.tiempo = 1800;
   estado.examen.preguntas = [...todasPreguntas].sort(() => Math.random() - 0.5).slice(0, 30);
+
   document.getElementById('btn-iniciar-examen').style.display = 'none';
   document.getElementById('btn-siguiente-examen').style.display = 'block';
   document.getElementById('examen-resultado').style.display = 'none';
+
   cargarPreguntaExamen();
   iniciarTimerExamen();
 }
@@ -708,14 +715,12 @@ function iniciarExamen(e) {
 function cargarPreguntaExamen() {
   if(!estado.examen.activo) return;
   const p = estado.examen.preguntas[estado.examen.index];
+
   document.getElementById('examen-num').textContent = estado.examen.index + 1;
   document.getElementById('examen-pregunta').textContent = p.pregunta;
   const imgCont = document.getElementById('examen-imagen');
-  if(p.imagen) {
-    imgCont.innerHTML = `<img src="${p.imagen}" style="max-width:100%;border-radius:10px;margin-bottom:15px">`;
-  } else {
-    imgCont.innerHTML = '';
-  }
+  imgCont.innerHTML = p.imagen? `<img src="${p.imagen}" class="exam-img">` : '';
+
   const contOpciones = document.getElementById('examen-opciones');
   contOpciones.innerHTML = '';
   p.opciones.forEach((op, idx) => {
@@ -725,6 +730,7 @@ function cargarPreguntaExamen() {
     div.onclick = (e) => responderExamen(e, idx);
     contOpciones.appendChild(div);
   });
+
   actualizarProgresoExamen();
 }
 
@@ -733,6 +739,7 @@ function responderExamen(e, idx) {
   const p = estado.examen.preguntas[estado.examen.index];
   const opciones = e.currentTarget.parentElement.children;
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
+
   const acierto = idx === p.correcta;
   if(acierto) {
     opciones[idx].classList.add('correcta');
@@ -744,9 +751,8 @@ function responderExamen(e, idx) {
     estado.examen.fallos++;
     mostrarEmoji(false, e.currentTarget);
   }
-  setTimeout(() => {
-    siguientePreguntaExamen(e);
-  }, 1500);
+
+  setTimeout(() => siguientePreguntaExamen(e), 1500);
 }
 
 function siguientePreguntaExamen(e) {
@@ -772,22 +778,26 @@ function iniciarTimerExamen() {
   }, 1000);
 }
 
+// ============================================
+// ORDEN CORREGIDO DESDE AQUÍ
+// finalizarExamen -> cargarProgreso -> cargarTips -> cargarGaraje -> cargarTienda
+// ============================================
+
 function finalizarExamen() {
   clearInterval(estado.examen.timer);
   estado.examen.activo = false;
-  // 8.9.6: 80% = 24 aciertos de 30 para aprobar
   const aprobado = estado.examen.aciertos >= 24;
   PROGRESO.examenes.realizados++;
   if(aprobado) PROGRESO.examenes.aprobados++;
+
   document.getElementById('examen-resultado').style.display = 'block';
   document.getElementById('examen-resultado').innerHTML = `
-    <div style="font-size:48px">${aprobado? '🎉' : '💔'}</div>
-    <div style="font-size:24px;font-weight:700;margin:10px 0">
-      ${aprobado? 'APROBADO' : 'SUSPENSO'}
-    </div>
-    <div style="font-size:18px">Aciertos: ${estado.examen.aciertos}/30</div>
-    <div style="color:#999;margin-top:10px">Mínimo 80%: 24 aciertos</div>
+    <div class="resultado-emoji">${aprobado? '🎉' : '💔'}</div>
+    <div class="resultado-titulo">${aprobado? 'APROBADO' : 'SUSPENSO'}</div>
+    <div class="resultado-text">Aciertos: ${estado.examen.aciertos}/30</div>
+    <div class="resultado-sub">Mínimo 80%: 24 aciertos</div>
   `;
+
   document.getElementById('btn-siguiente-examen').style.display = 'none';
   document.getElementById('btn-iniciar-examen').style.display = 'block';
   document.getElementById('btn-iniciar-examen').textContent = 'REPETIR EXAMEN';
@@ -800,62 +810,52 @@ function actualizarProgresoExamen() {
   document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
 }
 
-function guardar() {
-  localStorage.setItem('gd_estado', JSON.stringify(estado));
-  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
-}
-
-function actualizarCoins() {
-  document.getElementById('coins-display').textContent = estado.coins;
-}
-
-function actualizarMensajeMotivacional() {
-  const tips = ['15 min al día y apruebas', 'Revisa señales débiles', 'Practica el examen diario'];
-  const msg = tips[Math.floor(Math.random() * tips.length)];
-  const el = document.getElementById('mensaje-motivacional');
-  if(el) el.textContent = msg;
-}
-
-// 8.9.6: abrirPDF locales desde raíz, no link externo
-function abrirPDF(tema) {
-  const PDFs = {
-    senales: './01_Senales_Tomo_I_RD_465_2025.pdf',
-    normas: './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
-    auxilios: './03_Manual_IX_Primeiros_Auxilios_2025.pdf',
-    mecanica: './04_Manual_VIII_Mecanica_2024.pdf',
-    medioambiente: './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
-  };
-  const url = PDFs[tema] || PDFs.senales;
-  window.open(url, '_blank');
-}
-
-// 8.9.6: Funciones vacías para que no pete si llamas a los tabs
-function cargarTienda() {
-  document.getElementById('tienda-accesorios').innerHTML = '<div class="loading-placeholder">Próximamente</div>';
-  document.getElementById('tienda-emojis').innerHTML = '<div class="loading-placeholder">Próximamente</div>';
-}
-
-function cargarTips() {
-  const cont = document.getElementById('tips-lista');
-  cont.innerHTML = '<div class="tip-item"><div style="font-size:30px">💡</div><div>15 min al día y apruebas</div></div>';
-}
-
+// 1. CARGAR PROGRESO - Primero después de finalizar examen
 function cargarProgreso() {
+  if(ESTADO_APP!== 'APP') return;
   const cont = document.getElementById('progreso-stats');
-  const total = PROGRESO.tests.general.total || 1;
-  const pct = Math.round((PROGRESO.tests.general.aciertos / total) * 100);
-  cont.innerHTML = `
-    <div style="background:#1a1a2e;padding:20px;border-radius:12px;margin-bottom:15px">
-      <div style="font-size:18px;margin-bottom:10px">📊 Tests General</div>
-      <div style="font-size:32px;font-weight:700">${pct}%</div>
-      <div style="color:#999">${PROGRESO.tests.general.aciertos}/${total} aciertos</div>
-    </div>
-    <div style="background:#1a1a2e;padding:20px;border-radius:12px">
-      <div style="font-size:18px;margin-bottom:10px">📋 Exámenes</div>
-      <div style="font-size:32px;font-weight:700">${PROGRESO.examenes.aprobados}/${PROGRESO.examenes.realizados}</div>
-      <div style="color:#999">Aprobados/Realizados</div>
-    </div>
-  `;
+  if(!cont) return;
+
+  let html = '';
+  Object.entries(PROGRESO.tests).forEach(([cat, data]) => {
+    const pct = data.total > 0? Math.round((data.aciertos / data.total) * 100) : 0;
+    html += `
+      <div class="progreso-card">
+        <div class="progreso-cat">${cat.toUpperCase()}</div>
+        <div class="progreso-pct">${pct}%</div>
+        <div class="progreso-text">${data.aciertos}/${data.total} aciertos</div>
+        <div class="progreso-bar"><div class="progreso-fill" style="width:${pct}%"></div></div>
+      </div>
+    `;
+  });
+  cont.innerHTML = html;
+}
+
+// 2. CARGAR TIPS - Segundo después de progreso
+function cargarTips() {
+  if(ESTADO_APP!== 'APP') return;
+  const cont = document.getElementById('tips-lista');
+  cont.innerHTML = TIPS.length? TIPS.map(tip => `<div class="tip-item">${tip}</div>`).join('') : '<p class="loading-placeholder">Cargando tips...</p>';
+}
+
+// 3. CARGAR GARAJE - Tercero después de tips
+function cargarGaraje() {
+  if(ESTADO_APP!== 'APP') return;
+  const cont = document.getElementById('garaje-coches');
+  if(!cont ||!COCHES.length) {
+    cont.innerHTML = '<div class="loading-placeholder">Próximamente</div>';
+    return;
+  }
+  cont.innerHTML = COCHES.map(coche => {
+    const comprado = estado.coches.includes(coche.id);
+    return `
+      <div class="coche-item ${comprado? 'comprado' : ''}">
+        <div class="coche-nombre">${coche.nombre}</div>
+        <div class="coche-precio">${comprado? '✓ Comprado' : coche.precio + ' coins'}</div>
+        ${!comprado? `<button onclick="comprarCoche('${coche.id}')">Comprar</button>` : ''}
+      </div>
+    `;
+  }).join('');
 }
 
 function comprarCoche(id) {
@@ -873,131 +873,54 @@ function comprarCoche(id) {
   }
 }
 
-// 8.9.0: Tienda con guardias
+// 4. CARGAR TIENDA - Último después de garaje
 function cargarTienda() {
   if(ESTADO_APP!== 'APP') return;
-  
-  // Accesorios
-  if(ACCESORIOS && ACCESORIOS.length > 0) {
-    const contAcc = document.getElementById('tienda-accesorios');
-    if(contAcc) {
-      contAcc.innerHTML = '';
-      ACCESORIOS.forEach(acc => {
-        const div = document.createElement('div');
-        div.className = 'accesorio-item';
-        const comprado = estado.accesorios.includes(acc.id);
-        div.innerHTML = `
-          <div style="font-size:30px">${acc.emoji || '⚙️'}</div>
-          <div style="font-weight:600;font-size:14px">${acc.nombre}</div>
-          <div style="font-size:11px;color:#999">+${acc.hp}hp</div>
-          <div style="margin-top:6px">
-            ${comprado? 
-              '<span style="color:#4ade80;font-size:12px">✓</span>' : 
-              `<button onclick="comprarAccesorio('${acc.id}')" style="background:#ff8c00;border:none;color:#fff;padding:4px 8px;border-radius:6px;font-size:11px">${acc.precio}</button>`
-            }
-          </div>
-        `;
-        contAcc.appendChild(div);
-      });
-    }
+
+  const contAcc = document.getElementById('tienda-accesorios');
+  if(contAcc) {
+    contAcc.innerHTML = ACCESORIOS.length? ACCESORIOS.map(acc => {
+      const comprado = estado.accesorios?.includes(acc.id);
+      return `<div class="accesorio-item">${acc.nombre} ${comprado? '✓' : acc.precio}</div>`;
+    }).join('') : '<div class="loading-placeholder">Próximamente</div>';
   }
 
-  // Emojis
-  if(EMOJI_TIENDA && EMOJI_TIENDA.length > 0) {
-    const contEmoji = document.getElementById('tienda-emojis');
-    if(contEmoji) {
-      contEmoji.innerHTML = '';
-      EMOJI_TIENDA.forEach(emoji => {
-        const div = document.createElement('div');
-        div.className = 'emoji-item';
-        const comprado = estado.emojis.includes(emoji.id);
-        div.innerHTML = `
-          <div style="font-size:35px">${emoji.emoji}</div>
-          <div style="font-size:12px">${emoji.nombre}</div>
-          <div style="margin-top:5px">
-            ${comprado? 
-              '<span style="color:#4ade80;font-size:11px">✓</span>' : 
-              `<button onclick="comprarEmoji('${emoji.id}')" style="background:#ff8c00;border:none;color:#fff;padding:4px 8px;border-radius:6px;font-size:11px">${emoji.precio}</button>`
-            }
-          </div>
-        `;
-        contEmoji.appendChild(div);
-      });
-    }
+  const contEmoji = document.getElementById('tienda-emojis');
+  if(contEmoji) {
+    contEmoji.innerHTML = EMOJI_TIENDA.length? EMOJI_TIENDA.map(emoji => {
+      const comprado = estado.emojis?.includes(emoji.id);
+      return `<div class="emoji-item">${emoji.emoji} ${comprado? '✓' : emoji.precio}</div>`;
+    }).join('') : '<div class="loading-placeholder">Próximamente</div>';
   }
 }
 
-function comprarAccesorio(id) {
-  if(ESTADO_APP!== 'APP') return;
-  const acc = ACCESORIOS.find(a => a.id === id);
-  if(!acc) return;
-  if(estado.coins >= acc.precio &&!estado.accesorios.includes(id)) {
-    estado.coins -= acc.precio;
-    estado.accesorios.push(id);
-    guardar();
-    actualizarCoins();
-    cargarTienda();
-  }
+// UTILIDADES FINALES
+function guardar() {
+  localStorage.setItem('gd_estado', JSON.stringify(estado));
+  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
 
-function comprarEmoji(id) {
-  if(ESTADO_APP!== 'APP') return;
-  const emoji = EMOJI_TIENDA.find(e => e.id === id);
-  if(!emoji) return;
-  if(estado.coins >= emoji.precio &&!estado.emojis.includes(id)) {
-    estado.coins -= emoji.precio;
-    estado.emojis.push(id);
-    guardar();
-    actualizarCoins();
-    cargarTienda();
-  }
+function actualizarCoins() {
+  document.getElementById('coins-display').textContent = estado.coins;
 }
 
-// 8.9.0: Tips con guardias
-function cargarTips() {
-  if(ESTADO_APP!== 'APP') return;
-  if(!TIPS || TIPS.length === 0) {
-    document.getElementById('tips-lista').innerHTML = '<p style="color:#999">Cargando tips...</p>';
-    return;
-  }
+function actualizarMensajeMotivacional() {
+  const tips = ['15 min al día y apruebas', 'Revisa señales débiles', 'Practica el examen diario'];
+  const msg = tips[Math.floor(Math.random() * tips.length)];
+  const el = document.getElementById('mensaje-motivacional');
+  if(el) el.textContent = msg;
+}
 
-  const cont = document.getElementById('tips-lista');
-  cont.innerHTML = '';
-
-  TIPS.forEach(tip => {
-    const div = document.createElement('div');
-    div.className = 'tip-item';
-    div.textContent = tip;
-    cont.appendChild(div);
+// SERVICE WORKER REGISTRO - V8.9.7 PWA
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('SW registrado:', reg.scope))
+      .catch(err => console.log('SW error:', err));
   });
 }
 
-// 8.9.0: Progreso con guardias
-function cargarProgreso() {
-  if(ESTADO_APP!== 'APP') return;
 
-  const cont = document.getElementById('progreso-stats');
-  if(!cont) return;
-
-  let html = '<div style="display:grid;gap:15px">';
-
-  Object.entries(PROGRESO.tests).forEach(([cat, data]) => {
-    const pct = data.total > 0? Math.round((data.aciertos / data.total) * 100) : 0;
-    html += `
-      <div style="background:#2a2a3e;padding:15px;border-radius:12px">
-        <div style="font-weight:600;margin-bottom:8px">${cat.toUpperCase()}</div>
-        <div style="font-size:24px;font-weight:700">${pct}%</div>
-        <div style="font-size:12px;color:#999">${data.aciertos}/${data.total} aciertos</div>
-        <div style="height:6px;background:#1a1a2e;border-radius:3px;margin-top:8px;overflow:hidden">
-          <div style="height:100%;background:linear-gradient(90deg,#ff8c00,#ff2d55);width:${pct}%"></div>
-        </div>
-      </div>
-    `;
-  });
-
-  html += '</div>';
-  cont.innerHTML = html;
-}
 
 
 
