@@ -3,223 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES V8.9.9</title>
+<title>GasDrive DGT ES v1.0</title>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0a0a0a">
-<link rel="stylesheet" href="./style.css?v=8.9.9">
+<meta name="theme-color" content="#00D9FF">
+<link rel="stylesheet" href="./style.css">
 <style>
-html, body {
-  background: #0a0a0a;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  -webkit-tap-highlight-color: transparent;
-  padding-bottom: 80px;
+html, body { 
+  background: #0a0a0a; 
+  color: #fff; 
+  margin: 0; 
+  padding: 0; 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+  -webkit-tap-highlight-color: transparent; 
+  padding-bottom: 80px; 
 }
-.header {
-  background: #1a1a1a;
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #333;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+.header { 
+  background: #1a1a1a; 
+  padding: 12px 16px; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  border-bottom: 1px solid #333; 
+  position: sticky; 
+  top: 0; 
+  z-index: 100; 
 }
 .header h1 { font-size: 18px; margin: 0; }
 .coins { font-size: 16px; font-weight: 700; color: #ff8c00; }
 
 /* MENÚ ABAJO - Orden: Temario Test Casos Examen Progreso Tips Garaje Tienda */
-.tabs {
-  display: flex;
-  background: #1a1a1a;
-  border-top: 1px solid #333;
-  overflow-x: auto;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
+.tabs { 
+  display: flex; 
+  background: #1a1a1a; 
+  border-top: 1px solid #333; 
+  overflow-x: auto; 
+  position: fixed; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  z-index: 200; 
 }
-.tab-btn {
-  flex: 1;
-  padding: 10px 4px;
-  background: none;
-  border: none;
-  color: #999;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
+.tab-btn { 
+  flex: 1; 
+  padding: 10px 4px; 
+  background: none; 
+  border: none; 
+  color: #999; 
+  font-size: 11px; 
+  font-weight: 600; 
+  cursor: pointer; 
+  white-space: nowrap; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 3px; 
 }
 .tab-btn.active { color: #00D9FF; border-top: 2px solid #00D9FF; }
-
 .tab-content { display: none; padding: 16px; min-height: calc(100vh - 140px); }
 .tab-content.active { display: block; }
-
 .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
-.sub-tab-btn {
-  padding: 8px 12px;
-  background: #2a2a2a;
-  border: none;
-  border-radius: 8px;
-  color: #999;
-  font-size: 12px;
-  cursor: pointer;
+.sub-tab-btn { 
+  padding: 8px 12px; 
+  background: #2a2a2a; 
+  border: none; 
+  border-radius: 8px; 
+  color: #999; 
+  font-size: 12px; 
+  cursor: pointer; 
 }
 .sub-tab-btn.active { background: #00D9FF; color: #000; }
-
-.opcion {
-  background: #1a1a1a;
-  padding: 16px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: 2px solid #333;
+.opcion { 
+  background: #1a1a1a; 
+  padding: 16px; 
+  margin-bottom: 10px; 
+  border-radius: 10px; 
+  cursor: pointer; 
+  border: 2px solid #333; 
 }
 .opcion.correcta { border-color: #2ecc71; background: #1a2e1a; }
 .opcion.incorrecta { border-color: #e74c3c; background: #2e1a1a; }
-
-.btn {
-  background: linear-gradient(135deg,#ff8c00,#ff2d55);
-  border: none;
-  color: #fff;
-  padding: 14px 24px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 15px;
+.btn { 
+  background: linear-gradient(135deg,#ff8c00,#ff2d55); 
+  border: none; 
+  color: #fff; 
+  padding: 14px 24px; 
+  border-radius: 10px; 
+  font-size: 16px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  width: 100%; 
+  margin-top: 15px; 
 }
 .btn:disabled { opacity: 0.5; }
-
 .stats { display: flex; gap: 15px; margin-bottom: 15px; }
 .stat-box { flex: 1; background: #1a1a1a; padding: 12px; border-radius: 10px; text-align: center; }
 .stat-num { font-size: 24px; font-weight: 700; color: #00D9FF; }
-
 .progress-bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin: 10px 0; }
 .progress-fill { background: #00D9FF; height: 100%; width: 0%; transition: width 0.3s; }
 
-/* V8.9.9 - IMÁGENES TEST MIXTO - Respeta colores DGT RD 465/2025 */
-.imagen-cont:empty {
-  display: none!important;
-  height: 0!important;
-  margin: 0!important;
-  padding: 0!important;
+/* IMÁGENES TEST MIXTO - Respeta colores DGT RD 465/2025 */
+.imagen-cont:empty { display: none!important; height: 0!important; margin: 0!important; padding: 0!important; }
+.imagen-cont { 
+  width: 100%; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  margin: 15px 0; 
+  min-height: 140px; 
 }
-.imagen-cont {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 15px 0;
-  min-height: 140px;
+.imagen-cont svg { 
+  width: 140px; 
+  height: auto; 
+  max-width: 90vw; 
+  display: block; 
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.35)); 
 }
-.imagen-cont svg {
-  width: 140px;
-  height: auto;
-  max-width: 90vw;
-  display: block;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.35));
-}
-.imagen-cont svg[viewBox] {
-  width: 140px;
-  height: auto;
-}
-.pregunta-img {
-  max-width: 90vw;
-  max-height: 200px;
-  width: auto;
-  height: auto;
-  border-radius: 12px;
-  display: block;
-  margin: auto;
-  border: 2px solid #333;
-  object-fit: contain;
-  background: #0a0a0a;
+.pregunta-img { 
+  max-width: 90vw; 
+  max-height: 200px; 
+  width: auto; 
+  height: auto; 
+  border-radius: 12px; 
+  display: block; 
+  margin: auto; 
+  border: 2px solid #333; 
+  object-fit: contain; 
+  background: #0a0a0a; 
 }
 
 /* Emoji flotante */
-.emoji-flotante {
-  position: absolute;
-  font-size: 40px;
-  animation: flotar 1s ease-out forwards;
-  pointer-events: none;
-  z-index: 10;
+.emoji-flotante { 
+  position: absolute; 
+  font-size: 40px; 
+  animation: flotar 1s ease-out forwards; 
+  pointer-events: none; 
+  z-index: 10; 
 }
-@keyframes flotar {
- 0% { transform: translateY(0) scale(1); opacity: 1; }
- 100% { transform: translateY(-80px) scale(1.5); opacity: 0; }
+@keyframes flotar { 
+ 0% { transform: translateY(0) scale(1); opacity: 1; } 
+ 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } 
 }
 
 .garaje-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .garaje-coche { background: #1a1a1a; padding: 15px; border-radius: 12px; text-align: center; }
 .garaje-coche.bloqueado { opacity: 0.5; }
-.btn-comprar {
-  background: #00D9FF;
-  border: none;
-  color: #000;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 700;
-  margin-top: 8px;
-  cursor: pointer;
+.btn-comprar { 
+  background: #00D9FF; 
+  border: none; 
+  color: #000; 
+  padding: 8px 16px; 
+  border-radius: 8px; 
+  font-weight: 700; 
+  margin-top: 8px; 
+  cursor: pointer; 
 }
-
 .emoji-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .emoji-item { background: #1a1a1a; padding: 15px; border-radius: 12px; text-align: center; }
 .emoji-item.bloqueado { opacity: 0.5; }
-
 .temario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.temario-item {
-  background: #1a1a1a;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid #333;
+.temario-item { 
+  background: #1a1a1a; 
+  padding: 20px; 
+  border-radius: 12px; 
+  text-align: center; 
+  cursor: pointer; 
+  border: 2px solid #333; 
 }
 .temario-item:hover { border-color: #00D9FF; }
-
-.category-btn {
-  padding: 10px 16px;
-  background: #2a2a2a;
-  border: none;
-  border-radius: 8px;
-  color: #999;
-  font-weight: 600;
-  cursor: pointer;
+.category-btn { 
+  padding: 10px 16px; 
+  background: #2a2a2a; 
+  border: none; 
+  border-radius: 8px; 
+  color: #999; 
+  font-weight: 600; 
+  cursor: pointer; 
 }
 .category-btn.active { background: #00D9FF; color: #000; }
-
-.mensaje-motivacional {
-  background: #1a1a1a;
-  padding: 15px;
-  border-radius: 12px;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #00D9FF;
-  font-weight: 600;
+.mensaje-motivacional { 
+  background: #1a1a1a; 
+  padding: 15px; 
+  border-radius: 12px; 
+  text-align: center; 
+  margin-bottom: 20px; 
+  color: #00D9FF; 
+  font-weight: 600; 
 }
 .loading-placeholder { color: #666; text-align: center; padding: 40px; }
-
-@media (max-width: 380px) {
-.imagen-cont svg { width: 120px; }
-.pregunta-img { max-height: 160px; }
+@media (max-width: 380px) { 
+  .imagen-cont svg { width: 120px; } 
+  .pregunta-img { max-height: 160px; } 
 }
 </style>
 </head>
 <body>
-
 <div class="header">
-  <h1>🚗 GasDrive DGT ES</h1>
+  <h1>🚗 GasDrive DGT ES v1.0</h1>
   <div class="coins" id="coins-display">💰 0</div>
 </div>
 
@@ -243,7 +222,7 @@ html, body {
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','auxilios')">Auxilios</button>
     <button class="sub-tab-btn" onclick="cambiarSubTab(event,'test','medioambiente')">Medio Ambiente</button>
   </div>
-
+  
   <!-- GENERAL -->
   <div id="test-general" class="sub-content active">
     <div class="stats">
@@ -255,7 +234,7 @@ html, body {
     <div id="test-general-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'general')">Siguiente</button>
   </div>
-
+  
   <!-- SEÑALES -->
   <div id="test-senales" class="sub-content">
     <div class="stats">
@@ -267,7 +246,7 @@ html, body {
     <div id="test-senales-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'senales')">Siguiente</button>
   </div>
-
+  
   <!-- NORMAS -->
   <div id="test-normas" class="sub-content">
     <div class="stats">
@@ -279,7 +258,7 @@ html, body {
     <div id="test-normas-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'normas')">Siguiente</button>
   </div>
-
+  
   <!-- MECÁNICA -->
   <div id="test-mecanica" class="sub-content">
     <div class="stats">
@@ -291,7 +270,7 @@ html, body {
     <div id="test-mecanica-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'mecanica')">Siguiente</button>
   </div>
-
+  
   <!-- AUXILIOS -->
   <div id="test-auxilios" class="sub-content">
     <div class="stats">
@@ -303,7 +282,7 @@ html, body {
     <div id="test-auxilios-opciones"></div>
     <button class="btn" onclick="siguienteTest(event,'auxilios')">Siguiente</button>
   </div>
-
+  
   <!-- MEDIO AMBIENTE -->
   <div id="test-medioambiente" class="sub-content">
     <div class="stats">
@@ -325,7 +304,6 @@ html, body {
     <button class="category-btn" onclick="cambiarCategoriaSit('carretera')">Carretera</button>
     <button class="category-btn" onclick="cambiarCategoriaSit('emergencia')">Emergencia</button>
   </div>
-
   <div id="sit-clima" class="sub-content active">
     <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-clima-aciertos">0</div><div>Aciertos</div></div></div>
     <div id="situacion-clima-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
@@ -333,7 +311,6 @@ html, body {
     <div id="situacion-clima-opciones"></div>
     <button class="btn" onclick="siguienteSituacion(event,'clima')">Siguiente</button>
   </div>
-
   <div id="sit-urbano" class="sub-content">
     <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-urbano-aciertos">0</div><div>Aciertos</div></div></div>
     <div id="situacion-urbano-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
@@ -341,20 +318,18 @@ html, body {
     <div id="situacion-urbano-opciones"></div>
     <button class="btn" onclick="siguienteSituacion(event,'urbano')">Siguiente</button>
   </div>
-
   <div id="sit-carretera" class="sub-content">
     <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-carretera-aciertos">0</div><div>Aciertos</div></div></div>
     <div id="situacion-carretera-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="situacion-carretera-imagen" class="imagen-cont"></div>
-    <div id="situacion-carretera-opciones"></div>
+    <div id="sit-carretera-opciones"></div>
     <button class="btn" onclick="siguienteSituacion(event,'carretera')">Siguiente</button>
   </div>
-
   <div id="sit-emergencia" class="sub-content">
     <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-emergencia-aciertos">0</div><div>Aciertos</div></div></div>
     <div id="situacion-emergencia-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="situacion-emergencia-imagen" class="imagen-cont"></div>
-    <div id="situacion-emergencia-opciones"></div>
+    <div id="sit-emergencia-opciones"></div>
     <button class="btn" onclick="siguienteSituacion(event,'emergencia')">Siguiente</button>
   </div>
 </div>
@@ -363,22 +338,17 @@ html, body {
 <div id="tab-examen" class="tab-content">
   <div style="font-size:20px;font-weight:700;margin-bottom:15px">📝 Examen DGT 2026</div>
   <div style="color:#999;font-size:13px;margin-bottom:15px">30 preguntas, 30 minutos, máximo 3 fallos</div>
-
   <div class="stats">
     <div class="stat-box"><div class="stat-num" id="examen-num">0</div><div>Pregunta</div></div>
     <div class="stat-box"><div class="stat-num" id="examen-aciertos">0</div><div>Aciertos</div></div>
     <div class="stat-box"><div class="stat-num" id="examen-timer">30:00</div><div>Tiempo</div></div>
   </div>
-
   <div class="progress-bar"><div class="progress-fill" id="examen-progreso"></div></div>
-
   <div id="examen-pregunta" style="font-size:18px;font-weight:600;margin:20px 0"></div>
   <div id="examen-imagen" class="imagen-cont"></div>
   <div id="examen-opciones"></div>
-
   <button class="btn" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button>
   <button class="btn" id="btn-siguiente-examen" onclick="siguientePreguntaExamen(event)" style="display:none">Siguiente</button>
-
   <div id="examen-resultado" style="display:none;margin-top:20px"></div>
 </div>
 
@@ -421,21 +391,29 @@ html, body {
   <button class="tab-btn" onclick="cambiarTab(event,'tienda')">🛍️<br>Tienda</button>
 </div>
 
-<script src="./temario.js?v=8.9.9"></script>
-<script src="./data/senales-svg.js?v=8.9.9"></script>
-<script src="./app.js?v=8.9.9"></script>
-<script src="./sw.js?v=8.9.9"></script>
+<!-- SCRIPTS ORDEN CORRECTO: temario.js ANTES que app.js + v19.2.7 -->
+<script src="./temario.js?v=19.2.7"></script>
+<script src="./data/senales-svg.js?v=19.2.7"></script>
+<script src="./app.js?v=19.2.7"></script>
 
+<!-- IMPORTANTE: NO cargar sw.js con <script>. Se registra abajo -->
 <script>
-  // Registrar Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
-    });
-  }
+// Registrar Service Worker V19.2.7
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js?v=19.2.7', { scope: './' })
+    .then(reg => {
+      console.log('✅ SW registrado:', reg.scope, 'v19.2.7');
+    })
+    .catch(err => console.error('❌ SW error:', err));
+  });
+}
 </script>
+
 </body>
 </html>
+
+
 
 
 
