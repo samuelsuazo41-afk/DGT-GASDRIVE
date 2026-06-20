@@ -1,11 +1,12 @@
 // ============================================
-// GASDRIVE DGT V8.9.9 ESP - 630 PREGUNTAS DGT 2026
-// BLOQUE 1 COMPLETO - Lógica + Imágenes test mixto + Fix TEMARIO
+// GASDRIVE DGT V8.9.10 ESP - 630 PREGUNTAS DGT 2026
+// BLOQUE 1 COMPLETO - Lógica + Imágenes test mixto + Fix TEMARIO definitivo
 // ============================================
-const VERSION = "8.9.9";
+const VERSION = "8.9.10";
 
-// 8.9.9: Test mixto con imágenes + limpiar recuadro
-let ESTADO_APP = 'APP'; // La app siempre visible
+// 8.9.10: Fix race condition TEMARIO + logs debug
+let ESTADO_APP = 'APP';
+const TEMARIO_ESPERA_MAX = 5000; // 5 seg timeout esperando TEMARIO
 
 // Guardias arrays
 if(typeof COCHES === 'undefined') var COCHES = [];
@@ -180,7 +181,7 @@ function mostrarEmoji(acierto, elemento){
   setTimeout(() => div.remove(), 1000);
 }
 
-// V8.9.9: Pintar SVG señales DGT - Respeta colores y viewBox
+// V8.9.9: Pintar SVG señales DGT
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
@@ -198,7 +199,7 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 }
 
-// V8.9.9: Renderizar imagen JPG/PNG para test mixto
+// V8.9.9: Renderizar imagen JPG/PNG
 function renderImagenTest(categoria, rutaImagen) {
   const cont = document.getElementById(`test-${categoria}-imagen`);
   if(!cont) return;
@@ -218,41 +219,73 @@ function cargarPreguntaTest(categoria) {
   const idx = Math.floor(Math.random() * arr.length);
   const pregunta = arr[idx];
   estado.test[categoria].current = pregunta;
-
   const txtEl = document.getElementById(`test-${categoria}-pregunta`);
   if(txtEl) txtEl.textContent = pregunta.pregunta;
-
   pintarImagenTest(categoria, pregunta.pregunta);
   renderImagenTest(categoria, pregunta.imagen);
 }
 
-// V8.9.9 FIX: TEMARIO con reintento si no está cargado aún
-function cargarTemarioHTML() {
-  const container = document.getElementById('temario-lista');
-  if(!container) return;
+// V8.9.10 FIX DEFINITIVO: Esperar TEMARIO con Promise
+function esperarTemario() {
+  return new Promise((resolve, reject) => {
+    let intentos = 0;
+    const maxIntentos = TEMARIO_ESPERA_MAX / 100;
 
-  // Si TEMARIO no existe aún, reintentar en 100ms hasta que cargue
-  if(typeof TEMARIO === 'undefined') {
-    setTimeout(cargarTemarioHTML, 100);
+    const check = () => {
+      if(typeof window.TEMARIO!== 'undefined' && window.TEMARIO && window.TEMARIO.length > 0) {
+        console.log(`✅ TEMARIO cargado: ${window.TEMARIO.length} items`);
+        resolve(window.TEMARIO);
+        return;
+      }
+
+      intentos++;
+      if(intentos > maxIntentos) {
+        console.error(`❌ TIMEOUT: TEMARIO no cargó en ${TEMARIO_ESPERA_MAX}ms. Revisa temario.js y ruta`);
+        reject('TEMARIO_TIMEOUT');
+        return;
+      }
+
+      setTimeout(check, 100);
+    };
+    check();
+  });
+}
+
+// V8.9.10: Temario con await para evitar race condition
+async function cargarTemarioHTML() {
+  const container = document.getElementById('temario-lista');
+  if(!container) {
+    console.error('❌ No existe #temario-lista en DOM');
     return;
   }
 
-  container.innerHTML = TEMARIO.map(item => {
-    const pct = getPorcentajeProgreso(item.key);
-    const subtema = getSubtemaDebil(item.key);
-    return `
-      <div class="temario-item" onclick="abrirPDF('${item.archivo}')">
-        <div class="icono">${item.icono}</div>
-        <div class="titulo">${item.titulo}</div>
-        <div class="sub">${item.subtitulo}</div>
-        <div class="progreso-bar">
-          <div class="progreso-fill" style="width:${pct}%"></div>
+  try {
+    // ESPERAR a que TEMARIO exista sí o sí
+    const TEMARIO_DATA = await esperarTemario();
+
+    container.innerHTML = TEMARIO_DATA.map(item => {
+      const pct = getPorcentajeProgreso(item.key);
+      const subtema = getSubtemaDebil(item.key);
+      return `
+        <div class="temario-item" onclick="abrirPDF('${item.archivo}')">
+          <div class="icono">${item.icono}</div>
+          <div class="titulo">${item.titulo}</div>
+          <div class="sub">${item.subtitulo}</div>
+          <div class="progreso-bar">
+            <div class="progreso-fill" style="width:${pct}%"></div>
+          </div>
+          <div class="progreso-text">${pct}% completado</div>
+          <div class="subtema-debil">${subtema}</div>
         </div>
-        <div class="progreso-text">${pct}% completado</div>
-        <div class="subtema-debil">${subtema}</div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
+
+    console.log('✅ Temario pintado en pantalla');
+
+  } catch(e) {
+    console.error('Error cargarTemarioHTML:', e);
+    container.innerHTML = `<p style="color:red;padding:20px">Error cargando temario: ${e}. Revisa temario.js</p>`;
+  }
 }
 
 // Abrir PDF
@@ -331,11 +364,14 @@ async function cargarModulos() {
   });
 
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
-  cargarTemarioHTML();
+
+  // V8.9.10: await para que espere TEMARIO antes de pintar
+  await cargarTemarioHTML();
 }
 
 // Auto-arranque
 window.addEventListener('DOMContentLoaded', () => {
+  console.log(`🚀 app.js V${VERSION} cargado`);
   if(typeof init === 'function') init();
   cargarModulos();
   mostrarIntro();
