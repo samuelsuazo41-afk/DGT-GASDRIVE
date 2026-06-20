@@ -1,10 +1,7 @@
-// GASDRIVE DGT V8.9.6 ESP - 630 PREGUNTAS DGT 2026
-const VERSION = "8.9.6";
+// GASDRIVE DGT V8.9.7 ESP - 630 PREGUNTAS DGT 2026
+const VERSION = "8.9.7";
 
-// 8.9.6: FLAG para activar/desactivar explicaciones sin romper nada
-const EXPLICACIONES_ACTIVAS = false; // Pon true cuando quieras activarlas
-
-// 8.9.6: SIN ESTADO_APP bloqueando. La app siempre está visible
+// 8.9.7: SIN ESTADO_APP bloqueando. La app siempre está visible
 let ESTADO_APP = 'APP'; // Siempre APP, no bloqueamos clicks
 
 // Guardias arrays
@@ -101,11 +98,10 @@ let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
 
 const PREGUNTAS = {};
 const CASOS = {};
-window.EXPLICACIONES = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 
-// 8.9.6: ESTADO - Se declara aquí como en CAT
+// 8.9.7: ESTADO - Se declara aquí como en CAT
 const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
   coins: 0,
   coches: [],
@@ -160,11 +156,9 @@ function cargarTemarioHTML() {
   `;
 }
 
-// 8.9.6: INTRO SOLO LA 1ª VEZ - Lógica copiada CAT V8.2
+// 8.9.7: INTRO SOLO LA 1ª VEZ
 function mostrarIntro(){
-  // Si ya hay estado guardado = usuario ya entró antes → no mostrar intro
   if(localStorage.getItem('gd_estado')) return;
-
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
@@ -182,21 +176,19 @@ function mostrarIntro(){
   `);
 }
 
-// 8.9.6: tancarIntro SOLO quita overlay - igual que CAT
 function tancarIntro(){
   document.getElementById('intro-screen')?.remove();
-  // Guardar que ya vio intro para que no salga más
   localStorage.setItem('gd_visto_intro', '1');
 }
 
-// 8.9.6: Cargar módulos en background con catch individual - no rompe si 1 falla
+// 8.9.7: Cargar módulos SIN explicaciones
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
   const t0 = performance.now();
 
   await Promise.all([
     // Preguntas por tema con catch individual
-  ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
+   ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
         PREGUNTAS[tema] = mod[config.export] || [];
@@ -209,36 +201,23 @@ async function cargarModulos() {
 
     // Situaciones con catch
     import(`./data/preguntas-situaciones.js`)
-    .then(mod => {
+   .then(mod => {
         const SIT = mod.SITUACIONES;
         Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
           CASOS[config.clave] = SIT[config.clave] || [];
           console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
         });
       })
-    .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
+   .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
 
     // SVG con catch
     import(`./data/senales-svg.js`)
-    .then(mod => {
+   .then(mod => {
         window.SENALES_SVG = mod.SENALES_SVG || {};
         SVG_CARGADOS = true;
         console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
       })
-    .catch(e => console.error('❌ Error senales-svg.js:', e)),
-
-    // 8.9.6: Explicaciones OPCIONALES desde /assets/ con flag
-    EXPLICACIONES_ACTIVAS
-     ? import(`./assets/explicaciones.js`)
-         .then(mod => {
-            window.EXPLICACIONES = mod.EXPLICACIONES || {};
-            console.log(`✅ Explicaciones activas desde /assets/`);
-          })
-         .catch(e => {
-            console.warn('⚠️ explicaciones.js no encontrado en /assets/');
-            window.EXPLICACIONES = {};
-          })
-      : Promise.resolve(window.EXPLICACIONES = {})
+   .catch(e => console.error('❌ Error senales-svg.js:', e))
   ]);
 
   PREGUNTAS.general = [];
@@ -247,7 +226,7 @@ async function cargarModulos() {
   });
 
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
-  cargarTemarioHTML(); // Esto SIEMPRE se ejecuta ahora aunque falle 1 módulo
+  cargarTemarioHTML(); // Esto SIEMPRE se ejecuta ahora
 }
 
 function pintarImagenTest(cat, preguntaTexto) {
@@ -274,11 +253,11 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 }
 
-// 8.9.6: Auto-arranque al cargar DOM - como CAT
+// 8.9.7: Auto-arranque al cargar DOM
 window.addEventListener('DOMContentLoaded', () => {
-  init(); // Pinta coins, activa tabs
-  cargarModulos(); // Carga datos en background
-  mostrarIntro(); // Si toca, pone overlay encima
+  init();
+  cargarModulos();
+  mostrarIntro();
 });
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
@@ -630,13 +609,6 @@ function responderTest(e, categoria, idx) {
   guardar();
   actualizarCoins();
 
-  // 8.9.6: Explicaciones solo si flag activo
-  if(EXPLICACIONES_ACTIVAS && window.EXPLICACIONES && window.EXPLICACIONES[p.id]) {
-    setTimeout(() => {
-      alert(`💡 Explicación: ${window.EXPLICACIONES[p.id]}`);
-    }, 500);
-  }
-}
 
 function responderSituacion(e, cat, idx) {
   const sit = estado.situacion[cat];
