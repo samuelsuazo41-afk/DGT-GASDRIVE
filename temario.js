@@ -1,98 +1,62 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+// temario.js V8.9.7 ESP - WEB
+// Array de temarios oficiales DGT 2026
+// Los PDFs están en la raíz del proyecto, junto a index.html
 
-// NOMBRES SIN ACENTOS NI Ñ PARA QUE require() NO PETE
 const TEMARIO = [
   { 
     id: 1, 
-    titulo: "1. Senales de trafico", 
-    pdf: require('./01_Senales_Tomo_I_RD_465_2025.pdf'),
-    bloqueado: true
+    key: 'senales',
+    titulo: "1. Señales de tráfico", 
+    archivo: "01_Senales_Tomo_I_RD_465_2025.pdf", 
+    icono: "🚦", 
+    subtitulo: "RD 465/2025",
+    descripcion: "Señales de peligro, prioridad, prohibición, obligación e indicación"
   },
   { 
     id: 2, 
-    titulo: "2. Normas de circulacion", 
-    pdf: require('./02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf'),
-    bloqueado: true
+    key: 'normas',
+    titulo: "2. Normas de circulación", 
+    archivo: "02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf", 
+    icono: "📋", 
+    subtitulo: "Edición 2024",
+    descripcion: "Velocidades, prioridades, adelantamientos, alumbrado y carriles"
   },
   { 
     id: 3, 
+    key: 'auxilios',
     titulo: "3. Primeros Auxilios", 
-    pdf: require('./03_Manual_IX_Primeros_Auxilios_2025.pdf'),
-    bloqueado: true
+    archivo: "03_Manual_IX_Primeros_Auxilios_2025.pdf", 
+    icono: "🚑", 
+    subtitulo: "Manual IX 2025",
+    descripcion: "Conducta PAS, RCP, hemorragias y valoración ABC"
   },
   { 
     id: 4, 
-    titulo: "4. Mecanica del vehiculo", 
-    pdf: require('./04_Manual_VIII_Mecanica_2024.pdf'),
-    bloqueado: true
+    key: 'mecanica',
+    titulo: "4. Mecánica del vehículo", 
+    archivo: "04_Manual_VIII_Mecanica_2024.pdf", 
+    icono: "⚙️", 
+    subtitulo: "Manual VIII 2024",
+    descripcion: "Motor, frenos ABS, neumáticos y niveles de líquidos"
   },
   { 
     id: 5, 
+    key: 'medioambiente',
     titulo: "5. Medio Ambiente + Distintivos DGT", 
-    pdf: require('./05_Medio_Ambiente_Distintivos_DGT_2025.pdf'),
-    bloqueado: true
+    archivo: "05_Medio_Ambiente_Distintivos_DGT_2025.pdf", 
+    icono: "♻️", 
+    subtitulo: "Distintivos DGT 2025",
+    descripcion: "Etiquetas 0/ECO/C/B, ZBE y conducción eficiente"
   }
 ];
 
-export default function Temario() {
-  const navigation = useNavigation();
-  const isPremium = false; // déjalo en false para probar
-
-  const handlePress = (item) => {
-    if (item.bloqueado && !isPremium) {
-      navigation.navigate('Paywall');
-    } else {
-      navigation.navigate('PDFViewer', { pdf: item.pdf, titulo: item.titulo });
-    }
-  };
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={TEMARIO}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity 
-            style={[styles.card, item.bloqueado && !isPremium && styles.cardBloqueado]} 
-            onPress={() => handlePress(item)}
-          >
-            <Text style={styles.titulo}>{item.titulo}</Text>
-            {item.bloqueado && !isPremium ? (
-              <Ionicons name="lock-closed" size={20} color="#999" />
-            ) : (
-              <Ionicons name="chevron-forward" size={20} color="#00D9FF" />
-            )}
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-  );
+// Función auxiliar para buscar temario por key
+function getTemarioByKey(key) {
+  return TEMARIO.find(t => t.key === key);
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#0a' }, // Fondo oscuro como tu web
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    marginBottom: 12,
-    backgroundColor: '#1a1a',
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#00D9FF',
-  },
-  cardBloqueado: {
-    borderColor: '#333',
-    opacity: 0.6,
-  },
-  titulo: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-    flex: 1,
-  }
-});
+// Exportar para que app.js lo use
+if(typeof window !== 'undefined') {
+  window.TEMARIO = TEMARIO;
+  window.getTemarioByKey = getTemarioByKey;
+}
