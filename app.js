@@ -1,12 +1,19 @@
 // ============================================
-// GASDRIVE DGT V8.9.10 ESP - 630 PREGUNTAS DGT 2026
-// BLOQUE 1 COMPLETO - Intro siempre + carga datos después del clic
+// GASDRIVE DGT V19.2.7 ESP - 630 PREGUNTAS DGT 2026
+// BLOQUE 1 FIX - TEMARIO HARDCODEADO + CARGA DIRECTA v8.7.5
 // ============================================
-const VERSION = "8.9.10";
+const VERSION = "19.2.7";
 
-// 8.9.10: Fix race condition TEMARIO + intro siempre visible
-let ESTADO_APP = 'APP';
-const TEMARIO_ESPERA_MAX = 5000;
+// === TEMARIO DGT 2026 HARDCODEADO - QUITAMOS ARCHIVO EXTERNO ===
+// Esto rompe el bucle. Como v8.7.5 que funcionaba
+window.TEMARIO = [
+  {id: 1, key: 'senales', titulo: "1. Señales de tráfico", archivo: "01_Senales_Tomo_I_RD_465_2025.pdf", icono: "🚦", subtitulo: "RD 465/2025", descripcion: "Señales de peligro, prioridad, prohibición, obligación e indicación"},
+  {id: 2, key: 'normas', titulo: "2. Normas de circulación", archivo: "02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf", icono: "📋", subtitulo: "Edición 2024", descripcion: "Velocidades, prioridades, adelantamientos, alumbrado y carriles"},
+  {id: 3, key: 'auxilios', titulo: "3. Primeros Auxilios", archivo: "03_Manual_IX_Primeros_Auxilios_2025.pdf", icono: "🚑", subtitulo: "Manual IX 2025", descripcion: "Conducta PAS, RCP, hemorragias y valoración ABC"},
+  {id: 4, key: 'mecanica', titulo: "4. Mecánica del vehículo", archivo: "04_Manual_VIII_Mecanica_2024.pdf", icono: "⚙️", subtitulo: "Manual VIII 2024", descripcion: "Motor, frenos ABS, neumáticos y niveles de líquidos"},
+  {id: 5, key: 'medioambiente', titulo: "5. Medio Ambiente + Distintivos DGT", archivo: "05_Medio_Ambiente_Distintivos_DGT_2025.pdf", icono: "♻️", subtitulo: "Distintivos DGT 2025", descripcion: "Etiquetas 0/ECO/C/B, ZBE y conducción eficiente"}
+];
+console.log('✅ TEMARIO hardcodeado:', window.TEMARIO.length, 'items');
 
 // Guardias arrays
 if(typeof COCHES === 'undefined') var COCHES = [];
@@ -70,8 +77,8 @@ const MODULOS_PREGUNTAS = {
 const MODULOS_CASOS = {
   clima: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'clima' },
   urbano: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'urbano' },
-  carretera: { archivo: 'preguntas-situaciones.js', export: 'PREGUNTAS_SITUACIONES', clave: 'carretera' },
-  emergencia: { archivo: 'preguntas-situaciones.js', export: 'PREGUNTAS_SITUACIONES', clave: 'emergencia' }
+  carretera: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'carretera' },
+  emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
 };
 
 // DATOS GLOBALES + PROGRESO
@@ -182,7 +189,7 @@ function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
   const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
-  const codigo = match? match[1].toLowerCase() : null;
+  const codigo = match? match[1].lowerCase() : null;
   if (!codigo ||!SVG_CARGADOS) return;
   const svg = window.SENALES_SVG[codigo];
   if (svg) {
@@ -221,65 +228,8 @@ function cargarPreguntaTest(categoria) {
   renderImagenTest(categoria, pregunta.imagen);
 }
 
-// V8.9.10: Esperar TEMARIO
-function esperarTemario() {
-  return new Promise((resolve, reject) => {
-    let intentos = 0;
-    const maxIntentos = TEMARIO_ESPERA_MAX / 100;
-
-    const check = () => {
-      if(typeof window.TEMARIO!== 'undefined' && window.TEMARIO && window.TEMARIO.length > 0) {
-        console.log(`✅ TEMARIO cargado: ${window.TEMARIO.length} items`);
-        resolve(window.TEMARIO);
-        return;
-      }
-      intentos++;
-      if(intentos > maxIntentos) {
-        console.error(`❌ TIMEOUT TEMARIO en ${TEMARIO_ESPERA_MAX}ms`);
-        reject('TEMARIO_TIMEOUT');
-        return;
-      }
-      setTimeout(check, 100);
-    };
-    check();
-  });
-}
-
-// V8.9.10: Cargar temario con await
-async function cargarTemarioHTML() {
-  const container = document.getElementById('temario-lista');
-  if(!container) {
-    console.error('❌ No existe #temario-lista');
-    return;
-  }
-
-  try {
-    const TEMARIO_DATA = await esperarTemario();
-
-    container.innerHTML = TEMARIO_DATA.map(item => {
-      const pct = getPorcentajeProgreso(item.key);
-      const subtema = getSubtemaDebil(item.key);
-      return `
-        <div class="temario-item" onclick="abrirPDF('${item.archivo}')">
-          <div class="icono">${item.icono}</div>
-          <div class="titulo">${item.titulo}</div>
-          <div class="sub">${item.subtitulo}</div>
-          <div class="progreso-bar">
-            <div class="progreso-fill" style="width:${pct}%"></div>
-          </div>
-          <div class="progreso-text">${pct}% completado</div>
-          <div class="subtema-debil">${subtema}</div>
-        </div>
-      `;
-    }).join('');
-
-    console.log('✅ Temario pintado');
-
-  } catch(e) {
-    console.error('Error cargarTemarioHTML:', e);
-    container.innerHTML = `<p style="color:red;padding:20px">Error temario: ${e}</p>`;
-  }
-}
+// === ELIMINADO: esperarTemario() - Causaba bucle infinito ===
+// === ELIMINADO: cargarTemarioHTML() async - Ahora es síncrona ===
 
 // Abrir PDF
 function abrirPDF(archivo) {
@@ -287,7 +237,34 @@ function abrirPDF(archivo) {
   console.log(`📄 Abriendo PDF:./${archivo}`);
 }
 
-// V8.9.10: INTRO SIEMPRE VISIBLE - quitamos localStorage
+// PINTAR TEMARIO SÍNCRONO - Patrón v8.7.5 que funcionaba
+function pintarTemario() {
+  const container = document.getElementById('temario-lista');
+  if(!container) {
+    console.error('❌ No existe #temario-lista');
+    return;
+  }
+
+  container.innerHTML = window.TEMARIO.map(item => {
+    const pct = getPorcentajeProgreso(item.key);
+    const subtema = getSubtemaDebil(item.key);
+    return `
+      <div class="temario-item" onclick="abrirPDF('${item.archivo}')">
+        <div class="icono">${item.icono}</div>
+        <div class="titulo">${item.titulo}</div>
+        <div class="sub">${item.subtitulo}</div>
+        <div class="progreso-bar">
+          <div class="progreso-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="progreso-text">${pct}% completado</div>
+        <div class="subtema-debil">${subtema}</div>
+      </div>
+    `;
+  }).join('');
+  console.log('✅ Temario pintado:', window.TEMARIO.length);
+}
+
+// V19.2.7: INTRO SIEMPRE VISIBLE
 function mostrarIntro(){
   const intro = document.createElement('div');
   intro.id = 'intro-screen';
@@ -307,14 +284,14 @@ function mostrarIntro(){
   document.body.insertAdjacentElement('afterbegin', intro);
 }
 
-// V8.9.10: Al cerrar intro, AHORA sí cargamos datos
+// V19.2.7: Al cerrar intro, cargamos datos
 function tancarIntro(){
   document.getElementById('intro-screen')?.remove();
   console.log('🚀 Usuario clicó EMPEZAR. Cargando datos...');
-  cargarModulos(); // <- AQUÍ cargamos todo después del clic
+  cargarModulos();
 }
 
-// V8.9.10: Cargar módulos SOLO después de intro
+// Cargar módulos SOLO después de intro - Patrón v8.6.5
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
   const t0 = performance.now();
@@ -331,39 +308,37 @@ async function cargarModulos() {
       }
     }),
     import(`./data/preguntas-situaciones.js`)
-    .then(mod => {
-        const SIT = mod.SITUACIONES || mod.PREGUNTAS_SITUACIONES || {};
+     .then(mod => {
+        const SIT = mod.SITUACIONES || {};
         Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
           CASOS[config.clave] = SIT[config.clave] || [];
           console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
         });
       })
-    .catch(e => console.error('❌ Error situaciones:', e)),
+     .catch(e => console.error('❌ Error situaciones:', e)),
     import(`./data/senales-svg.js`)
-    .then(mod => {
+     .then(mod => {
         window.SENALES_SVG = mod.SENALES_SVG || {};
         SVG_CARGADOS = true;
         console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
       })
-    .catch(e => console.error('❌ Error SVG:', e))
+     .catch(e => console.error('❌ Error SVG:', e))
   ]);
 
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
-
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
 
-  // Ahora sí pintamos temario, con TEMARIO ya cargado por <script>
-  await cargarTemarioHTML();
+  // Ahora sí pintamos temario - TEMARIO ya existe porque está hardcodeado arriba
+  pintarTemario();
 }
 
-// Auto-arranque V8.9.10: Solo mostrar intro, nada más
+// Auto-arranque V19.2.7: Solo mostrar intro
 window.addEventListener('DOMContentLoaded', () => {
   console.log(`🚀 app.js V${VERSION} cargado`);
-  if(typeof init === 'function') init();
-  mostrarIntro(); // <- Solo intro. cargarModulos() va dentro de tancarIntro()
+  mostrarIntro();
 });
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
