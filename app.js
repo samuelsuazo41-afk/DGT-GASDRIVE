@@ -603,12 +603,14 @@ function cambiarSubTab(e, tab, sub) {
   e.currentTarget.classList.add('active');
   document.querySelectorAll(`#tab-${tab}.sub-content`).forEach(c => c.classList.remove('active'));
   document.getElementById(`${tab}-${sub}`).classList.add('active');
-  cargarPregunta(sub);
+
+  // V8.9.9: Usa cargarPreguntaTest para test mixto SVG+JPG
+  cargarPreguntaTest(sub);
 }
 
-function cambiarCategoriaSit(cat) {
+function cambiarCategoriaSit(e, cat) {
   document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  e.currentTarget.classList.add('active');
   document.querySelectorAll('#tab-situaciones.sub-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`sit-${cat}`).classList.add('active');
   cargarSituacion(cat);
@@ -625,14 +627,13 @@ function cargarPregunta(categoria) {
   const test = estado.test[categoria];
   const preguntas = PREGUNTAS[categoria];
   if(test.idx >= preguntas.length) test.idx = 0;
-
   test.current = preguntas[test.idx];
   const p = test.current;
 
   // 1. Texto pregunta
   document.getElementById(`test-${categoria}-pregunta`).textContent = p.pregunta;
 
-  // 2. Limpiar imagen anterior - V8.9.9 clave para test mixto
+  // 2. V8.9.9: Limpiar imagen anterior - clave para test mixto
   const imgCont = document.getElementById(`test-${categoria}-imagen`);
   imgCont.innerHTML = '';
 
@@ -667,7 +668,6 @@ function responderTest(e, categoria, idx) {
   const test = estado.test[categoria];
   const p = test.current;
   const opciones = e.currentTarget.parentElement.children;
-
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
 
   const acierto = idx === p.correcta;
@@ -700,7 +700,6 @@ function cargarSituacion(cat) {
   const sit = estado.situacion[cat];
   const casos = CASOS[cat];
   if(sit.idx >= casos.length) sit.idx = 0;
-
   sit.current = casos[sit.idx];
   const p = sit.current;
 
@@ -731,7 +730,6 @@ function responderSituacion(e, cat, idx) {
   const sit = estado.situacion[cat];
   const p = sit.current;
   const opciones = e.currentTarget.parentElement.children;
-
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
 
   const acierto = idx === p.correcta;
@@ -803,7 +801,6 @@ function responderExamen(e, idx) {
   if(!estado.examen.activo) return;
   const p = estado.examen.preguntas[estado.examen.index];
   const opciones = e.currentTarget.parentElement.children;
-
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
 
   const acierto = idx === p.correcta;
@@ -852,7 +849,6 @@ function iniciarTimerExamen() {
 function finalizarExamen() {
   clearInterval(estado.examen.timer);
   estado.examen.activo = false;
-
   const aprobado = estado.examen.aciertos >= 24;
   PROGRESO.examenes.realizados++;
   if(aprobado) PROGRESO.examenes.aprobados++;
@@ -868,7 +864,6 @@ function finalizarExamen() {
   document.getElementById('btn-siguiente-examen').style.display = 'none';
   document.getElementById('btn-iniciar-examen').style.display = 'block';
   document.getElementById('btn-iniciar-examen').textContent = 'REPETIR EXAMEN';
-
   guardar();
 }
 
@@ -914,6 +909,7 @@ function cargarGaraje() {
     cont.innerHTML = '<div class="loading-placeholder">Próximamente</div>';
     return;
   }
+
   cont.innerHTML = COCHES.map(coche => {
     const comprado = estado.coches.includes(coche.id);
     return `
