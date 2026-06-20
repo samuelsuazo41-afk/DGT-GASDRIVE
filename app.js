@@ -519,35 +519,23 @@ const ACCESORIOS = [
   {id:'a35',nombre:'Rayo',emoji:'⚡',precio:700,hp:20},
   {id:'a36',nombre:'Fuego',emoji:'🔥',precio:500,hp:15},
 
-  // Utiles / Safety
-  {id:'a37',nombre:'Extintor',emoji:'🧯',precio:200,hp:5},
-  {id:'a38',nombre:'Triangulo Emergencia',emoji:'🔺',precio:150,hp:5},
-  {id:'a39',nombre:'Chaleco Reflectante',emoji:'🦺',precio:150,hp:5},
-  {id:'a40',nombre:'Powerbank Coche',emoji:'🔋',precio:200,hp:5},
-  {id:'a41',nombre:'Soporte Movil',emoji:'📱',precio:180,hp:5},
-  {id:'a42',nombre:'Dashcam',emoji:'🎥',precio:400,hp:10}
-];
-
-const EMOJI_TIENDA = [
-  {id:'e1',emoji:'🦄',nombre:'Unicornio',precio:1000},
-  {id:'e2',emoji:'👑',nombre:'Corona',precio:800},
-  {id:'e3',emoji:'💎',nombre:'Diamante',precio:1200},
-  {id:'e4',emoji:'🚀',nombre:'Cohete',precio:600},
-  {id:'e5',emoji:'🔥',nombre:'Fuego',precio:500},
-  {id:'e6',emoji:'⚡',nombre:'Rayo',precio:700}
-];
 
 // ============================================
-// BLOQUE 2 V8.9.9 - Lógica de navegación y tests
-// ORDEN: finalizarExamen -> Progreso -> Tips -> Garaje -> Tienda
-// Test mixto con imágenes: SVG + JPG/PNG
+// BLOQUE 2 V19.2.7 - Lógica de navegación y tests
+// CUADRA CON BLOQUE 1: TEMARIO hardcodeado + cargarPregunta única
 // ============================================
 
-// INIT - Se llama al cargar DOM
+// INIT - Se llama al cargar DOM después del clic en EMPEZAR
 function init() {
   activarTabs();
   actualizarCoins();
   actualizarMensajeMotivacional();
+  pintarTemario(); // CRÍTICO: Bloque 1 lo definió. Sin esto no hay tarjetas
+
+  // Si ya hay preguntas cargadas, carga 1 de general
+  if(PREGUNTAS.general && PREGUNTAS.general.length > 0) {
+    cargarPregunta('general');
+  }
 }
 
 // Tabs principales
@@ -586,43 +574,45 @@ function cambiarSubTab(e, tab, sub) {
   document.querySelectorAll(`#tab-${tab}.sub-content`).forEach(c => c.classList.remove('active'));
   document.getElementById(`${tab}-${sub}`).classList.add('active');
 
-  // V8.9.9: Usa cargarPreguntaTest para test mixto SVG+JPG
-  cargarPreguntaTest(sub);
+  // V19.2.7: Solo existe cargarPregunta. cargadaPreguntaTest se borró del bloque 1
+  cargarPregunta(sub);
 }
 
-function cambiarCategoriaSit(e, cat) {
-  document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-  e.currentTarget.classList.add('active');
+function cambiarCategoriaSit(cat) {
+  document.querySelectorAll('#tab-situaciones.sub-tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
   document.querySelectorAll('#tab-situaciones.sub-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`sit-${cat}`).classList.add('active');
   cargarSituacion(cat);
 }
 
-// TESTS V8.9.9 - Test mixto con imágenes
+// TESTS V19.2.7 - UNIFICADO CON BLOQUE 1
 function cargarPregunta(categoria) {
-  if(!PREGUNTAS[categoria] || PREGUNTAS[categoria].length === 0) {
-    document.getElementById(`test-${categoria}-pregunta`).textContent = 'Cargando preguntas... espera 1s';
+  const arr = PREGUNTAS[categoria];
+  if(!arr || arr.length === 0) {
+    const el = document.getElementById(`test-${categoria}-pregunta`);
+    if(el) el.textContent = 'Cargando preguntas...';
     setTimeout(() => cargarPregunta(categoria), 500);
     return;
   }
 
   const test = estado.test[categoria];
-  const preguntas = PREGUNTAS[categoria];
-  if(test.idx >= preguntas.length) test.idx = 0;
-  test.current = preguntas[test.idx];
+  if(test.idx >= arr.length) test.idx = 0;
+  test.current = arr[test.idx];
   const p = test.current;
 
   // 1. Texto pregunta
-  document.getElementById(`test-${categoria}-pregunta`).textContent = p.pregunta;
+  const txtEl = document.getElementById(`test-${categoria}-pregunta`);
+  if(txtEl) txtEl.textContent = p.pregunta;
 
-  // 2. V8.9.9: Limpiar imagen anterior - clave para test mixto
+  // 2. Limpiar imagen anterior
   const imgCont = document.getElementById(`test-${categoria}-imagen`);
-  imgCont.innerHTML = '';
+  if(imgCont) imgCont.innerHTML = '';
 
-  // 3. Si es señal → SVG automático
+  // 3. SVG si es señal - función del bloque 1
   pintarImagenTest(categoria, p.pregunta);
 
-  // 4. Si tiene p.imagen JPG/PNG → pinta foto. Si no, recuadro se oculta con CSS
+  // 4. JPG/PNG si tiene - función del bloque 1
   renderImagenTest(categoria, p.imagen);
 
   // 5. Opciones
@@ -639,6 +629,7 @@ function cargarPregunta(categoria) {
   // 6. Contadores
   document.getElementById(`test-${categoria}-aciertos`).textContent = test.aciertos;
   document.getElementById(`test-${categoria}-racha`).textContent = test.racha;
+  document.getElementById(`test-${categoria}-score`).textContent = test.puntuacion || 0;
 }
 
 function siguienteTest(e, categoria) {
@@ -657,6 +648,7 @@ function responderTest(e, categoria, idx) {
     opciones[idx].classList.add('correcta');
     test.aciertos++;
     test.racha++;
+    test.puntuacion = (test.puntuacion || 0) + 10 + (test.racha * 2);
     estado.coins += 10;
     mostrarEmoji(true, e.currentTarget);
   } else {
@@ -666,15 +658,16 @@ function responderTest(e, categoria, idx) {
     mostrarEmoji(false, e.currentTarget);
   }
 
-  actualizarMetricasTest(categoria, acierto, p.id);
+  actualizarMetricasTest(categoria, acierto, p.id || p.pregunta.substring(0,50));
   guardar();
   actualizarCoins();
 }
 
-// SITUACIONES V8.9.9 - Con renderImagenTest para ruta correcta
+// SITUACIONES
 function cargarSituacion(cat) {
   if(!CASOS[cat] || CASOS[cat].length === 0) {
-    document.getElementById(`situacion-${cat}-pregunta`).textContent = 'Cargando casos... espera 1s';
+    const el = document.getElementById(`sit-${cat}-pregunta`);
+    if(el) el.textContent = 'Cargando casos...';
     setTimeout(() => cargarSituacion(cat), 500);
     return;
   }
@@ -685,12 +678,10 @@ function cargarSituacion(cat) {
   sit.current = casos[sit.idx];
   const p = sit.current;
 
-  document.getElementById(`situacion-${cat}-pregunta`).textContent = p.pregunta;
+  document.getElementById(`sit-${cat}-pregunta`).textContent = p.pregunta;
+  renderImagenTest(`sit-${cat}`, p.imagen);
 
-  // V8.9.9: Usa renderImagenTest para ruta./data/img/
-  renderImagenTest(`situacion-${cat}`, p.imagen);
-
-  const contOpciones = document.getElementById(`situacion-${cat}-opciones`);
+  const contOpciones = document.getElementById(`sit-${cat}-opciones`);
   contOpciones.innerHTML = '';
   p.opciones.forEach((op, idx) => {
     const div = document.createElement('div');
@@ -700,7 +691,8 @@ function cargarSituacion(cat) {
     contOpciones.appendChild(div);
   });
 
-  document.getElementById(`situacion-${cat}-aciertos`).textContent = sit.aciertos;
+  document.getElementById(`sit-${cat}-aciertos`).textContent = sit.aciertos;
+  document.getElementById(`sit-${cat}-score`).textContent = sit.puntuacion || 0;
 }
 
 function siguienteSituacion(e, cat) {
@@ -718,6 +710,7 @@ function responderSituacion(e, cat, idx) {
   if(acierto) {
     opciones[idx].classList.add('correcta');
     sit.aciertos++;
+    sit.puntuacion = (sit.puntuacion || 0) + 15;
     estado.coins += 15;
     mostrarEmoji(true, e.currentTarget);
   } else {
@@ -732,7 +725,7 @@ function responderSituacion(e, cat, idx) {
   actualizarCoins();
 }
 
-// EXAMEN DGT V8.9.9 - Con renderImagenTest
+// EXAMEN
 function iniciarExamen(e) {
   const todasPreguntas = PREGUNTAS.general;
   if(!todasPreguntas || todasPreguntas.length < 30) {
@@ -762,8 +755,6 @@ function cargarPreguntaExamen() {
 
   document.getElementById('examen-num').textContent = estado.examen.index + 1;
   document.getElementById('examen-pregunta').textContent = p.pregunta;
-
-  // V8.9.9: Usa renderImagenTest para examen también
   renderImagenTest('examen', p.imagen);
 
   const contOpciones = document.getElementById('examen-opciones');
@@ -823,11 +814,6 @@ function iniciarTimerExamen() {
   }, 1000);
 }
 
-// ============================================
-// ORDEN CORREGIDO DESDE AQUÍ
-// finalizarExamen -> cargarProgreso -> cargarTips -> cargarGaraje -> cargarTienda
-// ============================================
-
 function finalizarExamen() {
   clearInterval(estado.examen.timer);
   estado.examen.activo = false;
@@ -842,7 +828,6 @@ function finalizarExamen() {
     <div class="resultado-text">Aciertos: ${estado.examen.aciertos}/30</div>
     <div class="resultado-sub">Mínimo 80%: 24 aciertos</div>
   `;
-
   document.getElementById('btn-siguiente-examen').style.display = 'none';
   document.getElementById('btn-iniciar-examen').style.display = 'block';
   document.getElementById('btn-iniciar-examen').textContent = 'REPETIR EXAMEN';
@@ -857,7 +842,6 @@ function actualizarProgresoExamen() {
 
 // 1. CARGAR PROGRESO
 function cargarProgreso() {
-  if(ESTADO_APP!== 'APP') return;
   const cont = document.getElementById('progreso-stats');
   if(!cont) return;
 
@@ -878,14 +862,12 @@ function cargarProgreso() {
 
 // 2. CARGAR TIPS
 function cargarTips() {
-  if(ESTADO_APP!== 'APP') return;
   const cont = document.getElementById('tips-lista');
   cont.innerHTML = TIPS.length? TIPS.map(tip => `<div class="tip-item">${tip}</div>`).join('') : '<p class="loading-placeholder">Cargando tips...</p>';
 }
 
 // 3. CARGAR GARAJE
 function cargarGaraje() {
-  if(ESTADO_APP!== 'APP') return;
   const cont = document.getElementById('garaje-coches');
   if(!cont ||!COCHES.length) {
     cont.innerHTML = '<div class="loading-placeholder">Próximamente</div>';
@@ -905,7 +887,6 @@ function cargarGaraje() {
 }
 
 function comprarCoche(id) {
-  if(ESTADO_APP!== 'APP') return;
   const coche = COCHES.find(c => c.id === id);
   if(!coche) return;
   if(estado.coins >= coche.precio &&!estado.coches.includes(id)) {
@@ -921,8 +902,6 @@ function comprarCoche(id) {
 
 // 4. CARGAR TIENDA
 function cargarTienda() {
-  if(ESTADO_APP!== 'APP') return;
-
   const contAcc = document.getElementById('tienda-accesorios');
   if(contAcc) {
     contAcc.innerHTML = ACCESORIOS.length? ACCESORIOS.map(acc => {
@@ -942,22 +921,23 @@ function cargarTienda() {
 
 // UTILIDADES FINALES
 function actualizarCoins() {
-  document.getElementById('coins-display').textContent = estado.coins;
+  const el = document.getElementById('coins');
+  if(el) el.textContent = `💰 ${estado.coins}`;
 }
 
 function actualizarMensajeMotivacional() {
   const tips = ['15 min al día y apruebas', 'Revisa señales débiles', 'Practica el examen diario'];
   const msg = tips[Math.floor(Math.random() * tips.length)];
-  const el = document.getElementById('mensaje-motivacional');
+  const el = document.getElementById('motivacion');
   if(el) el.textContent = msg;
 }
 
-// SERVICE WORKER REGISTRO - V8.9.9 PWA
+// SERVICE WORKER REGISTRO
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-     .then(reg => console.log('SW registrado:', reg.scope))
-     .catch(err => console.log('SW error:', err));
+   .then(reg => console.log('SW registrado:', reg.scope))
+   .catch(err => console.log('SW error:', err));
   });
 }
 
