@@ -3,7 +3,6 @@
 // BLOQUE 1 COMPLETO - Lógica + Imágenes test mixto
 // ============================================
 const VERSION = "8.9.9"; // 8.9.9: Test mixto con imágenes + limpiar recuadro
-
 let ESTADO_APP = 'APP'; // La app siempre visible
 
 // Guardias arrays
@@ -69,8 +68,8 @@ const MODULOS_PREGUNTAS = {
 const MODULOS_CASOS = {
   clima: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'clima' },
   urbano: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'urbano' },
-  carretera: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'carretera' },
-  emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
+  carretera: { archivo: 'preguntas-situaciones.js', export: 'PREGUNTAS_SITUACIONES', clave: 'carretera' },
+  emergencia: { archivo: 'preguntas-situaciones.js', export: 'PREGUNTAS_SITUACIONES', clave: 'emergencia' }
 };
 
 // DATOS GLOBALES + MÉTRICAS PROGRESO
@@ -125,7 +124,7 @@ const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
   examen: { activo:false, index:0, aciertos:0, fallos:0, tiempo:0, timer:null, preguntas:[] }
 };
 
-// Guardar estado + progreso - V8.9.9 para BLOQUE 2
+// Guardar estado + progreso
 function guardar() {
   localStorage.setItem('gd_estado', JSON.stringify(estado));
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
@@ -167,7 +166,7 @@ function getSubtemaDebil(categoria) {
   return subtemas[0].msg;
 }
 
-// Emoji flotante - usa clase CSS de index.html
+// Emoji flotante
 function mostrarEmoji(acierto, elemento){
   const emojis = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
   const emoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -179,7 +178,7 @@ function mostrarEmoji(acierto, elemento){
   setTimeout(() => div.remove(), 1000);
 }
 
-// Pintar imagen test con SVG - Solo señales
+// V8.9.9: Pintar SVG señales DGT - Respeta colores y viewBox
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
@@ -187,22 +186,22 @@ function pintarImagenTest(cat, preguntaTexto) {
   const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
   const codigo = match? match[1].toLowerCase() : null;
 
-  if (!codigo ||!SVG_CARGADOS) {
-    return; // No pinta nada, deja que renderImagenTest decida
-  }
+  if (!codigo ||!SVG_CARGADOS) return;
 
   const svg = window.SENALES_SVG[codigo];
   if (svg) {
     imgCont.innerHTML = svg;
     const svgEl = imgCont.querySelector('svg');
     if (svgEl) {
-      svgEl.setAttribute('width', '140');
-      svgEl.setAttribute('height', '140');
+      // V8.9.9: Quitar width/height fijos para que mande CSS
+      // Respeta viewBox="0 0 200 200" y colores: rojo/azul/amarillo/gris
+      svgEl.removeAttribute('width');
+      svgEl.removeAttribute('height');
     }
   }
 }
 
-// V8.9.9 NUEVO: Renderizar imagen JPG/PNG para test mixto
+// V8.9.9: Renderizar imagen JPG/PNG para test mixto
 // Regla: limpia recuadro primero, pinta solo si hay imagen
 function renderImagenTest(categoria, rutaImagen) {
   const cont = document.getElementById(`test-${categoria}-imagen`);
@@ -211,7 +210,7 @@ function renderImagenTest(categoria, rutaImagen) {
   // Si ya pintó SVG de señal, no pisar
   if(cont.querySelector('svg')) return;
 
-  // Si no hay imagen, limpiar y salir - CSS oculta recuadro vacío
+  // Si no hay imagen, limpiar y salir - CSS.imagen-cont:empty oculta recuadro
   if(!rutaImagen) {
     cont.innerHTML = '';
     return;
@@ -225,13 +224,35 @@ function renderImagenTest(categoria, rutaImagen) {
   cont.innerHTML = `<img src="${src}" class="pregunta-img" alt="Imagen pregunta" onerror="this.parentElement.innerHTML=''">`;
 }
 
-// TEMARIO - Solo clases CSS
+// V8.9.9: Cargar pregunta con imagen mixta
+function cargarPreguntaTest(categoria) {
+  const arr = PREGUNTAS[categoria];
+  if(!arr ||!arr.length) return;
+
+  const idx = Math.floor(Math.random() * arr.length);
+  const pregunta = arr[idx];
+  estado.test[categoria].current = pregunta;
+
+  // Pintar texto pregunta
+  const txtEl = document.getElementById(`test-${categoria}-pregunta`);
+  if(txtEl) txtEl.textContent = pregunta.pregunta;
+
+  // V8.9.9: Primero SVG señales, luego JPG/PNG mecánica
+  pintarImagenTest(categoria, pregunta.pregunta);
+  renderImagenTest(categoria, pregunta.imagen);
+
+  // Pintar opciones - esto va en BLOQUE 2
+  // pintarOpcionesTest(categoria, pregunta);
+}
+
+// TEMARIO
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
   if(!container || typeof TEMARIO === 'undefined') {
     console.error('Container o TEMARIO no encontrado');
     return;
   }
+
   container.innerHTML = TEMARIO.map(item => {
     const pct = getPorcentajeProgreso(item.key);
     const subtema = getSubtemaDebil(item.key);
@@ -250,7 +271,7 @@ function cargarTemarioHTML() {
   }).join('');
 }
 
-// Abrir PDF - mapeo en BLOQUE 2
+// Abrir PDF
 function abrirPDF(archivo) {
   window.open('./' + archivo, '_blank');
   console.log(`📄 Abriendo PDF:./${archivo}`);
@@ -299,17 +320,19 @@ async function cargarModulos() {
         PREGUNTAS[tema] = [];
       }
     }),
+
     // Situaciones
     import(`./data/preguntas-situaciones.js`)
      .then(mod => {
-        const SIT = mod.SITUACIONES;
+        const SIT = mod.SITUACIONES || mod.PREGUNTAS_SITUACIONES || {};
         Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
           CASOS[config.clave] = SIT[config.clave] || [];
           console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
         });
       })
      .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
-    // SVG
+
+    // SVG señales DGT
     import(`./data/senales-svg.js`)
      .then(mod => {
         window.SENALES_SVG = mod.SENALES_SVG || {};
@@ -319,7 +342,7 @@ async function cargarModulos() {
      .catch(e => console.error('❌ Error senales-svg.js:', e))
   ]);
 
-  // Array general mixto: señales + normas + mecánica + auxilios + medioambiente
+  // Array general mixto
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
