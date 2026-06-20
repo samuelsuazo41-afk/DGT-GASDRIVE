@@ -17,7 +17,6 @@ const FILES = [
   './data/preguntas-auxilios.js',
   './data/preguntas-medioambiente.js',
   './data/preguntas-situaciones.js',
-  './data/explicaciones.js',
   
   // === PDFs Temario ===
   './01_Senales_Tomo_I_RD_465_2025.pdf',
