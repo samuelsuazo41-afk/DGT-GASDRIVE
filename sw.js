@@ -1,5 +1,5 @@
 // sw.js - V19.2.1 GasDrive DGT ESP
-const CACHE = 'gasdrive-v19.2.3';
+const CACHE = 'gasdrive-v19.2.4';
 
 const FILES = [
   './',
