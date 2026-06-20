@@ -1,12 +1,12 @@
 // ============================================
 // GASDRIVE DGT V8.9.10 ESP - 630 PREGUNTAS DGT 2026
-// BLOQUE 1 COMPLETO - Lógica + Imágenes test mixto + Fix TEMARIO definitivo
+// BLOQUE 1 COMPLETO - Intro siempre + carga datos después del clic
 // ============================================
 const VERSION = "8.9.10";
 
-// 8.9.10: Fix race condition TEMARIO + logs debug
+// 8.9.10: Fix race condition TEMARIO + intro siempre visible
 let ESTADO_APP = 'APP';
-const TEMARIO_ESPERA_MAX = 5000; // 5 seg timeout esperando TEMARIO
+const TEMARIO_ESPERA_MAX = 5000;
 
 // Guardias arrays
 if(typeof COCHES === 'undefined') var COCHES = [];
@@ -19,7 +19,7 @@ const EMOJIS_ACIERTO = ['🎉','💪','🔥','🚀','👏','💎','⚡','✅'];
 const EMOJIS_FALLO = ['😅','💥','🤔','💔','😬','⚠️'];
 const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
 
-// SUBTEMAS DÉBILES para métricas de progreso
+// SUBTEMAS DÉBILES
 const SUBTEMAS_DEBILES = {
   senales: [
     { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
@@ -58,7 +58,7 @@ const SUBTEMAS_DEBILES = {
   ]
 };
 
-// RUTAS MÓDULOS PREGUNTAS
+// RUTAS MÓDULOS
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
@@ -67,7 +67,6 @@ const MODULOS_PREGUNTAS = {
   medioambiente: { archivo: 'preguntas-medioambiente.js', export: 'PREGUNTAS_MEDIOAMBIENTE' }
 };
 
-// RUTAS MÓDULOS CASOS
 const MODULOS_CASOS = {
   clima: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'clima' },
   urbano: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'urbano' },
@@ -75,7 +74,7 @@ const MODULOS_CASOS = {
   emergencia: { archivo: 'preguntas-situaciones.js', export: 'PREGUNTAS_SITUACIONES', clave: 'emergencia' }
 };
 
-// DATOS GLOBALES + MÉTRICAS PROGRESO
+// DATOS GLOBALES + PROGRESO
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
     general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
@@ -127,18 +126,17 @@ const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
   examen: { activo:false, index:0, aciertos:0, fallos:0, tiempo:0, timer:null, preguntas:[] }
 };
 
-// Guardar estado + progreso
+// Guardar
 function guardar() {
   localStorage.setItem('gd_estado', JSON.stringify(estado));
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
 
-// Guardar solo progreso
 function guardarProgreso() {
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
 
-// Actualizar métricas de test
+// Métricas
 function actualizarMetricasTest(categoria, acierto, preguntaId) {
   const prog = PROGRESO.tests[categoria];
   prog.total++;
@@ -151,7 +149,6 @@ function actualizarMetricasTest(categoria, acierto, preguntaId) {
   guardarProgreso();
 }
 
-// Obtener porcentaje progreso por categoría
 function getPorcentajeProgreso(categoria) {
   const total = PREGUNTAS[categoria]? PREGUNTAS[categoria].length : 0;
   if(total === 0) return 0;
@@ -159,7 +156,6 @@ function getPorcentajeProgreso(categoria) {
   return Math.round((unicas / total) * 100);
 }
 
-// Obtener subtema débil según progreso
 function getSubtemaDebil(categoria) {
   const pct = getPorcentajeProgreso(categoria);
   const subtemas = SUBTEMAS_DEBILES[categoria] || SUBTEMAS_DEBILES.general;
@@ -181,7 +177,7 @@ function mostrarEmoji(acierto, elemento){
   setTimeout(() => div.remove(), 1000);
 }
 
-// V8.9.9: Pintar SVG señales DGT
+// Pintar SVG
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
@@ -199,7 +195,7 @@ function pintarImagenTest(cat, preguntaTexto) {
   }
 }
 
-// V8.9.9: Renderizar imagen JPG/PNG
+// Render imagen JPG/PNG
 function renderImagenTest(categoria, rutaImagen) {
   const cont = document.getElementById(`test-${categoria}-imagen`);
   if(!cont) return;
@@ -212,7 +208,7 @@ function renderImagenTest(categoria, rutaImagen) {
   cont.innerHTML = `<img src="${src}" class="pregunta-img" alt="Imagen pregunta" onerror="this.parentElement.innerHTML=''">`;
 }
 
-// V8.9.9: Cargar pregunta con imagen mixta
+// Cargar pregunta
 function cargarPreguntaTest(categoria) {
   const arr = PREGUNTAS[categoria];
   if(!arr ||!arr.length) return;
@@ -225,7 +221,7 @@ function cargarPreguntaTest(categoria) {
   renderImagenTest(categoria, pregunta.imagen);
 }
 
-// V8.9.10 FIX DEFINITIVO: Esperar TEMARIO con Promise
+// V8.9.10: Esperar TEMARIO
 function esperarTemario() {
   return new Promise((resolve, reject) => {
     let intentos = 0;
@@ -237,30 +233,27 @@ function esperarTemario() {
         resolve(window.TEMARIO);
         return;
       }
-
       intentos++;
       if(intentos > maxIntentos) {
-        console.error(`❌ TIMEOUT: TEMARIO no cargó en ${TEMARIO_ESPERA_MAX}ms. Revisa temario.js y ruta`);
+        console.error(`❌ TIMEOUT TEMARIO en ${TEMARIO_ESPERA_MAX}ms`);
         reject('TEMARIO_TIMEOUT');
         return;
       }
-
       setTimeout(check, 100);
     };
     check();
   });
 }
 
-// V8.9.10: Temario con await para evitar race condition
+// V8.9.10: Cargar temario con await
 async function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
   if(!container) {
-    console.error('❌ No existe #temario-lista en DOM');
+    console.error('❌ No existe #temario-lista');
     return;
   }
 
   try {
-    // ESPERAR a que TEMARIO exista sí o sí
     const TEMARIO_DATA = await esperarTemario();
 
     container.innerHTML = TEMARIO_DATA.map(item => {
@@ -280,11 +273,11 @@ async function cargarTemarioHTML() {
       `;
     }).join('');
 
-    console.log('✅ Temario pintado en pantalla');
+    console.log('✅ Temario pintado');
 
   } catch(e) {
     console.error('Error cargarTemarioHTML:', e);
-    container.innerHTML = `<p style="color:red;padding:20px">Error cargando temario: ${e}. Revisa temario.js</p>`;
+    container.innerHTML = `<p style="color:red;padding:20px">Error temario: ${e}</p>`;
   }
 }
 
@@ -294,9 +287,8 @@ function abrirPDF(archivo) {
   console.log(`📄 Abriendo PDF:./${archivo}`);
 }
 
-// INTRO SOLO 1ª VEZ
+// V8.9.10: INTRO SIEMPRE VISIBLE - quitamos localStorage
 function mostrarIntro(){
-  if(localStorage.getItem('gd_visto_intro')) return;
   const intro = document.createElement('div');
   intro.id = 'intro-screen';
   intro.innerHTML = `
@@ -315,18 +307,19 @@ function mostrarIntro(){
   document.body.insertAdjacentElement('afterbegin', intro);
 }
 
+// V8.9.10: Al cerrar intro, AHORA sí cargamos datos
 function tancarIntro(){
   document.getElementById('intro-screen')?.remove();
-  localStorage.setItem('gd_visto_intro', '1');
+  console.log('🚀 Usuario clicó EMPEZAR. Cargando datos...');
+  cargarModulos(); // <- AQUÍ cargamos todo después del clic
 }
 
-// Cargar módulos en background
+// V8.9.10: Cargar módulos SOLO después de intro
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
   const t0 = performance.now();
 
   await Promise.all([
-    // Preguntas por tema
    ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
@@ -337,27 +330,24 @@ async function cargarModulos() {
         PREGUNTAS[tema] = [];
       }
     }),
-    // Situaciones
     import(`./data/preguntas-situaciones.js`)
-     .then(mod => {
+    .then(mod => {
         const SIT = mod.SITUACIONES || mod.PREGUNTAS_SITUACIONES || {};
         Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
           CASOS[config.clave] = SIT[config.clave] || [];
           console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
         });
       })
-     .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
-    // SVG señales DGT
+    .catch(e => console.error('❌ Error situaciones:', e)),
     import(`./data/senales-svg.js`)
-     .then(mod => {
+    .then(mod => {
         window.SENALES_SVG = mod.SENALES_SVG || {};
         SVG_CARGADOS = true;
         console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
       })
-     .catch(e => console.error('❌ Error senales-svg.js:', e))
+    .catch(e => console.error('❌ Error SVG:', e))
   ]);
 
-  // Array general mixto
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
@@ -365,16 +355,15 @@ async function cargarModulos() {
 
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
 
-  // V8.9.10: await para que espere TEMARIO antes de pintar
+  // Ahora sí pintamos temario, con TEMARIO ya cargado por <script>
   await cargarTemarioHTML();
 }
 
-// Auto-arranque
+// Auto-arranque V8.9.10: Solo mostrar intro, nada más
 window.addEventListener('DOMContentLoaded', () => {
   console.log(`🚀 app.js V${VERSION} cargado`);
   if(typeof init === 'function') init();
-  cargarModulos();
-  mostrarIntro();
+  mostrarIntro(); // <- Solo intro. cargarModulos() va dentro de tancarIntro()
 });
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
