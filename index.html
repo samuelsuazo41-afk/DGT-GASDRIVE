@@ -3,193 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GasDrive DGT ES v1.0</title>
-<link rel="manifest" href="./manifest.json">
+<title>GasDrive DGT ES v19.2.7</title>
+<link rel="manifest" href="./manifest.json?v=19.2.7">
 <meta name="theme-color" content="#00D9FF">
-<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./style.css?v=19.2.7">
 <style>
-html, body { 
-  background: #0a0a0a; 
-  color: #fff; 
-  margin: 0; 
-  padding: 0; 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-  -webkit-tap-highlight-color: transparent; 
-  padding-bottom: 80px; 
-}
-.header { 
-  background: #1a1a1a; 
-  padding: 12px 16px; 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  border-bottom: 1px solid #333; 
-  position: sticky; 
-  top: 0; 
-  z-index: 100; 
-}
+html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; padding-bottom: 80px; }
+.header { background: #1a1a1a; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
 .header h1 { font-size: 18px; margin: 0; }
 .coins { font-size: 16px; font-weight: 700; color: #ff8c00; }
 
-/* MENÚ ABAJO - Orden: Temario Test Casos Examen Progreso Tips Garaje Tienda */
-.tabs { 
-  display: flex; 
-  background: #1a1a1a; 
-  border-top: 1px solid #333; 
-  overflow-x: auto; 
-  position: fixed; 
-  bottom: 0; 
-  left: 0; 
-  right: 0; 
-  z-index: 200; 
-}
-.tab-btn { 
-  flex: 1; 
-  padding: 10px 4px; 
-  background: none; 
-  border: none; 
-  color: #999; 
-  font-size: 11px; 
-  font-weight: 600; 
-  cursor: pointer; 
-  white-space: nowrap; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  gap: 3px; 
-}
+/* MENÚ ABAJO */
+.tabs { display: flex; background: #1a1a1a; border-top: 1px solid #333; overflow-x: auto; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; }
+.tab-btn { flex: 1; padding: 10px 4px; background: none; border: none; color: #999; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .tab-btn.active { color: #00D9FF; border-top: 2px solid #00D9FF; }
 .tab-content { display: none; padding: 16px; min-height: calc(100vh - 140px); }
 .tab-content.active { display: block; }
+
+/* CRÍTICO: sub-content oculto por defecto */
+.sub-content { display: none !important; }
+.sub-content.active { display: block !important; animation: fadeIn 0.3s; }
+
 .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
-.sub-tab-btn { 
-  padding: 8px 12px; 
-  background: #2a2a2a; 
-  border: none; 
-  border-radius: 8px; 
-  color: #999; 
-  font-size: 12px; 
-  cursor: pointer; 
-}
+.sub-tab-btn { padding: 8px 12px; background: #2a2a2a; border: none; border-radius: 8px; color: #999; font-size: 12px; cursor: pointer; }
 .sub-tab-btn.active { background: #00D9FF; color: #000; }
-.opcion { 
-  background: #1a1a1a; 
-  padding: 16px; 
-  margin-bottom: 10px; 
-  border-radius: 10px; 
-  cursor: pointer; 
-  border: 2px solid #333; 
-}
+
+.opcion { background: #1a1a1a; padding: 16px; margin-bottom: 10px; border-radius: 10px; cursor: pointer; border: 2px solid #333; position: relative; }
 .opcion.correcta { border-color: #2ecc71; background: #1a2e1a; }
 .opcion.incorrecta { border-color: #e74c3c; background: #2e1a1a; }
-.btn { 
-  background: linear-gradient(135deg,#ff8c00,#ff2d55); 
-  border: none; 
-  color: #fff; 
-  padding: 14px 24px; 
-  border-radius: 10px; 
-  font-size: 16px; 
-  font-weight: 700; 
-  cursor: pointer; 
-  width: 100%; 
-  margin-top: 15px; 
-}
+.opcion.bloqueada { pointer-events: none; }
+
+.btn { background: linear-gradient(135deg,#ff8c00,#ff2d55); border: none; color: #fff; padding: 14px 24px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 15px; }
 .btn:disabled { opacity: 0.5; }
+
 .stats { display: flex; gap: 15px; margin-bottom: 15px; }
 .stat-box { flex: 1; background: #1a1a1a; padding: 12px; border-radius: 10px; text-align: center; }
 .stat-num { font-size: 24px; font-weight: 700; color: #00D9FF; }
+
 .progress-bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin: 10px 0; }
 .progress-fill { background: #00D9FF; height: 100%; width: 0%; transition: width 0.3s; }
 
-/* IMÁGENES TEST MIXTO - Respeta colores DGT RD 465/2025 */
+/* IMÁGENES TEST MIXTO */
 .imagen-cont:empty { display: none!important; height: 0!important; margin: 0!important; padding: 0!important; }
-.imagen-cont { 
-  width: 100%; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  margin: 15px 0; 
-  min-height: 140px; 
-}
-.imagen-cont svg { 
-  width: 140px; 
-  height: auto; 
-  max-width: 90vw; 
-  display: block; 
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.35)); 
-}
-.pregunta-img { 
-  max-width: 90vw; 
-  max-height: 200px; 
-  width: auto; 
-  height: auto; 
-  border-radius: 12px; 
-  display: block; 
-  margin: auto; 
-  border: 2px solid #333; 
-  object-fit: contain; 
-  background: #0a0a0a; 
-}
+.imagen-cont { width: 100%; display: flex; justify-content: center; align-items: center; margin: 15px 0; min-height: 140px; }
+.imagen-cont svg { width: 140px; height: auto; max-width: 90vw; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.35)); }
+.pregunta-img { max-width: 90vw; max-height: 200px; width: auto; height: auto; border-radius: 12px; display: block; margin: auto; border: 2px solid #333; object-fit: contain; background: #0a0a0a; }
 
 /* Emoji flotante */
-.emoji-flotante { 
-  position: absolute; 
-  font-size: 40px; 
-  animation: flotar 1s ease-out forwards; 
-  pointer-events: none; 
-  z-index: 10; 
-}
-@keyframes flotar { 
- 0% { transform: translateY(0) scale(1); opacity: 1; } 
- 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } 
-}
+.emoji-flotante { position: absolute; font-size: 40px; animation: flotar 1s ease-out forwards; pointer-events: none; z-index: 10; }
+@keyframes flotar { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } }
+@keyframes fadeIn { from {opacity:0} to {opacity:1} }
 
 .garaje-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .garaje-coche { background: #1a1a1a; padding: 15px; border-radius: 12px; text-align: center; }
 .garaje-coche.bloqueado { opacity: 0.5; }
-.btn-comprar { 
-  background: #00D9FF; 
-  border: none; 
-  color: #000; 
-  padding: 8px 16px; 
-  border-radius: 8px; 
-  font-weight: 700; 
-  margin-top: 8px; 
-  cursor: pointer; 
-}
+.btn-comprar { background: #00D9FF; border: none; color: #000; padding: 8px 16px; border-radius: 8px; font-weight: 700; margin-top: 8px; cursor: pointer; }
+
 .emoji-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .emoji-item { background: #1a1a1a; padding: 15px; border-radius: 12px; text-align: center; }
 .emoji-item.bloqueado { opacity: 0.5; }
+
 .temario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.temario-item { 
-  background: #1a1a1a; 
-  padding: 20px; 
-  border-radius: 12px; 
-  text-align: center; 
-  cursor: pointer; 
-  border: 2px solid #333; 
-}
+.temario-item { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 2px solid #333; }
 .temario-item:hover { border-color: #00D9FF; }
-.category-btn { 
-  padding: 10px 16px; 
-  background: #2a2a2a; 
-  border: none; 
-  border-radius: 8px; 
-  color: #999; 
-  font-weight: 600; 
-  cursor: pointer; 
-}
+
+.category-btn { padding: 10px 16px; background: #2a2a2a; border: none; border-radius: 8px; color: #999; font-weight: 600; cursor: pointer; }
 .category-btn.active { background: #00D9FF; color: #000; }
-.mensaje-motivacional { 
-  background: #1a1a1a; 
-  padding: 15px; 
-  border-radius: 12px; 
-  text-align: center; 
-  margin-bottom: 20px; 
-  color: #00D9FF; 
-  font-weight: 600; 
-}
+
+.mensaje-motivacional { background: #1a1a1a; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; color: #00D9FF; font-weight: 600; }
 .loading-placeholder { color: #666; text-align: center; padding: 40px; }
+
 @media (max-width: 380px) { 
   .imagen-cont svg { width: 120px; } 
   .pregunta-img { max-height: 160px; } 
@@ -198,12 +81,12 @@ html, body {
 </head>
 <body>
 <div class="header">
-  <h1>🚗 GasDrive DGT ES v1.0</h1>
-  <div class="coins" id="coins-display">💰 0</div>
+  <h1>🚗 GasDrive DGT ES v19.2.7</h1>
+  <div class="coins" id="coins">💰 0</div> <!-- FIX: coins en vez de coins-display -->
 </div>
 
 <!-- MENSAJE MOTIVACIONAL -->
-<div class="mensaje-motivacional" id="mensaje-motivacional">Cargando...</div>
+<div class="mensaje-motivacional" id="motivacion">Cargando...</div> <!-- FIX: motivacion en vez de mensaje-motivacional -->
 
 <!-- 1. TEMARIO -->
 <div id="tab-temario" class="tab-content active">
@@ -226,73 +109,91 @@ html, body {
   <!-- GENERAL -->
   <div id="test-general" class="sub-content active">
     <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-general-aciertos">0</div><div>Racha</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-general-racha">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-general-aciertos">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-general-racha">0</div><div>Racha</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-general-score">0</div><div>Puntos</div></div>
     </div>
+    <div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div>
     <div id="test-general-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="test-general-imagen" class="imagen-cont"></div>
     <div id="test-general-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'general')">Siguiente</button>
+    <div id="test-general-feedback"></div>
+    <button class="btn" id="btn-sig-test-general" onclick="siguienteTest(event,'general')" disabled>Siguiente</button>
   </div>
   
   <!-- SEÑALES -->
   <div id="test-senales" class="sub-content">
     <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-senales-aciertos">0</div><div>Racha</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-senales-racha">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-senales-aciertos">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-senales-racha">0</div><div>Racha</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-senales-score">0</div><div>Puntos</div></div>
     </div>
+    <div class="progress-bar"><div class="progress-fill" id="test-senales-progress"></div></div>
     <div id="test-senales-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="test-senales-imagen" class="imagen-cont"></div>
     <div id="test-senales-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'senales')">Siguiente</button>
+    <div id="test-senales-feedback"></div>
+    <button class="btn" id="btn-sig-test-senales" onclick="siguienteTest(event,'senales')" disabled>Siguiente</button>
   </div>
   
   <!-- NORMAS -->
   <div id="test-normas" class="sub-content">
     <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-normas-aciertos">0</div><div>Racha</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-normas-racha">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-normas-aciertos">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-normas-racha">0</div><div>Racha</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-normas-score">0</div><div>Puntos</div></div>
     </div>
+    <div class="progress-bar"><div class="progress-fill" id="test-normas-progress"></div></div>
     <div id="test-normas-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="test-normas-imagen" class="imagen-cont"></div>
     <div id="test-normas-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'normas')">Siguiente</button>
+    <div id="test-normas-feedback"></div>
+    <button class="btn" id="btn-sig-test-normas" onclick="siguienteTest(event,'normas')" disabled>Siguiente</button>
   </div>
   
   <!-- MECÁNICA -->
   <div id="test-mecanica" class="sub-content">
     <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-mecanica-aciertos">0</div><div>Racha</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-mecanica-racha">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-mecanica-aciertos">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-mecanica-racha">0</div><div>Racha</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-mecanica-score">0</div><div>Puntos</div></div>
     </div>
+    <div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div>
     <div id="test-mecanica-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="test-mecanica-imagen" class="imagen-cont"></div>
     <div id="test-mecanica-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'mecanica')">Siguiente</button>
+    <div id="test-mecanica-feedback"></div>
+    <button class="btn" id="btn-sig-test-mecanica" onclick="siguienteTest(event,'mecanica')" disabled>Siguiente</button>
   </div>
   
   <!-- AUXILIOS -->
   <div id="test-auxilios" class="sub-content">
     <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-auxilios-aciertos">0</div><div>Racha</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-auxilios-racha">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-auxilios-aciertos">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-auxilios-racha">0</div><div>Racha</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-auxilios-score">0</div><div>Puntos</div></div>
     </div>
+    <div class="progress-bar"><div class="progress-fill" id="test-auxilios-progress"></div></div>
     <div id="test-auxilios-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="test-auxilios-imagen" class="imagen-cont"></div>
     <div id="test-auxilios-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'auxilios')">Siguiente</button>
+    <div id="test-auxilios-feedback"></div>
+    <button class="btn" id="btn-sig-test-auxilios" onclick="siguienteTest(event,'auxilios')" disabled>Siguiente</button>
   </div>
   
   <!-- MEDIO AMBIENTE -->
   <div id="test-medioambiente" class="sub-content">
     <div class="stats">
-      <div class="stat-box"><div class="stat-num" id="test-medioambiente-aciertos">0</div><div>Racha</div></div>
-      <div class="stat-box"><div class="stat-num" id="test-medioambiente-racha">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-medioambiente-aciertos">0</div><div>Aciertos</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-medioambiente-racha">0</div><div>Racha</div></div>
+      <div class="stat-box"><div class="stat-num" id="test-medioambiente-score">0</div><div>Puntos</div></div>
     </div>
+    <div class="progress-bar"><div class="progress-fill" id="test-medioambiente-progress"></div></div>
     <div id="test-medioambiente-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
     <div id="test-medioambiente-imagen" class="imagen-cont"></div>
     <div id="test-medioambiente-opciones"></div>
-    <button class="btn" onclick="siguienteTest(event,'medioambiente')">Siguiente</button>
+    <div id="test-medioambiente-feedback"></div>
+    <button class="btn" id="btn-sig-test-medioambiente" onclick="siguienteTest(event,'medioambiente')" disabled>Siguiente</button>
   </div>
 </div>
 
@@ -305,32 +206,32 @@ html, body {
     <button class="category-btn" onclick="cambiarCategoriaSit('emergencia')">Emergencia</button>
   </div>
   <div id="sit-clima" class="sub-content active">
-    <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-clima-aciertos">0</div><div>Aciertos</div></div></div>
-    <div id="situacion-clima-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
-    <div id="situacion-clima-imagen" class="imagen-cont"></div>
-    <div id="situacion-clima-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'clima')">Siguiente</button>
+    <div class="stats"><div class="stat-box"><div class="stat-num" id="sit-clima-aciertos">0</div><div>Aciertos</div></div></div>
+    <div id="sit-clima-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
+    <div id="sit-clima-imagen" class="imagen-cont"></div>
+    <div id="sit-clima-opciones"></div>
+    <button class="btn" id="btn-sig-sit-clima" onclick="siguienteSituacion(event,'clima')" disabled>Siguiente</button>
   </div>
   <div id="sit-urbano" class="sub-content">
-    <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-urbano-aciertos">0</div><div>Aciertos</div></div></div>
-    <div id="situacion-urbano-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
-    <div id="situacion-urbano-imagen" class="imagen-cont"></div>
-    <div id="situacion-urbano-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'urbano')">Siguiente</button>
+    <div class="stats"><div class="stat-box"><div class="stat-num" id="sit-urbano-aciertos">0</div><div>Aciertos</div></div></div>
+    <div id="sit-urbano-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
+    <div id="sit-urbano-imagen" class="imagen-cont"></div>
+    <div id="sit-urbano-opciones"></div>
+    <button class="btn" id="btn-sig-sit-urbano" onclick="siguienteSituacion(event,'urbano')" disabled>Siguiente</button>
   </div>
   <div id="sit-carretera" class="sub-content">
-    <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-carretera-aciertos">0</div><div>Aciertos</div></div></div>
-    <div id="situacion-carretera-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
-    <div id="situacion-carretera-imagen" class="imagen-cont"></div>
+    <div class="stats"><div class="stat-box"><div class="stat-num" id="sit-carretera-aciertos">0</div><div>Aciertos</div></div></div>
+    <div id="sit-carretera-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
+    <div id="sit-carretera-imagen" class="imagen-cont"></div>
     <div id="sit-carretera-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'carretera')">Siguiente</button>
+    <button class="btn" id="btn-sig-sit-carretera" onclick="siguienteSituacion(event,'carretera')" disabled>Siguiente</button>
   </div>
   <div id="sit-emergencia" class="sub-content">
-    <div class="stats"><div class="stat-box"><div class="stat-num" id="situacion-emergencia-aciertos">0</div><div>Aciertos</div></div></div>
+    <div class="stats"><div class="stat-box"><div class="stat-num" id="sit-emergencia-aciertos">0</div><div>Aciertos</div></div></div>
     <div id="situacion-emergencia-pregunta" style="font-size:18px;font-weight:600;margin-bottom:15px"></div>
-    <div id="situacion-emergencia-imagen" class="imagen-cont"></div>
+    <div id="sit-emergencia-imagen" class="imagen-cont"></div>
     <div id="sit-emergencia-opciones"></div>
-    <button class="btn" onclick="siguienteSituacion(event,'emergencia')">Siguiente</button>
+    <button class="btn" id="btn-sig-sit-emergencia" onclick="siguienteSituacion(event,'emergencia')" disabled>Siguiente</button>
   </div>
 </div>
 
@@ -366,54 +267,38 @@ html, body {
 
 <!-- 7. GARAJE -->
 <div id="tab-garaje" class="tab-content">
-  <div style="font-size:20px;font-weight:700;margin-bottom:15px">🏎️ Garaje</div>
-  <div id="garaje-coches" class="garaje-lista"></div>
+  <div style="font-size:20px;font-weight:700;margin-bottom:15px">🏁 Garaje</div>
+  <div id="garaje-coches"></div>
 </div>
 
 <!-- 8. TIENDA -->
 <div id="tab-tienda" class="tab-content">
-  <div style="font-size:20px;font-weight:700;margin-bottom:15px">🛍️ Tienda</div>
-  <div style="margin-bottom:20px;font-weight:600">Accesorios</div>
-  <div id="tienda-accesorios" class="emoji-grid"></div>
-  <div style="margin:20px 0;font-weight:600">Emojis</div>
-  <div id="tienda-emojis" class="emoji-grid"></div>
+  <div style="font-size:20px;font-weight:700;margin-bottom:15px">🛒 Tienda</div>
+  
+  <div class="sub-tabs">
+    <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'tienda','accesorios')">Accesorios</button>
+    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'tienda','emojis')">Emojis</button>
+  </div>
+  
+  <div id="tienda-accesorios" class="sub-content active"></div>
+  <div id="tienda-emojis" class="sub-content"></div>
 </div>
 
-<!-- MENÚ ABAJO - Orden: Temario Test Casos Examen Progreso Tips Garaje Tienda -->
+<!-- MENÚ INFERIOR -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="cambiarTab(event,'temario')">📚<br>Temario</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'test')">📝<br>Test</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')">🚦<br>Casos</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'examen')">🎯<br>Examen</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'progreso')">📊<br>Progreso</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tips')">💡<br>Tips</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'garaje')">🏎️<br>Garaje</button>
-  <button class="tab-btn" onclick="cambiarTab(event,'tienda')">🛍️<br>Tienda</button>
+  <button class="tab-btn active" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'progreso')"><span class="emoji">📊</span>PROGRESO</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tips')"><span class="emoji">💡</span>TIPS</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'garaje')"><span class="emoji">🏁</span>GARAJE</button>
+  <button class="tab-btn" onclick="cambiarTab(event,'tienda')"><span class="emoji">🛒</span>TIENDA</button>
 </div>
 
-<!-- SCRIPTS ORDEN CORRECTO: temario.js ANTES que app.js + v19.2.7 -->
-<script src="./temario.js?v=19.2.7"></script>
-<script src="./data/senales-svg.js?v=19.2.7"></script>
 <script src="./app.js?v=19.2.7"></script>
-
-<!-- IMPORTANTE: NO cargar sw.js con <script>. Se registra abajo -->
-<script>
-// Registrar Service Worker V19.2.7
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=19.2.7', { scope: './' })
-    .then(reg => {
-      console.log('✅ SW registrado:', reg.scope, 'v19.2.7');
-    })
-    .catch(err => console.error('❌ SW error:', err));
-  });
-}
-</script>
-
 </body>
 </html>
-
-
 
 
 
