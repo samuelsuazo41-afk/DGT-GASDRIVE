@@ -1,8 +1,12 @@
+// ============================================
 // GASDRIVE DGT V8.9.7 ESP - 630 PREGUNTAS DGT 2026
+// BLOQUE 1 COMPLETO - Solo lógica JS
+// ============================================
+
 const VERSION = "8.9.7";
 
 // 8.9.7: SIN ESTADO_APP bloqueando. La app siempre está visible
-let ESTADO_APP = 'APP'; // Siempre APP, no bloqueamos clicks
+let ESTADO_APP = 'APP';
 
 // Guardias arrays
 if(typeof COCHES === 'undefined') var COCHES = [];
@@ -15,7 +19,7 @@ const EMOJIS_ACIERTO = ['🎉','💪','🔥','🚀','👏','💎','⚡','✅'];
 const EMOJIS_FALLO = ['😅','💥','🤔','💔','😬','⚠️'];
 const LINK_DGT_OFICIAL = 'https://sede.dgt.gob.es/es/permisos-de-conducir/';
 
-// SUBTEMAS DÉBILES
+// SUBTEMAS DÉBILES para métricas de progreso
 const SUBTEMAS_DEBILES = {
   senales: [
     { pct: 0, msg: 'Señales de Prioridad R-1 a R-6 - Pág 65-66' },
@@ -54,7 +58,7 @@ const SUBTEMAS_DEBILES = {
   ]
 };
 
-// RUTAS MÓDULOS
+// RUTAS MÓDULOS PREGUNTAS
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
@@ -63,6 +67,7 @@ const MODULOS_PREGUNTAS = {
   medioambiente: { archivo: 'preguntas-medioambiente.js', export: 'PREGUNTAS_MEDIOAMBIENTE' }
 };
 
+// RUTAS MÓDULOS CASOS
 const MODULOS_CASOS = {
   clima: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'clima' },
   urbano: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'urbano' },
@@ -70,7 +75,7 @@ const MODULOS_CASOS = {
   emergencia: { archivo: 'preguntas-situaciones.js', export: 'SITUACIONES', clave: 'emergencia' }
 };
 
-// DATOS GLOBALES
+// DATOS GLOBALES + MÉTRICAS PROGRESO
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
     general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
@@ -101,7 +106,7 @@ const CASOS = {};
 window.SENALES_SVG = {};
 let SVG_CARGADOS = false;
 
-// 8.9.7: ESTADO - Se declara aquí como en CAT
+// ESTADO GLOBAL
 const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
   coins: 0,
   coches: [],
@@ -122,58 +127,106 @@ const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
   examen: { activo:false, index:0, aciertos:0, fallos:0, tiempo:0, timer:null, preguntas:[] }
 };
 
+// Guardar progreso en localStorage
+function guardarProgreso() {
+  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
+}
+
+// Actualizar métricas de test
+function actualizarMetricasTest(categoria, acierto, preguntaId) {
+  const prog = PROGRESO.tests[categoria];
+  prog.total++;
+  if(acierto) {
+    prog.aciertos++;
+    if(!prog.unicas.includes(preguntaId)) prog.unicas.push(preguntaId);
+  } else {
+    if(!prog.falladas.includes(preguntaId)) prog.falladas.push(preguntaId);
+  }
+  guardarProgreso();
+}
+
+// Obtener porcentaje progreso por categoría
+function getPorcentajeProgreso(categoria) {
+  const total = PREGUNTAS[categoria]? PREGUNTAS[categoria].length : 0;
+  if(total === 0) return 0;
+  const unicas = PROGRESO.tests[categoria].unicas.length;
+  return Math.round((unicas / total) * 100);
+}
+
+// Obtener subtema débil según progreso
+function getSubtemaDebil(categoria) {
+  const pct = getPorcentajeProgreso(categoria);
+  const subtemas = SUBTEMAS_DEBILES[categoria] || SUBTEMAS_DEBILES.general;
+  for(let i = subtemas.length - 1; i >= 0; i--) {
+    if(pct >= subtemas[i].pct) return subtemas[i].msg;
+  }
+  return subtemas[0].msg;
+}
+
+// Emoji flotante - usa clase CSS de index.html
 function mostrarEmoji(acierto, elemento){
   const emojis = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
   const emoji = emojis[Math.floor(Math.random() * emojis.length)];
   const div = document.createElement('div');
   div.textContent = emoji;
-  div.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;z-index:999;animation:flotar 1s ease-out forwards;pointer-events:none';
+  div.className = 'emoji-flotante';
   elemento.style.position = 'relative';
   elemento.appendChild(div);
   setTimeout(() => div.remove(), 1000);
 }
 
-// TEMARIO PRIMERO - Ya pintado en HTML, solo rellenamos
+// TEMARIO - Solo clases CSS
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
-  if(!container) return;
-  container.innerHTML = `
-    <div class="temario-item" onclick="abrirPDF('senales')">
-      <div style="font-size:40px">🚦</div><div>Señales</div><div style="font-size:11px;color:#999">RD 465/2025</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('normas')">
-      <div style="font-size:40px">📋</div><div>Normas Circulación</div><div style="font-size:11px;color:#999">Edición 2024</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('auxilios')">
-      <div style="font-size:40px">🚑</div><div>Primeros Auxilios</div><div style="font-size:11px;color:#999">Manual IX 2025</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('mecanica')">
-      <div style="font-size:40px">⚙️</div><div>Mecánica</div><div style="font-size:11px;color:#999">Manual VIII 2024</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('medioambiente')">
-      <div style="font-size:40px">♻️</div><div>Medio Ambiente</div><div style="font-size:11px;color:#999">Distintivos DGT 2025</div>
-    </div>
-  `;
+  if(!container || typeof TEMARIO === 'undefined') {
+    console.error('Container o TEMARIO no encontrado');
+    return;
+  }
+
+  container.innerHTML = TEMARIO.map(item => {
+    const pct = getPorcentajeProgreso(item.key);
+    const subtema = getSubtemaDebil(item.key);
+    return `
+      <div class="temario-item" onclick="abrirPDF('${item.archivo}')">
+        <div class="icono">${item.icono}</div>
+        <div class="titulo">${item.titulo}</div>
+        <div class="sub">${item.subtitulo}</div>
+        <div class="progreso-bar">
+          <div class="progreso-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="progreso-text">${pct}% completado</div>
+        <div class="subtema-debil">${subtema}</div>
+      </div>
+    `;
+  }).join('');
 }
 
-// 8.9.7: INTRO SOLO LA 1ª VEZ
+// Abrir PDF local desde raíz
+function abrirPDF(archivo) {
+  window.open('./' + archivo, '_blank');
+  console.log(`📄 Abriendo PDF:./${archivo}`);
+}
+
+// INTRO SOLO 1ª VEZ - Solo HTML
 function mostrarIntro(){
   if(localStorage.getItem('gd_estado')) return;
-  document.body.insertAdjacentHTML('afterbegin', `
-    <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
-      <div style="font-size:64px;margin-bottom:20px">🚗</div>
-      <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT ESP 2026 v${VERSION}</h1>
-      <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
-      <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
-        <div>💰 Gana coins respondiendo bien</div>
-        <div>🏎️ Compra supercotxes en el Garaje</div>
-        <div>📚 630 preguntas DGT reales</div>
-        <div>📖 Temarios completos para repasar</div>
-      </div>
-      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;position:relative;z-index:10000">EMPEZAR</button>
+
+  const intro = document.createElement('div');
+  intro.id = 'intro-screen';
+  intro.innerHTML = `
+    <div class="icono">🚗</div>
+    <h1>GasDrive DGT ESP 2026 v${VERSION}</h1>
+    <p>Aprende el carnet en 15 min al día</p>
+    <p class="sub">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
+    <div class="lista">
+      <div>💰 Gana coins respondiendo bien</div>
+      <div>🏎️ Compra supercotxes en el Garaje</div>
+      <div>📚 630 preguntas DGT reales</div>
+      <div>📖 Temarios completos para repasar</div>
     </div>
-  `);
+    <button onclick="tancarIntro()">EMPEZAR</button>
+  `;
+  document.body.insertAdjacentElement('afterbegin', intro);
 }
 
 function tancarIntro(){
@@ -181,13 +234,36 @@ function tancarIntro(){
   localStorage.setItem('gd_visto_intro', '1');
 }
 
-// 8.9.7: Cargar módulos SIN explicaciones
+// Pintar imagen test con SVG
+function pintarImagenTest(cat, preguntaTexto) {
+  const imgCont = document.getElementById(`test-${cat}-imagen`);
+  if (!imgCont) return;
+  const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
+  const codigo = match? match[1].toLowerCase() : null;
+  if (!codigo ||!SVG_CARGADOS) {
+    imgCont.innerHTML = codigo? `<div class="no-svg">Señal: ${codigo.toUpperCase()}</div>` : '';
+    return;
+  }
+  const svg = window.SENALES_SVG[codigo];
+  if (svg) {
+    imgCont.innerHTML = svg;
+    const svgEl = imgCont.querySelector('svg');
+    if (svgEl) {
+      svgEl.setAttribute('width', '140');
+      svgEl.setAttribute('height', '140');
+    }
+  } else {
+    imgCont.innerHTML = `<div class="no-svg">Señal: ${codigo.toUpperCase()}</div>`;
+  }
+}
+
+// Cargar módulos en background
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
   const t0 = performance.now();
 
   await Promise.all([
-    // Preguntas por tema con catch individual
+    // Preguntas por tema
    ...Object.entries(MODULOS_PREGUNTAS).map(async ([tema, config]) => {
       try {
         const mod = await import(`./data/${config.archivo}`);
@@ -199,63 +275,40 @@ async function cargarModulos() {
       }
     }),
 
-    // Situaciones con catch
+    // Situaciones
     import(`./data/preguntas-situaciones.js`)
-   .then(mod => {
+     .then(mod => {
         const SIT = mod.SITUACIONES;
         Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
           CASOS[config.clave] = SIT[config.clave] || [];
           console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
         });
       })
-   .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
+     .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
 
-    // SVG con catch
+    // SVG
     import(`./data/senales-svg.js`)
-   .then(mod => {
+     .then(mod => {
         window.SENALES_SVG = mod.SENALES_SVG || {};
         SVG_CARGADOS = true;
         console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
       })
-   .catch(e => console.error('❌ Error senales-svg.js:', e))
+     .catch(e => console.error('❌ Error senales-svg.js:', e))
   ]);
 
+  // Array general
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
 
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
-  cargarTemarioHTML(); // Esto SIEMPRE se ejecuta ahora
+  cargarTemarioHTML(); // Pinta temario con métricas
 }
 
-function pintarImagenTest(cat, preguntaTexto) {
-  const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if (!imgCont) return;
-  const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
-  const codigo = match? match[1].toLowerCase() : null;
-  if (!codigo ||!SVG_CARGADOS) {
-    imgCont.innerHTML = codigo? `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}</div>` : '';
-    return;
-  }
-  const svg = window.SENALES_SVG[codigo];
-  if (svg) {
-    imgCont.innerHTML = svg;
-    const svgEl = imgCont.querySelector('svg');
-    if (svgEl) {
-      svgEl.setAttribute('width', '140');
-      svgEl.setAttribute('height', '140');
-      svgEl.style.display = 'block';
-      svgEl.style.margin = '0 auto';
-    }
-  } else {
-    imgCont.innerHTML = `<div style="text-align:center;color:#999">Señal: ${codigo.toUpperCase()}</div>`;
-  }
-}
-
-// 8.9.7: Auto-arranque al cargar DOM
+// Auto-arranque
 window.addEventListener('DOMContentLoaded', () => {
-  init();
+  if(typeof init === 'function') init();
   cargarModulos();
   mostrarIntro();
 });
