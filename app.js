@@ -1,11 +1,10 @@
 // ============================================
 // GASDRIVE DGT V19.2.7 ESP - 630 PREGUNTAS DGT 2026
-// BLOQUE 1 FIX - TEMARIO HARDCODEADO + CARGA DIRECTA v8.7.5
+// BLOQUE 1 FINAL - Solo SVG, sin JPG, sin archivos fantasmas
 // ============================================
 const VERSION = "19.2.7";
 
-// === TEMARIO DGT 2026 HARDCODEADO - QUITAMOS ARCHIVO EXTERNO ===
-// Esto rompe el bucle. Como v8.7.5 que funcionaba
+// === TEMARIO DGT 2026 HARDCODEADO ===
 window.TEMARIO = [
   {id: 1, key: 'senales', titulo: "1. Señales de tráfico", archivo: "01_Senales_Tomo_I_RD_465_2025.pdf", icono: "🚦", subtitulo: "RD 465/2025", descripcion: "Señales de peligro, prioridad, prohibición, obligación e indicación"},
   {id: 2, key: 'normas', titulo: "2. Normas de circulación", archivo: "02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf", icono: "📋", subtitulo: "Edición 2024", descripcion: "Velocidades, prioridades, adelantamientos, alumbrado y carriles"},
@@ -65,7 +64,7 @@ const SUBTEMAS_DEBILES = {
   ]
 };
 
-// RUTAS MÓDULOS
+// RUTAS MÓDULOS - Solo los 7 archivos que tienes
 const MODULOS_PREGUNTAS = {
   senales: { archivo: 'preguntas-senales.js', export: 'PREGUNTAS_SENALES' },
   normas: { archivo: 'preguntas-normas.js', export: 'PREGUNTAS_NORMAS' },
@@ -117,18 +116,18 @@ const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
   coins: 0,
   coches: [],
   test: {
-    general: { idx:0, aciertos:0, racha:0, current:null },
-    senales: { idx:0, aciertos:0, racha:0, current:null },
-    normas: { idx:0, aciertos:0, racha:0, current:null },
-    mecanica: { idx:0, aciertos:0, racha:0, current:null },
-    auxilios: { idx:0, aciertos:0, racha:0, current:null },
-    medioambiente: { idx:0, aciertos:0, racha:0, current:null }
+    general: { idx:0, aciertos:0, racha:0, puntuacion:0, current:null },
+    senales: { idx:0, aciertos:0, racha:0, puntuacion:0, current:null },
+    normas: { idx:0, aciertos:0, racha:0, puntuacion:0, current:null },
+    mecanica: { idx:0, aciertos:0, racha:0, puntuacion:0, current:null },
+    auxilios: { idx:0, aciertos:0, racha:0, puntuacion:0, current:null },
+    medioambiente: { idx:0, aciertos:0, racha:0, puntuacion:0, current:null }
   },
   situacion: {
-    clima: { idx:0, aciertos:0, current:null },
-    urbano: { idx:0, aciertos:0, current:null },
-    carretera: { idx:0, aciertos:0, current:null },
-    emergencia: { idx:0, aciertos:0, current:null }
+    clima: { idx:0, aciertos:0, puntuacion:0, current:null },
+    urbano: { idx:0, aciertos:0, puntuacion:0, current:null },
+    carretera: { idx:0, aciertos:0, puntuacion:0, current:null },
+    emergencia: { idx:0, aciertos:0, puntuacion:0, current:null }
   },
   examen: { activo:false, index:0, aciertos:0, fallos:0, tiempo:0, timer:null, preguntas:[] }
 };
@@ -184,52 +183,34 @@ function mostrarEmoji(acierto, elemento){
   setTimeout(() => div.remove(), 1000);
 }
 
-// Pintar SVG
+// Pintar SVG - FIX: toLowerCase() no lowerCase()
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
+
   const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
-  const codigo = match? match[1].lowerCase() : null;
-  if (!codigo ||!SVG_CARGADOS) return;
+  const codigo = match? match[1].toLowerCase() : null; // FIX AQUÍ
+
+  if (!codigo ||!SVG_CARGADOS) {
+    imgCont.innerHTML = '';
+    return;
+  }
+
   const svg = window.SENALES_SVG[codigo];
   if (svg) {
-    imgCont.innerHTML = svg;
+    imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;height:160px">${svg}</div>`;
     const svgEl = imgCont.querySelector('svg');
     if (svgEl) {
       svgEl.removeAttribute('width');
       svgEl.removeAttribute('height');
     }
+  } else {
+    imgCont.innerHTML = '';
   }
 }
 
-// Render imagen JPG/PNG
-function renderImagenTest(categoria, rutaImagen) {
-  const cont = document.getElementById(`test-${categoria}-imagen`);
-  if(!cont) return;
-  if(cont.querySelector('svg')) return;
-  if(!rutaImagen) {
-    cont.innerHTML = '';
-    return;
-  }
-  const src = rutaImagen.startsWith('./') || rutaImagen.startsWith('http')? rutaImagen : `./data/img/${rutaImagen}`;
-  cont.innerHTML = `<img src="${src}" class="pregunta-img" alt="Imagen pregunta" onerror="this.parentElement.innerHTML=''">`;
-}
-
-// Cargar pregunta
-function cargarPreguntaTest(categoria) {
-  const arr = PREGUNTAS[categoria];
-  if(!arr ||!arr.length) return;
-  const idx = Math.floor(Math.random() * arr.length);
-  const pregunta = arr[idx];
-  estado.test[categoria].current = pregunta;
-  const txtEl = document.getElementById(`test-${categoria}-pregunta`);
-  if(txtEl) txtEl.textContent = pregunta.pregunta;
-  pintarImagenTest(categoria, pregunta.pregunta);
-  renderImagenTest(categoria, pregunta.imagen);
-}
-
-// === ELIMINADO: esperarTemario() - Causaba bucle infinito ===
-// === ELIMINADO: cargarTemarioHTML() async - Ahora es síncrona ===
+// ELIMINADO: cargarPreguntaTest - Solo existe cargarPregunta() en bloque 2
+// ELIMINADO: renderImagenTest - No hay /data/img/ en repo
 
 // Abrir PDF
 function abrirPDF(archivo) {
@@ -237,7 +218,7 @@ function abrirPDF(archivo) {
   console.log(`📄 Abriendo PDF:./${archivo}`);
 }
 
-// PINTAR TEMARIO SÍNCRONO - Patrón v8.7.5 que funcionaba
+// PINTAR TEMARIO SÍNCRONO
 function pintarTemario() {
   const container = document.getElementById('temario-lista');
   if(!container) {
@@ -264,7 +245,7 @@ function pintarTemario() {
   console.log('✅ Temario pintado:', window.TEMARIO.length);
 }
 
-// V19.2.7: INTRO SIEMPRE VISIBLE
+// INTRO
 function mostrarIntro(){
   const intro = document.createElement('div');
   intro.id = 'intro-screen';
@@ -284,16 +265,15 @@ function mostrarIntro(){
   document.body.insertAdjacentElement('afterbegin', intro);
 }
 
-// V19.2.7: Al cerrar intro, cargamos datos
 function tancarIntro(){
   document.getElementById('intro-screen')?.remove();
   console.log('🚀 Usuario clicó EMPEZAR. Cargando datos...');
   cargarModulos();
 }
 
-// Cargar módulos SOLO después de intro - Patrón v8.6.5
+// Cargar módulos SOLO después de intro - 7 archivos.js
 async function cargarModulos() {
-  console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
+  console.log(`🚀 V${VERSION} - Cargando 7 módulos desde /data/...`);
   const t0 = performance.now();
 
   await Promise.all([
@@ -308,21 +288,21 @@ async function cargarModulos() {
       }
     }),
     import(`./data/preguntas-situaciones.js`)
-     .then(mod => {
-        const SIT = mod.SITUACIONES || {};
-        Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
-          CASOS[config.clave] = SIT[config.clave] || [];
-          console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
-        });
-      })
-     .catch(e => console.error('❌ Error situaciones:', e)),
+   .then(mod => {
+      const SIT = mod.SITUACIONES || {};
+      Object.entries(MODULOS_CASOS).forEach(([caso, config]) => {
+        CASOS[config.clave] = SIT[config.clave] || [];
+        console.log(`✅ ${caso}: ${CASOS[config.clave].length} casos`);
+      });
+    })
+   .catch(e => console.error('❌ Error situaciones:', e)),
     import(`./data/senales-svg.js`)
-     .then(mod => {
-        window.SENALES_SVG = mod.SENALES_SVG || {};
-        SVG_CARGADOS = true;
-        console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
-      })
-     .catch(e => console.error('❌ Error SVG:', e))
+   .then(mod => {
+      window.SENALES_SVG = mod.SENALES_SVG || {};
+      SVG_CARGADOS = true;
+      console.log(`✅ SVG: ${Object.keys(window.SENALES_SVG).length} señales`);
+    })
+   .catch(e => console.error('❌ Error SVG:', e))
   ]);
 
   PREGUNTAS.general = [];
@@ -331,11 +311,10 @@ async function cargarModulos() {
   });
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
 
-  // Ahora sí pintamos temario - TEMARIO ya existe porque está hardcodeado arriba
   pintarTemario();
 }
 
-// Auto-arranque V19.2.7: Solo mostrar intro
+// Auto-arranque: Solo intro
 window.addEventListener('DOMContentLoaded', () => {
   console.log(`🚀 app.js V${VERSION} cargado`);
   mostrarIntro();
