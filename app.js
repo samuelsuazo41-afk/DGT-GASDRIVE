@@ -1,8 +1,10 @@
 // ============================================
 // GASDRIVE DGT V8.9.9 ESP - 630 PREGUNTAS DGT 2026
-// BLOQUE 1 COMPLETO - Lógica + Imágenes test mixto
+// BLOQUE 1 COMPLETO - Lógica + Imágenes test mixto + Fix TEMARIO
 // ============================================
-const VERSION = "8.9.9"; // 8.9.9: Test mixto con imágenes + limpiar recuadro
+const VERSION = "8.9.9";
+
+// 8.9.9: Test mixto con imágenes + limpiar recuadro
 let ESTADO_APP = 'APP'; // La app siempre visible
 
 // Guardias arrays
@@ -182,19 +184,14 @@ function mostrarEmoji(acierto, elemento){
 function pintarImagenTest(cat, preguntaTexto) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if (!imgCont) return;
-
   const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
   const codigo = match? match[1].toLowerCase() : null;
-
   if (!codigo ||!SVG_CARGADOS) return;
-
   const svg = window.SENALES_SVG[codigo];
   if (svg) {
     imgCont.innerHTML = svg;
     const svgEl = imgCont.querySelector('svg');
     if (svgEl) {
-      // V8.9.9: Quitar width/height fijos para que mande CSS
-      // Respeta viewBox="0 0 200 200" y colores: rojo/azul/amarillo/gris
       svgEl.removeAttribute('width');
       svgEl.removeAttribute('height');
     }
@@ -202,25 +199,15 @@ function pintarImagenTest(cat, preguntaTexto) {
 }
 
 // V8.9.9: Renderizar imagen JPG/PNG para test mixto
-// Regla: limpia recuadro primero, pinta solo si hay imagen
 function renderImagenTest(categoria, rutaImagen) {
   const cont = document.getElementById(`test-${categoria}-imagen`);
   if(!cont) return;
-
-  // Si ya pintó SVG de señal, no pisar
   if(cont.querySelector('svg')) return;
-
-  // Si no hay imagen, limpiar y salir - CSS.imagen-cont:empty oculta recuadro
   if(!rutaImagen) {
     cont.innerHTML = '';
     return;
   }
-
-  // Construir ruta:./data/img/nombre.jpg
-  const src = rutaImagen.startsWith('./') || rutaImagen.startsWith('http')
-   ? rutaImagen
-    : `./data/img/${rutaImagen}`;
-
+  const src = rutaImagen.startsWith('./') || rutaImagen.startsWith('http')? rutaImagen : `./data/img/${rutaImagen}`;
   cont.innerHTML = `<img src="${src}" class="pregunta-img" alt="Imagen pregunta" onerror="this.parentElement.innerHTML=''">`;
 }
 
@@ -228,28 +215,25 @@ function renderImagenTest(categoria, rutaImagen) {
 function cargarPreguntaTest(categoria) {
   const arr = PREGUNTAS[categoria];
   if(!arr ||!arr.length) return;
-
   const idx = Math.floor(Math.random() * arr.length);
   const pregunta = arr[idx];
   estado.test[categoria].current = pregunta;
 
-  // Pintar texto pregunta
   const txtEl = document.getElementById(`test-${categoria}-pregunta`);
   if(txtEl) txtEl.textContent = pregunta.pregunta;
 
-  // V8.9.9: Primero SVG señales, luego JPG/PNG mecánica
   pintarImagenTest(categoria, pregunta.pregunta);
   renderImagenTest(categoria, pregunta.imagen);
-
-  // Pintar opciones - esto va en BLOQUE 2
-  // pintarOpcionesTest(categoria, pregunta);
 }
 
-// TEMARIO
+// V8.9.9 FIX: TEMARIO con reintento si no está cargado aún
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
-  if(!container || typeof TEMARIO === 'undefined') {
-    console.error('Container o TEMARIO no encontrado');
+  if(!container) return;
+
+  // Si TEMARIO no existe aún, reintentar en 100ms hasta que cargue
+  if(typeof TEMARIO === 'undefined') {
+    setTimeout(cargarTemarioHTML, 100);
     return;
   }
 
@@ -320,7 +304,6 @@ async function cargarModulos() {
         PREGUNTAS[tema] = [];
       }
     }),
-
     // Situaciones
     import(`./data/preguntas-situaciones.js`)
      .then(mod => {
@@ -331,7 +314,6 @@ async function cargarModulos() {
         });
       })
      .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
-
     // SVG señales DGT
     import(`./data/senales-svg.js`)
      .then(mod => {
