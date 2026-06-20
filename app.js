@@ -1,12 +1,10 @@
 // ============================================
-// GASDRIVE DGT V8.9.7 ESP - 630 PREGUNTAS DGT 2026
-// BLOQUE 1 COMPLETO - Solo lógica JS
+// GASDRIVE DGT V8.9.9 ESP - 630 PREGUNTAS DGT 2026
+// BLOQUE 1 COMPLETO - Lógica + Imágenes test mixto
 // ============================================
+const VERSION = "8.9.9"; // 8.9.9: Test mixto con imágenes + limpiar recuadro
 
-const VERSION = "8.9.7";
-
-// 8.9.7: SIN ESTADO_APP bloqueando. La app siempre está visible
-let ESTADO_APP = 'APP';
+let ESTADO_APP = 'APP'; // La app siempre visible
 
 // Guardias arrays
 if(typeof COCHES === 'undefined') var COCHES = [];
@@ -127,7 +125,13 @@ const estado = JSON.parse(localStorage.getItem('gd_estado')) || {
   examen: { activo:false, index:0, aciertos:0, fallos:0, tiempo:0, timer:null, preguntas:[] }
 };
 
-// Guardar progreso en localStorage
+// Guardar estado + progreso - V8.9.9 para BLOQUE 2
+function guardar() {
+  localStorage.setItem('gd_estado', JSON.stringify(estado));
+  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
+}
+
+// Guardar solo progreso
 function guardarProgreso() {
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
@@ -175,6 +179,52 @@ function mostrarEmoji(acierto, elemento){
   setTimeout(() => div.remove(), 1000);
 }
 
+// Pintar imagen test con SVG - Solo señales
+function pintarImagenTest(cat, preguntaTexto) {
+  const imgCont = document.getElementById(`test-${cat}-imagen`);
+  if (!imgCont) return;
+
+  const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
+  const codigo = match? match[1].toLowerCase() : null;
+
+  if (!codigo ||!SVG_CARGADOS) {
+    return; // No pinta nada, deja que renderImagenTest decida
+  }
+
+  const svg = window.SENALES_SVG[codigo];
+  if (svg) {
+    imgCont.innerHTML = svg;
+    const svgEl = imgCont.querySelector('svg');
+    if (svgEl) {
+      svgEl.setAttribute('width', '140');
+      svgEl.setAttribute('height', '140');
+    }
+  }
+}
+
+// V8.9.9 NUEVO: Renderizar imagen JPG/PNG para test mixto
+// Regla: limpia recuadro primero, pinta solo si hay imagen
+function renderImagenTest(categoria, rutaImagen) {
+  const cont = document.getElementById(`test-${categoria}-imagen`);
+  if(!cont) return;
+
+  // Si ya pintó SVG de señal, no pisar
+  if(cont.querySelector('svg')) return;
+
+  // Si no hay imagen, limpiar y salir - CSS oculta recuadro vacío
+  if(!rutaImagen) {
+    cont.innerHTML = '';
+    return;
+  }
+
+  // Construir ruta:./data/img/nombre.jpg
+  const src = rutaImagen.startsWith('./') || rutaImagen.startsWith('http')
+   ? rutaImagen
+    : `./data/img/${rutaImagen}`;
+
+  cont.innerHTML = `<img src="${src}" class="pregunta-img" alt="Imagen pregunta" onerror="this.parentElement.innerHTML=''">`;
+}
+
 // TEMARIO - Solo clases CSS
 function cargarTemarioHTML() {
   const container = document.getElementById('temario-lista');
@@ -182,7 +232,6 @@ function cargarTemarioHTML() {
     console.error('Container o TEMARIO no encontrado');
     return;
   }
-
   container.innerHTML = TEMARIO.map(item => {
     const pct = getPorcentajeProgreso(item.key);
     const subtema = getSubtemaDebil(item.key);
@@ -201,16 +250,15 @@ function cargarTemarioHTML() {
   }).join('');
 }
 
-// Abrir PDF local desde raíz
+// Abrir PDF - mapeo en BLOQUE 2
 function abrirPDF(archivo) {
   window.open('./' + archivo, '_blank');
   console.log(`📄 Abriendo PDF:./${archivo}`);
 }
 
-// INTRO SOLO 1ª VEZ - Solo HTML
+// INTRO SOLO 1ª VEZ
 function mostrarIntro(){
-  if(localStorage.getItem('gd_estado')) return;
-
+  if(localStorage.getItem('gd_visto_intro')) return;
   const intro = document.createElement('div');
   intro.id = 'intro-screen';
   intro.innerHTML = `
@@ -234,29 +282,6 @@ function tancarIntro(){
   localStorage.setItem('gd_visto_intro', '1');
 }
 
-// Pintar imagen test con SVG
-function pintarImagenTest(cat, preguntaTexto) {
-  const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if (!imgCont) return;
-  const match = preguntaTexto.match(/\b([rsp]-\d+[a-z]?)\b/i);
-  const codigo = match? match[1].toLowerCase() : null;
-  if (!codigo ||!SVG_CARGADOS) {
-    imgCont.innerHTML = codigo? `<div class="no-svg">Señal: ${codigo.toUpperCase()}</div>` : '';
-    return;
-  }
-  const svg = window.SENALES_SVG[codigo];
-  if (svg) {
-    imgCont.innerHTML = svg;
-    const svgEl = imgCont.querySelector('svg');
-    if (svgEl) {
-      svgEl.setAttribute('width', '140');
-      svgEl.setAttribute('height', '140');
-    }
-  } else {
-    imgCont.innerHTML = `<div class="no-svg">Señal: ${codigo.toUpperCase()}</div>`;
-  }
-}
-
 // Cargar módulos en background
 async function cargarModulos() {
   console.log(`🚀 V${VERSION} - Cargando datos desde /data/...`);
@@ -274,7 +299,6 @@ async function cargarModulos() {
         PREGUNTAS[tema] = [];
       }
     }),
-
     // Situaciones
     import(`./data/preguntas-situaciones.js`)
      .then(mod => {
@@ -285,7 +309,6 @@ async function cargarModulos() {
         });
       })
      .catch(e => console.error('❌ Error preguntas-situaciones.js:', e)),
-
     // SVG
     import(`./data/senales-svg.js`)
      .then(mod => {
@@ -296,14 +319,14 @@ async function cargarModulos() {
      .catch(e => console.error('❌ Error senales-svg.js:', e))
   ]);
 
-  // Array general
+  // Array general mixto: señales + normas + mecánica + auxilios + medioambiente
   PREGUNTAS.general = [];
   Object.values(PREGUNTAS).forEach(arr => {
     if(Array.isArray(arr)) PREGUNTAS.general.push(...arr);
   });
 
   console.log(`✅ DATOS LISTOS en ${Math.round(performance.now() - t0)}ms. Total: ${PREGUNTAS.general.length}`);
-  cargarTemarioHTML(); // Pinta temario con métricas
+  cargarTemarioHTML();
 }
 
 // Auto-arranque
