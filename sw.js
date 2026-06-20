@@ -1,54 +1,58 @@
-// sw.js - V19.2.1 GasDrive DGT ESP
-const CACHE = 'gasdrive-v19.2.6';
+// sw.js - V19.2.7 GasDrive DGT ESP - CACHE BUSTER AGRESIVO
+const CACHE = 'gasdrive-v19.2.7'; // CAMBIA ESTE NÚMERO EN CADA DEPLOY
 
-const FILES = [
-  './',
-  './index.html',
-  './app.js',
-  './temario.js',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
-  './sw.js',
-  
-  // Módulos en /data/
-  './data/senales-svg.js',
-  './data/preguntas-senales.js',
-  './data/preguntas-normas.js',
-  './data/preguntas-mecanica.js',
-  './data/preguntas-auxilios.js',
-  './data/preguntas-medioambiente.js',
-  './data/preguntas-situaciones.js',
-  
-  // PDFs en raíz - NOMBRES EXACTOS DE TU REPO
-  './01_Senales_Tomo_I_RD_465_2025.pdf',
-  './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
-  './03_Manual_IX_Primeros_Auxilios_2025.pdf',
-  './04_Manual_VIII_Mecanica_2024.pdf',
-  './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
-];
-
-// INSTALAR
 self.addEventListener('install', e => {
+  console.log('🚀 SW V19.2.7 instalando...');
+  self.skipWaiting(); // MATA el SW viejo al instante
+  
   e.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(FILES))
+    caches.open(CACHE).then(cache => {
+      return cache.addAll([
+        './',
+        './index.html?v=19.2.7',
+        './manifest.json?v=19.2.7',
+        './style.css?v=19.2.7',
+        './temario.js?v=19.2.7',
+        './data/senales-svg.js?v=19.2.7',
+        './app.js?v=19.2.7',
+        './data/preguntas-senales.js?v=19.2.7',
+        './data/preguntas-normas.js?v=19.2.7',
+        './data/preguntas-mecanica.js?v=19.2.7',
+        './data/preguntas-auxilios.js?v=19.2.7',
+        './data/preguntas-medioambiente.js?v=19.2.7',
+        './data/preguntas-situaciones.js?v=19.2.7',
+        './01_Senales_Tomo_I_RD_465_2025.pdf',
+        './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
+        './03_Manual_IX_Primeros_Auxilios_2025.pdf',
+        './04_Manual_VIII_Mecanica_2024.pdf',
+        './05_Medio_Ambiente_Distintivos_DGT_2025.pdf',
+        './icon-192.png',
+        './icon-512.png'
+      ]);
+    })
   );
-  self.skipWaiting();
 });
 
-// ACTIVAR - Borrar cache viejo
 self.addEventListener('activate', e => {
+  console.log('✅ SW V19.2.7 activado');
   e.waitUntil(
     caches.keys().then(keys => 
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+      Promise.all(
+        keys.map(k => {
+          if (k !== CACHE) {
+            console.log('🗑️ Borrando cache viejo:', k);
+            return caches.delete(k);
+          }
+        })
+      )
+    ).then(() => self.clients.claim()) // Toma control inmediato
   );
-  self.clients.claim();
 });
 
-// FETCH - Cache first
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
+    caches.match(e.request).then(r => {
+      return r || fetch(e.request);
+    })
   );
 });
