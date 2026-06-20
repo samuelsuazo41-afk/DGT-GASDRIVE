@@ -533,8 +533,9 @@ const EMOJI_TIENDA = [
 ];
 
 // ============================================
-// BLOQUE 2 V8.9.7 - Lógica de navegación y tests
-// ORDEN DESDE FINALIZAREXAMEN: Progreso -> Tips -> Garaje -> Tienda
+// BLOQUE 2 V8.9.9 - Lógica de navegación y tests
+// ORDEN: finalizarExamen -> Progreso -> Tips -> Garaje -> Tienda
+// Test mixto con imágenes: SVG + JPG/PNG
 // ============================================
 
 // INIT - Se llama al cargar DOM
@@ -590,7 +591,7 @@ function cambiarCategoriaSit(cat) {
   cargarSituacion(cat);
 }
 
-// TESTS
+// TESTS V8.9.9 - Test mixto con imágenes
 function cargarPregunta(categoria) {
   if(!PREGUNTAS[categoria] || PREGUNTAS[categoria].length === 0) {
     document.getElementById(`test-${categoria}-pregunta`).textContent = 'Cargando preguntas... espera 1s';
@@ -601,12 +602,24 @@ function cargarPregunta(categoria) {
   const test = estado.test[categoria];
   const preguntas = PREGUNTAS[categoria];
   if(test.idx >= preguntas.length) test.idx = 0;
+
   test.current = preguntas[test.idx];
   const p = test.current;
 
+  // 1. Texto pregunta
   document.getElementById(`test-${categoria}-pregunta`).textContent = p.pregunta;
+
+  // 2. Limpiar imagen anterior - V8.9.9 clave para test mixto
+  const imgCont = document.getElementById(`test-${categoria}-imagen`);
+  imgCont.innerHTML = '';
+
+  // 3. Si es señal → SVG automático
   pintarImagenTest(categoria, p.pregunta);
 
+  // 4. Si tiene p.imagen JPG/PNG → pinta foto. Si no, recuadro se oculta con CSS
+  renderImagenTest(categoria, p.imagen);
+
+  // 5. Opciones
   const contOpciones = document.getElementById(`test-${categoria}-opciones`);
   contOpciones.innerHTML = '';
   p.opciones.forEach((op, idx) => {
@@ -617,6 +630,7 @@ function cargarPregunta(categoria) {
     contOpciones.appendChild(div);
   });
 
+  // 6. Contadores
   document.getElementById(`test-${categoria}-aciertos`).textContent = test.aciertos;
   document.getElementById(`test-${categoria}-racha`).textContent = test.racha;
 }
@@ -630,6 +644,7 @@ function responderTest(e, categoria, idx) {
   const test = estado.test[categoria];
   const p = test.current;
   const opciones = e.currentTarget.parentElement.children;
+
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
 
   const acierto = idx === p.correcta;
@@ -651,7 +666,7 @@ function responderTest(e, categoria, idx) {
   actualizarCoins();
 }
 
-// SITUACIONES
+// SITUACIONES V8.9.9 - Con renderImagenTest para ruta correcta
 function cargarSituacion(cat) {
   if(!CASOS[cat] || CASOS[cat].length === 0) {
     document.getElementById(`situacion-${cat}-pregunta`).textContent = 'Cargando casos... espera 1s';
@@ -662,12 +677,14 @@ function cargarSituacion(cat) {
   const sit = estado.situacion[cat];
   const casos = CASOS[cat];
   if(sit.idx >= casos.length) sit.idx = 0;
+
   sit.current = casos[sit.idx];
   const p = sit.current;
 
   document.getElementById(`situacion-${cat}-pregunta`).textContent = p.pregunta;
-  const imgCont = document.getElementById(`situacion-${cat}-imagen`);
-  imgCont.innerHTML = p.imagen? `<img src="${p.imagen}" class="sit-img">` : '';
+
+  // V8.9.9: Usa renderImagenTest para ruta./data/img/
+  renderImagenTest(`situacion-${cat}`, p.imagen);
 
   const contOpciones = document.getElementById(`situacion-${cat}-opciones`);
   contOpciones.innerHTML = '';
@@ -691,6 +708,7 @@ function responderSituacion(e, cat, idx) {
   const sit = estado.situacion[cat];
   const p = sit.current;
   const opciones = e.currentTarget.parentElement.children;
+
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
 
   const acierto = idx === p.correcta;
@@ -711,7 +729,7 @@ function responderSituacion(e, cat, idx) {
   actualizarCoins();
 }
 
-// EXAMEN DGT
+// EXAMEN DGT V8.9.9 - Con renderImagenTest
 function iniciarExamen(e) {
   const todasPreguntas = PREGUNTAS.general;
   if(!todasPreguntas || todasPreguntas.length < 30) {
@@ -741,8 +759,9 @@ function cargarPreguntaExamen() {
 
   document.getElementById('examen-num').textContent = estado.examen.index + 1;
   document.getElementById('examen-pregunta').textContent = p.pregunta;
-  const imgCont = document.getElementById('examen-imagen');
-  imgCont.innerHTML = p.imagen? `<img src="${p.imagen}" class="exam-img">` : '';
+
+  // V8.9.9: Usa renderImagenTest para examen también
+  renderImagenTest('examen', p.imagen);
 
   const contOpciones = document.getElementById('examen-opciones');
   contOpciones.innerHTML = '';
@@ -761,6 +780,7 @@ function responderExamen(e, idx) {
   if(!estado.examen.activo) return;
   const p = estado.examen.preguntas[estado.examen.index];
   const opciones = e.currentTarget.parentElement.children;
+
   Array.from(opciones).forEach(op => op.style.pointerEvents = 'none');
 
   const acierto = idx === p.correcta;
@@ -809,6 +829,7 @@ function iniciarTimerExamen() {
 function finalizarExamen() {
   clearInterval(estado.examen.timer);
   estado.examen.activo = false;
+
   const aprobado = estado.examen.aciertos >= 24;
   PROGRESO.examenes.realizados++;
   if(aprobado) PROGRESO.examenes.aprobados++;
@@ -824,6 +845,7 @@ function finalizarExamen() {
   document.getElementById('btn-siguiente-examen').style.display = 'none';
   document.getElementById('btn-iniciar-examen').style.display = 'block';
   document.getElementById('btn-iniciar-examen').textContent = 'REPETIR EXAMEN';
+
   guardar();
 }
 
@@ -833,7 +855,7 @@ function actualizarProgresoExamen() {
   document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
 }
 
-// 1. CARGAR PROGRESO - Primero después de finalizar examen
+// 1. CARGAR PROGRESO
 function cargarProgreso() {
   if(ESTADO_APP!== 'APP') return;
   const cont = document.getElementById('progreso-stats');
@@ -854,14 +876,14 @@ function cargarProgreso() {
   cont.innerHTML = html;
 }
 
-// 2. CARGAR TIPS - Segundo después de progreso
+// 2. CARGAR TIPS
 function cargarTips() {
   if(ESTADO_APP!== 'APP') return;
   const cont = document.getElementById('tips-lista');
   cont.innerHTML = TIPS.length? TIPS.map(tip => `<div class="tip-item">${tip}</div>`).join('') : '<p class="loading-placeholder">Cargando tips...</p>';
 }
 
-// 3. CARGAR GARAJE - Tercero después de tips
+// 3. CARGAR GARAJE
 function cargarGaraje() {
   if(ESTADO_APP!== 'APP') return;
   const cont = document.getElementById('garaje-coches');
@@ -896,7 +918,7 @@ function comprarCoche(id) {
   }
 }
 
-// 4. CARGAR TIENDA - Último después de garaje
+// 4. CARGAR TIENDA
 function cargarTienda() {
   if(ESTADO_APP!== 'APP') return;
 
@@ -918,11 +940,6 @@ function cargarTienda() {
 }
 
 // UTILIDADES FINALES
-function guardar() {
-  localStorage.setItem('gd_estado', JSON.stringify(estado));
-  localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
-}
-
 function actualizarCoins() {
   document.getElementById('coins-display').textContent = estado.coins;
 }
@@ -934,15 +951,14 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// SERVICE WORKER REGISTRO - V8.9.7 PWA
+// SERVICE WORKER REGISTRO - V8.9.9 PWA
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('SW registrado:', reg.scope))
-      .catch(err => console.log('SW error:', err));
+     .then(reg => console.log('SW registrado:', reg.scope))
+     .catch(err => console.log('SW error:', err));
   });
 }
-
 
 
 
