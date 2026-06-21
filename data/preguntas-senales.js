@@ -1,6 +1,6 @@
 // GASDRIVE DGT V8.6.5 - PREGUNTAS SEÑALES RD 465/2025
 // Ubicación: data/preguntas-senales.js
-export const PREGUNTAS_SENALES = [
+const PREGUNTAS_SENALES = [
   // === SECCIÓN 3.2: SEÑALES DE PRIORIDAD r-1 a r-6 ===
   {q:"¿Qué significa la señal R-1?",a:["Stop","Ceda el paso","Prohibido entrar"],ok:0,codigo:"r-1"},
   {q:"¿Qué significa la señal R-2?",a:["Ceda el paso","Parada obligatoria total","Ceda en intersección"],ok:0,codigo:"r-2"},
