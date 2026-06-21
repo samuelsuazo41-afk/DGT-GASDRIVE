@@ -1,11 +1,18 @@
 // ============================================
 // BLOQUE 1 - GASDRIVE DGT V8.5.5 ES FINAL
+// General = mezcla dinámica de las 5 categorías
+// Datos cargan primero, intro después
+// CERO import(), CERO export. 100% compatible PWA
 // ============================================
 const VERSION = "8.5.5";
 
+// COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
+// ============================================
+// DATOS GLOBALES + PROGRESO
+// ============================================
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
     general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
@@ -48,18 +55,18 @@ function actualizarMetricasTest(categoria, acierto, preguntaId) {
 }
 
 // ============================================
-// PANTALLA INTRO - CON ESPERA FORZADA AL BODY
+// PANTALLA INTRO - DATOS YA CARGADOS
+// Botón activo desde que aparece
 // ============================================
 function mostrarIntro(){
   if(document.getElementById('intro-screen')) return;
 
-  // ESPERA HASTA QUE BODY EXISTA
+  // Espera hasta que body exista
   if(!document.body) {
     setTimeout(mostrarIntro, 50);
     return;
   }
 
-  console.log('⏱️ Pintando intro...');
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
@@ -72,19 +79,19 @@ function mostrarIntro(){
         <div>📚 Todas las categorías en General</div>
         <div>📖 Temarios oficiales DGT</div>
       </div>
-      <button onclick="tancarIntro()" id="btn-empezar" disabled style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:not-allowed;opacity:0.5">CARGANDO DATOS...</button>
+      <button onclick="tancarIntro()" id="btn-empezar" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 4px 15px rgba(255,140,0,0.4)">EMPEZAR</button>
     </div>
   `);
 }
 
 function tancarIntro(){
-  if(!DATOS_CARGADOS) return;
   const intro = document.getElementById('intro-screen');
   if(intro) intro.remove();
 }
 
 // ============================================
-// DATOS EXTERNOS
+// DATOS EXTERNOS - Variables globales de /data/
+// Los <script> de index.html ya cargaron todo antes de app.js
 // ============================================
 const PREGUNTAS_SENALES = window.PREGUNTAS_SENALES || [];
 const PREGUNTAS_NORMAS = window.PREGUNTAS_NORMAS || [];
@@ -94,6 +101,10 @@ const PREGUNTAS_MEDIOAMBIENTE = window.PREGUNTAS_MEDIOAMBIENTE || [];
 const SITUACIONES = window.SITUACIONES || {};
 window.SENALES_SVG = window.SENALES_SVG || {};
 
+// ============================================
+// CLAVE: GENERAL SE CONSTRUYE DINÁMICO
+// Mezcla las 5 categorías porque no existe preguntas.js
+// ============================================
 const PREGUNTAS_GENERAL = [
 ...PREGUNTAS_SENALES,
 ...PREGUNTAS_NORMAS,
@@ -114,15 +125,24 @@ const PREGUNTAS = {
 const CASOS = SITUACIONES;
 let DATOS_CARGADOS = false;
 
-console.log(`📊 Datos iniciales: General ${PREGUNTAS_GENERAL.length}`);
+console.log(`📊 V${VERSION} Datos iniciales: General ${PREGUNTAS_GENERAL.length} preguntas`);
 
+// ============================================
+// VERSIÓN 8.5.5: Render imagen SEGURO
+// General + Señales pintan SVG si tienen codigo
+// ============================================
 function renderImagenTest(cat, p) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if(!imgCont) return;
+
   const codigo = (p.codigo || '').toLowerCase();
   if(codigo && window.SENALES_SVG[codigo]) {
     imgCont.style.display = 'block';
-    imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">${window.SENALES_SVG[codigo]}</div>`;
+    imgCont.innerHTML = `
+      <div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">
+        ${window.SENALES_SVG[codigo]}
+      </div>
+    `;
   } else {
     imgCont.style.display = 'none';
     imgCont.innerHTML = '';
@@ -130,26 +150,15 @@ function renderImagenTest(cat, p) {
 }
 
 // ============================================
-// INIT - ESPERA DOM + TIEMPO MÍNIMO INTRO
+// INIT - DATOS PRIMERO, INTRO DESPUÉS
+// Tiempo de carga: 50-200ms típico en móvil
 // ============================================
 function init() {
   console.log(`🚀 GasDrive V${VERSION} iniciado`);
-
-  // 1. Espera a que DOM esté listo
-  if(document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(mostrarIntroYcargar, 50));
-  } else {
-    setTimeout(mostrarIntroYcargar, 50);
-  }
-}
-
-function mostrarIntroYcargar() {
-  mostrarIntro(); // Ahora sí body existe
-
   const t0 = performance.now();
 
-  // 2. Espera 500ms mínimo para que se vea la intro
-  setTimeout(() => {
+  // 1. CARGA DATOS PRIMERO, sin mostrar nada al usuario
+  try {
     actualizarCoins();
     actualizarMensajeMotivacional();
     cargarPregunta('general');
@@ -161,17 +170,18 @@ function mostrarIntroYcargar() {
     cargarSituacion('clima');
 
     DATOS_CARGADOS = true;
+    const tiempoCarga = Math.round(performance.now() - t0);
+    console.log(`✅ Datos cargados en ${tiempoCarga}ms. General: ${PREGUNTAS_GENERAL.length} preguntas`);
+  } catch(e) {
+    console.error('❌ Error cargando datos:', e);
+  }
 
-    const btn = document.getElementById('btn-empezar');
-    if(btn) {
-      btn.disabled = false;
-      btn.textContent = 'EMPEZAR';
-      btn.style.cursor = 'pointer';
-      btn.style.opacity = '1';
-    }
-
-    console.log(`✅ Listo en ${Math.round(performance.now() - t0)}ms`);
-  }, 500);
+  // 2. CUANDO DATOS LISTOS, muestra intro para que el usuario lea
+  if(document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(mostrarIntro, 50));
+  } else {
+    setTimeout(mostrarIntro, 50);
+  }
 }
 
 init();
