@@ -319,7 +319,7 @@ const ACCESORIOS = [
   {id:'a16',nombre:'Cristales Tintados',emoji:'🪟',precio:200,hp:10},
   {id:'a17',nombre:'Luces LED',emoji:'💡',precio:250,hp:15},
   {id:'a18',nombre:'Faros Laser',emoji:'🔦',precio:600,hp:50},
-  {id:'a19',nom:'Retrovisor Racing',emoji:'🪞',precio:200,hp:10},
+  {id:'a19',nombre:'Retrovisor Racing',emoji:'🪞',precio:200,hp:10},
   {id:'a20',nombre:'Defensa Reforzada',emoji:'🛡️',precio:450,hp:35},
 
   // Interior / Piloto
@@ -594,10 +594,10 @@ function cambiarSubTab(e, tab, subtab) {
   if(tab === 'sit') cargarSituacion(subtab);
 }
 
-function cambiarCategoriaSit(cat) {
+function cambiarCategoriaSit(e, cat) {
   sitCategoriaActiva = cat;
   document.querySelectorAll('#tab-situaciones.category-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
+  e.target.classList.add('active');
   const titulos = {
     clima: '🌧️ CASOS REALES - CLIMA ADVERSO',
     urbano: '🏙️ CASOS REALES - URBANO',
