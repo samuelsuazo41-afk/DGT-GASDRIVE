@@ -1,5 +1,5 @@
 // GASDRIVE DGT V8.8.1 - SENALES SVG VECTORIALES RD 465/2025
-export const SENALES_SVG = {
+const SENALES_SVG = {
   // === SECCIÓN 3.2: PRIORIDAD r-1 a r-6 ===
   "r-1": `<svg viewBox="0 0 200 200"><polygon points="100,180 20,20 180,20" fill="#E74C3C"/><polygon points="100,165 35,35 165,35" fill="white"/><text x="100" y="115" text-anchor="middle" font-size="45" font-weight="bold" fill="#000">STOP</text></svg>`,
   
