@@ -55,7 +55,8 @@ function actualizarMetricasTest(categoria, acierto, preguntaId) {
 }
 
 // ============================================
-// PANTALLA INTRO
+// PANTALLA INTRO - PANTALLA DE CARGA
+// Botón bloqueado hasta que DATOS_CARGADOS = true
 // ============================================
 function mostrarIntro(){
   if(document.getElementById('intro-screen')) return;
@@ -71,12 +72,13 @@ function mostrarIntro(){
         <div>📚 Todas las categorías en General</div>
         <div>📖 Temarios oficiales DGT</div>
       </div>
-      <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
+      <button onclick="tancarIntro()" id="btn-empezar" disabled style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:not-allowed;opacity:0.5">CARGANDO DATOS...</button>
     </div>
   `);
 }
 
 function tancarIntro(){
+  if(!DATOS_CARGADOS) return; // No deja salir si datos no están listos
   document.getElementById('intro-screen').remove();
 }
 
@@ -114,7 +116,7 @@ const PREGUNTAS = {
 };
 
 const CASOS = SITUACIONES;
-let DATOS_CARGADOS = true;
+let DATOS_CARGADOS = false; // Empieza en false para bloquear intro
 
 console.log(`📊 V${VERSION} Datos cargados: General ${PREGUNTAS_GENERAL.length} = Señales ${PREGUNTAS_SENALES.length} + Normas ${PREGUNTAS_NORMAS.length} + Mecánica ${PREGUNTAS_MECANICA.length} + Auxilios ${PREGUNTAS_AUXILIOS.length} + Medioambiente ${PREGUNTAS_MEDIOAMBIENTE.length}`);
 
@@ -141,21 +143,38 @@ function renderImagenTest(cat, p) {
 }
 
 // ============================================
-// INIT - Se ejecuta cuando DOM listo
+// INIT - Carga datos en background mientras se ve intro
 // ============================================
 function init() {
   console.log(`🚀 GasDrive V${VERSION} iniciado - General mixto activo`);
-  mostrarIntro();
-  actualizarCoins();
-  actualizarMensajeMotivacional();
+  mostrarIntro(); // 1. Muestra intro con botón bloqueado
 
-  cargarPregunta('general');
-  cargarPregunta('senales');
-  cargarPregunta('normas');
-  cargarPregunta('mecanica');
-  cargarPregunta('auxilios');
-  cargarPregunta('medioambiente');
-  cargarSituacion('clima');
+  // 2. Carga datos en background 100ms después para que se pinte la intro
+  setTimeout(() => {
+    actualizarCoins();
+    actualizarMensajeMotivacional();
+
+    cargarPregunta('general');
+    cargarPregunta('senales');
+    cargarPregunta('normas');
+    cargarPregunta('mecanica');
+    cargarPregunta('auxilios');
+    cargarPregunta('medioambiente');
+    cargarSituacion('clima');
+
+    DATOS_CARGADOS = true; // 3. Marca datos listos
+
+    // 4. Activa botón
+    const btn = document.getElementById('btn-empezar');
+    if(btn) {
+      btn.disabled = false;
+      btn.textContent = 'EMPEZAR';
+      btn.style.cursor = 'pointer';
+      btn.style.opacity = '1';
+    }
+
+    console.log(`✅ Datos listos para usar. General: ${PREGUNTAS_GENERAL.length} preguntas`);
+  }, 100);
 }
 
 if(document.readyState === 'loading') {
