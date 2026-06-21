@@ -25,7 +25,7 @@ const FILES = [
   // ============================================
   './01_Senales_Tomo_I_RD_465_2025.pdf',
   './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
-  './03_Manual_IX_Primers_Auxilios_2025.pdf',
+  './03_Manual_IX_Primeros_Auxilios_2025.pdf',
   './04_Manual_VIII_Mecanica_2024.pdf',
   './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
 ];
