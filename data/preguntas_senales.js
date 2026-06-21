@@ -1,5 +1,5 @@
 // GASDRIVE DGT V8.6.5 - PREGUNTAS SEÑALES RD 465/2025
-// Ubicación: data/preguntas-senales.js
+// Ubicación: data/preguntas_senales.js
 const PREGUNTAS_SENALES = [
   // === SECCIÓN 3.2: SEÑALES DE PRIORIDAD r-1 a r-6 ===
   {q:"¿Qué significa la señal R-1?",a:["Stop","Ceda el paso","Prohibido entrar"],ok:0,codigo:"r-1"},
@@ -24,7 +24,7 @@ const PREGUNTAS_SENALES = [
   {q:"¿Qué significa la señal R-112?",a:["Prohibida entrada a peatones","Prohibida entrada a animales de montura","Prohibida entrada a bicicletas"],ok:1,codigo:"r-112"},
   {q:"¿Qué significa la señal R-113?",a:["Prohibida entrada a peatones","Prohibida entrada a carros de mano","Prohibida entrada a bicicletas"],ok:0,codigo:"r-113"},
   {q:"¿Qué significa la señal R-114?",a:["Prohibida entrada a bicicletas","Prohibida entrada a peatones","Prohibida entrada a motos"],ok:0,codigo:"r-114"},
-  {q:"¿Qué significa la señal R-115?",a:["Prohibida entrada a animales sueltos","Prohibida entrada a peatones","Prohibida entrada a bicicletas"],ok:0,codigo:"r-115"},
+  {q:"¿Qué significa la señal R-115?",a:["Prohibida entrada a animales sueltos","Prohibida entrada a peatones","Prohibida entrada a bicicletas"],ok:0,codigo:"s-115"},
   {q:"¿Qué significa la señal R-116?",a:["Prohibida entrada a peatones","Prohibida entrada a animales sueltos","Prohibida entrada a bicicletas"],ok:1,codigo:"r-116"},
 
   // === SECCIÓN 3.4: SEÑALES DE RESTRICCIÓN DE PASO r-200 a r-204 ===
@@ -148,14 +148,14 @@ const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-203?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-203"},
   {q:"¿Qué indica la señal S-204?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-204"},
   {q:"¿Qué indica la señal S-205?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-205"},
-  {q:"¿Qué indica la señal S-206?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-206"},
-  {q:"¿Qué indica la señal S-207?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-207"},
-  {q:"¿Qué indica la señal S-208?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-208"},
-  {q:"¿Qué indica la señal S-209?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-209"},
+  {q:"¿Qué significa la señal S-206?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-206"},
+  {q:"¿Qué significa la señal S-207?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-207"},
+  {q:"¿Qué significa la señal S-208?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-208"},
+  {q:"¿Qué significa la señal S-209?",a:["Ruta recomendada para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-209"},
   {q:"¿Qué indica la señal S-210?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-210"},
   {q:"¿Qué indica la señal S-211?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-211"},
   {q:"¿Qué indica la señal S-212?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-212"},
-  {q:"¿Qué indica la señal S-213?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-213"},
+  {q:"Qué indica la señal S-213?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-213"},
   {q:"¿Qué indica la señal S-214?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-214"},
   {q:"¿Qué indica la señal S-215?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-215"},
   {q:"¿Qué indica la señal S-216?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-216"},
@@ -174,28 +174,7 @@ const PREGUNTAS_SENALES = [
   {q:"¿Qué indica la señal S-376?",a:["Preseñalización de dirección","Información general","Prohibición"],ok:0,codigo:"s-376"},
   {q:"¿Qué indica la señal S-377?",a:["Preseñalización de dirección","Información general","Prohibición"],ok:0,codigo:"s-377"},
 
-  // === SECCIÓN 3.12: SEÑALES DE DIRECCIÓN s-200 a s-229 ===
-  {q:"¿Qué indica la señal S-200?",a:["Calle sin salida","Dirección obligatoria","Prohibido pasar"],ok:0,codigo:"s-200"},
-  {q:"¿Qué indica la señal S-201?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-201"},
-  {q:"¿Qué indica la señal S-202?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-202"},
-  {q:"¿Qué indica la señal S-203?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-203"},
-  {q:"¿Qué indica la señal S-204?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-204"},
-  {q:"¿Qué indica la señal S-205?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-205"},
-  {q:"¿Qué indica la señal S-206?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-206"},
-  {q:"¿Qué indica la señal S-207?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-207"},
-  {q:"¿Qué indica la señal S-208?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-208"},
-  {q:"¿Qué indica la señal S-209?",a:["Ruta para camiones","Prohibido camiones","Taller camiones"],ok:0,codigo:"s-209"},
-  {q:"¿Qué indica la señal S-210?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-210"},
-  {q:"¿Qué indica la señal S-211?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-211"},
-  {q:"¿Qué indica la señal S-212?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-212"},
-  {q:"¿Qué indica la señal S-213?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-213"},
-  {q:"¿Qué indica la señal S-214?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-214"},
-  {q:"¿Qué indica la señal S-215?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-215"},
-  {q:"¿Qué indica la señal S-216?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-216"},
-  {q:"¿Qué indica la señal S-217?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-217"},
-  {q:"¿Qué indica la señal S-218?",a:["Prohibido bicis","Carril bici","Zona peatonal"],ok:1,codigo:"s-218"},
-  {q:"¿Qué indica la señal S-219?",a:["Prohibido peatones","Zona peatonal","Carril bici"],ok:1,codigo:"s-219"},
-  {q:"¿Qué indica la señal S-220?",a:["Salida derecha","Desvío obligatorio derecha","Prohibido girar derecha"],ok:0,codigo:"s-220"},
+  // === SECCIÓN 3.12: SEÑALES DE DIRECCIÓN s-221 a s-229 ===
   {q:"¿Qué indica la señal S-221?",a:["Salida izquierda","Desvío obligatorio izquierda","Prohibido girar izquierda"],ok:0,codigo:"s-221"},
   {q:"¿Qué indica la señal S-222?",a:["Solo recto","Desvío obligatorio de frente","Prohibido recto"],ok:0,codigo:"s-222"},
   {q:"¿Qué indica la señal S-223?",a:["Solo giro","Direcciones obligatorias derecha o izquierda","Prohibido girar"],ok:1,codigo:"s-223"},
@@ -270,3 +249,5 @@ const PREGUNTAS_SENALES = [
 ];
 window.PREGUNTAS_SENALES = PREGUNTAS_SENALES;
  
+
+
