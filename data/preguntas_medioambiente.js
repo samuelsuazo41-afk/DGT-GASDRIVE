@@ -85,3 +85,4 @@ const PREGUNTAS_MEDIOAMBIENTE = [
     {q:"Repostar motor encendido:",a:["Correcto","Prohibido + peligroso","Obligatorio"],ok:1},
     {q:"Móvil repostando:",a:["Permitido","Prohibido por riesgo chispa","Solo llamadas"],ok:1}
 ];
+window.PREGUNTAS_MEDIOAMBIENTE = PREGUNTAS_MEDIOAMBIENTE;
