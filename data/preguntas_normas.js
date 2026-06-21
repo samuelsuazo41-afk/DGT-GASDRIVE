@@ -229,3 +229,4 @@ const PREGUNTAS_NORMAS = [
     {q:"Abandono vehículo vía pública:",a:["6 meses = residuo sólido","1 mes = residuo sólido","Nunca es residuo"],ok:0},
     {q:"Deteriorar señal tráfico:",a:["Multa leve","Multa grave + retirada puntos","Solo aviso"],ok:1}
 ];
+window.PREGUNTAS_NORMAS = PREGUNTAS_NORMAS;
