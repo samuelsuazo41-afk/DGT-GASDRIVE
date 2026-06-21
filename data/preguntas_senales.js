@@ -24,7 +24,7 @@ const PREGUNTAS_SENALES = [
   {q:"¿Qué significa la señal R-112?",a:["Prohibida entrada a peatones","Prohibida entrada a animales de montura","Prohibida entrada a bicicletas"],ok:1,codigo:"r-112"},
   {q:"¿Qué significa la señal R-113?",a:["Prohibida entrada a peatones","Prohibida entrada a carros de mano","Prohibida entrada a bicicletas"],ok:0,codigo:"r-113"},
   {q:"¿Qué significa la señal R-114?",a:["Prohibida entrada a bicicletas","Prohibida entrada a peatones","Prohibida entrada a motos"],ok:0,codigo:"r-114"},
-  {q:"¿Qué significa la señal R-115?",a:["Prohibida entrada a animales sueltos","Prohibida entrada a peatones","Prohibida entrada a bicicletas"],ok:0,codigo:"s-115"},
+  {q:"¿Qué significa la señal R-115?",a:["Prohibida entrada a animales sueltos","Prohibida entrada a peatones","Prohibida entrada a bicicletas"],ok:0,codigo:"r-115"},
   {q:"¿Qué significa la señal R-116?",a:["Prohibida entrada a peatones","Prohibida entrada a animales sueltos","Prohibida entrada a bicicletas"],ok:1,codigo:"r-116"},
 
 
