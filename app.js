@@ -60,8 +60,6 @@ function actualizarMetricasTest(categoria, acierto, preguntaId) {
 // ============================================
 function mostrarIntro(){
   if(document.getElementById('intro-screen')) return;
-
-  // Espera hasta que body exista
   if(!document.body) {
     setTimeout(mostrarIntro, 50);
     return;
@@ -90,8 +88,8 @@ function tancarIntro(){
 }
 
 // ============================================
-// DATOS EXTERNOS - Variables globales de /data/
-// Los <script> de index.html ya cargaron todo antes de app.js
+// DATOS EXTERNOS - ÚNICA FUENTE DE VERDAD
+// Los <script> de index.html cargan /data/ antes que app.js
 // ============================================
 const PREGUNTAS_SENALES = window.PREGUNTAS_SENALES || [];
 const PREGUNTAS_NORMAS = window.PREGUNTAS_NORMAS || [];
@@ -102,8 +100,7 @@ const SITUACIONES = window.SITUACIONES || {};
 window.SENALES_SVG = window.SENALES_SVG || {};
 
 // ============================================
-// CLAVE: GENERAL SE CONSTRUYE DINÁMICO
-// Mezcla las 5 categorías porque no existe preguntas.js
+// GENERAL = MEZCLA DINÁMICA DE LAS 5 CATEGORÍAS
 // ============================================
 const PREGUNTAS_GENERAL = [
 ...PREGUNTAS_SENALES,
@@ -128,8 +125,7 @@ let DATOS_CARGADOS = false;
 console.log(`📊 V${VERSION} Datos iniciales: General ${PREGUNTAS_GENERAL.length} preguntas`);
 
 // ============================================
-// VERSIÓN 8.5.5: Render imagen SEGURO
-// General + Señales pintan SVG si tienen codigo
+// RENDER IMAGEN SEGURO - General + Señales + Examen
 // ============================================
 function renderImagenTest(cat, p) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
@@ -138,11 +134,7 @@ function renderImagenTest(cat, p) {
   const codigo = (p.codigo || '').toLowerCase();
   if(codigo && window.SENALES_SVG[codigo]) {
     imgCont.style.display = 'block';
-    imgCont.innerHTML = `
-      <div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">
-        ${window.SENALES_SVG[codigo]}
-      </div>
-    `;
+    imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">${window.SENALES_SVG[codigo]}</div>`;
   } else {
     imgCont.style.display = 'none';
     imgCont.innerHTML = '';
@@ -151,13 +143,12 @@ function renderImagenTest(cat, p) {
 
 // ============================================
 // INIT - DATOS PRIMERO, INTRO DESPUÉS
-// Tiempo de carga: 50-200ms típico en móvil
 // ============================================
 function init() {
   console.log(`🚀 GasDrive V${VERSION} iniciado`);
   const t0 = performance.now();
 
-  // 1. CARGA DATOS PRIMERO, sin mostrar nada al usuario
+  // 1. CARGA DATOS PRIMERO
   try {
     actualizarCoins();
     actualizarMensajeMotivacional();
@@ -176,7 +167,7 @@ function init() {
     console.error('❌ Error cargando datos:', e);
   }
 
-  // 2. CUANDO DATOS LISTOS, muestra intro para que el usuario lea
+  // 2. INTRO DESPUÉS, botón activo
   if(document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => setTimeout(mostrarIntro, 50));
   } else {
@@ -184,7 +175,7 @@ function init() {
   }
 }
 
-init(); 
+init();
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
