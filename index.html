@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V8.5</title>
+<title>GasDrive DGT ES V8.5.5</title>
 <link rel="manifest" href="./manifest.json">
 <style>
 html, body { background: #0a0a0a; color: #fff; margin: 0; padding: 0; }
@@ -132,7 +132,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="stats"><div>Aciertos: <span id="test-general-aciertos">0</span>/10</div><div>Racha: <span id="test-general-racha">0</span>🔥</div><div>Score: <span id="test-general-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div>
       <div class="pregunta" id="test-general-pregunta">Cargando...</div>
-      <!-- NUEVO: Cuadro imagen General -->
       <div id="test-general-imagen" class="imagen-test"></div>
       <div id="test-general-opciones"></div>
       <div class="feedback" id="test-general-feedback"></div>
@@ -146,7 +145,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
       <div class="stats"><div>Aciertos: <span id="test-senales-aciertos">0</span>/5</div><div>Racha: <span id="test-senales-racha">0</span>🔥</div><div>Score: <span id="test-senales-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-senales-progress"></div></div>
       <div class="pregunta" id="test-senales-pregunta"></div>
-      <!-- NUEVO: Cuadro imagen Señales -->
       <div id="test-senales-imagen" class="imagen-test"></div>
       <div id="test-senales-opciones"></div>
       <div class="feedback" id="test-senales-feedback"></div>
@@ -262,6 +260,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
     <div class="stats"><div>Pregunta: <span id="examen-num">0</span>/30</div><div>Aciertos: <span id="examen-aciertos">0</span></div><div>Tiempo: <span id="examen-timer">30:00</span></div></div>
     <div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div>
     <div class="pregunta" id="examen-pregunta">Pulsa Iniciar Examen</div>
+    <div id="examen-imagen" class="imagen-test"></div>
     <div id="examen-opciones"></div>
     <button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button>
     <button class="btn-sig" id="btn-sig-examen" onclick="siguientePreguntaExamen(event)" style="display:none" disabled>SIGUIENTE</button>
@@ -269,7 +268,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   </div>
 </div>
 
-<!-- NUEVO: TAB PROGRESO DESPUÉS DE EXAMEN -->
 <div id="tab-progreso" class="tab-content">
   <div class="card">
     <h2>📊 TU PROGRESO</h2>
@@ -304,7 +302,6 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   </div>
 </div>
 
-<!-- TABS INFERIORES: BOTÓN PROGRESO AÑADIDO DESPUÉS DE EXAMEN -->
 <div class="tabs">
   <button class="tab-btn active" onclick="cambiarTab(event,'test')"><span class="emoji">📝</span>TEST</button>
   <button class="tab-btn" onclick="cambiarTab(event,'situaciones')"><span class="emoji">🚦</span>CASOS</button>
@@ -317,16 +314,15 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 </div>
 
 <script>
-// Cargar todos los /data/ en orden, sin tildes y minúsculas
+// Cargar todos los /data/ en orden con guion bajo y v8.5.5
 const ARCHIVOS = [
-  './data/preguntas.js',
   './data/preguntas_senales.js',
   './data/preguntas_normas.js',
   './data/preguntas_mecanica.js',
   './data/preguntas_auxilios.js',
   './data/preguntas_medioambiente.js',
-  './data/preguntas_clima.js',
-  './data/senales_svg.js' // este sí con _svg
+  './data/preguntas_situaciones.js',
+  './data/senales_svg.js'
 ];
 
 // Cargar en serie y luego app.js
@@ -334,7 +330,7 @@ async function cargarTodo() {
   for (const ruta of ARCHIVOS) {
     await new Promise((res, rej) => {
       const s = document.createElement('script');
-      s.src = ruta + '?v=8.5.2';
+      s.src = ruta + '?v=8.5.5';
       s.onload = res;
       s.onerror = () => rej('Fallo: ' + ruta);
       document.head.appendChild(s);
@@ -342,7 +338,7 @@ async function cargarTodo() {
   }
   // Ahora sí cargar app.js
   const app = document.createElement('script');
-  app.src = './app.js?v=8.5.2';
+  app.src = './app.js?v=8.5.5';
   document.head.appendChild(app);
 }
 cargarTodo().catch(e => console.error('Error cargando data:', e));
