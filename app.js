@@ -1,6 +1,7 @@
 // ============================================
-// BLOQUE 1 - GASDRIVE DGT V8.5.5 ES FINAL
+// BLOQUE 1 - GASDRIVE DGT V8.5.5 ES FINAL CORREGIDO
 // General = mezcla dinámica de las 5 categorías
+// CASOS = usa PREGUNTAS_SITUACIONES.clima/urbano/carretera/emergencia
 // Datos cargan primero, intro después
 // CERO import(), CERO export. 100% compatible PWA
 // ============================================
@@ -13,6 +14,8 @@ const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','�
 // ============================================
 // DATOS GLOBALES + PROGRESO
 // ============================================
+let DATOS_CARGADOS = false; // Para saber si ya cargaron datos
+
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
     general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
@@ -54,6 +57,18 @@ function actualizarMetricasTest(categoria, acierto, preguntaId) {
   guardarProgreso();
 }
 
+function actualizarMetricasCaso(subcat, acierto, preguntaId) {
+  const prog = PROGRESO.casos[subcat];
+  prog.total++;
+  if(acierto) {
+    prog.aciertos++;
+    if(!prog.unicas.includes(preguntaId)) prog.unicas.push(preguntaId);
+  } else {
+    if(!prog.falladas.includes(preguntaId)) prog.falladas.push(preguntaId);
+  }
+  guardarProgreso();
+}
+
 // ============================================
 // PANTALLA INTRO - DATOS YA CARGADOS
 // Botón activo desde que aparece
@@ -70,11 +85,11 @@ function mostrarIntro(){
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
       <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT ES 2026</h1>
       <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 630 Preguntas DGT + Señales con imágenes</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 630 Preguntas DGT + Señales + 160 Casos</p>
       <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
         <div>💰 Gana coins respondiendo bien</div>
         <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 Todas las categorías en General</div>
+        <div>📚 TEST + CASOS + EXAMEN DGT</div>
         <div>📖 Temarios oficiales DGT</div>
       </div>
       <button onclick="tancarIntro()" id="btn-empezar" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 4px 15px rgba(255,140,0,0.4)">EMPEZAR</button>
@@ -89,27 +104,20 @@ function tancarIntro(){
 
 // ============================================
 // GENERAL = MEZCLA DINÁMICA DE LAS 5 CATEGORÍAS
+// Se crea dentro de init() para que los datos ya estén cargados
 // ============================================
 function mezclarSinDuplicar(...arrays) {
   const vistos = new Set();
   const resultado = [];
-  
+
   arrays.flat().forEach(p => {
-    if (p && p.codigo && !vistos.has(p.codigo)) {
+    if (p && p.codigo &&!vistos.has(p.codigo)) {
       vistos.add(p.codigo);
       resultado.push(p);
     }
   });
   return resultado;
 }
-
-const PREGUNTAS_GENERAL = mezclarSinDuplicar(
-  PREGUNTAS_SENALES,
-  PREGUNTAS_NORMAS,
-  PREGUNTAS_MECANICA,
-  PREGUNTAS_AUXILIOS,
-  PREGUNTAS_MEDIOAMBIENTE
-);
 
 // ============================================
 // RENDER IMAGEN SEGURO - General + Señales + Examen
@@ -119,7 +127,7 @@ function renderImagenTest(cat, p) {
   if(!imgCont) return;
 
   const codigo = (p.codigo || '').toLowerCase();
-  if(codigo && window.SENALES_SVG[codigo]) {
+  if(codigo && window.SENALES_SVG && window.SENALES_SVG[codigo]) {
     imgCont.style.display = 'block';
     imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">${window.SENALES_SVG[codigo]}</div>`;
   } else {
@@ -135,22 +143,39 @@ function init() {
   console.log(`🚀 GasDrive V${VERSION} iniciado`);
   const t0 = performance.now();
 
-  // 1. CARGA DATOS PRIMERO
+  // 1. CARGA DATOS PRIMERO - Aquí ya están cargados por index.html
   try {
     actualizarCoins();
     actualizarMensajeMotivacional();
+
+    // CREAR GENERAL AQUÍ DESPUÉS DE QUE CARGUEN LOS 7 ARCHIVOS
+    const PREGUNTAS_GENERAL = mezclarSinDuplicar(
+      window.PREGUNTAS_SENALES || [],
+      window.PREGUNTAS_NORMAS || [],
+      window.PREGUNTAS_MECANICA || [],
+      window.PREGUNTAS_AUXILIOS || [],
+      window.PREGUNTAS_MEDIOAMBIENTE || []
+    );
+    window.PREGUNTAS_GENERAL = PREGUNTAS_GENERAL; // Global para cargarPregunta()
+
+    alert('DEBUG: General cargó ' + PREGUNTAS_GENERAL.length + ' preguntas'); // BORRA ESTO CUANDO FUNCIONE
+
+    // Precarga primera pregunta de cada categoría
     cargarPregunta('general');
     cargarPregunta('senales');
     cargarPregunta('normas');
     cargarPregunta('mecanica');
     cargarPregunta('auxilios');
     cargarPregunta('medioambiente');
+
+    // Precarga situación clima por defecto
     cargarSituacion('clima');
 
     DATOS_CARGADOS = true;
     const tiempoCarga = Math.round(performance.now() - t0);
     console.log(`✅ Datos cargados en ${tiempoCarga}ms. General: ${PREGUNTAS_GENERAL.length} preguntas`);
   } catch(e) {
+    alert('ERROR CRÍTICO BLOQUE 1: ' + e.message); // Para ver error en móvil sin F12
     console.error('❌ Error cargando datos:', e);
   }
 
@@ -163,7 +188,6 @@ function init() {
 }
 
 init();
-
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
   {emoji:'🚗', txt:'Regla de los 2 segundos: mantén distancia con el coche de delante'},
