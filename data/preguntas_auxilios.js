@@ -82,3 +82,4 @@ const PREGUNTAS_AUXILIOS= [
     {q:"Ante amputación dedo:",a:["Poner parte en hielo directo","Envolver gasa estéril + bolsa + hielo externo","Guardar seco"],ok:1},
     {q:"Picadura abeja alergia:",a:["Esperar","Adrenalina si hay + 112","Vinagre"],ok:1}
 ];
+window.PREGUNTAS_AUXILIOS = PREGUNTAS_AUXILIOS;
