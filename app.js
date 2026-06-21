@@ -1,12 +1,17 @@
-// GASDRIVE DGT V8.2 ES - 630 PREGUNTAS DGT 2026 - VERSIÓN UNO
-const VERSION = "8.2";
+// ============================================
+// BLOQUE 1 - GASDRIVE DGT V8.5.5 ES FINAL
+// General = mezcla dinámica de las 5 categorías
+// Archivos: preguntas_senales.js con guion bajo
+// CERO import(), CERO export. 100% compatible PWA
+// ============================================
+const VERSION = "8.5.5";
 
 // COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
 // ============================================
-// DATOS GLOBALES + PROGRESO - NUEVO INTEGRADO
+// DATOS GLOBALES + PROGRESO
 // ============================================
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
@@ -33,12 +38,10 @@ let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   }
 };
 
-// Guardar progreso - NUEVO
 function guardarProgreso() {
   localStorage.setItem('gd_progreso', JSON.stringify(PROGRESO));
 }
 
-// Métricas test - NUEVO
 function actualizarMetricasTest(categoria, acierto, preguntaId) {
   const prog = PROGRESO.tests[categoria];
   prog.total++;
@@ -52,20 +55,21 @@ function actualizarMetricasTest(categoria, acierto, preguntaId) {
 }
 
 // ============================================
-// PANTALLA INTRO - Aparece SIEMPRE al abrir
+// PANTALLA INTRO
 // ============================================
 function mostrarIntro(){
+  if(document.getElementById('intro-screen')) return;
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
       <h1 style="font-size:32px;margin:0 0 10px">GasDrive DGT ES 2026</h1>
       <p style="font-size:18px;opacity:0.8;margin:0 0 10px">Aprende el carnet en 15 min al día</p>
-      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 Temarios oficiales DGT para estudiar cuando quieras</p>
+      <p style="font-size:16px;opacity:0.9;margin:0 0 30px">📚 630 Preguntas DGT + Señales con imágenes</p>
       <div style="text-align:left;font-size:16px;margin-bottom:40px;line-height:2">
         <div>💰 Gana coins respondiendo bien</div>
         <div>🏎️ Compra supercoches en el Garaje</div>
-        <div>📚 630 preguntas DGT reales</div>
-        <div>📖 Temarios completos para repasar</div>
+        <div>📚 Todas las categorías en General</div>
+        <div>📖 Temarios oficiales DGT</div>
       </div>
       <button onclick="tancarIntro()" style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer">EMPEZAR</button>
     </div>
@@ -77,48 +81,74 @@ function tancarIntro(){
 }
 
 // ============================================
-// VERSIÓN UNO - DATOS EXTERNOS CON FALLBACK 100% SEGURO
-// General mezcla todo: solo pinta imagen si hay codigo + SVG
-// Si /data/ no existe, usa arrays internos y no rompe nada
+// DATOS EXTERNOS - Variables globales de /data/
+// Los <script> de index.html ya cargaron todo
 // ============================================
-const PREGUNTAS = window.PREGUNTAS || {};
-const CASOS = window.SITUACIONES || {};
+const PREGUNTAS_SENALES = window.PREGUNTAS_SENALES || [];
+const PREGUNTAS_NORMAS = window.PREGUNTAS_NORMAS || [];
+const PREGUNTAS_MECANICA = window.PREGUNTAS_MECANICA || [];
+const PREGUNTAS_AUXILIOS = window.PREGUNTAS_AUXILIOS || [];
+const PREGUNTAS_MEDIOAMBIENTE = window.PREGUNTAS_MEDIOAMBIENTE || [];
+const SITUACIONES = window.SITUACIONES || {};
 window.SENALES_SVG = window.SENALES_SVG || {};
-let DATOS_CARGADOS = Object.keys(PREGUNTAS).length > 0;
 
-async function cargarModulos() {
-  // Fallback total: si ya hay datos, no hace nada
-  if(DATOS_CARGADOS) {
-    console.log('⚡ Versión uno - Datos internos activos');
-    initTests();
-    return;
+// ============================================
+// CLAVE: GENERAL SE CONSTRUYE DINÁMICO
+// Mezcla las 5 categorías porque no existe preguntas.js
+// ============================================
+const PREGUNTAS_GENERAL = [
+...PREGUNTAS_SENALES,
+...PREGUNTAS_NORMAS,
+...PREGUNTAS_MECANICA,
+...PREGUNTAS_AUXILIOS,
+...PREGUNTAS_MEDIOAMBIENTE
+];
+
+const PREGUNTAS = {
+  general: PREGUNTAS_GENERAL,
+  senales: PREGUNTAS_SENALES,
+  normas: PREGUNTAS_NORMAS,
+  mecanica: PREGUNTAS_MECANICA,
+  auxilios: PREGUNTAS_AUXILIOS,
+  medioambiente: PREGUNTAS_MEDIOAMBIENTE
+};
+
+const CASOS = SITUACIONES;
+let DATOS_CARGADOS = true;
+
+console.log(`📊 V${VERSION} Datos cargados: General ${PREGUNTAS_GENERAL.length} = Señales ${PREGUNTAS_SENALES.length} + Normas ${PREGUNTAS_NORMAS.length} + Mecánica ${PREGUNTAS_MECANICA.length} + Auxilios ${PREGUNTAS_AUXILIOS.length} + Medioambiente ${PREGUNTAS_MEDIOAMBIENTE.length}`);
+
+// ============================================
+// VERSIÓN 8.5.5: Render imagen SEGURO
+// General + Señales pintan SVG si tienen codigo
+// ============================================
+function renderImagenTest(cat, p) {
+  const imgCont = document.getElementById(`test-${cat}-imagen`);
+  if(!imgCont) return;
+
+  const codigo = (p.codigo || '').toLowerCase();
+  if(codigo && window.SENALES_SVG[codigo]) {
+    imgCont.style.display = 'block';
+    imgCont.innerHTML = `
+      <div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">
+        ${window.SENALES_SVG[codigo]}
+      </div>
+    `;
+  } else {
+    imgCont.style.display = 'none';
+    imgCont.innerHTML = '';
   }
-
-  try {
-    console.log('🚀 Versión uno - Intentando cargar /data/');
-
-    const modSenales = await import('./data/preguntas-senales.js');
-    PREGUNTAS.senales = modSenales.PREGUNTAS_SENALES || [];
-
-    // General por ahora = solo señales. Cuando tengas normas/mecanica lo mezclamos
-    PREGUNTAS.general = [...PREGUNTAS.senales];
-
-    const modSvg = await import('./data/senales-svg.js');
-    window.SENALES_SVG = modSvg.SENALES_SVG || {};
-
-    DATOS_CARGADOS = true;
-    console.log(`✅ Versión uno: ${PREGUNTAS.senales.length} señales + ${Object.keys(window.SENALES_SVG).length} SVGs cargados`);
-
-  } catch(e) {
-    console.log('⚠️ /data/ no encontrada. Versión uno usa arrays internos. 0 roturas');
-    DATOS_CARGADOS = true;
-  }
-
-  initTests();
 }
 
-// Llama a cargarPregunta solo después de tener datos listos
-function initTests() {
+// ============================================
+// INIT - Se ejecuta cuando DOM listo
+// ============================================
+function init() {
+  console.log(`🚀 GasDrive V${VERSION} iniciado - General mixto activo`);
+  mostrarIntro();
+  actualizarCoins();
+  actualizarMensajeMotivacional();
+
   cargarPregunta('general');
   cargarPregunta('senales');
   cargarPregunta('normas');
@@ -128,23 +158,10 @@ function initTests() {
   cargarSituacion('clima');
 }
 
-// VERSIÓN UNO: Render imagen SEGURO para General + Señales
-// Si no hay codigo o no hay SVG -> oculta el contenedor, no rompe
-function renderImagenTest(cat, p) {
-  const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if(!imgCont) return;
-
-  if(p.codigo && window.SENALES_SVG[p.codigo.toLowerCase()]) {
-    imgCont.style.display = 'block';
-    imgCont.innerHTML = `
-      <div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">
-        ${window.SENALES_SVG[p.codigo.toLowerCase()]}
-      </div>
-    `;
-  } else {
-    imgCont.style.display = 'none';
-    imgCont.innerHTML = '';
-  }
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
