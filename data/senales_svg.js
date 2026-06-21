@@ -319,4 +319,5 @@ const SENALES_SVG = {
   
   "s-880": `<svg viewBox="0 0 200 200"><rect x="10" y="10" width="180" height="180" rx="10" fill="white" stroke="#000" stroke-width="8"/><text x="100" y="115" text-anchor="middle" font-size="30" font-weight="bold" fill="#000">PMR</text></svg>`
 };
+window.SENALES_SVG = SENALES_SVG;
 
