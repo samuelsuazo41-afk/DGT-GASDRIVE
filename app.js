@@ -184,7 +184,7 @@ function init() {
   }
 }
 
-init();
+init(); 
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
 const TIPS = [
