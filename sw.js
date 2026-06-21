@@ -2,7 +2,7 @@ const CACHE = 'gasdrive-v22.2.1'; // sube versión para forzar update
 const FILES = [
   './',
   './index.html',
-  './app.js?v=',
+  './app.js?',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
