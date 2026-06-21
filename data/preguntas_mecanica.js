@@ -109,3 +109,4 @@ const PREGUNTAS_MECANICA = [
     {q:"Asiento no se mueve:",a:["Normal","Motor asiento o guía rota","Palanca rota"],ok:1},
     {q:"Aire acondicionado no enfría:",a:["Normal","Falta gas o compresor roto","Filtro sucio"],ok:1}
 ];
+window.PREGUNTAS_MECANICA = PREGUNTAS_MECANICA;
