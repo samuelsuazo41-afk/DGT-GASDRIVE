@@ -1,18 +1,11 @@
 // ============================================
 // BLOQUE 1 - GASDRIVE DGT V8.5.5 ES FINAL
-// General = mezcla dinámica de las 5 categorías
-// Archivos: preguntas_senales.js con guion bajo
-// CERO import(), CERO export. 100% compatible PWA
 // ============================================
 const VERSION = "8.5.5";
 
-// COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
 const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','💩','🤡','💥','😤'];
 
-// ============================================
-// DATOS GLOBALES + PROGRESO
-// ============================================
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
     general: { total: 0, aciertos: 0, unicas: [], falladas: [] },
@@ -56,10 +49,12 @@ function actualizarMetricasTest(categoria, acierto, preguntaId) {
 
 // ============================================
 // PANTALLA INTRO - PANTALLA DE CARGA
-// Botón bloqueado hasta que DATOS_CARGADOS = true
 // ============================================
 function mostrarIntro(){
   if(document.getElementById('intro-screen')) return;
+  console.log('⏱️ Mostrando intro...');
+  const t0 = performance.now();
+
   document.body.insertAdjacentHTML('afterbegin', `
     <div id="intro-screen" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1a1a2e,#16213e);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px">
       <div style="font-size:64px;margin-bottom:20px">🚗</div>
@@ -75,16 +70,17 @@ function mostrarIntro(){
       <button onclick="tancarIntro()" id="btn-empezar" disabled style="background:linear-gradient(135deg,#ff8c00,#ff2d55);border:none;color:#fff;padding:16px 48px;border-radius:12px;font-size:18px;font-weight:bold;cursor:not-allowed;opacity:0.5">CARGANDO DATOS...</button>
     </div>
   `);
+  console.log(`⏱️ Intro pintada en ${Math.round(performance.now() - t0)}ms`);
 }
 
 function tancarIntro(){
-  if(!DATOS_CARGADOS) return; // No deja salir si datos no están listos
+  if(!DATOS_CARGADOS) return;
   document.getElementById('intro-screen').remove();
+  console.log('✅ Intro cerrada');
 }
 
 // ============================================
-// DATOS EXTERNOS - Variables globales de /data/
-// Los <script> de index.html ya cargaron todo
+// DATOS EXTERNOS
 // ============================================
 const PREGUNTAS_SENALES = window.PREGUNTAS_SENALES || [];
 const PREGUNTAS_NORMAS = window.PREGUNTAS_NORMAS || [];
@@ -94,10 +90,6 @@ const PREGUNTAS_MEDIOAMBIENTE = window.PREGUNTAS_MEDIOAMBIENTE || [];
 const SITUACIONES = window.SITUACIONES || {};
 window.SENALES_SVG = window.SENALES_SVG || {};
 
-// ============================================
-// CLAVE: GENERAL SE CONSTRUYE DINÁMICO
-// Mezcla las 5 categorías porque no existe preguntas.js
-// ============================================
 const PREGUNTAS_GENERAL = [
 ...PREGUNTAS_SENALES,
 ...PREGUNTAS_NORMAS,
@@ -116,26 +108,17 @@ const PREGUNTAS = {
 };
 
 const CASOS = SITUACIONES;
-let DATOS_CARGADOS = false; // Empieza en false para bloquear intro
+let DATOS_CARGADOS = false;
 
-console.log(`📊 V${VERSION} Datos cargados: General ${PREGUNTAS_GENERAL.length} = Señales ${PREGUNTAS_SENALES.length} + Normas ${PREGUNTAS_NORMAS.length} + Mecánica ${PREGUNTAS_MECANICA.length} + Auxilios ${PREGUNTAS_AUXILIOS.length} + Medioambiente ${PREGUNTAS_MEDIOAMBIENTE.length}`);
+console.log(`📊 V${VERSION} Datos iniciales: General ${PREGUNTAS_GENERAL.length} preguntas`);
 
-// ============================================
-// VERSIÓN 8.5.5: Render imagen SEGURO
-// General + Señales pintan SVG si tienen codigo
-// ============================================
 function renderImagenTest(cat, p) {
   const imgCont = document.getElementById(`test-${cat}-imagen`);
   if(!imgCont) return;
-
   const codigo = (p.codigo || '').toLowerCase();
   if(codigo && window.SENALES_SVG[codigo]) {
     imgCont.style.display = 'block';
-    imgCont.innerHTML = `
-      <div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">
-        ${window.SENALES_SVG[codigo]}
-      </div>
-    `;
+    imgCont.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">${window.SENALES_SVG[codigo]}</div>`;
   } else {
     imgCont.style.display = 'none';
     imgCont.innerHTML = '';
@@ -143,44 +126,53 @@ function renderImagenTest(cat, p) {
 }
 
 // ============================================
-// INIT - Carga datos en background mientras se ve intro
+// INIT - CON TIMING SEGURO
 // ============================================
 function init() {
-  console.log(`🚀 GasDrive V${VERSION} iniciado - General mixto activo`);
-  mostrarIntro(); // 1. Muestra intro con botón bloqueado
+  console.log(`🚀 GasDrive V${VERSION} iniciado`);
 
-  // 2. Carga datos en background 100ms después para que se pinte la intro
-  setTimeout(() => {
-    actualizarCoins();
-    actualizarMensajeMotivacional();
+  // 1. Espera 1 frame para que DOM esté 100% pintado
+  requestAnimationFrame(() => {
+    mostrarIntro(); // Muestra intro YA visible
 
-    cargarPregunta('general');
-    cargarPregunta('senales');
-    cargarPregunta('normas');
-    cargarPregunta('mecanica');
-    cargarPregunta('auxilios');
-    cargarPregunta('medioambiente');
-    cargarSituacion('clima');
+    const t0 = performance.now();
 
-    DATOS_CARGADOS = true; // 3. Marca datos listos
+    // 2. Espera 300ms mínimo para que el usuario vea la intro
+    setTimeout(() => {
+      console.log(`⏱️ Iniciando carga datos tras 300ms...`);
 
-    // 4. Activa botón
-    const btn = document.getElementById('btn-empezar');
-    if(btn) {
-      btn.disabled = false;
-      btn.textContent = 'EMPEZAR';
-      btn.style.cursor = 'pointer';
-      btn.style.opacity = '1';
-    }
+      actualizarCoins();
+      actualizarMensajeMotivacional();
 
-    console.log(`✅ Datos listos para usar. General: ${PREGUNTAS_GENERAL.length} preguntas`);
-  }, 100);
+      cargarPregunta('general');
+      cargarPregunta('senales');
+      cargarPregunta('normas');
+      cargarPregunta('mecanica');
+      cargarPregunta('auxilios');
+      cargarPregunta('medioambiente');
+      cargarSituacion('clima');
+
+      const tiempoCarga = Math.round(performance.now() - t0);
+      DATOS_CARGADOS = true;
+
+      // 3. Activa botón
+      const btn = document.getElementById('btn-empezar');
+      if(btn) {
+        btn.disabled = false;
+        btn.textContent = 'EMPEZAR';
+        btn.style.cursor = 'pointer';
+        btn.style.opacity = '1';
+      }
+
+      console.log(`✅ Datos listos en ${tiempoCarga}ms. General: ${PREGUNTAS_GENERAL.length} preguntas`);
+    }, 300);
+  });
 }
 
 if(document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
-  init();
+  requestAnimationFrame(init);
 }
 
 // 100 TIPS DEL DÍA - DOPAMINA DIARIA
