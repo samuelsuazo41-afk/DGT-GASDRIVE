@@ -316,7 +316,7 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 </div>
 
 <script>
-// Cargar todos los /data/ en orden con guion bajo y v8.5.5
+// Cargar todos los /data/ en orden con guion bajo
 const ARCHIVOS = [
   './data/preguntas_senales.js',
   './data/preguntas_normas.js',
@@ -332,7 +332,7 @@ async function cargarTodo() {
   for (const ruta of ARCHIVOS) {
     await new Promise((res, rej) => {
       const s = document.createElement('script');
-      s.src = ruta + '?v=8.5.5';
+      s.src = ruta; // SIN ?v=8.5.5
       s.onload = res;
       s.onerror = () => rej('Fallo: ' + ruta);
       document.head.appendChild(s);
@@ -340,7 +340,7 @@ async function cargarTodo() {
   }
   // Ahora sí cargar app.js
   const app = document.createElement('script');
-  app.src = './app.js?v=8.5.5';
+  app.src = './app.js'; // SIN ?v=
   document.head.appendChild(app);
 }
 cargarTodo().catch(e => console.error('Error cargando data:', e));
