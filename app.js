@@ -88,6 +88,43 @@ function tancarIntro(){
 }
 
 // ============================================
+// DATOS EXTERNOS - ÚNICA FUENTE DE VERDAD
+// Los <script> de index.html cargan /data/ antes que app.js
+// ============================================
+const PREGUNTAS_SENALES = window.PREGUNTAS_SENALES || [];
+const PREGUNTAS_NORMAS = window.PREGUNTAS_NORMAS || [];
+const PREGUNTAS_MECANICA = window.PREGUNTAS_MECANICA || [];
+const PREGUNTAS_AUXILIOS = window.PREGUNTAS_AUXILIOS || [];
+const PREGUNTAS_MEDIOAMBIENTE = window.PREGUNTAS_MEDIOAMBIENTE || [];
+const SITUACIONES = window.SITUACIONES || {};
+window.SENALES_SVG = window.SENALES_SVG || {};
+
+// ============================================
+// GENERAL = MEZCLA DINÁMICA DE LAS 5 CATEGORÍAS
+// ============================================
+const PREGUNTAS_GENERAL = [
+...PREGUNTAS_SENALES,
+...PREGUNTAS_NORMAS,
+...PREGUNTAS_MECANICA,
+...PREGUNTAS_AUXILIOS,
+...PREGUNTAS_MEDIOAMBIENTE
+];
+
+const PREGUNTAS = {
+  general: PREGUNTAS_GENERAL,
+  senales: PREGUNTAS_SENALES,
+  normas: PREGUNTAS_NORMAS,
+  mecanica: PREGUNTAS_MECANICA,
+  auxilios: PREGUNTAS_AUXILIOS,
+  medioambiente: PREGUNTAS_MEDIOAMBIENTE
+};
+
+const CASOS = SITUACIONES;
+let DATOS_CARGADOS = false;
+
+console.log(`📊 V${VERSION} Datos iniciales: General ${PREGUNTAS_GENERAL.length} preguntas`);
+
+// ============================================
 // RENDER IMAGEN SEGURO - General + Señales + Examen
 // ============================================
 function renderImagenTest(cat, p) {
