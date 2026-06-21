@@ -27,12 +27,6 @@ const PREGUNTAS_SENALES = [
   {q:"¿Qué significa la señal R-115?",a:["Prohibida entrada a animales sueltos","Prohibida entrada a peatones","Prohibida entrada a bicicletas"],ok:0,codigo:"s-115"},
   {q:"¿Qué significa la señal R-116?",a:["Prohibida entrada a peatones","Prohibida entrada a animales sueltos","Prohibida entrada a bicicletas"],ok:1,codigo:"r-116"},
 
-  // === SECCIÓN 3.4: SEÑALES DE RESTRICCIÓN DE PASO r-200 a r-204 ===
-  {q:"¿Qué indica la señal R-200?",a:["Peso mínimo","Masa máxima autorizada","Fin limitación de peso"],ok:1,codigo:"r-200"},
-  {q:"¿Qué indica la señal R-201?",a:["Peso mínimo 3,5 toneladas","Masa máxima autorizada 3,5 toneladas","Fin limitación de peso"],ok:1,codigo:"r-201"},
-  {q:"¿Qué indica la señal R-202?",a:["Anchura máxima 2,5 metros","Altura máxima 2,5 metros","Longitud máxima 2,5 metros"],ok:1,codigo:"r-202"},
-  {q:"¿Qué indica la señal R-203?",a:["Anchura máxima 4 metros","Altura máxima 4 metros","Peso máximo 4 toneladas"],ok:1,codigo:"r-203"},
-  {q:"¿Qué indica la señal R-204?",a:["Longitud máxima 10 metros","Anchura máxima 10 metros","Altura máxima 10 metros"],ok:0,codigo:"r-204"},
 
   // === SECCIÓN 3.5: OTRAS SEÑALES DE PROHIBICIÓN r-300 a r-311 ===
   {q:"¿Qué significa la señal R-300?",a:["Velocidad mínima 50 km/h","Velocidad máxima 50 km/h","Velocidad recomendada 50 km/h"],ok:1,codigo:"r-300"},
