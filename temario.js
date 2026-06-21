@@ -55,7 +55,7 @@ export default function Temario() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.card} onPress={() => handlePress(item)}>
-            <Text style={styles.titulo}>{item.titulo}</button>
+            <Text style={styles.titulo}>{item.titulo}</Text>
             <Ionicons name="lock-closed" size={20} color="#999" />
           </TouchableOpacity>
         )}
