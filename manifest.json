@@ -1,13 +1,14 @@
 {
-  "name": "GasDrive DGT ES 2026",
-  "short_name": "GasDrive",
-  "description": "Test y temarios DGT 2026 oficiales",
-  "lang": "es",
-  "start_url": "./index.html?v=19.2.7",
+  "name": "GasDrive DGT España V8.5.2",
+  "short_name": "GasDrive ES",
+  "description": "630 Preguntas DGT 2026. Señales con imágenes. Modo offline. 100% Gratis.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#00D9FF",
   "background_color": "#0a0a0a",
-  "theme_color": "#0a0a0a",
+  "lang": "es",
   "icons": [
     {
       "src": "./icon-192.png",
