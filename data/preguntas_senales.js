@@ -268,5 +268,5 @@ const PREGUNTAS_SENALES = [
   {q:"¿Qué indica el panel S-879?",a:["Panel decorativo","Panel con texto complementario al peligro próximo","No sirve"],ok:1,codigo:"s-879"},
   {q:"¿Qué indica el panel S-880?",a:["Panel decorativo","Panel con texto complementario al peligro próximo","No sirve"],ok:1,codigo:"s-880"}
 ];
-
+window.PREGUNTAS_SENALES = PREGUNTAS_SENALES;
  
