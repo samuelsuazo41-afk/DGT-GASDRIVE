@@ -5,7 +5,6 @@
 // Datos cargan primero, intro después
 // CERO import(), CERO export. 100% compatible PWA
 // ============================================
-const VERSION = "8.5.5";
 
 // COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
