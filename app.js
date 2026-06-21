@@ -341,84 +341,13 @@ const ACCESORIOS = [
   {id:'a34',nombre:'Diamante',emoji:'💎',precio:1200,hp:5},
   {id:'a35',nombre:'Rayo',emoji:'⚡',precio:700,hp:20},
   {id:'a36',nombre:'Fuego',emoji:'🔥',precio:500,hp:15},
+];
 
 // ============================================
-// VERSIÓN UNO BLOQUE 2 - RENDER IMAGEN + INIT SEGURO
-// General mezcla todo: solo pinta imagen si hay codigo + SVG
-// Si no hay imagen -> oculta contenedor, no rompe nada
-// Encaje: init() llama cargarModulos() del bloque 1
+// BLOQUE 2 - LÓGICA TEST + CASOS V8.5.5
+// General usa PREGUNTAS.general = mezcla de las 5 categorías
+// Render imagen integrado para señales con codigo
 // ============================================
-
-// Render imagen SEGURO para General + Señales
-function renderImagenTest(cat, p) {
-  const imgCont = document.getElementById(`test-${cat}-imagen`);
-  if(!imgCont) return;
-
-  if(p.codigo && window.SENALES_SVG && window.SENALES_SVG[p.codigo.toLowerCase()]) {
-    imgCont.style.display = 'block';
-    imgCont.innerHTML = `
-      <div style="display:flex;justify-content:center;align-items:center;margin:12px 0;min-height:120px;max-height:180px">
-        ${window.SENALES_SVG[p.codigo.toLowerCase()]}
-      </div>
-    `;
-  } else {
-    imgCont.style.display = 'none';
-    imgCont.innerHTML = '';
-  }
-}
-
-// MODIFICACIÓN 1: init() ÚNICA - carga módulos antes de pintar
-function init() {
-  console.log("GasDrive V8.5 ES cargado");
-  mostrarIntro();
-  actualizarCoins();
-  actualizarMensajeMotivacional();
-  cargarModulos(); // BLOQUE 1: carga /data/, luego llama initTests()
-}
-
-// MODIFICACIÓN 2: initTests() ÚNICA - se ejecuta después de cargar datos
-function initTests() {
-  cargarPregunta('general');
-  cargarPregunta('senales');
-  cargarPregunta('normas');
-  cargarPregunta('mecanica');
-  cargarPregunta('auxilios');
-  cargarPregunta('medioambiente');
-  cargarSituacion('clima');
-}
-
-// MODIFICACIÓN 3: cargarPregunta() ÚNICA - con render de imagen integrado
-function cargarPregunta(cat) {
-  const s = estado.test[cat];
-  const preguntas = mezclarArray(PREGUNTAS[cat]);
-  if(!preguntas || preguntas.length === 0) return;
-  const pOriginal = preguntas[s.idx % preguntas.length];
-  const opcionesMezcladas = mezclarArray(pOriginal.a);
-  const textoCorrecto = pOriginal.a[pOriginal.ok];
-  const nuevoIndexCorrecto = opcionesMezcladas.indexOf(textoCorrecto);
-  const p = {...pOriginal, a: opcionesMezcladas, ok: nuevoIndexCorrecto};
-  s.current = p;
-
-  document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
-
-  renderImagenTest(cat, p); // BLOQUE 2: pinta imagen solo si existe
-
-  document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
-  document.getElementById(`test-${cat}-racha`).textContent = s.racha;
-  document.getElementById(`test-${cat}-score`).textContent = s.puntuacion;
-  document.getElementById(`test-${cat}-progress`).style.width = `${((s.idx % preguntas.length)/preguntas.length)*100}%`;
-  const cont = document.getElementById(`test-${cat}-opciones`);
-  cont.innerHTML = '';
-  document.getElementById(`test-${cat}-feedback`).textContent = '';
-  document.getElementById(`btn-sig-test-${cat}`).disabled = true;
-  p.a.forEach((txt, i) => {
-    const div = document.createElement('div');
-    div.className = 'opcion';
-    div.textContent = txt;
-    div.onclick = function() { responderTest(cat, i, this); };
-    cont.appendChild(div);
-  });
-}
 
 let tipsData = [];
 let currentTip = 0;
@@ -454,27 +383,7 @@ let estado = {
   }
 };
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
-
 let sitCategoriaActiva = 'clima';
-
-function init() {
-  console.log("GasDrive V8.5 ES cargado");
-  mostrarIntro();
-  actualizarCoins();
-  cargarPregunta('general');
-  cargarPregunta('senales');
-  cargarPregunta('normas');
-  cargarPregunta('mecanica');
-  cargarPregunta('auxilios');
-  cargarPregunta('medioambiente');
-  cargarSituacion('clima');
-  actualizarMensajeMotivacional();
-}
 
 function guardar() {
   localStorage.setItem('gd_coins', estado.coins);
@@ -488,7 +397,7 @@ function actualizarCoins() {
   if(el) el.textContent = `💰 ${estado.coins}`;
 }
 
-// Mezclador Fisher-Yates para randomizar opciones y preguntas
+// Mezclador Fisher-Yates
 function mezclarArray(arr) {
   const a = arr.slice();
   for(let i = a.length - 1; i > 0; i--) {
@@ -498,6 +407,167 @@ function mezclarArray(arr) {
   return a;
 }
 
+// TEST con render imagen integrado
+function cargarPregunta(cat) {
+  const s = estado.test[cat];
+  const preguntas = mezclarArray(PREGUNTAS[cat]);
+  if(!preguntas || preguntas.length === 0) {
+    console.warn(`⚠️ No hay preguntas para categoría: ${cat}`);
+    return;
+  }
+
+  const pOriginal = preguntas[s.idx % preguntas.length];
+  const opcionesMezcladas = mezclarArray(pOriginal.a);
+  const textoCorrecto = pOriginal.a[pOriginal.ok];
+  const nuevoIndexCorrecto = opcionesMezcladas.indexOf(textoCorrecto);
+  const p = {...pOriginal, a: opcionesMezcladas, ok: nuevoIndexCorrecto};
+  s.current = p;
+
+  document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
+
+  // CLAVE: Render imagen solo si tiene codigo + SVG existe
+  renderImagenTest(cat, p);
+
+  document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
+  document.getElementById(`test-${cat}-racha`).textContent = s.racha;
+  document.getElementById(`test-${cat}-score`).textContent = s.puntuacion;
+  document.getElementById(`test-${cat}-progress`).style.width = `${((s.idx % preguntas.length)/preguntas.length)*100}%`;
+
+  const cont = document.getElementById(`test-${cat}-opciones`);
+  cont.innerHTML = '';
+  document.getElementById(`test-${cat}-feedback`).textContent = '';
+  document.getElementById(`btn-sig-test-${cat}`).disabled = true;
+
+  p.a.forEach((txt, i) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.textContent = txt;
+    div.onclick = function() { responderTest(cat, i, this); };
+    cont.appendChild(div);
+  });
+}
+
+function responderTest(cat, idx, el) {
+  const s = estado.test[cat];
+  const p = s.current;
+  const cont = document.getElementById(`test-${cat}-opciones`);
+  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+
+  cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
+  const correcto = idx === p.ok;
+
+  if(correcto) {
+    el.classList.add('correcta');
+    s.aciertos++;
+    s.racha++;
+    s.puntuacion += 10 + (s.racha * 2);
+    estado.coins += 5;
+    document.getElementById(`test-${cat}-feedback`).className = 'feedback acierto';
+    document.getElementById(`test-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +${10+(s.racha*2)} pts`;
+    mostrarEmoji(true, el);
+  } else {
+    el.classList.add('incorrecta');
+    cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
+    document.getElementById(`test-${cat}-feedback`).className = 'feedback fallo';
+    document.getElementById(`test-${cat}-feedback`).textContent = '❌ FALLO';
+    mostrarEmoji(false, el);
+    s.racha = 0;
+  }
+
+  // Guardar métricas para Progreso
+  actualizarMetricasTest(cat, correcto, p.q.substring(0,50));
+
+  document.getElementById(`btn-sig-test-${cat}`).disabled = false;
+  actualizarCoins();
+  guardar();
+}
+
+function siguienteTest(e, cat) {
+  estado.test[cat].idx++;
+  cargarPregunta(cat);
+}
+
+function mostrarEmoji(acierto, element) {
+  const lista = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
+  const emoji = lista[Math.floor(Math.random() * lista.length)];
+  const span = document.createElement('span');
+  span.textContent = emoji;
+  span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:32px;animation:bounceIn 0.4s;pointer-events:none;z-index:999;';
+  element.style.position = 'relative';
+  element.appendChild(span);
+  setTimeout(() => span.remove(), 600);
+  if(navigator.vibrate) navigator.vibrate(acierto? [30,20,30] : 100);
+}
+
+// CASOS con preguntas aleatorias
+function cargarSituacion(cat) {
+  if(!cat) cat = sitCategoriaActiva;
+  const s = estado.sit[cat];
+  const casos = mezclarArray(CASOS[cat]);
+  if(!casos || casos.length === 0) return;
+
+  const pOriginal = casos[s.idx % casos.length];
+  const opcionesMezcladas = mezclarArray(pOriginal.a);
+  const textoCorrecto = pOriginal.a[pOriginal.ok];
+  const nuevoIndexCorrecto = opcionesMezcladas.indexOf(textoCorrecto);
+  const p = {...pOriginal, a: opcionesMezcladas, ok: nuevoIndexCorrecto};
+  s.current = p;
+
+  document.getElementById(`sit-${cat}-pregunta`).textContent = p.q;
+  document.getElementById(`sit-${cat}-aciertos`).textContent = s.aciertos;
+  document.getElementById(`sit-${cat}-score`).textContent = s.puntuacion;
+  document.getElementById(`sit-${cat}-progress`).style.width = `${((s.idx % casos.length)/casos.length)*100}%`;
+
+  const cont = document.getElementById(`sit-${cat}-opciones`);
+  cont.innerHTML = '';
+  document.getElementById(`sit-${cat}-feedback`).textContent = '';
+  document.getElementById(`btn-sig-sit-${cat}`).disabled = true;
+
+  p.a.forEach((txt, i) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.textContent = txt;
+    div.onclick = function() { responderSituacion(cat, i, this); };
+    cont.appendChild(div);
+  });
+}
+
+function responderSituacion(cat, idx, el) {
+  const s = estado.sit[cat];
+  const p = s.current;
+  const cont = document.getElementById(`sit-${cat}-opciones`);
+  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+
+  cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
+  const correcto = idx === p.ok;
+
+  if(correcto) {
+    el.classList.add('correcta');
+    s.aciertos++;
+    s.puntuacion += 15;
+    estado.coins += 10;
+    document.getElementById(`sit-${cat}-feedback`).className = 'feedback acierto';
+    document.getElementById(`sit-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +15 pts`;
+    mostrarEmoji(true, el);
+  } else {
+    el.classList.add('incorrecta');
+    cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
+    document.getElementById(`sit-${cat}-feedback`).className = 'feedback fallo';
+    document.getElementById(`sit-${cat}-feedback`).textContent = '❌ FALLO';
+    mostrarEmoji(false, el);
+  }
+
+  document.getElementById(`btn-sig-sit-${cat}`).disabled = false;
+  actualizarCoins();
+  guardar();
+}
+
+function siguienteSituacion(e, cat) {
+  estado.sit[cat].idx++;
+  cargarSituacion(cat);
+}
+
+// Tabs
 function cambiarTab(e, tab) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -510,7 +580,7 @@ function cambiarTab(e, tab) {
   if(tab === 'temario') cargarTemario();
   if(tab === 'test') cargarPregunta('general');
   if(tab === 'situaciones') cargarSituacion(sitCategoriaActiva);
-  if(tab === 'progreso') cargarProgreso(); // NUEVO
+  if(tab === 'progreso') cargarProgreso();
 }
 
 function cambiarSubTab(e, tab, subtab) {
@@ -539,174 +609,31 @@ function cambiarCategoriaSit(cat) {
   cargarSituacion(cat);
 }
 
-function mostrarEmoji(acierto, element) {
-  const lista = acierto? EMOJIS_ACIERTO : EMOJIS_FALLO;
-  const emoji = lista[Math.floor(Math.random() * lista.length)];
-  const span = document.createElement('span');
-  span.textContent = emoji;
-  span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:32px;animation:bounceIn 0.4s;pointer-events:none;z-index:999;';
-  element.style.position = 'relative';
-  element.appendChild(span);
-  setTimeout(() => span.remove(), 600);
-  if(navigator.vibrate) navigator.vibrate(acierto? [30,20,30] : 100);
-}
-
-// TEST con preguntas aleatorias cada vez
-function cargarPregunta(cat) {
-  const s = estado.test[cat];
-  const preguntas = mezclarArray(PREGUNTAS[cat]);
-  if(!preguntas || preguntas.length === 0) return;
-  const pOriginal = preguntas[s.idx % preguntas.length];
-  const opcionesMezcladas = mezclarArray(pOriginal.a);
-  const textoCorrecto = pOriginal.a[pOriginal.ok];
-  const nuevoIndexCorrecto = opcionesMezcladas.indexOf(textoCorrecto);
-  const p = {...pOriginal, a: opcionesMezcladas, ok: nuevoIndexCorrecto};
-  s.current = p;
-  document.getElementById(`test-${cat}-pregunta`).textContent = p.q;
-  document.getElementById(`test-${cat}-aciertos`).textContent = s.aciertos;
-  document.getElementById(`test-${cat}-racha`).textContent = s.racha;
-  document.getElementById(`test-${cat}-score`).textContent = s.puntuacion;
-  document.getElementById(`test-${cat}-progress`).style.width = `${((s.idx % preguntas.length)/preguntas.length)*100}%`;
-  const cont = document.getElementById(`test-${cat}-opciones`);
-  cont.innerHTML = '';
-  document.getElementById(`test-${cat}-feedback`).textContent = '';
-  document.getElementById(`btn-sig-test-${cat}`).disabled = true;
-  p.a.forEach((txt, i) => {
-    const div = document.createElement('div');
-    div.className = 'opcion';
-    div.textContent = txt;
-    div.onclick = function() { responderTest(cat, i, this); };
-    cont.appendChild(div);
-  });
-}
-
-function responderTest(cat, idx, el) {
-  const s = estado.test[cat];
-  const p = s.current;
-  const cont = document.getElementById(`test-${cat}-opciones`);
-  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
-  cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
-  const correcto = idx === p.ok;
-  if(correcto) {
-    el.classList.add('correcta');
-    s.aciertos++;
-    s.racha++;
-    s.puntuacion += 10 + (s.racha * 2);
-    estado.coins += 5;
-    document.getElementById(`test-${cat}-feedback`).className = 'feedback acierto';
-    document.getElementById(`test-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +${10+(s.racha*2)} pts`;
-    mostrarEmoji(true, el);
-  } else {
-    el.classList.add('incorrecta');
-    cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
-    document.getElementById(`test-${cat}-feedback`).className = 'feedback fallo';
-    document.getElementById(`test-${cat}-feedback`).textContent = '❌ FALLO';
-    mostrarEmoji(false, el);
-    s.racha = 0;
-  }
-
-  // NUEVO: Guardar métricas para Progreso
-  actualizarMetricasTest(cat, correcto, p.q.substring(0,50));
-
-  document.getElementById(`btn-sig-test-${cat}`).disabled = false;
-  actualizarCoins();
-  guardar();
-}
-
-function siguienteTest(e, cat) {
-  estado.test[cat].idx++;
-  cargarPregunta(cat);
-}
-
-// CASOS con preguntas aleatorias cada vez
-function cargarSituacion(cat) {
-  if(!cat) cat = sitCategoriaActiva;
-  const s = estado.sit[cat];
-  const casos = mezclarArray(SITUACIONES[cat]);
-  if(!casos || casos.length === 0) return;
-  const pOriginal = casos[s.idx % casos.length];
-  const opcionesMezcladas = mezclarArray(pOriginal.a);
-  const textoCorrecto = pOriginal.a[pOriginal.ok];
-  const nuevoIndexCorrecto = opcionesMezcladas.indexOf(textoCorrecto);
-  const p = {...pOriginal, a: opcionesMezcladas, ok: nuevoIndexCorrecto};
-  s.current = p;
-  document.getElementById(`sit-${cat}-pregunta`).textContent = p.q;
-  document.getElementById(`sit-${cat}-aciertos`).textContent = s.aciertos;
-  document.getElementById(`sit-${cat}-score`).textContent = s.puntuacion;
-  document.getElementById(`sit-${cat}-progress`).style.width = `${((s.idx % casos.length)/casos.length)*100}%`;
-  const cont = document.getElementById(`sit-${cat}-opciones`);
-  cont.innerHTML = '';
-  document.getElementById(`sit-${cat}-feedback`).textContent = '';
-  document.getElementById(`btn-sig-sit-${cat}`).disabled = true;
-  p.a.forEach((txt, i) => {
-    const div = document.createElement('div');
-    div.className = 'opcion';
-    div.textContent = txt;
-    div.onclick = function() { responderSituacion(cat, i, this); };
-    cont.appendChild(div);
-  });
-}
-
-function responderSituacion(cat, idx, el) {
-  const s = estado.sit[cat];
-  const p = s.current;
-  const cont = document.getElementById(`sit-${cat}-opciones`);
-  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
-  cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
-  const correcto = idx === p.ok;
-  if(correcto) {
-    el.classList.add('correcta');
-    s.aciertos++;
-    s.puntuacion += 15;
-    estado.coins += 10;
-    document.getElementById(`sit-${cat}-feedback`).className = 'feedback acierto';
-    document.getElementById(`sit-${cat}-feedback`).textContent = `✅ ¡CORRECTO! +15 pts`;
-    mostrarEmoji(true, el);
-  } else {
-    el.classList.add('incorrecta');
-    cont.querySelectorAll('.opcion')[p.ok].classList.add('correcta');
-    document.getElementById(`sit-${cat}-feedback`).className = 'feedback fallo';
-    document.getElementById(`sit-${cat}-feedback`).textContent = '❌ FALLO';
-    mostrarEmoji(false, el);
-  }
-  document.getElementById(`btn-sig-sit-${cat}`).disabled = false;
-  actualizarCoins();
-  guardar();
-}
-
-function siguienteSituacion(e, cat) {
-  estado.sit[cat].idx++;
-  cargarSituacion(cat);
-}
-
-// Examen con etiqueta de tipo
+// ============================================
+// EXAMEN OFICIAL 30 PREGUNTAS
+// ============================================
 function iniciarExamen(e) {
   const todas = [
-  ...PREGUNTAS.general,
-  ...PREGUNTAS.senales,
-  ...PREGUNTAS.normas,
-  ...PREGUNTAS.mecanica,
-  ...SITUACIONES.clima
+ ...PREGUNTAS.general,
+ ...PREGUNTAS.senales,
+ ...PREGUNTAS.normas,
+ ...PREGUNTAS.mecanica,
+ ...PREGUNTAS.auxilios,
+ ...PREGUNTAS.medioambiente,
+ ...CASOS.clima
   ];
+
   if(todas.length < 30) {
     alert('Faltan preguntas. Necesitas 30 mínimo.');
     return;
   }
+
   estado.examen.preguntas = mezclarArray(todas).slice(0, 30);
   estado.examen.activa = true;
   estado.examen.index = 0;
   estado.examen.aciertos = 0;
   estado.examen.fallos = 0;
   estado.examen.categoria = 'general';
-
-  const tipoExamen = {
-    general: "EXAMEN OFICIAL 30 PREGUNTAS - General",
-    mecanico: "EXAMEN OFICIAL 30 PREGUNTAS - Mecánica",
-    ambiental: "EXAMEN OFICIAL 30 PREGUNTAS - Medio Ambiente",
-    senales: "EXAMEN OFICIAL 30 PREGUNTAS - Señales"
-  };
-  const tituloEl = document.querySelector('#tab-examen h2,.examen-titulo');
-  if(tituloEl) tituloEl.textContent = tipoExamen[estado.examen.categoria];
 
   document.getElementById('btn-iniciar-examen').style.display = 'none';
   document.getElementById('btn-sig-examen').style.display = 'block';
@@ -729,19 +656,36 @@ function iniciarTimerExamen() {
 
 function cargarPreguntaExamen() {
   if(estado.examen.index >= 30) return finalizarExamen();
+
   const pOriginal = estado.examen.preguntas[estado.examen.index];
   const opcionesMezcladas = mezclarArray(pOriginal.a);
   const textoCorrecto = pOriginal.a[pOriginal.ok];
   const nuevoIndexCorrecto = opcionesMezcladas.indexOf(textoCorrecto);
   const p = {...pOriginal, a: opcionesMezcladas, ok: nuevoIndexCorrecto};
   estado.examen.preguntas[estado.examen.index] = p;
+
   document.getElementById('examen-num').textContent = estado.examen.index + 1;
   document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
   document.getElementById('examen-progress').style.width = `${(estado.examen.index/30)*100}%`;
   document.getElementById('examen-pregunta').textContent = p.q;
+
+  // Render imagen examen si tiene codigo
+  const imgExamen = document.getElementById('examen-imagen');
+  if(imgExamen) {
+    const codigo = (p.codigo || '').toLowerCase();
+    if(codigo && window.SENALES_SVG[codigo]) {
+      imgExamen.style.display = 'block';
+      imgExamen.innerHTML = `<div style="display:flex;justify-content:center;margin:12px 0">${window.SENALES_SVG[codigo]}</div>`;
+    } else {
+      imgExamen.style.display = 'none';
+      imgExamen.innerHTML = '';
+    }
+  }
+
   const cont = document.getElementById('examen-opciones');
   cont.innerHTML = '';
   document.getElementById('btn-sig-examen').disabled = true;
+
   p.a.forEach((txt, i) => {
     const div = document.createElement('div');
     div.className = 'opcion';
@@ -755,8 +699,10 @@ function responderExamen(idx, el) {
   const p = estado.examen.preguntas[estado.examen.index];
   const cont = document.getElementById('examen-opciones');
   if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+
   cont.querySelectorAll('.opcion').forEach(o => o.classList.add('bloqueada'));
   const correcto = idx === p.ok;
+
   if(correcto) {
     el.classList.add('correcta');
     estado.examen.aciertos++;
@@ -768,6 +714,7 @@ function responderExamen(idx, el) {
     estado.examen.fallos++;
     mostrarEmoji(false, el);
   }
+
   document.getElementById('btn-sig-examen').disabled = false;
   document.getElementById('examen-aciertos').textContent = estado.examen.aciertos;
   actualizarCoins();
@@ -789,7 +736,6 @@ function finalizarExamen() {
   const nota = estado.examen.aciertos;
   const aprobado = nota >= 27;
 
-  // NUEVO: Guardar stats de examen
   PROGRESO.examenes.realizados++;
   if(aprobado) PROGRESO.examenes.aprobados++;
   guardarProgreso();
@@ -830,7 +776,9 @@ function reiniciarExamen() {
   document.getElementById('examen-timer').textContent = '30:00';
 }
 
-// NUEVO: Función para pintar Progreso
+// ============================================
+// PROGRESO
+// ============================================
 function cargarProgreso() {
   const cont = document.getElementById('progreso-stats');
   if(!cont) return;
@@ -840,6 +788,7 @@ function cargarProgreso() {
     const pct = data.total > 0? Math.round((data.aciertos / data.total) * 100) : 0;
     const nombre = cat === 'senales'? 'Señales' :
                    cat === 'medioambiente'? 'Medio Ambiente' :
+                   cat === 'auxilios'? 'Auxilios' :
                    cat.charAt(0).toUpperCase() + cat.slice(1);
     html += `
       <div class="progreso-card">
@@ -853,8 +802,96 @@ function cargarProgreso() {
   cont.innerHTML = html;
 }
 
-//... resto de tu código cargarGaraje, cargarTienda, etc sin tocar...
+// ============================================
+// TIPS
+// ============================================
+function cargarTips() {
+  tipsData = TIPS;
+  currentTip = 0;
+  mostrarTip();
+}
 
+function mostrarTip() {
+  if (tipsData.length === 0) return;
+  const tip = tipsData[currentTip];
+  document.getElementById('tip-content').innerHTML = `
+    <div class="tip-emoji">${tip.emoji}</div>
+    <div class="tip-text">${tip.txt}</div>
+  `;
+  document.getElementById('tip-counter').textContent = `${currentTip + 1} / ${tipsData.length}`;
+}
+
+function nextTip(e) {
+  currentTip = (currentTip + 1) % tipsData.length;
+  mostrarTip();
+}
+
+function prevTip(e) {
+  currentTip = (currentTip - 1 + tipsData.length) % tipsData.length;
+  mostrarTip();
+}
+
+// ============================================
+// TEMARIO PDF
+// ============================================
+function cargarTemario() {
+  const container = document.getElementById('temario-lista');
+  container.innerHTML = `
+    <div class="temario-item" onclick="abrirPDF('./01_Senales_Tomo_I_RD_465_2025.pdf')">
+      <div style="font-size:40px">🚦</div>
+      <div>Señales</div>
+      <div style="font-size:11px;color:#999">RD 465/2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')">
+      <div style="font-size:40px">📋</div>
+      <div>Normas Circulación</div>
+      <div style="font-size:11px;color:#999">Edición 2024</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./03_Manual_IX_Primers_Auxilios_2025.pdf')">
+      <div style="font-size:40px">🚑</div>
+      <div>Primeros Auxilios</div>
+      <div style="font-size:11px;color:#999">Manual IX 2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./04_Manual_VIII_Mecanica_2024.pdf')">
+      <div style="font-size:40px">⚙️</div>
+      <div>Mecánica</div>
+      <div style="font-size:11px;color:#999">Manual VIII 2025</div>
+    </div>
+    <div class="temario-item" onclick="abrirPDF('./05_Medio_Ambiente_Distintivos_DGT_2025.pdf')">
+      <div style="font-size:40px">♻️</div>
+      <div>Medio Ambiente</div>
+      <div style="font-size:11px;color:#999">Distintivos DGT 2025</div>
+    </div>
+  `;
+}
+
+function abrirPDF(ruta) {
+  const modal = document.createElement('div');
+  modal.id = 'pdf-modal';
+  modal.style.cssText = `
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:#0a0a0a;z-index:9999;
+    display:flex;flex-direction:column;
+  `;
+  modal.innerHTML = `
+    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
+      <button onclick="cerrarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
+      <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
+      <div style="width:60px"></div>
+    </div>
+    <iframe src="${ruta}" style="flex:1;border:none;width:100%"></iframe>
+  `;
+  document.body.appendChild(modal);
+}
+
+function cerrarPDF() {
+  const modal = document.getElementById('pdf-modal');
+  if(modal) modal.remove();
+}
+
+// ============================================
+// GARAJE + TIENDA
+// ============================================
 function cargarGaraje() {
   const cont = document.getElementById('garage-lista');
   cont.innerHTML = '';
@@ -864,6 +901,7 @@ function cargarGaraje() {
     if(acc) hpTotal += acc.hp;
   });
   document.getElementById('garage-score').textContent = `🏎️ ${hpTotal} CV`;
+
   COCHES.forEach(coche => {
     const desbloqueado = estado.coches.includes(coche.id);
     const div = document.createElement('div');
@@ -907,18 +945,6 @@ function cargarTienda() {
     `;
     cont.appendChild(div);
   });
-  EMOJI_TIENDA.forEach(emoji => {
-    const comprado = estado.emojis.includes(emoji.id);
-    const div = document.createElement('div');
-    div.className = 'emoji-item' + (comprado? ' locked' : '');
-    div.innerHTML = `
-      <div style="font-size:40px">${emoji.emoji}</div>
-      <div>${emoji.nombre}</div>
-      <div style="color:#667eea">Cosmético</div>
-      ${!comprado? `<button class="btn-buy" onclick="comprarEmoji('${emoji.id}')">Comprar ${emoji.precio}💰</button>` : '<div style="color:#2ecc71">✓ Comprado</div>'}
-    `;
-    cont.appendChild(div);
-  });
 }
 
 function comprarAccesorios(id) {
@@ -933,110 +959,11 @@ function comprarAccesorios(id) {
   guardar();
   actualizarCoins();
   cargarTienda();
-  const totalAcc = estado.accesorios.length;
-  const msg = document.createElement('div');
-  msg.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff8c00,#ff2d55);color:#fff;padding:12px 24px;border-radius:12px;font-weight:bold;z-index:999;animation:slideUp 0.3s';
-  msg.innerHTML = `🏎️ ¡Ya estás creando tu supercoché! ${totalAcc}/42 accesorios`;
-  document.body.appendChild(msg);
-  setTimeout(() => msg.remove(), 2000);
 }
 
-function comprarEmoji(id) {
-  const emoji = EMOJI_TIENDA.find(e => e.id === id);
-  if(!emoji) return;
-  if(estado.coins < emoji.precio) {
-    alert('No tienes suficientes coins');
-    return;
-  }
-  estado.coins -= emoji.precio;
-  estado.emojis.push(id);
-  guardar();
-  actualizarCoins();
-  cargarTienda();
-}
-
-function cargarTips() {
-  tipsData = TIPS;
-  currentTip = 0;
-  mostrarTip();
-}
-
-function mostrarTip() {
-  if (tipsData.length === 0) return;
-  const tip = tipsData[currentTip];
-  document.getElementById('tip-content').innerHTML = `
-    <div class="tip-emoji">${tip.emoji}</div>
-    <div class="tip-text">${tip.txt}</div>
-  `;
-  document.getElementById('tip-counter').textContent = `${currentTip + 1} / ${tipsData.length}`;
-}
-
-function nextTip(e) {
-  currentTip = (currentTip + 1) % tipsData.length;
-  mostrarTip();
-}
-
-function prevTip(e) {
-  currentTip = (currentTip - 1 + tipsData.length) % tipsData.length;
-  mostrarTip();
-}
-
-function cargarTemario() {
-  const container = document.getElementById('temario-lista');
-  container.innerHTML = `
-    <div class="temario-item" onclick="abrirPDF('./01_Senales_Tomo_I_RD_465_2025.pdf')">
-      <div style="font-size:40px">🚦</div>
-      <div>Señales</div>
-      <div style="font-size:11px;color:#999">RD 465/2025</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('./02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')">
-      <div style="font-size:40px">📋</div>
-      <div>Normas Circulación</div>
-      <div style="font-size:11px;color:#999">Edición 2024</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('./03_Manual_IX_Primers_Auxilios_2025.pdf')">
-      <div style="font-size:40px">🚑</div>
-      <div>Primeros Auxilios</div>
-      <div style="font-size:11px;color:#999">Manual IX 2025</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('./04_Manual_VIII_Mecanica_2024.pdf')">
-      <div style="font-size:40px">⚙️</div>
-      <div>Mecánica</div>
-      <div style="font-size:11px;color:#999">Manual VIII 2025</div>
-    </div>
-    <div class="temario-item" onclick="abrirPDF('./05_Medio_Ambiente_Distintivos_DGT_2025.pdf')">
-      <div style="font-size:40px">♻️</div>
-      <div>Medio Ambiente</div>
-      <div style="font-size:11px;color:#999">Distintivos DGT 2025</div>
-    </div>
-  `;
-}
-
-// PDF normal, sin marcador
-function abrirPDF(ruta) {
-  const modal = document.createElement('div');
-  modal.id = 'pdf-modal';
-  modal.style.cssText = `
-    position:fixed;top:0;left:0;right:0;bottom:0;
-    background:#0a0a0a;z-index:9999;
-    display:flex;flex-direction:column;
-  `;
-  modal.innerHTML = `
-    <div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333">
-      <button onclick="cerrarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button>
-      <div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div>
-      <div style="width:60px"></div>
-    </div>
-    <iframe src="${ruta}" style="flex:1;border:none;width:100%"></iframe>
-  `;
-  document.body.appendChild(modal);
-}
-
-function cerrarPDF() {
-  const modal = document.getElementById('pdf-modal');
-  if(modal) modal.remove();
-}
-
+// ============================================
+// MENSAJE MOTIVACIONAL + SW
+// ============================================
 function actualizarMensajeMotivacional() {
   const mensajes = [
     "Vas por buen camino 💪",
@@ -1054,8 +981,8 @@ function actualizarMensajeMotivacional() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js')
-.then(reg => console.log('SW registrado'))
-.catch(err => console.log('SW error:', err));
+   .then(reg => console.log('SW registrado'))
+   .catch(err => console.log('SW error:', err));
   });
 }
 
