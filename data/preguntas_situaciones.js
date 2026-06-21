@@ -167,5 +167,6 @@ const PREGUNTAS_SITUACIONES = {
     {q:"Conductor tiene ataque de pánico:",a:["Seguir","Para seguro, tranquilizar, avisar si hace falta","Presionar para seguir"],ok:1},
     {q:"Señal acústica continua del coche:",a:["Ignorar","Para seguro, revisa cuadro, avisa grúa","Acelerar"],ok:1},
     {q:"Has de señalizar accidente de noche:",a:["Poner triángulos a 10m","Triángulos 50m vía, 100m autopista, chaleco","Solo luces emergencia"],ok:1}
-  ];
-window.SITUACIONES = SITUACIONES;
+];
+window.PREGUNTAS_SITUACIONES = PREGUNTAS_SITUACIONES;
+
