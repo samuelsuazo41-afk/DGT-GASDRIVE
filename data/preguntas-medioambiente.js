@@ -1,4 +1,4 @@
-export const PREGUNTAS_MEDIOAMBIENTE = [
+const PREGUNTAS_MEDIOAMBIENTE = [
     // === ETIQUETAS AMBIENTALES === Pág 15-20
     {q:"¿Qué es la etiqueta ambiental B?",a:["Eléctrico","Gasolina Euro 3/4/5/6 y Diésel Euro 4/5","Híbrido"],ok:1},
     {q:"Etiqueta B: diésel de:",a:["Euro 3","Euro 4, 5 y 6","Euro 2"],ok:1},
