@@ -1,23 +1,22 @@
-const CACHE = 'gasdrive-v20.1.1'; // sube versión para forzar update
+const CACHE = 'gasdrive-v8.5.5'; // sube versión para forzar update
 const FILES = [
   './',
   './index.html',
-  './app.js?v=8.5.2',
+  './app.js?v=8.5.5',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
   
   // ============================================
   // BLOQUE 1: Archivos DATA - Preguntas + SVG
-  // Necesarios para General con imágenes
+  // Nombres exactos como en tu /data/
   // ============================================
-  './data/general.js',
-  './data/senales.js',
-  './data/normas.js',
-  './data/mecanica.js',
-  './data/auxilios.js',
-  './data/medioambiente.js',
-  './data/situaciones.js',
+  './data/preguntas_senales.js',
+  './data/preguntas_normas.js',
+  './data/preguntas_mecanica.js',
+  './data/preguntas_auxilios.js',
+  './data/preguntas_medioambiente.js',
+  './data/preguntas_situaciones.js',
   './data/senales_svg.js',
   
   // ============================================
@@ -26,7 +25,7 @@ const FILES = [
   // ============================================
   './01_Senales_Tomo_I_RD_465_2025.pdf',
   './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
-  './03_Manual_IX_Primeros_Auxilios_2025.pdf',
+  './03_Manual_IX_Primers_Auxilios_2025.pdf',
   './04_Manual_VIII_Mecanica_2024.pdf',
   './05_Medio_Ambiente_Distintivos_DGT_2025.pdf'
 ];
