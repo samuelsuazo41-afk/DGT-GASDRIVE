@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>GasDrive DGT ES V8.5.5</title>
 <link rel="manifest" href="./manifest.json">
 <style>
@@ -24,6 +24,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .sub-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
 .sub-tab-btn{background:#222;border:1px solid #333;color:#999;padding:7px 14px;border-radius:18px;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s}
 .sub-tab-btn.active{background:#00D9FF;color:#000;border-color:#00D9FF;font-weight:700}
+.category-btn{background:#222;border:1px solid #333;color:#999;padding:7px 14px;border-radius:18px;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s}
+.category-btn.active{background:#00D9FF;color:#000;border-color:#00D9FF;font-weight:700}
 .sub-content{display:none}
 .sub-content.active{display:block;animation:fadeIn 0.3s}
 /* Cards centradas y compactas */
@@ -203,10 +205,10 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
 
 <div id="tab-situaciones" class="tab-content">
   <div class="sub-tabs">
-    <button class="sub-tab-btn active" onclick="cambiarSubTab(event,'sit','clima')">🌧️ Clima</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','urbano')">🏙️ Urbano</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','carretera')">🛣️ Carretera</button>
-    <button class="sub-tab-btn" onclick="cambiarSubTab(event,'sit','emergencia')">🚨 Emergencia</button>
+    <button class="category-btn active" onclick="cambiarCategoriaSit(event,'clima')">🌧️ Clima</button>
+    <button class="category-btn" onclick="cambiarCategoriaSit(event,'urbano')">🏙️ Urbano</button>
+    <button class="category-btn" onclick="cambiarCategoriaSit(event,'carretera')">🛣️ Carretera</button>
+    <button class="category-btn" onclick="cambiarCategoriaSit(event,'emergencia')">🚨 Emergencia</button>
   </div>
   <div id="sit-clima" class="sub-content active">
     <div class="card">
