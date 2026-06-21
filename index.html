@@ -316,15 +316,36 @@ body.menu-open{ overflow:hidden; position:fixed; width:100%; height:100%; }
   <button class="tab-btn" onclick="cambiarTab(event,'temario')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<!-- NUEVO: Cargar data/ antes que app.js para que DATOS_CARGADOS funcione -->
-<script src="./data/general.js"></script>
-<script src="./data/senales.js"></script>
-<script src="./data/normas.js"></script>
-<script src="./data/mecanica.js"></script>
-<script src="./data/auxilios.js"></script>
-<script src="./data/medioambiente.js"></script>
-<script src="./data/situaciones.js"></script>
-<script src="./data/senales_svg.js"></script>
-<script src="./app.js?v=8.5.2"></script>
+<script>
+// Cargar todos los /data/ en orden, sin tildes y minúsculas
+const ARCHIVOS = [
+  './data/preguntas.js',
+  './data/preguntas_senales.js',
+  './data/preguntas_normas.js',
+  './data/preguntas_mecanica.js',
+  './data/preguntas_auxilios.js',
+  './data/preguntas_medioambiente.js',
+  './data/preguntas_clima.js',
+  './data/senales_svg.js' // este sí con _svg
+];
+
+// Cargar en serie y luego app.js
+async function cargarTodo() {
+  for (const ruta of ARCHIVOS) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = ruta + '?v=8.5.2';
+      s.onload = res;
+      s.onerror = () => rej('Fallo: ' + ruta);
+      document.head.appendChild(s);
+    });
+  }
+  // Ahora sí cargar app.js
+  const app = document.createElement('script');
+  app.src = './app.js?v=8.5.2';
+  document.head.appendChild(app);
+}
+cargarTodo().catch(e => console.error('Error cargando data:', e));
+</script>
 </body>
 </html>
