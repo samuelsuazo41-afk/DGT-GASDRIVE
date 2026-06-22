@@ -162,8 +162,8 @@
       <p class="sub" id="frase-header">Cada fallo te hace mas fuerte 🔥</p>
     </div>
 
-    <!-- MENÚ -->
-    <div id="seccion-menu" class="seccion activa">
+    <!-- MENÚ - DESACTIVADO POR AHORA -->
+    <div id="seccion-menu" class="seccion">
       <div class="card card-menu" id="btn-test-menu"><h2>📝 Tests Teóricos</h2><p id="progreso-test-menu">0/630 preguntas únicas</p></div>
       <div class="card card-menu" id="btn-casos-menu"><h2>🚦 Casos Prácticos</h2><p id="progreso-casos-menu">0/80 casos únicos</p></div>
       <div class="card card-menu" id="btn-examen-menu"><h2>📋 Exámenes Reales</h2><p id="progreso-examen-menu">Aprobados: 0/0</p></div>
@@ -172,8 +172,8 @@
       <p style="text-align:center; font-size:0.8rem; color:var(--text-gray); margin-top:5px;">Necesitas 80% para desbloquear</p>
     </div>
 
-    <!-- TEST -->
-    <div id="seccion-test" class="seccion">
+    <!-- TEST - ACTIVO AL ARRANCAR -->
+    <div id="seccion-test" class="seccion activa">
       <div class="tabs" id="tabs-test">
         <div class="tab activo" data-cat="general">📝 General</div>
         <div class="tab" data-cat="senales">🚸 Señales</div>
@@ -221,7 +221,7 @@
       </div>
     </div>
 
-    <!-- EXAMEN - NUEVO -->
+    <!-- EXAMEN -->
     <div id="seccion-examen" class="seccion">
       <div class="stats-bar-verde">
         <div class="stat-item"><span class="emoji">📝</span><span class="valor" id="examen-num">0</span>/30</div>
@@ -286,15 +286,15 @@
       <div id="lista-temario"></div>
     </div>
 
-    <!-- NAVBAR 7 BOTONS -->
+    <!-- NAVBAR 7 BOTONS - TEST ACTIVO -->
     <div class="navbar">
-      <div class="nav-item" id="nav-temario"><span class="emoji">📚</span>TEMARIO</div>
       <div class="nav-item activo" id="nav-test"><span class="emoji">📝</span>TEST</div>
       <div class="nav-item" id="nav-casos"><span class="emoji">🚦</span>CASOS</div>
       <div class="nav-item" id="nav-progreso"><span class="emoji">📊</span>PROGRESO</div>
       <div class="nav-item" id="nav-garaje"><span class="emoji">🏁</span>GARAJE</div>
       <div class="nav-item" id="nav-tienda"><span class="emoji">🛒</span>TIENDA</div>
       <div class="nav-item" id="nav-tips"><span class="emoji">💡</span>TIPS</div>
+      <div class="nav-item" id="nav-temario"><span class="emoji">📚</span>TEMARIO</div>
     </div>
 
   </div>
@@ -330,7 +330,32 @@
     }
   }
   cargarTodo();
+
+  // NAVBAR + TABS MÍNIMO
+  function mostrarSeccion(seccion) {
+    document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('activo'));
+    document.getElementById('seccion-' + seccion).classList.add('activa');
+    document.getElementById('nav-' + seccion).classList.add('activo');
+  }
+
+  document.getElementById('nav-test')?.addEventListener('click', () => mostrarSeccion('test'));
+  document.getElementById('nav-casos')?.addEventListener('click', () => mostrarSeccion('casos'));
+  document.getElementById('nav-progreso')?.addEventListener('click', () => mostrarSeccion('progreso'));
+  document.getElementById('nav-garaje')?.addEventListener('click', () => { mostrarSeccion('garaje'); cargarGaraje(); });
+  document.getElementById('nav-tienda')?.addEventListener('click', () => { mostrarSeccion('tienda'); cargarTienda(); });
+  document.getElementById('nav-tips')?.addEventListener('click', () => { mostrarSeccion('tips'); cargarTips(); });
+  document.getElementById('nav-temario')?.addEventListener('click', () => { mostrarSeccion('temario'); cargarTemario(); });
+
+  document.querySelectorAll('#tabs-test .tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      document.querySelectorAll('#tabs-test .tab').forEach(t => t.classList.remove('activo'));
+      e.target.classList.add('activo');
+      cargarPregunta(e.target.dataset.cat);
+    });
+  });
   </script>
 
 </body>
 </html>
+
