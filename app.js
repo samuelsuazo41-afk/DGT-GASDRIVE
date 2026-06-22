@@ -6,7 +6,7 @@
 // CERO import(), CERO export. 100% compatible PWA
 // ============================================
 
-const VERSION = '8.5.5'; // FIX 1: Definir versión
+const VERSION = '8.5.5';
 
 // COMBO DOPAMINA
 const EMOJIS_ACIERTO = ['🚀','💎','👑','🔥','💯','⚡','🏆','🦄','🤑','✅','💪','😎','🎯','💥','🌟','🎉'];
@@ -16,6 +16,8 @@ const EMOJIS_FALLO = ['❌','💀','😭','⛔','💔','😵','🤦','🚫','�
 // DATOS GLOBALES + PROGRESO
 // ============================================
 let DATOS_CARGADOS = false;
+window.categoriaActual = 'general'; // FIX: Evita undefined en UI
+window.subcatActual = 'clima';
 
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso')) || {
   tests: {
@@ -47,25 +49,26 @@ function guardarProgreso() {
 }
 
 function actualizarMetricasTest(categoria, acierto, preguntaId) {
+  if(!PROGRESO.tests[categoria]) return;
   const prog = PROGRESO.tests[categoria];
   prog.total++;
   if(acierto) {
     prog.aciertos++;
     if(!prog.unicas.includes(preguntaId)) prog.unicas.push(preguntaId);
-    // Racha
     let racha = parseInt(localStorage.getItem('gd_racha') || '0') + 1;
     localStorage.setItem('gd_racha', racha);
     let rachaMax = Math.max(racha, parseInt(localStorage.getItem('gd_racha_max') || '0'));
     localStorage.setItem('gd_racha_max', rachaMax);
   } else {
     if(!prog.falladas.includes(preguntaId)) prog.falladas.push(preguntaId);
-    localStorage.setItem('gd_racha', '0'); // Reset
+    localStorage.setItem('gd_racha', '0');
   }
   guardarProgreso();
-  actualizarUIProgreso(); // FIX 5: Pintar en vivo
+  if(DATOS_CARGADOS) actualizarUIProgreso();
 }
 
 function actualizarMetricasCaso(subcat, acierto, preguntaId) {
+  if(!PROGRESO.casos[subcat]) return;
   const prog = PROGRESO.casos[subcat];
   prog.total++;
   if(acierto) {
@@ -75,7 +78,7 @@ function actualizarMetricasCaso(subcat, acierto, preguntaId) {
     if(!prog.falladas.includes(preguntaId)) prog.falladas.push(preguntaId);
   }
   guardarProgreso();
-  actualizarUIProgreso(); // FIX 5: Pintar en vivo
+  if(DATOS_CARGADOS) actualizarUIProgreso();
 }
 
 // ============================================
@@ -111,7 +114,7 @@ function tancarIntro(){
 }
 
 // ============================================
-// SHUFFLE + MEZCLAR SIN DUPLICAR - FIX 3
+// SHUFFLE + MEZCLAR SIN DUPLICAR
 // ============================================
 function shuffleArray(arr) {
   if(!arr ||!arr.length) return [];
@@ -132,14 +135,15 @@ function mezclarSinDuplicar(...arrays) {
       resultado.push(p);
     }
   });
-  return shuffleArray(resultado); // FIX: Barrejar real
+  return shuffleArray(resultado);
 }
 
 // ============================================
-// RENDER IMAGEN SEGURO - FIX 2: ID ÚNICO
+// RENDER IMAGEN SEGURO
 // ============================================
 function renderImagenTest(cat, p) {
-  const imgCont = document.getElementById('img-container-test'); // FIX: ID único del index
+  if(!DATOS_CARGADOS) return;
+  const imgCont = document.getElementById('img-container-test');
   const svgCont = document.getElementById('svg-container');
   const labelCont = document.getElementById('img-label-test');
   if(!imgCont ||!svgCont) return;
@@ -156,11 +160,11 @@ function renderImagenTest(cat, p) {
 }
 
 // ============================================
-// FUNCIONES PONT FALTANTES - FIX 5
+// FUNCIONES UI
 // ============================================
 function actualizarCoins() {
   const coins = parseInt(localStorage.getItem('gd_coins') || '0');
-  const el1 = document.getElementById('monedas-header'); // FIX: ID del index
+  const el1 = document.getElementById('monedas-header');
   const el2 = document.getElementById('monedas-tienda');
   if(el1) el1.textContent = `💰 ${coins}`;
   if(el2) el2.textContent = coins;
@@ -178,10 +182,11 @@ function actualizarMensajeMotivacional() {
   if(el) el.textContent = msg;
 }
 
-// PINTAR MÉTRICAS PROGRESO EN INDEX
 function actualizarUIProgreso() {
+  if(!DATOS_CARGADOS) return;
+
   const catActual = window.categoriaActual || 'general';
-  const progTest = PROGRESO.tests[catActual];
+  const progTest = PROGRESO.tests[catActual] || { total: 0, aciertos: 0 };
   const racha = parseInt(localStorage.getItem('gd_racha') || '0');
   const score = progTest.aciertos * 10;
 
@@ -193,7 +198,7 @@ function actualizarUIProgreso() {
   if(scoreStat) scoreStat.textContent = score;
 
   const subcatActual = window.subcatActual || 'clima';
-  const progCaso = PROGRESO.casos[subcatActual];
+  const progCaso = PROGRESO.casos[subcatActual] || { total: 0, aciertos: 0 };
   const casosRes = document.getElementById('casos-resueltos');
   const scoreCasos = document.getElementById('score-casos');
   if(casosRes) casosRes.textContent = `${progCaso.total}/20`;
@@ -237,7 +242,7 @@ function actualizarUIProgreso() {
 }
 
 // ============================================
-// INIT - DATOS PRIMERO, INTRO DESPUÉS
+// INIT
 // ============================================
 function init() {
   console.log(`🚀 GasDrive V${VERSION} iniciado`);
@@ -246,6 +251,7 @@ function init() {
   try {
     actualizarCoins();
     actualizarMensajeMotivacional();
+    window.categoriaActual = 'general'; // FIX: Asegurar valor inicial
 
     const PREGUNTAS_GENERAL = mezclarSinDuplicar(
       window.PREGUNTAS_SENALES || [],
@@ -256,18 +262,23 @@ function init() {
     );
     window.PREGUNTAS_GENERAL = PREGUNTAS_GENERAL;
 
-    console.log(`DEBUG: General cargó ${PREGUNTAS_GENERAL.length} preguntas`); // FIX 4: Sin alert
-
-    // Precarga
-    cargarPregunta('general');
-    cargarPregunta('senales');
-    cargarPregunta('normas');
-    cargarPregunta('mecanica');
-    cargarPregunta('auxilios');
-    cargarPregunta('medioambiente');
-    cargarSituacion('clima');
+    console.log(`DEBUG: General cargó ${PREGUNTAS_GENERAL.length} preguntas`);
 
     DATOS_CARGADOS = true;
+
+    // Precarga solo si bloque 2 existe
+    if(typeof cargarPregunta === 'function') {
+      cargarPregunta('general');
+      cargarPregunta('senales');
+      cargarPregunta('normas');
+      cargarPregunta('mecanica');
+      cargarPregunta('auxilios');
+      cargarPregunta('medioambiente');
+    }
+    if(typeof cargarSituacion === 'function') {
+      cargarSituacion('clima');
+    }
+
     const tiempoCarga = Math.round(performance.now() - t0);
     console.log(`✅ Datos cargados en ${tiempoCarga}ms. General: ${PREGUNTAS_GENERAL.length} preguntas`);
     actualizarUIProgreso();
