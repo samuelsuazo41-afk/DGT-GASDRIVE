@@ -522,7 +522,6 @@ function guardar() {
   localStorage.setItem('gd_emojis', JSON.stringify(estado.emojis));
 }
 
-// Helper para obtener array de preguntas según categoría
 function getPreguntasCat(cat) {
   if(cat === 'general') return window.PREGUNTAS_GENERAL || [];
   if(cat === 'senales') return window.PREGUNTAS_SENALES || [];
@@ -559,7 +558,6 @@ function getNombreSubcat(subcat) {
   return nombres[subcat] || 'CASOS';
 }
 
-// TEST con IDs únicos del index
 function cargarPregunta(cat) {
   window.categoriaActual = cat;
   const s = estado.test[cat];
@@ -577,18 +575,16 @@ function cargarPregunta(cat) {
   const p = {...pOriginal, a: opcionesMezcladas, ok: nuevoIndexCorrecto};
   s.current = p;
 
-  // FIX: IDs únicos del index.html
   document.getElementById('titulo-categoria').textContent = getNombreCat(cat);
   document.getElementById('texto-pregunta').textContent = p.q;
 
-  // Render imagen solo si señales
   if(cat === 'senales') {
     renderImagenTest(cat, p);
   } else {
-    document.getElementById('img-container-test').style.display = 'none';
+    const imgCont = document.getElementById('img-container-test');
+    if(imgCont) imgCont.style.display = 'none';
   }
 
-  // Barra progreso única
   const progressEl = document.getElementById('progress-test');
   if(progressEl) progressEl.style.width = `${((s.idx % preguntas.length)/preguntas.length)*100}%`;
 
@@ -598,7 +594,7 @@ function cargarPregunta(cat) {
 
   p.a.forEach((txt, i) => {
     const div = document.createElement('div');
-    div.className = 'card-opcion'; // FIX: Clase del index
+    div.className = 'card-opcion';
     div.textContent = txt;
     div.onclick = function() { responderTest(cat, i, this); };
     cont.appendChild(div);
@@ -636,12 +632,12 @@ function responderTest(cat, idx, el) {
   guardar();
 }
 
-function siguienteTest(e, cat) {
+function siguienteTest(e) {
+  const cat = window.categoriaActual || 'general';
   estado.test[cat].idx++;
   cargarPregunta(cat);
 }
 
-// CASOS con IDs únicos del index
 function cargarSituacion(subcat) {
   if(!subcat) subcat = sitCategoriaActiva;
   window.subcatActual = subcat;
@@ -709,7 +705,8 @@ function responderSituacion(subcat, idx, el) {
   guardar();
 }
 
-function siguienteSituacion(e, subcat) {
+function siguienteSituacion(e) {
+  const subcat = window.subcatActual || 'clima';
   estado.sit[subcat].idx++;
   cargarSituacion(subcat);
 }
@@ -726,21 +723,19 @@ function mostrarEmoji(acierto, element) {
   if(navigator.vibrate) navigator.vibrate(acierto? [30,20,30] : 100);
 }
 
-// ============================================
-// EXAMEN OFICIAL 30 PREGUNTAS COMPLETO
-// ============================================
+// EXAMEN
 function iniciarExamen(e) {
   const todas = [
-   ...getPreguntasCat('general'),
-   ...getPreguntasCat('senales'),
-   ...getPreguntasCat('normas'),
-   ...getPreguntasCat('mecanica'),
-   ...getPreguntasCat('auxilios'),
-   ...getPreguntasCat('medioambiente'),
-   ...getCasosCat('clima'),
-   ...getCasosCat('urbano'),
-   ...getCasosCat('carretera'),
-   ...getCasosCat('emergencia')
+  ...getPreguntasCat('general'),
+  ...getPreguntasCat('senales'),
+  ...getPreguntasCat('normas'),
+  ...getPreguntasCat('mecanica'),
+  ...getPreguntasCat('auxilios'),
+  ...getPreguntasCat('medioambiente'),
+  ...getCasosCat('clima'),
+  ...getCasosCat('urbano'),
+  ...getCasosCat('carretera'),
+  ...getCasosCat('emergencia')
   ];
 
   if(todas.length < 30) {
@@ -776,7 +771,6 @@ function cargarPreguntaExamen() {
   const progressEl = document.getElementById('examen-progress');
   if(progressEl) progressEl.style.width = `${(estado.examen.index / 30) * 100}%`;
 
-  // Render imagen examen si tiene código
   const imgCont = document.getElementById('img-container-examen');
   const svgCont = document.getElementById('svg-container-examen');
   const codigo = (p.codigo || '').toLowerCase();
@@ -896,9 +890,7 @@ function reiniciarExamen() {
   document.getElementById('examen-timer').textContent = '30:00';
 }
 
-// ============================================
-// TIPS - IDs únicos del index
-// ============================================
+// TIPS
 function cargarTips() {
   tipsData = TIPS;
   currentTip = 0;
@@ -922,11 +914,9 @@ function prevTip(e) {
   mostrarTip();
 }
 
-// ============================================
-// GARAJE + TIENDA - IDs únicos del index
-// ============================================
+// GARAJE + TIENDA
 function cargarGaraje() {
-  const cont = document.getElementById('grid-garaje'); // FIX: ID del index
+  const cont = document.getElementById('grid-garaje');
   cont.innerHTML = '';
   let hpTotal = 90;
   estado.accesorios.forEach(id => {
@@ -964,7 +954,7 @@ function comprarCoche(id) {
 }
 
 function cargarTienda() {
-  const cont = document.getElementById('grid-tienda'); // FIX: ID del index
+  const cont = document.getElementById('grid-tienda');
   cont.innerHTML = '';
   ACCESORIOS.forEach(acc => {
     const comprado = estado.accesorios.includes(acc.id);
@@ -994,9 +984,7 @@ function comprarAccesorio(id) {
   cargarTienda();
 }
 
-// ============================================
 // TEMARIO PDF
-// ============================================
 function cargarTemario() {
   const container = document.getElementById('lista-temario');
   container.innerHTML = `
@@ -1042,40 +1030,22 @@ function cerrarPDF() {
   if(modal) modal.remove();
 }
 
-// NAVBAR NAVIGATION
-document.getElementById('nav-test')?.addEventListener('click', () => mostrarSeccion('test'));
-document.getElementById('nav-casos')?.addEventListener('click', () => mostrarSeccion('casos'));
-document.getElementById('nav-progreso')?.addEventListener('click', () => mostrarSeccion('progreso'));
-document.getElementById('nav-garaje')?.addEventListener('click', () => { mostrarSeccion('garaje'); cargarGaraje(); });
-document.getElementById('nav-tienda')?.addEventListener('click', () => { mostrarSeccion('tienda'); cargarTienda(); });
-document.getElementById('nav-tips')?.addEventListener('click', () => { mostrarSeccion('tips'); cargarTips(); });
-document.getElementById('nav-temario')?.addEventListener('click', () => { mostrarSeccion('temario'); cargarTemario(); });
-
-function mostrarSeccion(seccion) {
-  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('activo'));
-  document.getElementById('seccion-' + seccion).classList.add('activa');
-  document.getElementById('nav-' + seccion).classList.add('activo');
-}
-
-document.getElementById('btn-siguiente-test')?.addEventListener('click', (e) => siguienteTest(e, window.categoriaActual));
-document.getElementById('btn-siguiente-caso')?.addEventListener('click', (e) => siguienteSituacion(e, window.subcatActual));
+// LISTENERS BOTONES - SIN NAVBAR DUPLICADO
+document.getElementById('btn-siguiente-test')?.addEventListener('click', siguienteTest);
+document.getElementById('btn-siguiente-caso')?.addEventListener('click', siguienteSituacion);
 document.getElementById('btn-tip-siguiente')?.addEventListener('click', nextTip);
 document.getElementById('btn-tip-anterior')?.addEventListener('click', prevTip);
 document.getElementById('btn-presentar-examen')?.addEventListener('click', iniciarExamen);
 document.getElementById('btn-sig-examen')?.addEventListener('click', siguientePreguntaExamen);
 
-// ============================================
-// SERVICE WORKER REGISTRO
-// ============================================
+// SERVICE WORKER
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js')
-   .then(reg => console.log('SW registrado'))
-   .catch(err => console.log('SW error:', err));
+  .then(reg => console.log('SW registrado'))
+  .catch(err => console.log('SW error:', err));
   });
 }
- 
 
 
     
