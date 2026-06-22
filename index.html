@@ -85,7 +85,6 @@
 .card-progreso.num { font-size: 2rem; color: var(--cyan); font-weight: bold; }
 .card-progreso.label { font-size: 0.85rem; color: var(--text-gray); margin-top: 5px; }
 
-  /* GRID GARAJE/TIENDA - 2 COLUMNAS PER CAPS PER 19 COTXES */
 .grid-items {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -108,10 +107,10 @@
   }
 .card-item.comprado { border-color: var(--green); }
 .card-item.bloqueado { opacity: 0.4; cursor: default; }
-.card-item.emoji { font-size: 2.5rem; margin-bottom: 5px; }
-.card-item.nombre { font-size: 0.95rem; margin-bottom: 3px; font-weight: bold; }
-.card-item.cv { font-size: 0.9rem; color: var(--cyan); margin-bottom: 5px; }
-.card-item.precio { font-size: 0.85rem; color: var(--yellow); font-weight: bold; }
+.card-item .emoji { font-size: 2.5rem; margin-bottom: 5px; }
+.card-item .nombre { font-size: 0.95rem; margin-bottom: 3px; font-weight: bold; }
+.card-item .cv { font-size: 0.9rem; color: var(--cyan); margin-bottom: 5px; }
+.card-item .precio { font-size: 0.85rem; color: var(--yellow); font-weight: bold; }
 .btn-comprar {
     margin-top: 8px;
     padding: 8px;
@@ -125,7 +124,6 @@
   }
 .btn-comprar:disabled { background: #2a2a3e; color: var(--text-gray); cursor: default; }
 
-  /* GARAJE: CV TOTAL GRAN A DALT */
 .cv-total {
     text-align: center;
     font-size: 2.5rem;
@@ -135,17 +133,15 @@
     text-shadow: 0 0 10px var(--cyan);
   }
 
-  /* TIPS */
 .card-tip { margin: 10px; background: var(--bg-card); border-radius: 15px; padding: 20px; min-height: 200px; display: flex; flex-direction: column; justify-content: center; }
-.card-tip.icono { font-size: 2.5rem; text-align: center; margin-bottom: 10px; }
-.card-tip.titulo { text-align: center; color: var(--cyan); font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; }
-.card-tip.texto { font-size: 1.1rem; line-height: 1.5; text-align: center; margin-bottom: 20px; }
+.card-tip .icono { font-size: 2.5rem; text-align: center; margin-bottom: 10px; }
+.card-tip .titulo { text-align: center; color: var(--cyan); font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; }
+.card-tip .texto { font-size: 1.1rem; line-height: 1.5; text-align: center; margin-bottom: 20px; }
 .controles-tip { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .btn-tip { flex: 1; padding: 14px; background: var(--cyan); border: none; border-radius: 10px; color: #000; font-weight: bold; font-size: 1rem; cursor: pointer; }
 .btn-tip:disabled { opacity: 0.3; cursor: default; }
 .contador-tip { font-size: 1.1rem; font-weight: bold; color: var(--text); }
 
-  /* PDF VIEWER */
 .pdf-container { margin: 10px; background: #000; border-radius: 12px; height: calc(100vh - 200px); overflow: hidden; border: 1px solid #2a2a3e; }
 .pdf-container iframe { width: 100%; height: 100%; border: none; }
   </style>
@@ -225,6 +221,26 @@
       </div>
     </div>
 
+    <!-- EXAMEN - NUEVO -->
+    <div id="seccion-examen" class="seccion">
+      <div class="stats-bar-verde">
+        <div class="stat-item"><span class="emoji">📝</span><span class="valor" id="examen-num">0</span>/30</div>
+        <div class="stat-item"><span class="emoji">⏱️</span><span class="valor" id="examen-timer">30:00</span></div>
+        <div class="stat-item"><span class="emoji">✅</span><span class="valor" id="examen-aciertos">0</span></div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div>
+      <div class="card-pregunta">
+        <div class="titulo-cat">📋 EXAMEN DGT OFICIAL</div>
+        <div class="texto-pregunta" id="examen-pregunta">Pulsa Presentarme al Examen</div>
+        <div id="examen-opciones"></div>
+        <div class="img-container" id="img-container-examen" style="display:none;">
+          <div id="svg-container-examen"></div>
+        </div>
+        <button class="btn-siguiente" id="btn-sig-examen" disabled>SIGUIENTE</button>
+        <div id="examen-resultado" style="display:none; margin-top:20px; text-align:center;"></div>
+      </div>
+    </div>
+
     <!-- PROGRESO -->
     <div id="seccion-progreso" class="seccion">
       <div class="grid-progreso">
@@ -235,26 +251,22 @@
       </div>
     </div>
 
-    <!-- GARAJE AMB 19 COTXES - GRID 2 COLUMNES SCROLL -->
+    <!-- GARAJE -->
     <div id="seccion-garaje" class="seccion">
       <div class="titulo-cat">🏁 TU GARAJE</div>
       <div class="cv-total" id="cv-garaje">90 CV</div>
-      <div class="grid-items" id="grid-garaje">
-        <!-- app.js injecta 19 cards-item aquí -->
-      </div>
+      <div class="grid-items" id="grid-garaje"></div>
     </div>
 
-    <!-- TIENDA AMB ACCESSORIS IL·LIMITATS - GRID 2 COLUMNES SCROLL -->
+    <!-- TIENDA -->
     <div id="seccion-tienda" class="seccion">
       <div class="titulo-cat">🛒 TIENDA</div>
       <p style="text-align:center; color:var(--text-gray); margin:10px;">Cambia tus puntos por coches y accesorios</p>
       <p style="text-align:center; color:var(--yellow); margin-bottom:15px;">Monedas: <span id="monedas-tienda">0</span> 💰</p>
-      <div class="grid-items" id="grid-tienda">
-        <!-- app.js injecta Turbo, Nitro, Motor, Kit... aquí -->
-      </div>
+      <div class="grid-items" id="grid-tienda"></div>
     </div>
 
-    <!-- TIPS AMB ANTERIOR/SIGUIENTE -->
+    <!-- TIPS -->
     <div id="seccion-tips" class="seccion">
       <div class="card-tip">
         <div class="icono">💡</div>
@@ -268,13 +280,10 @@
       </div>
     </div>
 
-    <!-- TEMARIO AMB PDF -->
+    <!-- TEMARIO -->
     <div id="seccion-temario" class="seccion">
       <div class="titulo-cat">📚 TEMARIO DGT</div>
       <div id="lista-temario"></div>
-      <div class="pdf-container" id="pdf-viewer" style="display:none;">
-        <iframe id="pdf-frame" src=""></iframe>
-      </div>
     </div>
 
     <!-- NAVBAR 7 BOTONS -->
@@ -321,14 +330,6 @@
     }
   }
   cargarTodo();
-  </script>
-
-  <script>
-  if('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./service-worker.js');
-    });
-  }
   </script>
 
 </body>
