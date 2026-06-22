@@ -1,4 +1,4 @@
-const PREGUNTAS_MECANICA = [
+const preguntas_mecanica = [
     // === NEUMÁTICOS === Pág 55-58
     {q:"Presión baja causa:",a:["Mayor consumo","Menor adherencia","Las dos + riesgo reventón"],ok:2},
     {q:"Neumático liso profundidad mínima:",a:["1mm","1,6mm","2mm"],ok:1},
@@ -109,4 +109,3 @@ const PREGUNTAS_MECANICA = [
     {q:"Asiento no se mueve:",a:["Normal","Motor asiento o guía rota","Palanca rota"],ok:1},
     {q:"Aire acondicionado no enfría:",a:["Normal","Falta gas o compresor roto","Filtro sucio"],ok:1}
 ];
-window.PREGUNTAS_MECANICA = PREGUNTAS_MECANICA;
