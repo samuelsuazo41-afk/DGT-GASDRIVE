@@ -300,23 +300,36 @@
     './data/senales_svg.js'
   ];
 
+  async function cargarScript(src) {
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = res;
+      s.onerror = () => rej('Fallo: ' + src);
+      document.head.appendChild(s);
+    });
+  }
+
   async function cargarTodo() {
     try {
+      // 1. Cargar todos los datos primero
       for (const ruta of ARCHIVOS) {
-        await new Promise((res, rej) => {
-          const s = document.createElement('script');
-          s.src = ruta;
-          s.onload = res;
-          s.onerror = () => rej('Fallo: ' + ruta);
-          document.head.appendChild(s);
-        });
+        await cargarScript(ruta);
       }
+      
+      // 2. Cargar apps.js DESPUÉS de los datos
+      // Timestamp para romper caché sin usar VERSION
+      await cargarScript('./apps.js?t=' + Date.now());
+      
+      // 3. Mostrar app y arrancar
       document.getElementById('pantalla-carga').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       if(typeof init === 'function') init();
+      else console.error('ERROR: init() no existe. Revisa apps.js');
+      
     } catch(e) {
       console.error('Error:', e);
-      document.getElementById('pantalla-carga').innerHTML = '<h1>Error</h1><p>Recarga</p>';
+      document.getElementById('pantalla-carga').innerHTML = '<h1>Error</h1><p>Recarga</p><p style="font-size:0.8rem">'+e+'</p>';
     }
   }
   cargarTodo();
@@ -352,7 +365,6 @@
       cargarSituacion(e.target.dataset.subcat);
     });
   });
-  </script>
-
+</script>
 </body>
 </html>
