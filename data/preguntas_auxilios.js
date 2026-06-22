@@ -1,4 +1,4 @@
-const PREGUNTAS_AUXILIOS= [
+const preguntas_auxilios = [
 // === PROTOCOLO PAS === Pág 40-41   
 {q:"¿Qué haces primero ante un accidente?",a:["Llamar al 112","Proteger la zona","Socorrer heridos"],ok:1},
     {q:"Orden correcto protocolo PAS:",a:["Socorrer, Avisar, Proteger","Proteger, Avisar, Socorrer","Avisar, Proteger, Socorrer"],ok:1},
@@ -82,4 +82,3 @@ const PREGUNTAS_AUXILIOS= [
     {q:"Ante amputación dedo:",a:["Poner parte en hielo directo","Envolver gasa estéril + bolsa + hielo externo","Guardar seco"],ok:1},
     {q:"Picadura abeja alergia:",a:["Esperar","Adrenalina si hay + 112","Vinagre"],ok:1}
 ];
-window.PREGUNTAS_AUXILIOS = PREGUNTAS_AUXILIOS;
