@@ -1,4 +1,4 @@
-const PREGUNTAS_MEDIOAMBIENTE = [
+window.preguntas_medioambiente = [
     // === ETIQUETAS AMBIENTALES === Pág 15-20
     {q:"¿Qué es la etiqueta ambiental B?",a:["Eléctrico","Gasolina Euro 3/4/5/6 y Diésel Euro 4/5","Híbrido"],ok:1},
     {q:"Etiqueta B: diésel de:",a:["Euro 3","Euro 4, 5 y 6","Euro 2"],ok:1},
@@ -85,4 +85,3 @@ const PREGUNTAS_MEDIOAMBIENTE = [
     {q:"Repostar motor encendido:",a:["Correcto","Prohibido + peligroso","Obligatorio"],ok:1},
     {q:"Móvil repostando:",a:["Permitido","Prohibido por riesgo chispa","Solo llamadas"],ok:1}
 ];
-window.PREGUNTAS_MEDIOAMBIENTE = PREGUNTAS_MEDIOAMBIENTE;
