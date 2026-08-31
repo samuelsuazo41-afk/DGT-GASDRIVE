@@ -80,6 +80,11 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .stats-falta{ text-align:center; color:#FFD700; font-size:13px; font-weight:700; margin:8px 0 4px; line-height:1.3; background:rgba(255,215,0,0.08); padding:8px; border-radius:8px; border:1px dashed rgba(255,215,0,0.3); }
 .evolucio-mot{ text-align:center; color:#00D9FF; font-size:12px; font-weight:600; margin:12px 0 4px; padding:10px; background:#0a0a0a; border-radius:8px; border:1px solid #333; line-height:1.4; }
 .pase-consell{ color:#999; font-size:11px; margin-top:10px; line-height:1.4; background:#111; padding:10px; border-radius:8px; }
+.orientacio-bloc{ margin-bottom:12px; padding:12px; background:#1a1a1a; border-radius:8px; }
+.orientacio-bloc.verd{ border-left:4px solid #2ecc71; }
+.orientacio-bloc.groc{ border-left:4px solid #FFD700; }
+.orientacio-bloc.blau{ border-left:4px solid #00D9FF; }
+.debil-card{ margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px; }
 .mini-picto{width:64px;height:40px;stroke:#00D9FF;fill:none;stroke-width:2.2;display:block;margin:0 auto}
 .mc-badge{display:inline-block;background:#00D9FF;color:#000;font-size:10px;font-weight:900;padding:3px 8px;border-radius:10px;margin:6px 0}
 .icon{width:18px;height:18px;stroke-width:2;vertical-align:middle;display:inline-block;stroke:#00D9FF;fill:none}
@@ -212,8 +217,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   </div>
 </div>
 
-<div id="tab-garage" class="tab-content"><div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div></div></div>
-<div id="tab-tienda" class="tab-content"><div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Canjea tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div></div>
+<div id="tab-garage" class="tab-content"><div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div><div id="garaje-lista" style="display:none"></div></div></div>
+<div id="tab-tienda" class="tab-content"><div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div></div>
 <div id="tab-tips" class="tab-content"><div class="card"><h2>💡 CONSEJO DGT</h2><div id="tip-content"></div><div style="display:flex;gap:10px;margin-top:15px"><button class="btn" style="flex:1" onclick="prevTip(event)">ANTERIOR</button><span id="tip-counter" style="align-self:center">1/100</span><button class="btn" style="flex:1" onclick="nextTip(event)">SIGUIENTE</button></div></div></div>
 <div id="tab-temari" class="tab-content"><div class="card"><h2>📖 TEMARIOS OFICIALES</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT. 20min para desbloquear - Consejo: 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS</p><div id="temari-lista"></div></div></div>
 
@@ -268,7 +273,7 @@ function inyectarOrientacionFix(){
       <div style="font-weight:900;color:#00D9FF;font-size:13px">3. Haz el EXAMEN - Pruébate en examen diario para mejorar preparación</div>
       <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Cuando tengas 90% global, haz 1 simulacro diario. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen son 30 preguntas mezcla de todos los paneles N-01..N-15 + S-100 + M- + A- + E-.</div>
     </div>
-    <div style="background:#0a0a1a;border:1px dashed rgba(0,217,255,0.4);padding:12px;border-radius:8px">
+    <div style="background:#0a0a0a;border:1px dashed rgba(0,217,255,0.4);padding:12px;border-radius:8px">
       <div style="font-weight:900;color:#00D9FF;font-size:12px">📍 Plan de Estudio Trampas + Familias Reales</div>
       <div style="font-size:11px;color:#999;margin-top:4px;line-height:1.5">Cada panel tiene 5-6 preguntas con mismo pictograma. Si fallas N-01 alcohol, todas las de N-01 son misma familia. Si fallas S-105c servicios, son familia S-100 azul con pictograma blanco WC/gasolinera/hotel. No estudies 2 horas seguidas. Estudia 5 minutos cada temario, después 30-60 tests, después 1 examen. Constancia > intensidad. El sistema detecta si fallas en señales verticales de peligro P-, prohibición R-, o información S-100 y te lo dice exacto.</div>
     </div>
@@ -388,7 +393,7 @@ function inyectarOrientacionFix(){
     <span class="mc-badge" style="background:#FFD700;color:#000">7/8 • E-01 • TARA/MMA/MOM • 4 PREGUNTAS FIJAS EXAMEN</span>
     <div class="mc-text">
       <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      Infografía oficial que cae 4 preguntas fijas en examen B. Es la base para entender si puedes llevar remolque y si vas sobrecargado.
+      Infografía oficial que caen 4 preguntas fijas en examen B. Es la base para entender si puedes llevar remolque y si vas sobrecargado.
       <div style="background:#0f0f0f;border:1px solid #FFD700;border-radius:8px;padding:10px;margin:10px 0;font-size:12px"><b>Tara:</b> Vacío lleno fluidos herramientas sin conductor.<br><b>MOM:</b> Tara + 75kg conductor.<br><b>MMA:</b> Masa máxima autorizada fabricante.<br><b>Real:</b> Peso momento circular.<br><b>Útil:</b> MMA - Tara.</div>
       <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite entender</b></div>
       - Si cargas 1600kg con furgoneta Tara 2000 MMA 3500 útil 1500kg → vas 100kg sobrecargado.<br>- MOM es lo que pesa cuando te pesan en báscula contigo dentro.
