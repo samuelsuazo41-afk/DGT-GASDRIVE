@@ -78,13 +78,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .test-emojis { display: none !important; }
 .tip-box { background: linear-gradient(135deg, #332a00 0%, #2a2a00 100%); border: 3px solid #00D9FF; border-left: 5px solid #FFD700; padding: 14px 15px; border-radius: 12px; font-size: 14px; font-weight: 700; color: #FFD700; line-height: 1.4; margin: 0; box-shadow: 0 0 15px rgba(0,217,255,0.3); display: none; flex-shrink: 0; width: 100%; box-sizing: border-box; position: relative; z-index: 2; }
 .stats-falta{ text-align:center; color:#FFD700; font-size:13px; font-weight:700; margin:8px 0 4px; line-height:1.3; background:rgba(255,215,0,0.08); padding:8px; border-radius:8px; border:1px dashed rgba(255,215,0,0.3); }
-.evolucio-mot{ text-align:center; color:#00D9FF; font-size:12px; font-weight:600; margin:12px 0 4px; padding:10px; background:#0a0a1a; border-radius:8px; border:1px solid #333; line-height:1.4; }
+.evolucio-mot{ text-align:center; color:#00D9FF; font-size:12px; font-weight:600; margin:12px 0 4px; padding:10px; background:#0a0a0a; border-radius:8px; border:1px solid #333; line-height:1.4; }
 .pase-consell{ color:#999; font-size:11px; margin-top:10px; line-height:1.4; background:#111; padding:10px; border-radius:8px; }
-.orientacio-bloc{ margin-bottom:12px; padding:12px; background:#1a1a1a; border-radius:8px; }
-.orientacio-bloc.verd{ border-left:4px solid #2ecc71; }
-.orientacio-bloc.groc{ border-left:4px solid #FFD700; }
-.orientacio-bloc.blau{ border-left:4px solid #00D9FF; }
-.debil-card{ margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px; }
 .mini-picto{width:64px;height:40px;stroke:#00D9FF;fill:none;stroke-width:2.2;display:block;margin:0 auto}
 .mc-badge{display:inline-block;background:#00D9FF;color:#000;font-size:10px;font-weight:900;padding:3px 8px;border-radius:10px;margin:6px 0}
 .icon{width:18px;height:18px;stroke-width:2;vertical-align:middle;display:inline-block;stroke:#00D9FF;fill:none}
@@ -209,7 +204,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
     <div id="examen-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div>
     <div id="examen-tip" class="tip-box"></div> 
     <div id="examen-emojis" class="test-emojis"></div>
-    <div class="pregunta" id="examen-pregunta">Pulsa Iniciar Examen</div>
+    <div class="pregunta" id="examen-pregunta">Pulsa Inicia el Examen</div>
     <div id="examen-opciones"></div>
     <div id="examen-resultat" style="display:none"></div>
     <button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button>
@@ -218,7 +213,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 </div>
 
 <div id="tab-garage" class="tab-content"><div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div></div></div>
-<div id="tab-tienda" class="tab-content"><div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div></div>
+<div id="tab-tienda" class="tab-content"><div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Canjea tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div></div>
 <div id="tab-tips" class="tab-content"><div class="card"><h2>💡 CONSEJO DGT</h2><div id="tip-content"></div><div style="display:flex;gap:10px;margin-top:15px"><button class="btn" style="flex:1" onclick="prevTip(event)">ANTERIOR</button><span id="tip-counter" style="align-self:center">1/100</span><button class="btn" style="flex:1" onclick="nextTip(event)">SIGUIENTE</button></div></div></div>
 <div id="tab-temari" class="tab-content"><div class="card"><h2>📖 TEMARIOS OFICIALES</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT. 20min para desbloquear - Consejo: 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS</p><div id="temari-lista"></div></div></div>
 
@@ -262,16 +257,20 @@ function inyectarOrientacionFix(){
   <h2 style="color:#FFD700">📚 MÉTODO GASDRIVE - 3 PASOS QUE YA TIENES EN EL PASE</h2>
   <div style="display:flex;flex-direction:column;gap:12px">
     <div style="background:#0f2e0f;border-left:4px solid #2ecc71;padding:12px;border-radius:8px">
-      <div style="font-weight:900;color:#2ecc71;font-size:13px">1. Empieza por el TEMARIO - 5 minutos cada temario diario (20 min total PASE)</div>
+      <div style="font-weight:900;color:#2ecc71;font-size:13px">1. Empieza por el TEMARIO - 5 minutos cada temario al día (20 min total PASE)</div>
       <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">No estudies 20 min seguidos de un temario. Haz 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS y MEDIO AMBIENTE. Esto te desbloquea el PASE y te da +50 coins. El contador cuenta automático cuando estás en TEMARIO.</div>
     </div>
     <div style="background:#332a00;border-left:4px solid #FFD700;padding:12px;border-radius:8px">
       <div style="font-weight:900;color:#FFD700;font-size:13px">2. Haz TESTS diarios para mejorar porcentaje de preparación</div>
-      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Practica 30-60 tests diarios. El % no es solo aciertos. Es: 30% Retención (preguntas que dominas 3 días seguidos) + 40% Constancia (20 días válidos 30-60 preguntas 85% aciertos) + 20% Cobertura 7 días + 10% Estabilidad exámenes. Cuando llegues 90% estás listo.</div>
+      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Practica 30-60 tests diarios. El % no es solo aciertos. Es: 30% Retención (preguntas que dominas 3 días seguidos) + 40% Constancia (20 días válidos 30-60 preguntas 85% aciertos) + 20% Cobertura 7 días + 10% Estabilidad exámenes. Cuando llegues al 90% estás listo.</div>
     </div>
     <div style="background:#001a33;border-left:4px solid #00D9FF;padding:12px;border-radius:8px">
       <div style="font-weight:900;color:#00D9FF;font-size:13px">3. Haz el EXAMEN - Pruébate en examen diario para mejorar preparación</div>
       <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Cuando tengas 90% global, haz 1 simulacro diario. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen son 30 preguntas mezcla de todos los paneles N-01..N-15 + S-100 + M- + A- + E-.</div>
+    </div>
+    <div style="background:#0a0a1a;border:1px dashed rgba(0,217,255,0.4);padding:12px;border-radius:8px">
+      <div style="font-weight:900;color:#00D9FF;font-size:12px">📍 Plan de Estudio Trampas + Familias Reales</div>
+      <div style="font-size:11px;color:#999;margin-top:4px;line-height:1.5">Cada panel tiene 5-6 preguntas con mismo pictograma. Si fallas N-01 alcohol, todas las de N-01 son misma familia. Si fallas S-105c servicios, son familia S-100 azul con pictograma blanco WC/gasolinera/hotel. No estudies 2 horas seguidas. Estudia 5 minutos cada temario, después 30-60 tests, después 1 examen. Constancia > intensidad. El sistema detecta si fallas en señales verticales de peligro P-, prohibición R-, o información S-100 y te lo dice exacto.</div>
     </div>
   </div>
 </div>
@@ -293,17 +292,128 @@ function inyectarOrientacionFix(){
     <div style="text-align:center"><svg class="mini-picto" viewBox="0 0 100 50"><path d="M12 35 L60 8 L82 28 L84 38 L20 40 Z M16 38 A8 8 0 1 0 31 38 M66 38 A8 8 0 1 0 81 38"/></svg><div style="font-size:11px;color:#00D9FF;font-weight:700">L1e · L6e · Art.4 Reglamento Vehículos</div></div>
     <span class="mc-badge">1/8 • AM 15 AÑOS • 45 km/h • 50cc / 4kW</span>
     <div class="mc-text">
-      <b style="color:#00D9FF">Qué es exactamente?</b><br>
-      Ciclomotor de 2/3 ruedas con velocidad máxima por construcción de 45 km/h. Combustión ≤50cc. Eléctrico ≤4kW. Quadriciclo ligero L6e: 4 ruedas, masa en vacío &lt;350kg sin baterías, mismo límite 45 km/h.
-      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><b>Tara ~70kg / MMA ~160kg:</b> Ligero, pero a 45 km/h sin casco la lesividad es crítica.</div>
-      <b style="color:#2ecc71">Qué te permite</b><br>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      Ciclomotor de 2/3 ruedas con velocidad máxima por construcción de 45 km/h. Combustión ≤50cc. Eléctrico ≤4kW. Cuadriciclo ligero L6e: 4 ruedas, masa en vacío &lt;350kg sin baterías, mismo límite 45 km/h. El L7e de 400kg ya es categoría B1.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara ~70kg / MMA ~160kg:</b> Ligero, pero a 45 km/h sin casco la lesividad es crítica.</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
       - 1 pasajero si ficha técnica indica 2 plazas homologadas.<br>- Circular por arcén derecho transitable.<br>- Carga pequeña en baca sin ocultar alumbrado.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.38</b></div>
+      - Autopista, autovía, vía para automóviles.<br>- Remolcar, auriculares, transportar menores de 12 años. Excepción 7-12 con padre/madre/tutor, casco infantil y reposapiés.
       <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0">
-        <b style="font-size:12px;color:#00D9FF">A-06 CASCO + M-11 MECÁNICA</b><div style="font-size:12px;margin-top:6px">Casco ECE 22.05/22.06 obligatorio. Sanción 200€ + 4 puntos. Chaleco: llevar en el vehículo y poner en caso de avería interurbana. Luces de cruce siempre. Presión cada 2 semanas. Frenada 70% delante 30% detrás.</div>
+        <div style="display:flex;gap:8px;align-items:center"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 11 7 11s7-6 7-11a7 7 0 0 0-7-7z"/></svg><b style="font-size:12px;color:#00D9FF">A-06 CASCO + M-11 MECÁNICA</b></div>
+        <div style="font-size:12px;margin-top:6px">Casco ECE 22.05/22.06 obligatorio. Sanción 200€ + 4 puntos. Chaleco: llevar en el vehículo y poner en caso de avería interurbana. Luces de cruce siempre. Presión cada 2 semanas. Frenada 70% delante 30% detrás.</div>
       </div>
       <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN B</b><div style="font-size:12px;color:#FFD700;margin-top:4px">N-01 Alcohol 0,5/0,25 - en AM sigue siendo 0,5 aunque seas novel. R-101 Prohibido ciclomotores. Circular a 70km/h = sin carnet sin seguro.</div></div>
     </div>
   </div>
+
+  <div id="orientacio-a1" class="orientacio-subcontent">
+    <span class="mc-badge">2/8 • A1 16 AÑOS • 125cc • 11kW • 0,1kW/kg</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      Motocicleta ≤125cc, ≤11kW (15CV), relación potencia/peso ≤0,1kW/kg. Triciclo ≤15kW. Incluye AM. Edad mínima 16 años.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara ~110kg / MMA ~250kg:</b> Moto 100kg con 11kW = 0,11kW/kg → NO válida. Necesita 110kg mínimo.</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
+      - 125cc con y sin sidecar.<br>- Pasajero si homologada 2 plazas.<br>- Autopista y autovía máximo 120km/h.<br>- Remolque ligero 50% tara.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.5</b></div>
+      - &gt;125cc o &gt;11kW o relación &gt;0,1.<br>- Convalidación B+3 años solo España.<br>- Mercancías peligrosas sin ADR.
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><div style="display:flex;gap:8px;align-items:center"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 11 7 11s7-6 7-11a7 7 0 0 0-7-7z"/></svg><b style="font-size:12px;color:#00D9FF">A-06 CASCO + M-11</b></div><div style="font-size:12px;margin-top:6px">Casco integral ECE 22.06. Guantes obligatorios. Neumático mín 1,6mm, cadena 2-3cm, frenada 70/30.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">Convalidación B+3 años solo España. Novel 0,3/0,15. B con 1 año no puedes A1.</div></div>
+    </div>
+  </div>
+
+  <div id="orientacio-a2" class="orientacio-subcontent">
+    <span class="mc-badge">3/8 • A2 18 AÑOS • 35kW 47CV • 0,2kW/kg</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      ≤35kW (47CV), relación ≤0,2kW/kg, no derivada de vehículo con más del doble de potencia de origen.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara ~180kg / MMA ~380kg:</b> MT-07 55kW limitada 35kW SÍ (&lt;70kW origen) Ducati 90kW NO (&gt;70kW origen)</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
+      - Todas A1.<br>- Motos hasta 47CV limitadas legalmente.<br>- Triciclos &gt;15kW.<br>- Acceso A con 20a + 2a A2 + curso 9h.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.7</b></div>
+      - &gt;35kW o relación &gt;0,2.<br>- Limitar moto origen &gt;70kW.<br>- A directo con 21a sin 2a A2.
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">M-11 MECÁNICA + A-06</b><div style="font-size:12px;margin-top:6px">ABS obligatorio &gt;125cc nuevas. CBS &lt;125cc. Cadena, DOT4, presión en frío.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">Relación 0,2kW/kg A2. Doble potencia origen 70kW máximo para limitar. A con 20a solo con 2a A2 + curso 9h.</div></div>
+    </div>
+  </div>
+
+  <div id="orientacio-b" class="orientacio-subcontent">
+    <div style="text-align:center"><svg class="mini-picto" viewBox="0 0 100 40"><path d="M10 26 L20 12 L75 12 L90 20 L88 32 L10 32 Z M20 32 A7 7 0 1 0 34 32 M66 32 A7 7 0 1 0 80 32"/></svg></div>
+    <span class="mc-badge" style="background:#FFD700;color:#000">4/8 • B ACTIVO • 3500kg • 4250kg CONJUNTO</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      Art.5: MMA ≤3500kg, 8 pasajeros + conductor (9 total). Remolque ≤750kg. Conjunto máximo B: 4250kg MMA. Incluye AM, A1 con +3a, cuadriciclos.
+      <div style="background:#0f0f0f;border:1px solid #FFD700;border-radius:8px;padding:10px;margin:10px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> <b>Ejemplo 100%:</b> Coche 2000kg + Remolque 1000kg = 3000kg → &lt;4250 → SÍ B. Coche 3500+1000=4500 → &gt;4250 → NO B+E</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
+      - Turismo hasta 9 plazas, furgoneta 3500kg.<br>- Remolque ligero 750kg.<br>- Triciclos y cuadriciclos pesados L7e.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.5 y 9</b></div>
+      - &gt;3500kg MMA o &gt;9 plazas.<br>- Conjunto &gt;4250kg sin B+E.<br>- Camión C1 sin C1.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg><b style="color:#FFD700">E-01 TARA / MMA / MOM</b></div>
+      <b>Tara:</b> Vacío con fluidos y herramientas, sin conductor.<br><b>MOM:</b> Tara+75kg.<br><b>MMA:</b> Máximo fabricante ficha ITV.<br><b>Útil:</b> MMA-Tara.
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;margin-top:10px"><b style="color:#FFD700;font-size:12px">🎯 ERRORES QUE SUSPENDEN B</b><div style="font-size:12px;color:#FFD700">Glorieta interior sin intermitente, Stop 2 segundos, MMA conjunto 4250 no 3500, Alcohol 0,25 es aire no sangre.</div></div>
+    </div>
+  </div>
+
+  <div id="orientacio-be" class="orientacio-subcontent">
+    <span class="mc-badge">5/8 • B+E • HASTA 7000kg</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      B + remolque MMA &gt;750kg hasta 7000kg MMA conjunto. Ej 3500+3500=7000 límite. 18a + B. Caravanas grandes y remolques caballos.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara tractor 1500kg / Remolque 1200kg / MMA conjunto 6500kg:</b> Caravana pesada necesita B+E si supera 750kg MMA remolque y conjunto &gt;4250kg.</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
+      - Remolque &gt;750kg hasta 3500kg MMA.<br>- Conjunto hasta 7000kg MMA total.<br>- Caravanas &gt;750kg, portacoches, portacaballos.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite</b></div>
+      - Conjuntos &gt;7000kg MMA, necesitas C1+E.<br>- Remolque sin ITV propia si &gt;750kg.<br>- Velocidad &gt;90 en autovía con remolque.
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">M-11 + E-01 MASAS Y VELOCIDAD</b><div style="font-size:12px;margin-top:6px">Longitud máxima conjunto turismo+remolque 18,75m. Anchura remolque 2,55m. Altura 4m. Con remolque: Autovía 90, convencional 80, ciudad 50. Nunca 120 con remolque.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">B+E hasta 7000kg MMA conjunto. Remolque &gt;750kg necesita matrícula propia blanca+roja, ITV propia, seguro propio y placa SP.</div></div>
+    </div>
+  </div>
+
+  <div id="orientacio-c" class="orientacio-subcontent">
+    <span class="mc-badge" style="background:#666">6/8 • C/C1 • CAMIÓN</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      C1: 3500kg a 7500kg MMA, edad 18 años. C: &gt;3500kg sin límite superior, edad 21 años (18 años con CAP inicial). Incluye C1 y B. No incluye D.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara camión 8000kg / MMA 18000kg / Útil 10000kg:</b> 2 ejes 18t, 3 ejes 25t (26t neumático), 4 ejes 31t, tren 40t, 44t contenedor 40 pies.</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
+      - Camión &gt;3500kg hasta 18000kg 2 ejes.<br>- Remolque ligero 750kg.<br>- Tacógrafo digital y tarjeta conductor.<br>- Transporte profesional con CAP.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite</b></div>
+      - Bus D, ni C+E sin obtener C+E.<br>- Exceder masas por eje: simple motor 11,5t, no motor 10t.<br>- Conducir sin CAP o tacógrafo.
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">TACÓGRAFO - HORARIO PROFESIONAL</b><div style="font-size:12px;margin-top:6px">Conducción 4h30 + pausa 45min (15+30). Diaria 9h ampliable 10h 2 veces/semana. Semanal 56h quincenal 90h. Descanso diario 11h reducible 9h 3 veces. CAP 140h.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN B (MERCANCÍAS)</b><div style="font-size:12px;color:#FFD700">Masas máximas 2 ejes 18t 3 ejes 25t tren 40t. Velocidad camión autovía 90 convencional 80. Alcohol profesional 0,3/0,15.</div></div>
+    </div>
+  </div>
+
+  <div id="orientacio-masas" class="orientacio-subcontent">
+    <span class="mc-badge" style="background:#FFD700;color:#000">7/8 • E-01 • TARA/MMA/MOM • 4 PREGUNTAS FIJAS EXAMEN</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      Infografía oficial que cae 4 preguntas fijas en examen B. Es la base para entender si puedes llevar remolque y si vas sobrecargado.
+      <div style="background:#0f0f0f;border:1px solid #FFD700;border-radius:8px;padding:10px;margin:10px 0;font-size:12px"><b>Tara:</b> Vacío lleno fluidos herramientas sin conductor.<br><b>MOM:</b> Tara + 75kg conductor.<br><b>MMA:</b> Masa máxima autorizada fabricante.<br><b>Real:</b> Peso momento circular.<br><b>Útil:</b> MMA - Tara.</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite entender</b></div>
+      - Si cargas 1600kg con furgoneta Tara 2000 MMA 3500 útil 1500kg → vas 100kg sobrecargado.<br>- MOM es lo que pesa cuando te pesan en báscula contigo dentro.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite confundir</b></div>
+      - Tara NO incluye conductor, MOM SÍ incluye 75kg.<br>- MMA no es peso real, es máximo legal ficha ITV.
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">M-11 MASAS POR EJE Y DIMENSIONES</b><div style="font-size:12px;margin-top:6px">Tándem &lt;1m 11,5t, 1-1,3m 16t, 1,3-1,8m 18t. Tridem &lt;1,3m 21t, &gt;1,3m 24t. Longitud turismo 12m, camión 12m, bus 15m, articulado 18,75m, tren 16,5m, conjunto 18,75m. Anchura 2,55m (2,60 frigorífico). Altura 4m.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 TRUCO EXAMEN B</b><div style="font-size:12px;color:#FFD700">Tara NO incluye conductor. MOM SÍ incluye 75kg. MMA es la que sale en ficha ITV. Ejemplo Tara 2000 MOM 2075 MMA 3500 útil 1500kg.</div></div>
+    </div>
+  </div>
+
+  <div id="orientacio-via" class="orientacio-subcontent">
+    <span class="mc-badge" style="background:#FFD700;color:#000">8/8 • PARTES DE LA VÍA + VEHÍCULOS ESPECIALES</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      Glosario oficial DGT de partes de la vía y vehículos especiales V-... que caen 3-4 preguntas en examen con foto.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Plataforma vs Calzada:</b> Plataforma = Calzada + Arcenes. Calzada = solo vehículos. Arcén = franja contigua no destinada a circulación excepto excepciones. Mediana = separa calzadas, nunca pisar.</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite identificar</b></div>
+      - <b>Plataforma:</b> Zona carretera para uso de vehículos, formada por calzada + arcenes.<br>- <b>Calzada:</b> Parte destinada a circulación de vehículos.<br>- <b>Carril:</b> Franja longitudinal.<br>- <b>Arcén:</b> Franja contigua a calzada.<br>- <b>Acera:</b> Zona elevada para peatones.<br>- <b>Mediana:</b> Separa calzadas. No aparcar nunca.<br>- <b>Cuneta:</b> Canal de desagüe.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite confundir</b></div>
+      - Arcén no es acera. Arcén vehículos excepcionalmente, acera solo peatones.<br>- Mediana no se puede pisar ni para adelantar.
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">V- VEHÍCULOS ESPECIALES</b><div style="font-size:12px;margin-top:6px"><b>V-1:</b> Prioritario (policía, bomberos, ambulancia) luz azul + sirena, prioridad absoluta.<br><b>V-2:</b> Obra/servicio luz naranja.<br><b>V-5:</b> Vehículo lento &lt;60km/h triángulo rojo.<br><b>V-16:</b> Preseñalización de peligro - luz naranja obligatoria desde 2026, sustituye triángulos.<br><b>V-13:</b> Conductor novel L verde 1 año.<br><b>V-20:</b> Panel carga que sobresale.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">V-16 luz naranja obligatoria 2026 sustituye triángulos. V-1 azul policía/bomberos. V-2 naranja obra. Plataforma = calzada + arcenes. Mediana nunca pisar.</div></div>
+    </div>
+  </div>
+
 </div>
   `;
   const first=document.getElementById('orientacio-am');
