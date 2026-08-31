@@ -65,19 +65,17 @@ export default function Temario() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#f5f5f5' },
+  container: { flex: 1, padding: 16, backgroundColor: '#0a0a0a' },
   card: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#1a1a1a',
+    borderWidth: 1,
+    borderColor: '#00D9FF',
     padding: 16,
-    marginBottom: 12,
-    borderRadius: 12
+    borderRadius: 12,
+    marginBottom: 10
   },
-  titulo: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333'
-  }
+  titulo: { color: '#fff', fontSize: 15, fontWeight: '700', flex: 1 }
 });
