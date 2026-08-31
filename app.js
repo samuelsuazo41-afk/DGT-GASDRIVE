@@ -1080,8 +1080,6 @@ const COCHES = [
   {id:'c16', nombre:'McLaren P1 GTR', emoji:'🏎️', precio:9000, cv:916, color:'hue-rotate(35deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #ff8800)'}, // naranja neón
   {id:'c17', nombre:'Bugatti Bolide', emoji:'🏎️', precio:16000, cv:1825, color:'hue-rotate(200deg) saturate(2.5) brightness(1.3) drop-shadow(0 0 10px #00d4ff)'} // azul eléctrico
 ];
-// Compatibilidad por si tienes código antiguo
-const COTXES = COCHES;
 
 const ACCESORIOS = [
   // Mecánica / Potencia
@@ -1138,7 +1136,6 @@ const ACCESORIOS = [
   {id:'a41', nombre:'Soporte Móvil', emoji:'📱', precio:180, hp:5},
   {id:'a42', nombre:'Dashcam', emoji:'🎥', precio:400, hp:10}
 ];
-const ACCESSORIS = ACCESORIOS;
 
 const EMOJI_TIENDA = [
   {id:'e1', emoji:'🦄', nombre:'Unicornio', precio:1000},
