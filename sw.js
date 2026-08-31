@@ -1,26 +1,25 @@
-const CACHE = 'gasdrive-es-v12.11'; // SUBE ESTA VERSION CADA VEZ QUE CAMBIES ALGO
+const CACHE = 'gasdrive-v10.7.4'; // SUBE ESTA VERSION CADA VEZ QUE CAMBIES ALGO
 const FILES = [
   './',
   './index.html',
   './app.js',
+  './styles.css',
   './temario.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  './privacidad.html',
-  './terminos.html',
 
-  // ===== BANCO NUEVO ES =====
-  './senales.json',
+  // ===== BANCO NUEVO =====
+  './senales.json', // TU JSON CON ruta_panel
 
-  // PDFs Temario - 5 archivos completos en ES
+  // PDFs Temario - 5 archivos completos
   './01_Senales_Tomo_I_RD_465_2025.pdf',
   './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
   './03_Manual_IX_Primeros_Auxilios_2025.pdf',
   './04_Manual_VIII_Mecanica_2024.pdf',
   './05_Medio_Ambiente_Distintivos_DGT_2025.pdf',
 
-  // ===== TODOS LOS PANELES DGT REALES =====
+  // ===== TODOS LOS PANELES DGT REALES DE TU JSON =====
   // P - PELIGRO
   './P-01_INTERSECCIONES.jpg',
   './P-02_PASO_A_NIVEL.jpg',
@@ -71,28 +70,7 @@ const FILES = [
   './S-200_A_S-203_PRESEÑAL.jpg',
   './S-220_A_S-222_PRESEÑAL2.jpg',
   './S-222A_A_S-230_PRESEÑAL3.jpg',
-  './S-321_A_S-342_DIRECCION.jpg',
-
-  // N - NORMAS
-  './N-01_ALCOHOL_DROGAS.jpg',
-  './N-02_VELOCIDADES.jpg',
-  './N-03_A_N-15_NORMAS.jpg',
-
-  // A - AUXILIOS (ya en ES)
-  './A-01_PAS_PROTEGER.jpg',
-  './A-02_AVISAR_112.jpg',
-  './A-03_HEMORRAGIAS_HERIDAS.jpg',
-  './A-04_TRAUMAS_FRACTURAS_QUEMADURAS.jpg',
-  './A-05_RCP.jpg',
-  './A-06_MOTORISTA_CASCO.jpg',
-  './A-07_BOTIQUIN_MATERIAL.jpg',
-
-  // M - MECANICA
-  './M-01_MOTOR.jpg',
-  './M-11_MASAS_DIMENSIONES.jpg',
-
-  // E - MEDIO AMBIENTE
-  './E-01_MASAS.jpg'
+  './S-321_A_S-342_DIRECCION.jpg'
 ];
 
 self.addEventListener('install', e => {
@@ -111,7 +89,8 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // Cache First: si esta en cache lo sirve, si no fetch
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request))
-  ); 
+  );
 });
