@@ -1,7 +1,7 @@
 {
-  "name": "GasDrive DGT España V8.5.2",
+  "name": "GasDrive DGT España V12.8",
   "short_name": "GasDrive ES",
-  "description": "630 Preguntas DGT 2026. Señales con imágenes. Modo offline. 100% Gratis.",
+  "description": "450 Preguntas DGT 2026. Modo offline. 87 Paneles reales RD 465/2025. 100% Gratis.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
