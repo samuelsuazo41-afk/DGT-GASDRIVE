@@ -133,7 +133,7 @@ const TIPS = [
 ];
 
 // 470 PREGUNTAS TEST DGT OFICIALES ES 2026
-const PREGUNTES = {
+const PREGUNTAS = {
   general: [
     {id:1,q:"¿Cuál es la velocidad máxima en zona urbana?",a:["30 km/h","50 km/h","60 km/h"],ok:1},
     {id:2,q:"¿Qué indica una luz amarilla intermitente?",a:["Parada total","Precaución","Acelera"],ok:1},
