@@ -1146,8 +1146,7 @@ const EMOJI_TIENDA = [
   {id:'e6', emoji:'⚡', nombre:'Rayo', precio:700}
 ];
 
-
- // ===== GASDRIVE DGT ES V12 FINAL - ESTADÍSTICA V12 COMPLETA - FIX RESUMEN 1% + P.DÉBILES FAMILIA REAL + EVOLUCIÓN + ORIENTACIÓN DGT =====
+// ===== GASDRIVE DGT ES V13 - BLOQUE 1 FINAL - 15 PREGUNTAS POR TANDA + ESTADISTICA + FAMILIA REAL =====
 let tipsData = [];
 let currentTip = 0;
 let tempsIniciTemari = null;
@@ -1258,7 +1257,21 @@ let estat = {
   emojis: JSON.parse(localStorage.getItem('gd_emojis')) || [],
   historial: JSON.parse(localStorage.getItem('gd_historial')) || [],
   stats: JSON.parse(localStorage.getItem('gd_stats')) || { tempsEstudiatAvui: 0, diaActual: new Date().toISOString().split('T')[0], paseCompletado: false, puntsDebils: {}, preguntesFetes: 0, encertsTotals: 0, perCategoria: {}, historialEvolucio: [], historialPregunta: {} },
-  test: { general: {idx:0,encerts:0,ratxa:0,puntuacio:0}, senales: {idx:0,encerts:0,ratxa:0,puntuacio:0}, senyals: {idx:0,encerts:0,ratxa:0,puntuacio:0}, trampas: {idx:0,encerts:0,ratxa:0,puntuacio:0}, trampes: {idx:0,encerts:0,ratxa:0,puntuacio:0}, normas: {idx:0,encerts:0,ratxa:0,puntuacio:0}, normes: {idx:0,encerts:0,ratxa:0,puntuacio:0}, mecanica: {idx:0,encerts:0,ratxa:0,puntuacio:0}, auxilios: {idx:0,encerts:0,ratxa:0,puntuacio:0}, auxilis: {idx:0,encerts:0,ratxa:0,puntuacio:0}, mediambient: {idx:0,encerts:0,ratxa:0,puntuacio:0}, medio_ambiente: {idx:0,encerts:0,ratxa:0,puntuacio:0} },
+  // ===== V13 - SISTEMA 15 PREGUNTAS POR TANDA - SIN ROMPER NADA =====
+  test: {
+    general: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    senales: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    senyals: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    trampas: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    trampes: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    normas: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    normes: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    mecanica: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    auxilios: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    auxilis: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    mediambient: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
+    medio_ambiente: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15}
+  },
   examen: { activa: false, preguntes: [], index: 0, encerts: 0, fallos: 0, timer: null, temps: 1800, categoria: 'general' },
   sit: { clima: {idx:0,encerts:0,puntuacio:0,current:null}, urbano: {idx:0,encerts:0,puntuacio:0,current:null}, urbà: {idx:0,encerts:0,puntuacio:0,current:null}, carretera: {idx:0,encerts:0,puntuacio:0,current:null}, emergencia: {idx:0,encerts:0,puntuacio:0,current:null}, emergència: {idx:0,encerts:0,puntuacio:0,current:null} }
 };
@@ -1266,7 +1279,7 @@ let estat = {
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 
 function init() {
-  console.log("GasDrive V12 ES - ESTADISTICA FINAL - Fix 1% + Familias Reales - PANELES OK");
+  console.log("GasDrive V13 - BLOQUE 1 - 15 preguntas por tanda - Fix 1% + Familias Reales");
   if(typeof PREGUNTES!== 'undefined'){
     if((!PREGUNTES.mecanica || PREGUNTES.mecanica.length===0) && typeof BANCO_MECANICA_66!== 'undefined'){ PREGUNTES.mecanica = BANCO_MECANICA_66; }
     if((!PREGUNTES.normas || PREGUNTES.normas.length===0) && typeof BANCO_PREGUNTAS_NORMAS_V1!== 'undefined'){ PREGUNTES.normas = BANCO_PREGUNTAS_NORMAS_V1; }
@@ -1276,9 +1289,7 @@ function init() {
   iniciarComptadorTemari();
   mostrarIntro();
   actualitzarCoins();
-  carregarPregunta('general'); carregarPregunta('senales'); carregarPregunta('normas'); carregarPregunta('mecanica'); carregarPregunta('auxilios'); carregarPregunta('medio_ambiente');
-  carregarSituacio('clima');
-  // Si existe modulo externo de garaje/tienda/temario (tu bloque guardado), lo cargamos
+  // Nota: carregarPregunta está en Bloque 2, se llamará cuando cargue
   try{ if(typeof carregarGaratge==='function') carregarGaratge(); }catch(e){}
   try{ if(typeof carregarBotiga==='function') carregarBotiga(); }catch(e){}
   try{ if(typeof carregarTemari==='function') carregarTemari(); }catch(e){}
@@ -1423,9 +1434,8 @@ function autoMapearTotesPreguntes() {
       return {...p, id: p.id || idCounter++, subtema: detall.nom, pag: detall.pag, detallReal: detall, familia: detall.familia };
     });
   }
-  console.log('✅ BANCO MAPEADO V12 FAMILIA REAL. Total:', getTotalBanco());
+  console.log('✅ BLOQUE 1 V13 MAPEADO - 15 por tanda listo. Total:', getTotalBanco());
 }
-
 
 function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
   if(!subtema || subtema === 'undefined') subtema = 'General'; if(!pagina) pagina = 1;
@@ -1454,8 +1464,6 @@ function dibuixarPuntsDebils_V94() {
     const detall = detallMillor || {nom:pitjorClau, desc:'', temari:'TEMARIO 1', pag:1, familia:pitjorClau};
     cont.innerHTML += `<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div><div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div><div style="color:#ccc; font-size:12px; margin-bottom:6px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div><div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Página <b>${detall.pag||1}</b> <button onclick="anarAPagina(${detall.pag||1})" style="background:#00D9FF; border:none; border-radius:6px; padding:4px 10px; margin-left:8px; cursor:pointer; font-weight:700; color:#000">Ir</button></div></div>`;
   });
-  const stats = calcularPreparacioDGT_V94();
-  if(stats.aprenent > 0) { cont.innerHTML += `<div style="margin-top:15px; padding:12px; background:#3d1f1f; border-radius:8px; color:#ff6b6b; font-weight:600">⚠️ ALERTA: Tienes ${stats.aprenent} preguntas que perderán memoria en 3 días. ¡Repásalas hoy!</div>`; }
 }
 
  function actualitzarOrientacioV11() {
@@ -1468,30 +1476,30 @@ function dibuixarPuntsDebils_V94() {
         <p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p>
         <p>⏱️ <b>30 minutos</b> máximo - Con práctica lo haces en 10 min</p>
         <p>✅ <b>27 aciertos mínimo</b> para aprobar - Máximo 3 fallos permitidos</p>
-        <p>🏫 <b>El día del examen:</b> Lleva DNI + Justificante cita. Llega 15 min antes. Aula con ordenadores. Resultado al momento en pantalla. Si suspendes, puedes repetir en 7-15 días.</p>
-        <p>💡 <b>Truco DGT que nadie explica:</b> Siempre la respuesta más segura y conservadora es la correcta. Palabras absolutas como "siempre, nunca, en todo caso" son trampa.</p>
+        <p>🏫 <b>El día del examen:</b> Lleva DNI + Justificante cita. Llega 15 min antes.</p>
+        <p>💡 <b>Truco DGT:</b> Siempre la respuesta más segura y conservadora es la correcta.</p>
       </div>
     </div>
-    <h3 style="color:#00D9FF; margin:15px 0 10px;">📚 MÉTODO GASDRIVE - 3 PASOS QUE YA TIENES EN EL PASE</h3>
+    <h3 style="color:#00D9FF; margin:15px 0 10px;">📚 MÉTODO GASDRIVE - 3 PASOS</h3>
     <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #2ecc71; border-radius:8px;">
-      <div style="font-weight:700; color:#2ecc71;">1. Empieza por el TEMARIO - 5 minutos cada temario al día (20 min total PASE)</div>
-      <div style="color:#ccc; font-size:12px; margin-top:4px;">No estudies 20 min seguidos de un temario. Haz 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS y MEDIO AMBIENTE. Esto te desbloquea el PASE y te da +50 coins. El contador cuenta automático cuando estás en TEMARIO.</div>
+      <div style="font-weight:700; color:#2ecc71;">1. TEMARIO 20 min/día (5 min x temario)</div>
+      <div style="color:#ccc; font-size:12px;">Te desbloquea el PASE y +50 coins.</div>
     </div>
     <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:8px;">
-      <div style="font-weight:700; color:#FFD700;">2. Haz TESTS diarios para mejorar porcentaje de preparación</div>
-      <div style="color:#ccc; font-size:12px; margin-top:4px;">Practica 30-60 tests diarios. El % no es solo aciertos. Es: 30% Retención (preguntas que dominas 3 días seguidos) + 40% Constancia (20 días válidos 30-60 preguntas 85% aciertos) + 20% Cobertura 7 días + 10% Estabilidad exámenes. Cuando llegues al 90% estás listo.</div>
+      <div style="font-weight:700; color:#FFD700;">2. TESTS de 15 preguntas</div>
+      <div style="color:#ccc; font-size:12px;">Rutina corta, sin aburrimiento. Cada 15 ves tu resultado y empiezas otra tanda nueva.</div>
     </div>
     <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #00D9FF; border-radius:8px;">
-      <div style="font-weight:700; color:#00D9FF;">3. Haz el EXAMEN - Pruébate en examen diario para mejorar preparación</div>
-      <div style="color:#ccc; font-size:12px; margin-top:4px;">Cuando tengas 90% global, haz 1 simulacro diario. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen son 30 preguntas mezcla de todos los paneles N-01..N-15 + S-100 + M- + A- + E-.</div>
+      <div style="font-weight:700; color:#00D9FF;">3. EXAMEN diario cuando llegues al 90%</div>
+      <div style="color:#ccc; font-size:12px;">Racha de 6 aprobados seguidos para ir seguro a DGT real.</div>
     </div>
   `;
 }
 
-function anarAPagina(pagina) { canviarTab_V94(null, 'temari'); alert(`Abre el TEMARIO en la Página ${pagina}`); }
+function anarAPagina(pagina) { canviarTab_V94(null, 'temari'); }
 
 function actualitzarEstadistiques_V94() {
-  const tab = document.getElementById('tab-estadistiques') || document.getElementById('tab-estad') || document.getElementById('tab-estadistiques-V12');
+  const tab = document.getElementById('tab-estadistiques') || document.getElementById('tab-estad') ;
   if(!tab ||!tab.classList.contains('active')) {
     const maybeActive = document.querySelector('.tab-content.active');
     if(!maybeActive ||!maybeActive.id.includes('estad')) return;
@@ -1501,7 +1509,7 @@ function actualitzarEstadistiques_V94() {
   const falta = Math.max(0, 90 - preparacioArrodonida);
   const el1 = document.getElementById('stats-global-percent'); if(el1) el1.textContent = preparacioArrodonida + '%';
   const el1b = document.getElementById('stats-global-falta') || document.getElementById('stats-global-text');
-  if(el1b) el1b.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Ya estás listo para DGT!` : `${preparacioArrodonida}% - Te falta ${falta}% para llegar al 90% DGT`;
+  if(el1b) el1b.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Listo para DGT!` : `${preparacioArrodonida}% - Te falta ${falta}% para el 90%`;
   const el2 = document.getElementById('stats-global-bar'); if(el2) el2.style.width = preparacioArrodonida + '%';
   const el3 = document.getElementById('stats-domini-percent'); if(el3) el3.textContent = Math.round(stats.retencio) + '%';
   const el4 = document.getElementById('stats-domini-bar'); if(el4) el4.style.width = Math.round(stats.retencio) + '%';
@@ -1530,28 +1538,46 @@ function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 20 - Math.floo
 function barrejarArray(arr) { const a = arr.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function normalizarPregunta(p){ const q = p.q || p.pregunta || ''; const a = p.a || p.opcions || p.opciones || []; const ok = p.ok!==undefined? p.ok : (p.correcta!==undefined? p.correcta : 0); return {...p, q, a, ok, pregunta: q, opcions: a, correcta: ok}; }
 
+// ===== V13 - CARREGAR PREGUNTA 15 POR TANDA =====
 function carregarPregunta(cat) {
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   let catReal = catNet; if(catNet==='senales') catReal='senyals'; if(catNet==='normas') catReal='normes'; if(catNet==='auxilios') catReal='auxilis'; if(catNet==='medio_ambiente' || catNet==='medioambiente') catReal='mediambient';
   const s = estat.test[catNet] || estat.test[catReal]; if(!s) return;
   const banco = (typeof PREGUNTES!=='undefined' && PREGUNTES[catNet])? PREGUNTES[catNet] : (typeof PREGUNTES!=='undefined' && PREGUNTES[catReal]? PREGUNTES[catReal] : null);
   if(!banco || banco.length===0) return;
-  const preguntes = barrejarArray(banco); const pOriginal = preguntes[s.idx % preguntes.length];
-  const pNorm = normalizarPregunta(pOriginal); const textCorrecte = pNorm.a[pNorm.ok]; const opcionsBarrejades = barrejarArray(pNorm.a); const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
-  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.idx)}; s.current = p;
-  pintarImatgeSiExisteix(catNet, pOriginal); pintarImatgeSiExisteix(catReal, pOriginal); pintarImatgeSiExisteix(cat, pOriginal);
+
+  // === NUEVO: GENERAR TANDA DE 15 ===
+  if(!s.sesionPreguntas || s.sesionPreguntas.length===0 || s.sesionIndex >= s.totalSesion){
+    s.sesionPreguntas = barrejarArray(banco).slice(0, Math.min(15, banco.length));
+    s.sesionIndex = 0;
+    s.encertsSesion = 0;
+  }
+
+  const pOriginal = s.sesionPreguntas[s.sesionIndex];
+  if(!pOriginal) return;
+  const pNorm = normalizarPregunta(pOriginal);
+  const textCorrecte = pNorm.a[pNorm.ok];
+  const opcionsBarrejades = barrejarArray(pNorm.a);
+  const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
+  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.sesionIndex)};
+  s.current = p;
+
+  pintarImatgeSiExisteix(catNet, pOriginal); pintarImatgeSiExisteix(catReal, pOriginal);
+
   const preguntaEl = document.getElementById(`test-${catNet}-pregunta`) || document.getElementById(`test-${catReal}-pregunta`) || document.getElementById(`test-${cat}-pregunta`);
-  if(preguntaEl){ const audioTxt = pOriginal.audio || p.q || ''; const audioSafe = audioTxt.replace(/'/g, "\\'"); preguntaEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; margin-left:8px;">🔊</button>`; }
-  const acEl = document.getElementById(`test-${catNet}-aciertos`) || document.getElementById(`test-${catReal}-aciertos`); if(acEl) acEl.textContent = s.encerts;
-  const progEl = document.getElementById(`test-${catNet}-progress`) || document.getElementById(`test-${catReal}-progress`); if(progEl) progEl.style.width = `${((s.idx % preguntes.length)/preguntes.length)*100}%`;
+  if(preguntaEl){ const audioSafe = (p.q||'').replace(/'/g, "\\'"); preguntaEl.innerHTML = `${s.sesionIndex+1}/15 - ${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
+  const acEl = document.getElementById(`test-${catNet}-aciertos`) || document.getElementById(`test-${catReal}-aciertos`); if(acEl) acEl.textContent = s.encertsSesion + '/' + s.totalSesion;
+  const progEl = document.getElementById(`test-${catNet}-progress`) || document.getElementById(`test-${catReal}-progress`); if(progEl) progEl.style.width = `${((s.sesionIndex)/s.totalSesion)*100}%`;
   const cont = document.getElementById(`test-${catNet}-opciones`) || document.getElementById(`test-${catReal}-opciones`) || document.getElementById(`test-${cat}-opciones`); if(!cont) return; cont.innerHTML = '';
   const fb = document.getElementById(`test-${catNet}-feedback`) || document.getElementById(`test-${catReal}-feedback`); if(fb) fb.textContent = '';
   const tipIds = [`test-${catNet}-tip`, `test-${catReal}-tip`, `test-${cat}-tip`]; tipIds.forEach(id=>{ const t=document.getElementById(id); if(t){ t.innerHTML=''; t.style.display='none'; }});
-  const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; }
+  const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; btnSig.textContent = (s.sesionIndex===s.totalSesion-1? 'Ver resultado →' : 'Siguiente →'); }
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreTest_V94(catReal, i, this); }; cont.appendChild(div); });
 }
+
 function parlar(text) { if('speechSynthesis' in window){ speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'es-ES'; utterance.rate = 0.9; speechSynthesis.speak(utterance); } }
 
+// ===== TESTS CON TIPS - V13 =====
 function respondreTest_V94(cat, idx, el) {
   if(!potFerTests()) return mostrarPopupPase();
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -1560,18 +1586,61 @@ function respondreTest_V94(cat, idx, el) {
   if(!cont || cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
   cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada'));
   const correcte = idx === p.ok;
-  if(correcte) { el.classList.add('correcta'); s.encerts++; s.ratxa++; s.puntuacio += 10 + (s.ratxa * 2); estat.coins += 5; }
-  else { el.classList.add('incorrecta'); const ops = cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta'); s.ratxa = 0; registrarFallada(catNet, p.subtema, p.pag, p); }
+  if(correcte) { el.classList.add('correcta'); s.encerts++; s.encertsSesion++; s.ratxa++; s.puntuacio += 10 + (s.ratxa * 2); estat.coins += 5; mostrarEmoji(true, el); }
+  else { el.classList.add('incorrecta'); const ops = cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta'); s.ratxa = 0; registrarFallada(catNet, p.subtema, p.pag, p); mostrarEmoji(false, el); }
   actualizarMetricasTest(catNet, p.id, correcte); registrarHistorialPregunta(p.id, correcte); actualitzarCoins(); guardar();
-  // TIP SOLO EN TESTS - EN EXAMEN NO
-  if(!estat.examen.activa){
-    const tipDiv = document.getElementById(`test-${catNet}-tip`) || document.getElementById(`test-${cat}-tip`);
-    if(tipDiv){ const txt = p.tip || p.explicacion || ""; if(txt){ tipDiv.innerHTML = `💡 ${txt}`; tipDiv.style.display = 'block'; tipDiv.style.border = '3px solid #00D9FF'; tipDiv.style.background = '#fff9c4'; tipDiv.style.color = '#000'; tipDiv.style.padding = '14px'; tipDiv.style.borderRadius = '12px'; } }
+
+  // TIP EN TESTS - SIEMPRE
+  const tipDiv = document.getElementById(`test-${catNet}-tip`) || document.getElementById(`test-${catReal}-tip`) || document.getElementById(`test-${cat}-tip`);
+  if(tipDiv){
+    const txt = p.tip || p.explicacion || p.explicacio || "";
+    if(txt){
+      tipDiv.innerHTML = `💡 <b>CONSEJO DGT:</b> ${txt}`;
+      tipDiv.style.display = 'block';
+      tipDiv.style.border = '2px solid #00D9FF';
+      tipDiv.style.background = '#fff9c4';
+      tipDiv.style.color = '#000';
+      tipDiv.style.padding = '14px';
+      tipDiv.style.borderRadius = '12px';
+      tipDiv.style.marginTop = '12px';
+      tipDiv.style.fontWeight = '600';
+      tipDiv.style.fontSize = '13px';
+      tipDiv.style.lineHeight = '1.4';
+    }
   }
   const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; }
 }
-function seguentTest(e, cat) { e.preventDefault(); const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); if(estat.test[catNet]) estat.test[catNet].idx++; else if(estat.test[cat]) estat.test[cat].idx++; carregarPregunta(catNet); }
 
+function seguentTest(e, cat) {
+  e.preventDefault();
+  const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const s = estat.test[catNet] || estat.test[cat];
+  if(!s) return;
+  s.sesionIndex++;
+  s.idx++;
+
+  // SI TERMINO LAS 15 -> MOSTRAR RESULTADO Y REINICIAR
+  if(s.sesionIndex >= s.totalSesion){
+    const pct = Math.round((s.encertsSesion / s.totalSesion)*100);
+    const msg = s.encertsSesion >= 12? '🔥 ¡TANDA PERFECTA!' : s.encertsSesion >= 9? '💪 ¡Buen trabajo!' : '📚 Sigue practicando';
+    // Modal resultado tanda
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `<div style="background:#1a1a1a; border:3px solid #00D9FF; border-radius:20px; padding:24px; max-width:340px; width:100%; text-align:center;"><h2 style="color:#00D9FF; margin-bottom:10px;">${msg}</h2><div style="font-size:42px; font-weight:800; color:#FFD700; margin:10px 0;">${s.encertsSesion}/${s.totalSesion}</div><div style="color:#fff; font-size:18px;">${pct}% aciertos</div><div style="color:#2ecc71; margin-top:10px;">+${s.encertsSesion*5} coins ganados</div><button id="btn-continuar-tanda" style="background:#00D9FF; color:#000; border:none; padding:12px 20px; border-radius:12px; font-weight:800; margin-top:16px; width:100%; cursor:pointer;">Siguiente tanda de 15 →</button></div>`;
+    document.body.appendChild(modal);
+    document.getElementById('btn-continuar-tanda').onclick = () => {
+      modal.remove();
+      s.sesionPreguntas = [];
+      s.sesionIndex = 0;
+      s.encertsSesion = 0;
+      carregarPregunta(catNet);
+    };
+    return;
+  }
+  carregarPregunta(catNet);
+}
+
+// ===== SITUACIONES (igual) =====
 function carregarSituacio(cat) {
   if(!cat) cat = sitCategoriaActiva; const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
   const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm]; const banco = (typeof SITUACIONS!=='undefined' && SITUACIONS[cat])? SITUACIONS[cat] : (typeof SITUACIONS!=='undefined' && SITUACIONS[keySit]? SITUACIONS[keySit] : null); if(!banco) return;
@@ -1590,7 +1659,7 @@ function respondreSituacio_V94(cat, idx, el) {
 }
 function seguentSituacio(e, cat) { e.preventDefault(); if(estat.sit[cat]) estat.sit[cat].idx++; carregarSituacio(cat); }
 
-// ===== EXAMEN - SIN TIPS - FIX =====
+// ===== EXAMEN SIN TIPS =====
 function iniciarExamen(e) {
   if(!potFerTests()) return mostrarPopupPase(); let totes = [];
   if(typeof PREGUNTES!== 'undefined') { for(let key in PREGUNTES) { if(Array.isArray(PREGUNTES[key])) totes = totes.concat(PREGUNTES[key]); } }
@@ -1614,7 +1683,7 @@ function carregarPreguntaExamen() {
   const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts;
   const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = `${(estat.examen.index/30)*100}%`;
   const preEl = document.getElementById('examen-pregunta');
-  if(preEl) { const audioTxt = p.q || ''; const audioSafe = audioTxt.replace(/'/g, "\\'"); preEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
+  if(preEl) { const audioSafe = (p.q||'').replace(/'/g, "\\'"); preEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
   const cont = document.getElementById('examen-opciones'); if(!cont) return; cont.innerHTML = '';
   const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; }
   const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
@@ -1628,7 +1697,6 @@ function respondreExamen(idx, el) {
   else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); estat.examen.fallos++; registrarFallada('examen', p.subtema, p.pag, p); }
   const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; }
   const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; actualitzarCoins(); guardar();
-  // FIX EXAMEN SIN TIPS - NO MOSTRAMOS NADA
   const tipDiv = document.getElementById('examen-tip'); if(tipDiv){ tipDiv.innerHTML=''; tipDiv.style.display='none'; }
 }
 function seguentPreguntaExamen(e) { e.preventDefault(); estat.examen.index++; if(estat.examen.index >= 30) { finalitzarExamen(); } else { carregarPreguntaExamen(); } }
@@ -1651,7 +1719,6 @@ function reiniciarExamen() {
   const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = '0%';
   const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = '30:00';
   const imgEl = document.getElementById('examen-imagen'); if(imgEl) imgEl.innerHTML = '';
-  const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
 }
 
 // ===== GARAJE 17 + TIENDA 42 - FIX COMPATIBILIDAD =====
@@ -1709,20 +1776,51 @@ function comprarEmoji(id) {
 function carregarTemari() {
   const container = document.getElementById('temari-lista') || document.getElementById('temario-lista'); if(!container) return;
   container.innerHTML = `
-  <div class="temari-item" onclick="obrirPDF('01_Senales_Tomo_I_RD_465_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚦</div><div><div style="color:#fff;font-weight:700">01 - Señales Tomo I RD 465/2025</div><small style="color:#888">8,81 MB</small></div></div>
-  <div class="temari-item" onclick="obrirPDF('02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">📋</div><div><div style="color:#fff;font-weight:700">02 - Normas Circulación Tomo II Edición 2024</div><small style="color:#888">11,63 MB</small></div></div>
-  <div class="temari-item" onclick="obrirPDF('03_Manual_IX_Primeros_Auxilios_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚑</div><div><div style="color:#fff;font-weight:700">03 - Primeros Auxilios 2025</div><small style="color:#888">6,24 MB</small></div></div>
-  <div class="temari-item" onclick="obrirPDF('04_Manual_VIII_Mecanica_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">⚙️</div><div><div style="color:#fff;font-weight:700">04 - Mecánica 2024</div><small style="color:#2ecc71">13,57 MB ✓</small></div></div>
-  <div class="temari-item" onclick="obrirPDF('05_Medio_Ambiente_Distintivos_DGT_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">♻️</div><div><div style="color:#fff;font-weight:700">05 - Medio Ambiente Distintivos DGT 2025</div><small style="color:#888">3,10 MB</small></div></div>`;
+  <div class="temari-item" onclick="obrirPDF('01_Senales_Tomo_I_RD_465_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚦</div><div><div style="color:#fff;font-weight:700">01 - Señales Tomo I RD 465/2025</div></div></div>
+  <div class="temari-item" onclick="obrirPDF('02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">📋</div><div><div style="color:#fff;font-weight:700">02 - Normas Circulación Tomo II</div></div></div>
+  <div class="temari-item" onclick="obrirPDF('03_Manual_IX_Primeros_Auxilios_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚑</div><div><div style="color:#fff;font-weight:700">03 - Primeros Auxilios 2025</div></div></div>
+  <div class="temari-item" onclick="obrirPDF('04_Manual_VIII_Mecanica_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">⚙️</div><div><div style="color:#fff;font-weight:700">04 - Mecánica 2024</div></div></div>
+  <div class="temari-item" onclick="obrirPDF('05_Medio_Ambiente_Distintivos_DGT_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">♻️</div><div><div style="color:#fff;font-weight:700">05 - Medio Ambiente DGT 2025</div></div></div>`;
 }
 function obrirPDF(ruta) {
   const nombre = ruta.split('/').pop();
   const modal = document.createElement('div'); modal.id = 'pdf-modal';
   modal.style.cssText = `position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;`;
-  modal.innerHTML = `<div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333"><button onclick="tancarPDF()" style="background:#00D9FF;border:none;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;">← Volver</button><div style="color:#fff;font-size:12px;font-weight:700;max-width:180px;overflow:hidden;text-overflow:ellipsis;">${nombre}</div><div style="width:60px"></div></div><iframe src="./${nombre}" style="flex:1;border:none;width:100%;background:#fff"></iframe>`;
+  modal.innerHTML = `<div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333"><button onclick="tancarPDF()" style="background:#00D9FF;border:none;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;">← Volver</button><div style="color:#fff;font-size:12px;font-weight:700;">${nombre}</div><div style="width:60px"></div></div><iframe src="./${nombre}" style="flex:1;border:none;width:100%;background:#fff"></iframe>`;
   document.body.appendChild(modal);
 }
 function tancarPDF() { const modal = document.getElementById('pdf-modal'); if(modal) modal.remove(); }
+
+// ===== TIPS REPARADO - V13 =====
+function carregarTips() {
+  if(typeof TIPS === 'undefined' ||!TIPS || TIPS.length===0){
+    const cont = document.getElementById('tip-content');
+    if(cont) cont.innerHTML = '<div style="color:#999; text-align:center; padding:20px;">No hay tips cargados.<br>Verifica TIPS.js</div>';
+    return;
+  }
+  tipsData = TIPS;
+  currentTip = 0;
+  mostrarTip();
+}
+function mostrarTip() {
+  if (!tipsData || tipsData.length === 0) return;
+  const tip = tipsData[currentTip];
+  const txt = tip.txt || tip.texto || tip.tip || '';
+  const emoji = tip.emoji || '💡';
+  const contentEl = document.getElementById('tip-content');
+  if(contentEl){
+    contentEl.innerHTML = `
+      <div style="text-align:center;">
+        <div style="font-size:56px; margin-bottom:12px; filter:drop-shadow(0 0 10px #00D9FF);">${emoji}</div>
+        <div style="color:#FFD700; font-size:12px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">CONSEJO DGT ${currentTip+1}/${tipsData.length}</div>
+        <div style="background:#fff9c4; color:#000; padding:16px; border-radius:14px; border:3px solid #00D9FF; font-size:15px; font-weight:600; line-height:1.5; text-align:left; box-shadow:0 0 20px rgba(0,217,255,0.3);">${txt}</div>
+      </div>`;
+  }
+  const counterEl = document.getElementById('tip-counter');
+  if(counterEl) counterEl.textContent = `${currentTip + 1} / ${tipsData.length}`;
+}
+function nextTip(e) { if(e) e.preventDefault(); if(!tipsData || tipsData.length===0) return; currentTip = (currentTip + 1) % tipsData.length; mostrarTip(); }
+function prevTip(e) { if(e) e.preventDefault(); if(!tipsData || tipsData.length===0) return; currentTip = (currentTip - 1 + tipsData.length) % tipsData.length; mostrarTip(); }
 
 function dibujarGraficaEvolucion() {
   const canvas = document.getElementById('grafica-evolucion'); if(!canvas) return; const ctx = canvas.getContext('2d'); const dades = getDadesEvolucio();
@@ -1733,7 +1831,6 @@ function dibujarGraficaEvolucion() {
   ctx.strokeStyle = '#00D9FF'; ctx.lineWidth = 3; ctx.beginPath();
   dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
 }
-
 function mostrarIntro(){}
 function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "¡Vas por buen camino! 💪"; }
 
@@ -1742,7 +1839,11 @@ function canviarTab_V94(e, tab) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   const targetTab = document.getElementById('tab-' + tab); if(targetTab) targetTab.classList.add('active');
   if(e && e.target) { const btn = e.target.closest('.tab-btn'); if(btn) btn.classList.add('active'); }
-  if(tab === 'garage' || tab === 'garaje') carregarGaratge(); if(tab === 'tienda' || tab === 'botiga') carregarBotiga(); if(tab === 'temari' || tab === 'temario') { carregarTemari(); iniciarComptadorTemari(); }
+  if(tab === 'garage' || tab === 'garaje') carregarGaratge();
+  if(tab === 'tienda' || tab === 'botiga') carregarBotiga();
+  if(tab === 'temari' || tab === 'temario') { carregarTemari(); iniciarComptadorTemari(); }
+  if(tab === 'tips') carregarTips();
+  if(tab === 'test') { carregarPregunta('senales'); }
   if(tab === 'estadistiques' || tab === 'estadisticas') actualitzarEstadistiques_V94();
 }
 
@@ -1766,5 +1867,4 @@ function mostrarEmoji(encert, element) {
 }
 
 if('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }); }
-
   
