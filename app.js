@@ -1147,7 +1147,7 @@ const EMOJI_TIENDA = [
 ];
 
 
-// ===== GASDRIVE DGT ES V12 FINAL - ESTADÍSTICA V12 COMPLETA - FIX RESUMEN 1% + P.DÉBILES FAMILIA REAL + EVOLUCIÓN + ORIENTACIÓN DGT =====
+ // ===== GASDRIVE DGT ES V12 FINAL - ESTADÍSTICA V12 COMPLETA - FIX RESUMEN 1% + P.DÉBILES FAMILIA REAL + EVOLUCIÓN + ORIENTACIÓN DGT =====
 let tipsData = [];
 let currentTip = 0;
 let tempsIniciTemari = null;
@@ -1278,6 +1278,10 @@ function init() {
   actualitzarCoins();
   carregarPregunta('general'); carregarPregunta('senales'); carregarPregunta('normas'); carregarPregunta('mecanica'); carregarPregunta('auxilios'); carregarPregunta('medio_ambiente');
   carregarSituacio('clima');
+  // Si existe modulo externo de garaje/tienda/temario (tu bloque guardado), lo cargamos
+  try{ if(typeof carregarGaratge==='function') carregarGaratge(); }catch(e){}
+  try{ if(typeof carregarBotiga==='function') carregarBotiga(); }catch(e){}
+  try{ if(typeof carregarTemari==='function') carregarTemari(); }catch(e){}
   actualitzarMissatgeMotivacional();
 }
 
@@ -1422,6 +1426,7 @@ function autoMapearTotesPreguntes() {
   console.log('✅ BANCO MAPEADO V12 FAMILIA REAL. Total:', getTotalBanco());
 }
 
+
 function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
   if(!subtema || subtema === 'undefined') subtema = 'General'; if(!pagina) pagina = 1;
   if(!estat.stats.puntsDebils) estat.stats.puntsDebils = {};
@@ -1480,19 +1485,11 @@ function dibuixarPuntsDebils_V94() {
       <div style="font-weight:700; color:#00D9FF;">3. Haz el EXAMEN - Pruébate en examen diario para mejorar preparación</div>
       <div style="color:#ccc; font-size:12px; margin-top:4px;">Cuando tengas 90% global, haz 1 simulacro diario. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen son 30 preguntas mezcla de todos los paneles N-01..N-15 + S-100 + M- + A- + E-.</div>
     </div>
-    <div style="margin-top:16px; padding:12px; background:#111; border-radius:8px; border:1px dashed #00D9FF;">
-      <div style="color:#00D9FF; font-weight:700; font-size:13px;">📍 Plan de Estudio Trampas + Familias Reales</div>
-      <div style="color:#999; font-size:12px; line-height:1.5; margin-top:6px;">
-        Cada panel tiene 5-6 preguntas con mismo pictograma. Si fallas N-01 alcohol, todas las de N-01 son misma familia. Si fallas S-105c servicios, son familia S-100 azul con pictograma blanco WC/gasolinera/hotel.<br>
-        No estudies 2 horas seguidas. Estudia 5 minutos cada temario, después 30-60 tests, después 1 examen. Constancia > intensidad. El sistema detecta si fallas en señales verticales de peligro P-, prohibición R-, o información S-100 y te lo dice exacto.
-      </div>
-    </div>
   `;
 }
 
 function anarAPagina(pagina) { canviarTab_V94(null, 'temari'); alert(`Abre el TEMARIO en la Página ${pagina}`); }
 
-// ===== V12 RESUMEN CON MENSAJE "FALTA X% PARA 90%" + % REDONDEADOS =====
 function actualitzarEstadistiques_V94() {
   const tab = document.getElementById('tab-estadistiques') || document.getElementById('tab-estad') || document.getElementById('tab-estadistiques-V12');
   if(!tab ||!tab.classList.contains('active')) {
@@ -1502,14 +1499,9 @@ function actualitzarEstadistiques_V94() {
   const stats = calcularPreparacioDGT_V94();
   const preparacioArrodonida = Math.round(stats.preparacio);
   const falta = Math.max(0, 90 - preparacioArrodonida);
-
-  const el1 = document.getElementById('stats-global-percent');
-  if(el1) el1.textContent = preparacioArrodonida + '%';
+  const el1 = document.getElementById('stats-global-percent'); if(el1) el1.textContent = preparacioArrodonida + '%';
   const el1b = document.getElementById('stats-global-falta') || document.getElementById('stats-global-text');
   if(el1b) el1b.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Ya estás listo para DGT!` : `${preparacioArrodonida}% - Te falta ${falta}% para llegar al 90% DGT`;
-  const elMotiv = document.getElementById('stats-resum-falta');
-  if(elMotiv) elMotiv.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Listo!` : `${preparacioArrodonida}% para llegar al 90% - Te falta ${falta}%`;
-
   const el2 = document.getElementById('stats-global-bar'); if(el2) el2.style.width = preparacioArrodonida + '%';
   const el3 = document.getElementById('stats-domini-percent'); if(el3) el3.textContent = Math.round(stats.retencio) + '%';
   const el4 = document.getElementById('stats-domini-bar'); if(el4) el4.style.width = Math.round(stats.retencio) + '%';
@@ -1521,81 +1513,43 @@ function actualitzarEstadistiques_V94() {
   const el10 = document.getElementById('stats-simulacres-percent'); if(el10) el10.textContent = Math.round(stats.estabilitat) + '%';
   const el11 = document.getElementById('stats-simulacres-bar'); if(el11) el11.style.width = Math.round(stats.estabilitat) + '%';
   const el12 = document.getElementById('stats-examen-aprobados'); if(el12) el12.textContent = `Mejor racha: ${stats.maxRatxa}/6 aprobados seguidos`;
-
-  document.querySelectorAll('[id*="retencio"], [id*="Retenció"]').forEach(e=>{ if(e.textContent.includes('.')){ const num = parseFloat(e.textContent); if(!isNaN(num)) e.textContent = Math.round(num)+'%'; } });
-
-  dibujarGraficaEvolucion();
-  dibuixarPuntsDebils_V94();
-  actualitzarOrientacioV11();
-  const btnDGT = document.getElementById('btn-dgt-oficial'); if(btnDGT){ btnDGT.style.opacity = preparacioArrodonida >= 90? '1' : '0.4'; btnDGT.style.pointerEvents = preparacioArrodonida >= 90? 'auto' : 'none'; }
+  dibujarGraficaEvolucion(); dibuixarPuntsDebils_V94(); actualitzarOrientacioV11();
 }
 
 function getDadesEvolucio() {
   return estat.stats.historialEvolucio.map(h => {
     let diaNum = '0';
-    if(h.dia && h.dia.includes('-')) {
-      const parts = h.dia.split('-'); diaNum = parts[2] || parts[0] || '0';
-      if(diaNum.includes('T')) diaNum = diaNum.split('T')[0];
-    } else if(h.dia && h.dia.includes('/')) { diaNum = h.dia.split('/')[0]; }
+    if(h.dia && h.dia.includes('-')) { const parts = h.dia.split('-'); diaNum = parts[2] || parts[0] || '0'; if(diaNum.includes('T')) diaNum = diaNum.split('T')[0]; }
+    else if(h.dia && h.dia.includes('/')) { diaNum = h.dia.split('/')[0]; }
     else { diaNum = (h.dia||'').toString().substring(0,2); }
-    diaNum = diaNum.replace(/^0+/, '') || '0';
-    return {dia: diaNum, global: Math.round(h.percent||0)};
+    diaNum = diaNum.replace(/^0+/, '') || '0'; return {dia: diaNum, global: Math.round(h.percent||0)};
   });
 }
-
 function potFerTests() { comprovarNouDia(); return estat.stats.paseCompletado; }
-function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 20 - Math.floor(estat.stats.tempsEstudiatAvui)); alert(`⛔ PASE BLOQUEADO\nEstudia ${minutsQueFalten} minutos más en el TEMARIO para desbloquear los tests de hoy.\n\nConsejo: Haz 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS = 20 min`); }
+function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 20 - Math.floor(estat.stats.tempsEstudiatAvui)); alert(`⛔ PASE BLOQUEADO\nEstudia ${minutsQueFalten} minutos más en el TEMARIO para desbloquear los tests de hoy.`); }
 function barrejarArray(arr) { const a = arr.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-
-function normalizarPregunta(p){
-  // FIX DEFINITIVO: entiende q/a/ok Y pregunta/opcions/correcta Y ruta_panel
-  const q = p.q || p.pregunta || '';
-  const a = p.a || p.opcions || p.opciones || [];
-  const ok = p.ok!==undefined? p.ok : (p.correcta!==undefined? p.correcta : 0);
-  return {...p, q, a, ok, pregunta: q, opcions: a, correcta: ok};
-}
+function normalizarPregunta(p){ const q = p.q || p.pregunta || ''; const a = p.a || p.opcions || p.opciones || []; const ok = p.ok!==undefined? p.ok : (p.correcta!==undefined? p.correcta : 0); return {...p, q, a, ok, pregunta: q, opcions: a, correcta: ok}; }
 
 function carregarPregunta(cat) {
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  let catReal = catNet;
-  if(catNet==='senales') catReal='senyals';
-  if(catNet==='normas') catReal='normes';
-  if(catNet==='auxilios') catReal='auxilis';
-  if(catNet==='medio_ambiente' || catNet==='medioambiente') catReal='mediambient';
-
+  let catReal = catNet; if(catNet==='senales') catReal='senyals'; if(catNet==='normas') catReal='normes'; if(catNet==='auxilios') catReal='auxilis'; if(catNet==='medio_ambiente' || catNet==='medioambiente') catReal='mediambient';
   const s = estat.test[catNet] || estat.test[catReal]; if(!s) return;
   const banco = (typeof PREGUNTES!=='undefined' && PREGUNTES[catNet])? PREGUNTES[catNet] : (typeof PREGUNTES!=='undefined' && PREGUNTES[catReal]? PREGUNTES[catReal] : null);
-  if(!banco || banco.length===0){ console.warn(`[V12] PREGUNTES.${catNet}/${catReal} vacío`); return; }
-  const preguntes = barrejarArray(banco);
-  const pOriginal = preguntes[s.idx % preguntes.length];
-  const pNorm = normalizarPregunta(pOriginal);
-  const textCorrecte = pNorm.a[pNorm.ok];
-  const opcionsBarrejades = barrejarArray(pNorm.a);
-  const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
-  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.idx)};
-  s.current = p;
+  if(!banco || banco.length===0) return;
+  const preguntes = barrejarArray(banco); const pOriginal = preguntes[s.idx % preguntes.length];
+  const pNorm = normalizarPregunta(pOriginal); const textCorrecte = pNorm.a[pNorm.ok]; const opcionsBarrejades = barrejarArray(pNorm.a); const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
+  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.idx)}; s.current = p;
   pintarImatgeSiExisteix(catNet, pOriginal); pintarImatgeSiExisteix(catReal, pOriginal); pintarImatgeSiExisteix(cat, pOriginal);
-
   const preguntaEl = document.getElementById(`test-${catNet}-pregunta`) || document.getElementById(`test-${catReal}-pregunta`) || document.getElementById(`test-${cat}-pregunta`);
-  if(preguntaEl){
-    const audioTxt = pOriginal.audio || p.q || '';
-    const audioSafe = audioTxt.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    preguntaEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; margin-left:8px; font-size:18px;">🔊</button>`;
-  }
+  if(preguntaEl){ const audioTxt = pOriginal.audio || p.q || ''; const audioSafe = audioTxt.replace(/'/g, "\\'"); preguntaEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; margin-left:8px;">🔊</button>`; }
   const acEl = document.getElementById(`test-${catNet}-aciertos`) || document.getElementById(`test-${catReal}-aciertos`); if(acEl) acEl.textContent = s.encerts;
-  const rachaEl = document.getElementById(`test-${catNet}-racha`) || document.getElementById(`test-${catReal}-racha`); if(rachaEl) rachaEl.textContent = s.ratxa;
-  const scoreEl = document.getElementById(`test-${catNet}-score`) || document.getElementById(`test-${catReal}-score`); if(scoreEl) scoreEl.textContent = s.puntuacio;
   const progEl = document.getElementById(`test-${catNet}-progress`) || document.getElementById(`test-${catReal}-progress`); if(progEl) progEl.style.width = `${((s.idx % preguntes.length)/preguntes.length)*100}%`;
-  const cont = document.getElementById(`test-${catNet}-opciones`) || document.getElementById(`test-${catReal}-opciones`) || document.getElementById(`test-${cat}-opciones`);
-  if(!cont) return; cont.innerHTML = '';
+  const cont = document.getElementById(`test-${catNet}-opciones`) || document.getElementById(`test-${catReal}-opciones`) || document.getElementById(`test-${cat}-opciones`); if(!cont) return; cont.innerHTML = '';
   const fb = document.getElementById(`test-${catNet}-feedback`) || document.getElementById(`test-${catReal}-feedback`); if(fb) fb.textContent = '';
-  const tipIds = [`test-${catNet}-tip`, `test-${catReal}-tip`, `test-${cat}-tip`, `test-mecanica-tip`, `test-mediambient-tip`, `test-medio_ambiente-tip`, `test-auxilios-tip`, `test-normas-tip`, `test-senales-tip`];
-  tipIds.forEach(id=>{ const t=document.getElementById(id); if(t){ t.innerHTML=''; t.style.display='none'; }});
-  const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${catReal}`) || document.getElementById(`btn-sig-test-${cat}`);
-  if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; btnSig.style.cursor = 'not-allowed'; }
+  const tipIds = [`test-${catNet}-tip`, `test-${catReal}-tip`, `test-${cat}-tip`]; tipIds.forEach(id=>{ const t=document.getElementById(id); if(t){ t.innerHTML=''; t.style.display='none'; }});
+  const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; }
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreTest_V94(catReal, i, this); }; cont.appendChild(div); });
 }
-
 function parlar(text) { if('speechSynthesis' in window){ speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'es-ES'; utterance.rate = 0.9; speechSynthesis.speak(utterance); } }
 
 function respondreTest_V94(cat, idx, el) {
@@ -1606,81 +1560,49 @@ function respondreTest_V94(cat, idx, el) {
   if(!cont || cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
   cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada'));
   const correcte = idx === p.ok;
-  if(correcte) {
-    el.classList.add('correcta'); s.encerts++; s.ratxa++; s.puntuacio += 10 + (s.ratxa * 2); estat.coins += 5;
-    const fb = document.getElementById(`test-${catNet}-feedback`) || document.getElementById(`test-${cat}-feedback`); if(fb){ fb.className = 'feedback acierto'; fb.textContent = `✅ ¡CORRECTO! +${10+(s.ratxa*2)} pts`; }
-    mostrarEmoji(true, el);
-  } else {
-    el.classList.add('incorrecta'); const ops = cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta');
-    const fb = document.getElementById(`test-${catNet}-feedback`) || document.getElementById(`test-${cat}-feedback`); if(fb){ fb.className = 'feedback fallo'; fb.textContent = '❌ FALLO'; }
-    mostrarEmoji(false, el); s.ratxa = 0; registrarFallada(catNet, p.subtema, p.pag, p);
-  }
+  if(correcte) { el.classList.add('correcta'); s.encerts++; s.ratxa++; s.puntuacio += 10 + (s.ratxa * 2); estat.coins += 5; }
+  else { el.classList.add('incorrecta'); const ops = cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta'); s.ratxa = 0; registrarFallada(catNet, p.subtema, p.pag, p); }
   actualizarMetricasTest(catNet, p.id, correcte); registrarHistorialPregunta(p.id, correcte); actualitzarCoins(); guardar();
-  const tipDiv = document.getElementById(`test-${catNet}-tip`) || document.getElementById(`test-${cat}-tip`) || document.getElementById(`test-mecanica-tip`) || document.getElementById(`test-mediambient-tip`) || document.getElementById(`test-medio_ambiente-tip`) || document.getElementById(`test-general-tip`);
-  if(tipDiv){
-    const txt = p.tip || p.explicacion || p.explicacio || "";
-    if(txt){ tipDiv.innerHTML = `💡 ${txt}`; tipDiv.style.display = 'block'; tipDiv.style.border = '3px solid #00D9FF'; tipDiv.style.background = '#fff9c4'; tipDiv.style.color = '#000'; tipDiv.style.padding = '14px'; tipDiv.style.borderRadius = '12px'; tipDiv.style.marginTop = '12px'; tipDiv.style.fontWeight = '700'; tipDiv.style.fontSize = '14px'; tipDiv.style.lineHeight = '1.4'; tipDiv.style.boxShadow = '0 0 15px rgba(0,217,255,0.3)'; }
+  // TIP SOLO EN TESTS - EN EXAMEN NO
+  if(!estat.examen.activa){
+    const tipDiv = document.getElementById(`test-${catNet}-tip`) || document.getElementById(`test-${cat}-tip`);
+    if(tipDiv){ const txt = p.tip || p.explicacion || ""; if(txt){ tipDiv.innerHTML = `💡 ${txt}`; tipDiv.style.display = 'block'; tipDiv.style.border = '3px solid #00D9FF'; tipDiv.style.background = '#fff9c4'; tipDiv.style.color = '#000'; tipDiv.style.padding = '14px'; tipDiv.style.borderRadius = '12px'; } }
   }
-  const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`);
-  if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; btnSig.style.cursor = 'pointer'; }
+  const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; }
 }
-
 function seguentTest(e, cat) { e.preventDefault(); const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); if(estat.test[catNet]) estat.test[catNet].idx++; else if(estat.test[cat]) estat.test[cat].idx++; carregarPregunta(catNet); }
 
 function carregarSituacio(cat) {
-  if(!cat) cat = sitCategoriaActiva;
-  const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  let catKey = cat; if(catNorm==='urbà'||catNorm==='urbano') catKey='clima'; // fallback handled below
-  let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
-  const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm] || estat.sit.urbano || estat.sit.clima;
-  const banco = (typeof SITUACIONS!=='undefined' && SITUACIONS[cat])? SITUACIONS[cat] : (typeof SITUACIONS!=='undefined' && SITUACIONS[keySit]? SITUACIONS[keySit] : (typeof SITUACIONES!=='undefined'? SITUACIONES[cat]||SITUACIONES[keySit]||SITUACIONES[catNorm] : null));
-  if(!banco) return;
-  const casos = barrejarArray(banco); if(!casos || casos.length === 0) return;
-  const pOriginal = casos[s.idx % casos.length];
-  const pNorm = normalizarPregunta(pOriginal);
-  const opcionsBarrejades = barrejarArray(pNorm.a); const textCorrecte = pNorm.a[pNorm.ok]; const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
-  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte}; s.current = p;
+  if(!cat) cat = sitCategoriaActiva; const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
+  const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm]; const banco = (typeof SITUACIONS!=='undefined' && SITUACIONS[cat])? SITUACIONS[cat] : (typeof SITUACIONS!=='undefined' && SITUACIONS[keySit]? SITUACIONS[keySit] : null); if(!banco) return;
+  const casos = barrejarArray(banco); if(!casos || casos.length === 0) return; const pOriginal = casos[s.idx % casos.length]; const pNorm = normalizarPregunta(pOriginal);
+  const opcionsBarrejades = barrejarArray(pNorm.a); const textCorrecte = pNorm.a[pNorm.ok]; const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte); const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte}; s.current = p;
   const preEl = document.getElementById(`sit-${cat}-pregunta`) || document.getElementById(`sit-${keySit}-pregunta`); if(preEl) preEl.textContent = p.q;
-  const acEl = document.getElementById(`sit-${cat}-aciertos`) || document.getElementById(`sit-${keySit}-aciertos`); if(acEl) acEl.textContent = s.encerts;
-  const scEl = document.getElementById(`sit-${cat}-score`) || document.getElementById(`sit-${keySit}-score`); if(scEl) scEl.textContent = s.puntuacio;
-  const prEl = document.getElementById(`sit-${cat}-progress`) || document.getElementById(`sit-${keySit}-progress`); if(prEl) prEl.style.width = `${((s.idx % casos.length)/casos.length)*100}%`;
   const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`); if(!cont) return; cont.innerHTML = '';
-  const fb = document.getElementById(`sit-${cat}-feedback`) || document.getElementById(`sit-${keySit}-feedback`); if(fb) fb.textContent = '';
-  const btnSig = document.getElementById(`btn-sig-sit-${cat}`) || document.getElementById(`btn-sig-sit-${keySit}`); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; btnSig.style.cursor = 'not-allowed'; }
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreSituacio_V94(cat, i, this); }; cont.appendChild(div); });
 }
-
 function respondreSituacio_V94(cat, idx, el) {
-  if(!potFerTests()) return mostrarPopupPase();
-  const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
-  const s = estat.sit[cat] || estat.sit[keySit]; const p = s.current;
-  const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`); if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
+  if(!potFerTests()) return mostrarPopupPase(); const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
+  const s = estat.sit[cat] || estat.sit[keySit]; const p = s.current; const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`); if(cont.querySelector('.correcta')) return;
   cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada')); const correcte = idx === p.ok;
-  if(correcte) { el.classList.add('correcta'); s.encerts++; s.puntuacio += 15; estat.coins += 10; const fb = document.getElementById(`sit-${cat}-feedback`)||document.getElementById(`sit-${keySit}-feedback`); if(fb){ fb.className = 'feedback acierto'; fb.textContent = `✅ ¡CORRECTO! +15 pts`; } mostrarEmoji(true, el); }
-  else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); const fb = document.getElementById(`sit-${cat}-feedback`)||document.getElementById(`sit-${keySit}-feedback`); if(fb){ fb.className = 'feedback fallo'; fb.textContent = '❌ FALLO'; } mostrarEmoji(false, el); registrarFallada('examen', p.subtema, p.pag, p); }
-  actualizarMetricasCaso(cat, p.id, correcte); registrarHistorialPregunta(p.id, correcte);
-  const btnSig = document.getElementById(`btn-sig-sit-${cat}`)||document.getElementById(`btn-sig-sit-${keySit}`); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; btnSig.style.cursor = 'pointer'; }
-  actualitzarCoins(); guardar();
+  if(correcte) { el.classList.add('correcta'); s.encerts++; s.puntuacio += 15; estat.coins += 10; } else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); registrarFallada('examen', p.subtema, p.pag, p); }
+  actualizarMetricasCaso(cat, p.id, correcte); registrarHistorialPregunta(p.id, correcte); actualitzarCoins(); guardar();
 }
+function seguentSituacio(e, cat) { e.preventDefault(); if(estat.sit[cat]) estat.sit[cat].idx++; carregarSituacio(cat); }
 
-function seguentSituacio(e, cat) { e.preventDefault(); const keySit = cat; if(estat.sit[keySit]) estat.sit[keySit].idx++; else if(estat.sit[cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()]) estat.sit[cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()].idx++; carregarSituacio(cat); }
-
+// ===== EXAMEN - SIN TIPS - FIX =====
 function iniciarExamen(e) {
   if(!potFerTests()) return mostrarPopupPase(); let totes = [];
-  if(typeof PREGUNTES!== 'undefined') { for(let key in PREGUNTES) { if(Array.isArray(PREGUNTES[key])) { totes = totes.concat(PREGUNTES[key]); } } }
-  if(typeof SITUACIONS!== 'undefined' && SITUACIONS.clima) { totes = totes.concat(SITUACIONS.clima.slice(0,5)); }
-  if(totes.length < 30) { alert(`Faltan preguntas. Tienes ${totes.length}, necesitas 30 mínimo.`); return; }
+  if(typeof PREGUNTES!== 'undefined') { for(let key in PREGUNTES) { if(Array.isArray(PREGUNTES[key])) totes = totes.concat(PREGUNTES[key]); } }
+  if(totes.length < 30) { alert(`Faltan preguntas. Tienes ${totes.length}`); return; }
   estat.examen.preguntes = barrejarArray(totes).slice(0, 30); estat.examen.activa = true; estat.examen.index = 0; estat.examen.encerts = 0; estat.examen.fallos = 0;
   const btnIni = document.getElementById('btn-iniciar-examen'); if(btnIni) btnIni.style.display = 'none'; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig) btnSig.style.display = 'block';
   iniciarTimerExamen(); carregarPreguntaExamen();
 }
-
 function iniciarTimerExamen() {
   clearInterval(estat.examen.timer); estat.examen.temps = 1800;
   estat.examen.timer = setInterval(() => { estat.examen.temps--; const min = Math.floor(estat.examen.temps / 60); const seg = estat.examen.temps % 60; const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`; if(estat.examen.temps <= 0) finalitzarExamen(); }, 1000);
 }
-
 function carregarPreguntaExamen() {
   if(estat.examen.index >= 30) return finalitzarExamen();
   const pOriginal = estat.examen.preguntes[estat.examen.index];
@@ -1692,35 +1614,32 @@ function carregarPreguntaExamen() {
   const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts;
   const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = `${(estat.examen.index/30)*100}%`;
   const preEl = document.getElementById('examen-pregunta');
-  if(preEl) { const audioTxt = p.q || p.audio || ''; const audioSafe = audioTxt.replace(/'/g, "\\'").replace(/"/g, '&quot;'); preEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; margin-left:8px; font-size:18px;">🔊</button>`; }
+  if(preEl) { const audioTxt = p.q || ''; const audioSafe = audioTxt.replace(/'/g, "\\'"); preEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
   const cont = document.getElementById('examen-opciones'); if(!cont) return; cont.innerHTML = '';
-  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; btnSig.style.cursor = 'not-allowed'; }
+  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; }
   const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreExamen(i, this); }; cont.appendChild(div); });
 }
-
 function respondreExamen(idx, el) {
   const p = estat.examen.preguntes[estat.examen.index]; const cont = document.getElementById('examen-opciones');
   if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
   cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada')); const correcte = idx === p.ok;
-  if(correcte) { el.classList.add('correcta'); estat.examen.encerts++; estat.coins += 20; mostrarEmoji(true, el); }
-  else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); estat.examen.fallos++; mostrarEmoji(false, el); registrarFallada('examen', p.subtema, p.pag, p); }
-  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; btnSig.style.cursor = 'pointer'; }
+  if(correcte) { el.classList.add('correcta'); estat.examen.encerts++; estat.coins += 20; }
+  else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); estat.examen.fallos++; registrarFallada('examen', p.subtema, p.pag, p); }
+  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; }
   const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; actualitzarCoins(); guardar();
-  const tipDiv = document.getElementById('examen-tip'); if(tipDiv){ const txt = p.tip || p.explicacion || p.explicacio || ""; if(txt){ tipDiv.innerHTML = `💡 ${txt}`; tipDiv.style.display = 'block'; tipDiv.style.border = '3px solid #00D9FF'; tipDiv.style.background = '#fff9c4'; tipDiv.style.color = '#000'; tipDiv.style.padding = '14px'; tipDiv.style.borderRadius = '12px'; tipDiv.style.marginTop = '12px'; tipDiv.style.fontWeight = '700'; } }
+  // FIX EXAMEN SIN TIPS - NO MOSTRAMOS NADA
+  const tipDiv = document.getElementById('examen-tip'); if(tipDiv){ tipDiv.innerHTML=''; tipDiv.style.display='none'; }
 }
-
 function seguentPreguntaExamen(e) { e.preventDefault(); estat.examen.index++; if(estat.examen.index >= 30) { finalitzarExamen(); } else { carregarPreguntaExamen(); } }
-
 function finalitzarExamen() {
   clearInterval(estat.examen.timer); estat.examen.activa = false; const nota = estat.examen.encerts; const aprovat = nota >= 27;
   PROGRESO.examen.realitzats++; if(aprovat) PROGRESO.examen.aprovats++; PROGRESO.examen.historial.push({data: estat.stats.diaActual, nota}); guardar();
   const res = document.getElementById('examen-resultat'); if(!res) return; res.style.display = 'block';
-  if(aprovat) { res.innerHTML = `<h2 style="color:#2ecc71">✅ ¡APROBADO!</h2><p style="font-size:24px">${nota}/30</p><p>Aciertos: ${nota} | Fallos: ${estat.examen.fallos}</p><p>Has ganado +${nota*20} coins</p><button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>`; estat.coins += nota * 20; }
-  else { res.innerHTML = `<h2 style="color:#e74c3c">❌ SUSPENSO</h2><p style="font-size:24px">${nota}/30</p><p>Aciertos: ${nota} | Fallos: ${estat.examen.fallos}</p><p>Necesitas 27 aciertos mínimo</p><button class="btn" onclick="reiniciarExamen()">Volver a intentar</button>`; }
+  if(aprovat) { res.innerHTML = `<h2 style="color:#2ecc71">✅ ¡APROBADO!</h2><p style="font-size:24px">${nota}/30</p><button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>`; estat.coins += nota * 20; }
+  else { res.innerHTML = `<h2 style="color:#e74c3c">❌ SUSPENSO</h2><p style="font-size:24px">${nota}/30</p><p>Necesitas 27</p><button class="btn" onclick="reiniciarExamen()">Volver a intentar</button>`; }
   actualitzarCoins(); guardar(); actualitzarEstadistiques_V94();
 }
-
 function reiniciarExamen() {
   const resEl = document.getElementById('examen-resultat'); if(resEl) resEl.style.display = 'none';
   const btnIni = document.getElementById('btn-iniciar-examen'); if(btnIni) btnIni.style.display = 'block';
@@ -1735,35 +1654,74 @@ function reiniciarExamen() {
   const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
 }
 
+// ===== GARAJE 17 + TIENDA 42 - FIX COMPATIBILIDAD =====
 function carregarGaratge() {
-  const cont = document.getElementById('garage-lista') || document.getElementById('garaje-lista'); if(!cont) return; cont.innerHTML = ''; let hpTotal = 90;
-  estat.accessoris.forEach(id => { const acc = (typeof ACCESSORIS!== 'undefined')? ACCESSORIS.find(a => a.id === id) : null; if(acc) hpTotal += acc.hp; });
-  const scoreEl = document.getElementById('garage-score') || document.getElementById('garaje-score'); if(scoreEl) scoreEl.textContent = `🏎️ ${hpTotal} CV`;
-  if(typeof COTXES === 'undefined'){ cont.innerHTML = `<div class="garage-car"><div style="font-size:40px">🚗</div><div>Turismo Base 90CV</div><div style="color:#2ecc71">✓ Propietario</div></div>`; return; }
-  COTXES.forEach(cotxe => {
-    const desbloquejat = estat.cotxes.includes(cotxe.id);
-    const div = document.createElement('div'); div.className = 'garage-car' + (desbloquejat? '' : ' locked');
-    div.innerHTML = `<div style="font-size:40px; filter:${cotxe.color||''}">${cotxe.emoji}</div><div>${cotxe.nom||cotxe.nombre}</div><div style="color:#667eea">${cotxe.cv} CV</div>${!desbloquejat? `<button class="btn-buy" onclick="comprarCotxe('${cotxe.id}')">Comprar ${cotxe.preu}💰</button>` : '<div style="color:#2ecc71">✓ Propietario</div>'}`;
+  const cont = document.getElementById('garage-lista') || document.getElementById('garaje-lista'); if(!cont) return; cont.innerHTML = '';
+  let hpTotal = 90;
+  estat.accessoris.forEach(id => {
+    const acc = (typeof ACCESORIOS!=='undefined'? ACCESORIOS.find(a => a.id === id) : null) || (typeof ACCESSORIS!=='undefined'? ACCESSORIS.find(a => a.id === id) : null);
+    if(acc) hpTotal += (acc.hp||0);
+  });
+  const scoreEl = document.getElementById('garage-score') || document.getElementById('garaje-score'); if(scoreEl) scoreEl.textContent = `🏎️ ${hpTotal} CV - ${estat.coins} 💰`;
+  const lista = (typeof COCHES!=='undefined'? COCHES : (typeof COTXES!=='undefined'? COTXES : []));
+  lista.forEach(cotxe => {
+    const id = cotxe.id; const nombre = cotxe.nombre || cotxe.nom || 'Coche'; const cv = cotxe.cv || 90;
+    const emoji = cotxe.emoji || '🚗'; const color = cotxe.color || ''; const precio = cotxe.precio || cotxe.preu || 200;
+    const desbloquejat = estat.cotxes.includes(id);
+    const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:12px;border-radius:12px;text-align:center;border:1px solid #333;margin-bottom:10px;';
+    div.innerHTML = `<div style="font-size:40px; filter:${color}">${emoji}</div><div style="color:#fff;font-size:13px;font-weight:700;">${nombre}</div><div style="color:#00D9FF;font-size:12px;">${cv} CV</div>${!desbloquejat? `<button onclick="comprarCotxe('${id}')" style="background:#00D9FF;border:none;padding:8px 12px;border-radius:8px;margin-top:6px;font-weight:700;cursor:pointer;width:100%;">Comprar ${precio} 💰</button>` : '<div style="color:#2ecc71;font-size:12px;margin-top:6px;">✓ En garaje</div>'}`;
     cont.appendChild(div);
   });
 }
-function comprarCotxe(id) { const cotxe = COTXES.find(c => c.id === id); if(!cotxe) return; if(estat.coins < cotxe.preu) { alert('No tienes suficientes coins'); return; } estat.coins -= cotxe.preu; estat.cotxes.push(id); guardar(); actualitzarCoins(); carregarGaratge(); }
+function comprarCotxe(id) {
+  const lista = (typeof COCHES!=='undefined'? COCHES : COTXES); const cotxe = lista.find(c => c.id === id); if(!cotxe) return;
+  const precio = cotxe.precio || cotxe.preu || 0;
+  if(estat.coins < precio) { alert('💰 Faltan monedas'); return; }
+  estat.coins -= precio; if(!estat.cotxes.includes(id)) estat.cotxes.push(id); guardar(); actualitzarCoins(); carregarGaratge();
+}
 function carregarBotiga() {
-  const cont = document.getElementById('emoji-tienda'); if(!cont) return; cont.innerHTML = '';
-  if(typeof ACCESSORIS!== 'undefined'){ ACCESSORIS.forEach(acc => { const comprat = estat.accessoris.includes(acc.id); const div = document.createElement('div'); div.className = 'emoji-item' + (comprat? ' locked' : ''); div.innerHTML = `<div style="font-size:40px">${acc.emoji}</div><div>${acc.nom||acc.nombre}</div><div style="color:#667eea">+${acc.hp} CV</div>${!comprat? `<button class="btn-buy" onclick="comprarAccessoris('${acc.id}')">Comprar ${acc.preu}💰</button>` : '<div style="color:#2ecc71">✓ Comprado</div>'}`; cont.appendChild(div); }); }
-  if(typeof EMOJI_BOTIGA!== 'undefined'){ EMOJI_BOTIGA.forEach(emoji => { const comprat = estat.emojis.includes(emoji.id); const div = document.createElement('div'); div.className = 'emoji-item' + (comprat? ' locked' : ''); div.innerHTML = `<div style="font-size:40px">${emoji.emoji}</div><div>${emoji.nom||emoji.nombre}</div><div style="color:#667eea">Cosmético</div>${!comprat? `<button class="btn-buy" onclick="comprarEmoji('${emoji.id}')">Comprar ${emoji.preu}💰</button>` : '<div style="color:#2ecc71">✓ Comprado</div>'}`; cont.appendChild(div); }); }
+  const cont = document.getElementById('emoji-tienda') || document.getElementById('tienda-lista'); if(!cont) return; cont.innerHTML = '';
+  const listaAcc = (typeof ACCESORIOS!=='undefined'? ACCESORIOS : (typeof ACCESSORIS!=='undefined'? ACCESSORIS : []));
+  const listaEmoji = (typeof EMOJI_TIENDA!=='undefined'? EMOJI_TIENDA : (typeof EMOJI_BOTIGA!=='undefined'? EMOJI_BOTIGA : []));
+  listaAcc.forEach(acc => {
+    const comprat = estat.accessoris.includes(acc.id); const precio = acc.precio || acc.preu || 0;
+    const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:10px;border-radius:10px;border:1px solid #333;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;';
+    div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px">${acc.emoji}</span><div><div style="color:#fff;font-size:12px;">${acc.nombre||acc.nom}</div><div style="color:#00D9FF;font-size:10px;">+${acc.hp} CV</div></div></div>${!comprat? `<button onclick="comprarAccessoris('${acc.id}')" style="background:#FFD700;border:none;padding:6px 10px;border-radius:6px;font-weight:700;cursor:pointer;">${precio} 💰</button>` : '<div style="color:#2ecc71">✓</div>'}`; cont.appendChild(div);
+  });
+  listaEmoji.forEach(emoji => {
+    const comprat = estat.emojis.includes(emoji.id); const precio = emoji.precio || emoji.preu || 0;
+    const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:10px;border-radius:10px;border:1px solid #333;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;';
+    div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px">${emoji.emoji}</span><span style="color:#fff;font-size:12px;">${emoji.nombre||emoji.nom}</span></div>${!comprat? `<button onclick="comprarEmoji('${emoji.id}')" style="background:#00D9FF;border:none;padding:6px 10px;border-radius:6px;font-weight:700;cursor:pointer;">${precio} 💰</button>` : '<div style="color:#2ecc71">✓</div>'}`; cont.appendChild(div);
+  });
 }
-function comprarAccessoris(id) { const acc = ACCESSORIS.find(a => a.id === id); if(!acc) return; if(estat.coins < acc.preu) { alert('No tienes suficientes coins'); return; } estat.coins -= acc.preu; estat.accessoris.push(id); guardar(); actualitzarCoins(); carregarBotiga(); }
-function comprarEmoji(id) { const emoji = EMOJI_BOTIGA.find(e => e.id === id); if(!emoji) return; if(estat.coins < emoji.preu) { alert('No tienes suficientes coins'); return; } estat.coins -= emoji.preu; estat.emojis.push(id); guardar(); actualitzarCoins(); carregarBotiga(); }
-function carregarTips() { if(typeof TIPS === 'undefined') return; tipsData = TIPS; currentTip = 0; mostrarTip(); }
-function mostrarTip() { if (tipsData.length === 0) return; const tip = tipsData[currentTip]; const contentEl = document.getElementById('tip-content'); if(contentEl) contentEl.innerHTML = `<div class="tip-emoji">${tip.emoji}</div><div class="tip-text">${tip.txt||tip.texto||''}</div>`; const counterEl = document.getElementById('tip-counter'); if(counterEl) counterEl.textContent = `${currentTip + 1} / ${tipsData.length}`; }
-function nextTip(e) { if(e) e.preventDefault(); currentTip = (currentTip + 1) % tipsData.length; mostrarTip(); }
-function prevTip(e) { if(e) e.preventDefault(); currentTip = (currentTip - 1 + tipsData.length) % tipsData.length; mostrarTip(); }
+function comprarAccessoris(id) {
+  const lista = (typeof ACCESORIOS!=='undefined'? ACCESORIOS : ACCESSORIS); const acc = lista.find(a => a.id === id); if(!acc) return;
+  const precio = acc.precio || acc.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; }
+  estat.coins -= precio; if(!estat.accessoris.includes(id)) estat.accessoris.push(id); guardar(); actualitzarCoins(); carregarBotiga(); carregarGaratge();
+}
+function comprarEmoji(id) {
+  const lista = (typeof EMOJI_TIENDA!=='undefined'? EMOJI_TIENDA : EMOJI_BOTIGA); const emoji = lista.find(e => e.id === id); if(!emoji) return;
+  const precio = emoji.precio || emoji.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; }
+  estat.coins -= precio; if(!estat.emojis.includes(id)) estat.emojis.push(id); guardar(); actualitzarCoins(); carregarBotiga();
+}
+
+// ===== TEMARIO 5 PDFs EXACTOS - FIX 404 =====
 function carregarTemari() {
-  const container = document.getElementById('temari-lista'); if(!container) return;
-  container.innerHTML = `<div class="temari-item" onclick="obrirPDF('./01_Senyals_Tomo_I_RD_465_2025.pdf')"><div style="font-size:40px">🚦</div><div>Señales</div></div><div class="temari-item" onclick="obrirPDF('./02_Normes_Circulacio_Tomo_II_Edicio_2024.pdf')"><div style="font-size:40px">📋</div><div>Normas</div></div><div class="temari-item" onclick="obrirPDF('./03_Manual_IX_Primers_Auxilis_2025.pdf')"><div style="font-size:40px">🚑</div><div>Auxilios</div></div><div class="temari-item" onclick="obrirPDF('./04_Manual_VIII_Mecanica_2024.pdf')"><div style="font-size:40px">⚙️</div><div>Mecánica</div></div><div class="temari-item" onclick="obrirPDF('./05_Medi_Ambient_Distintius_DGT_2025.pdf')"><div style="font-size:40px">♻️</div><div>Medio Ambiente</div></div>`;
+  const container = document.getElementById('temari-lista') || document.getElementById('temario-lista'); if(!container) return;
+  container.innerHTML = `
+  <div class="temari-item" onclick="obrirPDF('01_Senales_Tomo_I_RD_465_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚦</div><div><div style="color:#fff;font-weight:700">01 - Señales Tomo I RD 465/2025</div><small style="color:#888">8,81 MB</small></div></div>
+  <div class="temari-item" onclick="obrirPDF('02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">📋</div><div><div style="color:#fff;font-weight:700">02 - Normas Circulación Tomo II Edición 2024</div><small style="color:#888">11,63 MB</small></div></div>
+  <div class="temari-item" onclick="obrirPDF('03_Manual_IX_Primeros_Auxilios_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚑</div><div><div style="color:#fff;font-weight:700">03 - Primeros Auxilios 2025</div><small style="color:#888">6,24 MB</small></div></div>
+  <div class="temari-item" onclick="obrirPDF('04_Manual_VIII_Mecanica_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">⚙️</div><div><div style="color:#fff;font-weight:700">04 - Mecánica 2024</div><small style="color:#2ecc71">13,57 MB ✓</small></div></div>
+  <div class="temari-item" onclick="obrirPDF('05_Medio_Ambiente_Distintivos_DGT_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">♻️</div><div><div style="color:#fff;font-weight:700">05 - Medio Ambiente Distintivos DGT 2025</div><small style="color:#888">3,10 MB</small></div></div>`;
 }
-function obrirPDF(ruta) { const modal = document.createElement('div'); modal.id = 'pdf-modal'; modal.style.cssText = `position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;`; modal.innerHTML = `<div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333"><button onclick="tancarPDF()" style="background:none;border:none;color:#00D9FF;font-size:16px;font-weight:700">← Volver</button><div style="color:#fff;font-size:15px;font-weight:700">Temario DGT</div><div style="width:60px"></div></div><iframe src="${ruta}" style="flex:1;border:none;width:100%"></iframe>`; document.body.appendChild(modal); }
+function obrirPDF(ruta) {
+  const nombre = ruta.split('/').pop();
+  const modal = document.createElement('div'); modal.id = 'pdf-modal';
+  modal.style.cssText = `position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;`;
+  modal.innerHTML = `<div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333"><button onclick="tancarPDF()" style="background:#00D9FF;border:none;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;">← Volver</button><div style="color:#fff;font-size:12px;font-weight:700;max-width:180px;overflow:hidden;text-overflow:ellipsis;">${nombre}</div><div style="width:60px"></div></div><iframe src="./${nombre}" style="flex:1;border:none;width:100%;background:#fff"></iframe>`;
+  document.body.appendChild(modal);
+}
 function tancarPDF() { const modal = document.getElementById('pdf-modal'); if(modal) modal.remove(); }
 
 function dibujarGraficaEvolucion() {
@@ -1771,33 +1729,21 @@ function dibujarGraficaEvolucion() {
   if(canvas.width === 0) canvas.width = canvas.offsetWidth || 300; if(canvas.height === 0) canvas.height = 200;
   ctx.clearRect(0,0,canvas.width,canvas.height);
   if(dades.length === 0){ ctx.fillStyle = '#666'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Haz tests 2 días para ver evolución', canvas.width/2, canvas.height/2); return; }
-  ctx.strokeStyle = '#333'; ctx.lineWidth = 1; for(let i = 0; i <= 4; i++) { const y = 30 + (i * (canvas.height-60)/4); ctx.beginPath(); ctx.moveTo(30, y); ctx.lineTo(canvas.width-30, y); ctx.stroke(); ctx.fillStyle = '#666'; ctx.font = '10px sans-serif'; ctx.textAlign = 'left'; ctx.fillText((100 - i*25) + '%', 5, y+3); }
+  ctx.strokeStyle = '#333'; ctx.lineWidth = 1; for(let i = 0; i <= 4; i++) { const y = 30 + (i * (canvas.height-60)/4); ctx.beginPath(); ctx.moveTo(30, y); ctx.lineTo(canvas.width-30, y); ctx.stroke(); }
   ctx.strokeStyle = '#00D9FF'; ctx.lineWidth = 3; ctx.beginPath();
-  dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
-  ctx.stroke();
-  dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); ctx.fillStyle = '#00D9FF'; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(d.dia, x, canvas.height-10); ctx.fillText(d.global+'%', x, y-10); });
-  const stats = calcularPreparacioDGT_V94();
-  const msgEl = document.getElementById('evolucio-motivacio');
-  if(msgEl) {
-    if(stats.preparacio < 30) msgEl.textContent = `🚀 ${stats.preparacio}% - Acabas de empezar. Haz 5 min cada temario al día.`;
-    else if(stats.preparacio < 60) msgEl.textContent = `💪 ${stats.preparacio}% para llegar al 90% - Te falta ${90-stats.preparacio}% - ¡Vas mejorando!`;
-    else if(stats.preparacio < 90) msgEl.textContent = `🔥 ${stats.preparacio}% - Te falta ${90-stats.preparacio}% para DGT - ¡Ya casi estás!`;
-    else msgEl.textContent = `✅ ${stats.preparacio}% - ¡Ya estás listo para DGT! 6 aprobados seguidos.`;
-  }
+  dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
 }
 
 function mostrarIntro(){}
-function actualitzarMissatgeMotivacional() { const missatges = ["¡Vas por buen camino! 💪","Cada fallo te hace más fuerte 🔥","El examen DGT es tuyo 🚗","No pares ahora 💎","Concéntrate y aprobarás 👑"]; const msg = missatges[Math.floor(Math.random() * missatges.length)]; const el = document.getElementById('motivacio'); if(el) el.textContent = msg; }
+function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "¡Vas por buen camino! 💪"; }
 
 function canviarTab_V94(e, tab) {
   const tabTemari = document.getElementById('tab-temari'); if(tabTemari && tabTemari.classList.contains('active') && tempsIniciTemari!== null) { const minutsPassats = (Date.now() - tempsIniciTemari) / 1000 / 60; estat.stats.tempsEstudiatAvui += minutsPassats; tempsIniciTemari = null; guardar(); }
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   const targetTab = document.getElementById('tab-' + tab); if(targetTab) targetTab.classList.add('active');
   if(e && e.target) { const btn = e.target.closest('.tab-btn'); if(btn) btn.classList.add('active'); }
-  if(tab === 'garage') carregarGaratge(); if(tab === 'tienda') carregarBotiga(); if(tab === 'tips') carregarTips(); if(tab === 'temari') { carregarTemari(); iniciarComptadorTemari(); }
-  if(tab === 'test') carregarPregunta('general'); if(tab === 'situaciones') carregarSituacio(sitCategoriaActiva);
-  if(tab === 'estadistiques' || tab === 'estad' || tab === 'estadisticas') { actualitzarEstadistiques_V94(); actualitzarPaseUI(); }
-  if(['test', 'situaciones', 'examen'].includes(tab) &&!potFerTests()) { mostrarPopupPase(); }
+  if(tab === 'garage' || tab === 'garaje') carregarGaratge(); if(tab === 'tienda' || tab === 'botiga') carregarBotiga(); if(tab === 'temari' || tab === 'temario') { carregarTemari(); iniciarComptadorTemari(); }
+  if(tab === 'estadistiques' || tab === 'estadisticas') actualitzarEstadistiques_V94();
 }
 
 function canviarSubTab(e, tab, subtab) {
@@ -1806,24 +1752,19 @@ function canviarSubTab(e, tab, subtab) {
   contenidor.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active')); contenidor.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
   if(e && e.target) e.target.classList.add('active');
   const subNorm = subtab.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  const idsPosibles = [
-    `${tab === 'test'? 'test' : tab === 'stats'||tab==='estad'? 'stats' : 'sit'}-${subtab}`,
-    `${tab === 'test'? 'test' : tab === 'stats'||tab==='estad'? 'stats' : 'sit'}-${subNorm}`,
-    `stats-${subNorm}`, `sit-${subNorm}`, `test-${subNorm}`
-  ];
-  let encontrado = false;
-  idsPosibles.forEach(id=>{ const el=document.getElementById(id); if(el &&!encontrado){ el.classList.add('active'); encontrado=true; } });
+  const idsPosibles = [`${tab === 'test'? 'test' : tab === 'stats'||tab==='estad'? 'stats' : 'sit'}-${subtab}`, `${tab === 'test'? 'test' : tab === 'stats'||tab==='estad'? 'stats' : 'sit'}-${subNorm}`, `stats-${subNorm}`, `sit-${subNorm}`, `test-${subNorm}`];
+  let encontrado = false; idsPosibles.forEach(id=>{ const el=document.getElementById(id); if(el &&!encontrado){ el.classList.add('active'); encontrado=true; } });
   if(tab === 'test') carregarPregunta(subNorm); if(tab === 'sit') carregarSituacio(subtab); if(tab === 'stats' || tab === 'estad') { actualitzarEstadistiques_V94(); }
 }
 
 function mostrarEmoji(encert, element) {
-  if(typeof EMOJIS_ENCERT === 'undefined' || typeof EMOJIS_FALLO === 'undefined') return;
-  const llista = encert? EMOJIS_ENCERT : EMOJIS_FALLO; const emoji = llista[Math.floor(Math.random() * llista.length)];
-  const span = document.createElement('span'); span.textContent = emoji; span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:32px;animation:bounceIn 0.4s;pointer-events:none;z-index:999;';
-  element.style.position = 'relative'; element.appendChild(span); setTimeout(() => span.remove(), 600); if(navigator.vibrate) navigator.vibrate(encert? [30,20,30] : 100);
+  const llista = encert? ['✅','💪','🔥'] : ['❌','💥','😅'];
+  const emoji = llista[Math.floor(Math.random() * llista.length)];
+  const span = document.createElement('span'); span.textContent = emoji; span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;pointer-events:none;';
+  element.style.position = 'relative'; element.appendChild(span); setTimeout(() => span.remove(), 600);
+  if(navigator.vibrate) navigator.vibrate(encert? [30,20,30] : 100);
 }
 
-if('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }); } 
-
+if('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }); }
 
   
