@@ -1147,8 +1147,7 @@ const EMOJI_TIENDA = [
   {id:'e6', emoji:'⚡', nombre:'Rayo', precio:700}
 ];
 
-// ===== GASDRIVE DGT ES V13 - BLOQUE 1 FINAL - 15 PREGUNTAS POR TANDA + ESTADISTICA + FAMILIA REAL =====
-// ===== ACTUALIZADO V14 - 10 MIN GLOBAL + 22 FICHAS VERTICALES + BIBLIOTECA 5 LINKS =====
+// ===== GASDRIVE DGT ES V14 PRO - BLOQUE 1 FINAL - FIX IMAGENES + FICHAS LARGAS + BIBLIOTECA OFICIAL =====
 let tipsData = [];
 let currentTip = 0;
 let tempsIniciTemari = null;
@@ -1156,21 +1155,45 @@ let contadorTemari = null;
 let sitCategoriaActiva = 'clima';
 const SENALES_SVG = {};
 
-// ===== V14 - CONFIG NUEVO TEMARIO - 10 MIN + 22 FICHAS =====
+// ===== V14 - 22 FICHAS REALES LARGAS - MAPA EXACTO DE TU GITHUB =====
+const MAPA_FICHAS_LARGAS_V14 = {
+  'ficha-t01a': 'ficha-t01a-definiciones-masas-clasificacion-vehiculos-v3-final.jpg',
+  'ficha-t02a': 'ficha-t02a-via-partes-definiciones-v3-final.jpg',
+  'ficha-t02b': 'ficha-t02b-via-partes-marcas-v3-final.jpg',
+  'ficha-t02c': 'ficha-t02c-via-intersecciones-velocidades-v3-final.jpg',
+  'ficha-t03a': 'ficha-t03a-senalizacion-vertical-peligro-v3-final.jpg',
+  'ficha-t03b': 'ficha-t03b-senalizacion-semaforos-baliza-v3-final.jpg',
+  'ficha-t04a': 'ficha-t04a-maniobras-definiciones-v3-final.jpg',
+  'ficha-t04b': 'ficha-t04b-maniobras-adelantamiento-v3-final.jpg',
+  'ficha-t05a': 'ficha-t05a-conductor-estado-psicofisico-v3-final.jpg',
+  'ficha-t05b': 'ficha-t05b-alcohol-drogas-medicamentos-v3-final.jpg',
+  'ficha-t06a': 'ficha-t06a-vehiculo-seguridad-activa-v3-final.jpg',
+  'ficha-t06b': 'ficha-t06b-seguridad-pasiva-frenos-itv-v3-final.jpg',
+  'ficha-t07a': 'ficha-t07a-accidentes-pas-primeros-auxilios-v3-final.jpg',
+  'ficha-t07b': 'ficha-t07b-accidentes-conducta-pas-bioseguridad-v3-final.jpg',
+  'ficha-t08a': 'ficha-t08a-luces-alumbrado-v3-final.jpg',
+  'ficha-t08b': 'ficha-t08b-senalizacion-vehiculos-luces-v3-final.jpg',
+  'ficha-t09a': 'ficha-t09a-conduccion-velocidades-tipos-via-v3-final.jpg',
+  'ficha-t09b': 'ficha-t09b-intersecciones-glorietas-adelantamiento-v3-final.jpg',
+  'ficha-t10a': 'ficha-t10a-iluminacion-carga-v3-final.jpg',
+  'ficha-t10b': 'ficha-t10b-masa-dimensiones-remolque-v3-final.jpg',
+  'ficha-t11a': 'ficha-t11a-permisos-conducir-clases-v3-final.jpg',
+  'ficha-t11b': 'ficha-t11b-puntos-validez-cap-itv-v3-final.jpg'
+};
+
 const TEMARIO_V14_CONFIG = {
   temas: ['t01','t02','t03','t04','t05','t06','t07','t08','t09','t10','t11'],
   totalFichas: 22,
   paseMinutos: 10,
   bibliotecaLinks: {
-    '01': 'https://share.google/OB30FJpKxoUxfUwZT',
-    '02': 'https://share.google/cdTfRzcGeB9s9xnuQ',
-    '03': 'https://share.google/d16o0xmNpIAQ6Nh1c',
-    '04': 'https://share.google/tW0GEXMT1rJlb5Vqt',
-    '05': 'https://share.google/i2dZbEcYBk2QaCx2t'
+    '01': 'https://sede.dgt.gob.es/es/la-dgt/normas-y-senales/senales/',
+    '02': 'https://sede.dgt.gob.es/Galerias/seguridad-vial/normativa-circulacion/reglamento-general-circulacion/',
+    '03': 'https://sede.dgt.gob.es/es/la-dgt/normas-y-senales/senales/manual-primeros-auxilios/',
+    '04': 'https://sede.dgt.gob.es/es/vehiculos/mecanica-y-mantenimiento/',
+    '05': 'https://sede.dgt.gob.es/es/vehiculos/distintivo-ambiental/'
   }
 };
 
-// COMPATIBILIDAD ES - FIX BUGS PANTALLA CARGANDO Y PANELES
 if(typeof PREGUNTAS!=='undefined' && typeof PREGUNTES==='undefined'){ var PREGUNTES = PREGUNTAS; }
 if(typeof SITUACIONES!=='undefined' && typeof SITUACIONS==='undefined'){ var SITUACIONS = SITUACIONES; }
 if(typeof PREGUNTES!=='undefined'){
@@ -1185,7 +1208,6 @@ if(typeof PREGUNTES!=='undefined'){
   PREGUNTES.medioambiente = PREGUNTES.medioambiente || PREGUNTES.mediambient;
 }
 
-// ===== V12 MAPA FAMILIAS REALES - PARA P.DÉBILES ESPECÍFICO =====
 const MAPA_PANELLS_DETALLAT = {
   'N-01': { nom: 'Alcohol y Drogas Tasas', desc: '0,25 aire / 0,5 sangre - Novel 0,15 / 0,3 - N-01', temari: 'TEMARIO 2', pag: 22, familia: 'NORMAS ALCOHOL', biblioteca: '03' },
   'N-02': { nom: 'Cinturón y SRI Embarazada', desc: 'Cinturón todos, niño hasta 1,35m SRI detrás - N-02', temari: 'TEMARIO 2', pag: 33, familia: 'NORMAS SEGURIDAD', biblioteca: '03' },
@@ -1213,6 +1235,7 @@ const MAPA_PANELLS_DETALLAT = {
   'E-': { nom: 'Medio Ambiente ZBE', desc: 'ZBE zonas bajas emisiones, distintivo ambiental - Familia E-', temari: 'TEMARIO 5', pag: 103, familia: 'MEDIO AMBIENTE ZBE', biblioteca: '05' }
 };
 
+// ===== FIX IMAGENES 15 RUTAS + LOWERCASE PARA GITHUB PAGES =====
 function pintarImatgeSiExisteix(cat, pregunta) {
   if (!pregunta) return;
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -1223,26 +1246,20 @@ function pintarImatgeSiExisteix(cat, pregunta) {
   const esPanel = ruta && /^(P-|R-|S-|M-|A-|E-|N-)/.test(ruta) || ruta.toLowerCase().endsWith('.jpg');
   const rutaConPrefix = panelId? `${panelId} - ${ruta}` : ruta;
   if (ruta && esPanel) {
-    const r1 = `./${ruta}`; const r2 = `./${rutaConPrefix}`; const r3 = `./assets/paneles/${ruta}`; const r4 = `./assets/paneles/${rutaConPrefix}`; const r5 = `./paneles/${ruta}`; const r6 = `./paneles/${rutaConPrefix}`; const r7 = `./assets/mecanica/${ruta}`; const r8 = `./assets/medioambiente/${ruta}`; const r9 = `./assets/auxilios/${ruta}`; const r10 = `./assets/normas/${ruta}`; const r11 = `./assets/normes/${ruta}`; const r12 = `./normas/${ruta}`; const r13 = `./assets/senyals/${ruta}`; const r14 = `./assets/${ruta}`;
-    imgDiv.innerHTML = `<div style="background:#0a0a1a; padding:12px; border-radius:16px; border:3px solid #00D9FF; box-shadow:0 0 25px rgba(0,217,255,0.3);"><img src="${r1}" alt="${panelId}" style="width:100%; height:auto; max-height:340px; object-fit:contain; border-radius:12px; display:block;" onerror="this.onerror=null; this.src='${r2}'; this.onerror=function(){this.onerror=null; this.src='${r3}'; this.onerror=function(){this.onerror=null; this.src='${r4}'; this.onerror=function(){this.onerror=null; this.src='${r5}'; this.onerror=function(){this.onerror=null; this.src='${r6}'; this.onerror=function(){this.onerror=null; this.src='${r7}'; this.onerror=function(){this.onerror=null; this.src='${r8}'; this.onerror=function(){this.onerror=null; this.src='${r9}'; this.onerror=function(){this.onerror=null; this.src='${r10}'; this.onerror=function(){this.onerror=null; this.src='${r11}'; this.onerror=function(){this.onerror=null; this.src='${r12}'; this.onerror=function(){this.onerror=null; this.src='${r13}'; this.onerror=function(){this.onerror=null; this.src='${r14}'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='block';}}}}}}}}}}}}}}"/><div style="display:none; color:#ff6b6b; text-align:center; padding:15px;">❌ No encontrado: ${ruta}<br><small>${rutaConPrefix}</small></div><div style="text-align:center; color:#888; font-size:11px; margin-top:8px;">Panel: ${panelId||'N/A'} - ${ruta}</div></div>`;
-    imgDiv.style.display = 'block'; imgDiv.style.border = 'none'; imgDiv.style.boxShadow = 'none'; return;
+    const r1 = `./${ruta}`; const r2 = `./${rutaConPrefix}`; const r3 = `./${ruta.toLowerCase()}`; const r4 = `./${rutaConPrefix.toLowerCase()}`; const r5 = `./assets/paneles/${ruta}`; const r6 = `./assets/paneles/${rutaConPrefix}`; const r7 = `./paneles/${ruta}`; const r8 = `./paneles/${rutaConPrefix}`; const r9 = `./assets/mecanica/${ruta}`; const r10 = `./assets/medioambiente/${ruta}`; const r11 = `./assets/auxilios/${ruta}`; const r12 = `./assets/normas/${ruta}`; const r13 = `./assets/senyals/${ruta}`; const r14 = `./assets/${ruta}`; const r15 = `./assets/${ruta.toLowerCase()}`;
+    imgDiv.innerHTML = `<div style="background:#0a0a1a; padding:12px; border-radius:16px; border:3px solid #00D9FF; box-shadow:0 0 25px rgba(0,217,255,0.3);"><img src="${r1}" alt="${panelId}" style="width:100%; height:auto; max-height:340px; object-fit:contain; border-radius:12px; display:block;" onerror="this.onerror=null; this.src='${r2}'; this.onerror=function(){this.onerror=null; this.src='${r3}'; this.onerror=function(){this.onerror=null; this.src='${r4}'; this.onerror=function(){this.onerror=null; this.src='${r5}'; this.onerror=function(){this.onerror=null; this.src='${r6}'; this.onerror=function(){this.onerror=null; this.src='${r7}'; this.onerror=function(){this.onerror=null; this.src='${r8}'; this.onerror=function(){this.onerror=null; this.src='${r9}'; this.onerror=function(){this.onerror=null; this.src='${r10}'; this.onerror=function(){this.onerror=null; this.src='${r11}'; this.onerror=function(){this.onerror=null; this.src='${r12}'; this.onerror=function(){this.onerror=null; this.src='${r13}'; this.onerror=function(){this.onerror=null; this.src='${r14}'; this.onerror=function(){this.onerror=null; this.src='${r15}'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='block';}}}}}}}}}}}}}}}}}"/><div style="display:none; color:#ff6b6b; text-align:center; padding:15px;">❌ No encontrado: ${ruta}<br><small>${rutaConPrefix}</small></div><div style="text-align:center; color:#888; font-size:11px; margin-top:8px;">Panel: ${panelId||'N/A'} - ${ruta}</div></div>`;
+    imgDiv.style.display = 'block'; return;
   }
   if (pregunta.emoji) {
     let htmlEmojis = ''; try { const segmenter = new Intl.Segmenter('es', { granularity: 'grapheme' }); const segs = [...segmenter.segment(pregunta.emoji)].map(s => s.segment); const size = segs.length > 2? '26px' : segs.length === 2? '32px' : '42px'; htmlEmojis = segs.map(s => `<span style="font-size:${size}; line-height:1;">${s}</span>`).join(''); } catch(e) { htmlEmojis = [...pregunta.emoji].map(s=>`<span style="font-size:32px">${s}</span>`).join(''); }
     const forma = pregunta.forma || 'cuadrado-azul'; let extraStyle = forma==='circulo-rojo'? 'border:6px solid #e53935; border-radius:50%; background:white;' : forma==='triangulo-amarillo'? 'border:6px solid #fdd835; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); background:white; width:130px; height:115px;' : 'border:6px solid #1e88e5; border-radius:16px; background:white;';
     imgDiv.innerHTML = `<div style="width:120px; height:120px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(0,217,255,0.15); ${extraStyle}"><div style="display:flex; gap:3px; flex-wrap:wrap; justify-content:center; align-items:center; ${forma==='triangulo-amarillo'?'margin-top:18px':''}">${htmlEmojis}</div></div>`;
-    imgDiv.style.display='block'; imgDiv.style.border='none'; imgDiv.style.boxShadow='none'; return;
+    imgDiv.style.display='block'; return;
   }
   imgDiv.innerHTML = `<div class="placeholder" style="color:#00aaff; text-align:center; padding:20px; border:2px dashed rgba(0,217,255,0.3); border-radius:12px;">Sin pictograma<br><small>${pregunta.id||''}</small></div>`;
 }
 
-function getTotalBanco() {
-  let total = 0;
-  if(typeof PREGUNTES!== 'undefined') for(let cat in PREGUNTES) if(Array.isArray(PREGUNTES[cat])) total += PREGUNTES[cat].length;
-  if(typeof SITUACIONS!== 'undefined') for(let cat in SITUACIONS) if(Array.isArray(SITUACIONS[cat])) total += SITUACIONS[cat].length;
-  return total;
-}
-
+function getTotalBanco(){ let total=0; if(typeof PREGUNTES!=='undefined') for(let cat in PREGUNTES) if(Array.isArray(PREGUNTES[cat])) total+=PREGUNTES[cat].length; if(typeof SITUACIONS!=='undefined') for(let cat in SITUACIONS) if(Array.isArray(SITUACIONS[cat])) total+=SITUACIONS[cat].length; return total; }
 const MAPEO_PALABRAS_CLAVE = {
   'velocidad': {subtema: 'Velocidad y Limites', pag: 22}, 'alcohol': {subtema: 'Alcohol y Drogas', pag: 26}, 'drogas': {subtema: 'Alcohol y Drogas', pag: 26},
   'prioridad': {subtema: 'Prioridad y Preferencia', pag: 12}, 'rotonda': {subtema: 'Rotondas', pag: 14}, 'cinturon': {subtema: 'Elementos Seguridad', pag: 33},
@@ -1255,7 +1272,6 @@ const MAPEO_PALABRAS_CLAVE = {
   'lluvia': {subtema: 'Conduccion Lluvia', pag: 110}, 'niebla': {subtema: 'Conduccion Niebla', pag: 111}, 'accidente': {subtema: 'Actuacion Accidente', pag: 115},
   'motor': {subtema: 'Motor', pag: 85}, 'embrague': {subtema: 'Transmision', pag: 87}, 'bateria': {subtema: 'Sistema Electrico', pag: 86}
 };
-
 let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso_v2')) || {
   tests: { general: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, senales: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, senyas: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, trampas: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, normas: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, mecanica: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, auxilios: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, medio_ambiente: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, mediambient: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} } },
   casos: { clima: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, urbano: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, carretera: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} }, emergencia: { total: 0, aciertos: 0, unicas: new Set(), falladas: [], dies: {} } },
@@ -1265,7 +1281,6 @@ let PROGRESO = JSON.parse(localStorage.getItem('gd_progreso_v2')) || {
 for(let c in PROGRESO.tests) { PROGRESO.tests[c].unicas = new Set(PROGRESO.tests[c].unicas || []); PROGRESO.tests[c].dies = PROGRESO.tests[c].dies || {}; }
 for(let c in PROGRESO.casos) { PROGRESO.casos[c].unicas = new Set(PROGRESO.casos[c].unicas || []); PROGRESO.casos[c].dies = PROGRESO.casos[c].dies || {}; }
 PROGRESO.diesEstudi = new Set(PROGRESO.diesEstudi || []);
-
 let estat = {
   coins: parseInt(localStorage.getItem('gd_coins')) || 0,
   cotxes: JSON.parse(localStorage.getItem('gd_cotxes')) || ['c1'],
@@ -1273,7 +1288,6 @@ let estat = {
   emojis: JSON.parse(localStorage.getItem('gd_emojis')) || [],
   historial: JSON.parse(localStorage.getItem('gd_historial')) || [],
   stats: JSON.parse(localStorage.getItem('gd_stats')) || { tempsEstudiatAvui: 0, diaActual: new Date().toISOString().split('T')[0], paseCompletado: false, puntsDebils: {}, preguntesFetes: 0, encertsTotals: 0, perCategoria: {}, historialEvolucio: [], historialPregunta: {} },
-  // ===== V13 - SISTEMA 15 PREGUNTAS POR TANDA - SIN ROMPER NADA =====
   test: {
     general: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
     senales: {idx:0,encerts:0,ratxa:0,puntuacio:0, sesionPreguntas:[], sesionIndex:0, encertsSesion:0, totalSesion:15},
@@ -1291,28 +1305,19 @@ let estat = {
   examen: { activa: false, preguntes: [], index: 0, encerts: 0, fallos: 0, timer: null, temps: 1800, categoria: 'general' },
   sit: { clima: {idx:0,encerts:0,puntuacio:0,current:null}, urbano: {idx:0,encerts:0,puntuacio:0,current:null}, urbà: {idx:0,encerts:0,puntuacio:0,current:null}, carretera: {idx:0,encerts:0,puntuacio:0,current:null}, emergencia: {idx:0,encerts:0,puntuacio:0,current:null}, emergència: {idx:0,encerts:0,puntuacio:0,current:null} }
 };
-
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
-
 function init() {
-  console.log("GasDrive V14 - BLOQUE 1 - 10 min global + 22 fichas verticales + 15 preguntas tanda");
-  if(typeof PREGUNTES!== 'undefined'){
+  console.log("GasDrive V14 PRO - BLOQUE 1 - Fix imagenes + 22 fichas largas + 10 min");
+  if(typeof PREGUNTES!=='undefined'){
     if((!PREGUNTES.mecanica || PREGUNTES.mecanica.length===0) && typeof BANCO_MECANICA_66!== 'undefined'){ PREGUNTES.mecanica = BANCO_MECANICA_66; }
     if((!PREGUNTES.normas || PREGUNTES.normas.length===0) && typeof BANCO_PREGUNTAS_NORMAS_V1!== 'undefined'){ PREGUNTES.normas = BANCO_PREGUNTAS_NORMAS_V1; }
   }
-  autoMapearTotesPreguntes();
-  comprovarNouDia();
-  iniciarComptadorTemari();
-  mostrarIntro();
-  actualitzarCoins();
-  // Nota: carregarPregunta está en Bloque 2, se llamará cuando cargue
+  autoMapearTotesPreguntes(); comprovarNouDia(); iniciarComptadorTemari(); mostrarIntro(); actualitzarCoins();
   try{ if(typeof carregarGaratge==='function') carregarGaratge(); }catch(e){}
   try{ if(typeof carregarBotiga==='function') carregarBotiga(); }catch(e){}
-  try{ if(typeof carregarTemari==='function') carregarTemari(); }catch(e){}
   try{ if(typeof carregarTemari_V14==='function') carregarTemari_V14(); }catch(e){}
   actualitzarMissatgeMotivacional();
 }
-
 function guardar() {
   localStorage.setItem('gd_coins', estat.coins);
   localStorage.setItem('gd_cotxes', JSON.stringify(estat.cotxes));
@@ -1326,9 +1331,7 @@ function guardar() {
   progGuardar.diesEstudi = [...PROGRESO.diesEstudi];
   localStorage.setItem('gd_progreso_v2', JSON.stringify(progGuardar));
 }
-
 function actualitzarCoins() { const el = document.getElementById('coins'); if(el) el.textContent = `💰 ${estat.coins}`; }
-
 function actualizarMetricasTest(categoria, preguntaId, acierto) {
   const catNet = categoria.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   if(!PROGRESO.tests[catNet] &&!PROGRESO.tests[categoria]) return;
@@ -1338,7 +1341,6 @@ function actualizarMetricasTest(categoria, preguntaId, acierto) {
   if(!acierto &&!prog.falladas.includes(preguntaId)) prog.falladas.push(preguntaId);
   if(!prog.dies[avui]) prog.dies[avui] = 0; prog.dies[avui]++; PROGRESO.diesEstudi.add(avui); guardar();
 }
-
 function actualizarMetricasCaso(subcat, preguntaId, acierto) {
   let key = subcat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   if(key==='urbà') key='urbano'; if(key==='emergència') key='emergencia';
@@ -1348,7 +1350,6 @@ function actualizarMetricasCaso(subcat, preguntaId, acierto) {
   if(!acierto &&!prog.falladas.includes(preguntaId)) prog.falladas.push(preguntaId);
   if(!prog.dies[avui]) prog.dies[avui] = 0; prog.dies[avui]++; PROGRESO.diesEstudi.add(avui); guardar();
 }
-
 function registrarHistorialPregunta(preguntaId, acierto) {
   if(!preguntaId) return;
   if(!estat.stats.historialPregunta) estat.stats.historialPregunta = {};
@@ -1357,7 +1358,6 @@ function registrarHistorialPregunta(preguntaId, acierto) {
   if(acierto) estat.stats.historialPregunta[preguntaId].consecutius++; else estat.stats.historialPregunta[preguntaId].consecutius = 0;
   estat.stats.historialPregunta[preguntaId].ultima = avui; guardar();
 }
-
 function calcularPreparacioDGT_V94() {
   const avui = new Date(); const fa7Dies = new Date(avui.getTime() - 7 * 24 * 60 * 60 * 1000);
   let totalPreg = 0, domina = 0, aprenent = 0; let historial = estat.stats.historialPregunta || {};
@@ -1389,53 +1389,18 @@ function calcularPreparacioDGT_V94() {
   const preparacio = Math.round((retencio * 0.3) + (constancia * 0.4) + (cobertura * 0.2) + (estabilitat * 0.1));
   return { preparacio: Math.round(preparacio), retencio: Math.round(retencio), constancia: Math.round(constancia), cobertura: Math.round(cobertura), estabilitat: Math.round(estabilitat), domina, aprenent, diesValids, maxRatxa, total: totalPreg };
 }
-
 function iniciarComptadorTemari() {
-  if (contadorTemari) clearInterval(contadorTemari);
-  comprovarNouDia();
-  actualitzarPaseUI();
+  if (contadorTemari) clearInterval(contadorTemari); comprovarNouDia(); actualitzarPaseUI();
   contadorTemari = setInterval(() => {
     const vistaTemariActiva = document.getElementById('tab-temari')?.classList.contains('active');
     if (vistaTemariActiva) {
       if (tempsIniciTemari === null) { tempsIniciTemari = Date.now(); }
-      else {
-        const ara = Date.now();
-        const segundos = (ara - tempsIniciTemari) / 1000;
-        if (segundos >= 3) { // V14: cada 3 seg suma para scroll infinito
-          estat.stats.tempsEstudiatAvui += segundos / 60;
-          tempsIniciTemari = ara;
-          guardar();
-          actualitzarPaseUI();
-        }
-      }
-      if (estat.stats.tempsEstudiatAvui >= TEMARIO_V14_CONFIG.paseMinutos &&!estat.stats.paseCompletado) {
-        estat.stats.paseCompletado = true;
-        estat.coins += 50;
-        guardar();
-        alert(`✅ PASE DESBLOQUEADO V14!\nHas estudiado ${TEMARIO_V14_CONFIG.paseMinutos} minutos con fichas verticales. +50 coins`);
-        if(typeof actualitzarEstadistiques_V94==='function') actualitzarEstadistiques_V94();
-      }
-    } else {
-      if (tempsIniciTemari!== null) {
-        const ara = Date.now();
-        const segundos = (ara - tempsIniciTemari) / 1000;
-        estat.stats.tempsEstudiatAvui += segundos / 60;
-        tempsIniciTemari = null;
-        guardar();
-        actualitzarPaseUI();
-      }
-    }
+      else { const ara = Date.now(); const segundos = (ara - tempsIniciTemari) / 1000; if (segundos >= 3) { estat.stats.tempsEstudiatAvui += segundos / 60; tempsIniciTemari = ara; guardar(); actualitzarPaseUI(); } }
+      if (estat.stats.tempsEstudiatAvui >= TEMARIO_V14_CONFIG.paseMinutos &&!estat.stats.paseCompletado) { estat.stats.paseCompletado = true; estat.coins += 50; guardar(); alert(`✅ PASE DESBLOQUEADO V14!\nHas estudiado ${TEMARIO_V14_CONFIG.paseMinutos} minutos con fichas verticales. +50 coins`); if(typeof actualitzarEstadistiques_V94==='function') actualitzarEstadistiques_V94(); }
+    } else { if (tempsIniciTemari!== null) { const ara = Date.now(); const segundos = (ara - tempsIniciTemari) / 1000; estat.stats.tempsEstudiatAvui += segundos / 60; tempsIniciTemari = null; guardar(); actualitzarPaseUI(); } }
   }, 1000);
 }
-
-function sumarTiempoEstudio() {
-  if(tempsIniciTemari===null) tempsIniciTemari = Date.now();
-  else {
-    const ara = Date.now(); const diff = (ara - tempsIniciTemari)/1000;
-    if(diff>1){ estat.stats.tempsEstudiatAvui += diff/60; tempsIniciTemari = ara; guardar(); actualitzarPaseUI(); }
-  }
-}
-
+function sumarTiempoEstudio() { if(tempsIniciTemari===null) tempsIniciTemari = Date.now(); else { const ara = Date.now(); const diff = (ara - tempsIniciTemari)/1000; if(diff>1){ estat.stats.tempsEstudiatAvui += diff/60; tempsIniciTemari = ara; guardar(); actualitzarPaseUI(); } } }
 function comprovarNouDia() {
   const avuiISO = new Date().toISOString().split('T')[0];
   const avuiLegible = new Date().toLocaleDateString('es-ES');
@@ -1447,97 +1412,44 @@ function comprovarNouDia() {
     for(let c in PROGRESO.tests) PROGRESO.tests[c].dies = {}; for(let c in PROGRESO.casos) PROGRESO.casos[c].dies = {}; guardar(); actualitzarPaseUI();
   } else if(estat.stats.diaActual=== avuiLegible) { estat.stats.diaActual = avuiISO; guardar(); }
 }
-
 function actualitzarPaseUI() {
   const minuts = Math.floor(estat.stats.tempsEstudiatAvui || 0);
   const segons = Math.floor(((estat.stats.tempsEstudiatAvui || 0) - minuts)*60);
-  const el = document.getElementById('pase-temps');
-  if(el) el.textContent = `${minuts}:${segons.toString().padStart(2,'0')} / ${TEMARIO_V14_CONFIG.paseMinutos}:00`;
-  const msg = document.getElementById('stats-motivacio');
-  if(msg) {
-    if(estat.stats.paseCompletado) msg.textContent = "✅ Pase Activo 10min. A practicar 💪";
-    else {
-      const falten = Math.max(0, TEMARIO_V14_CONFIG.paseMinutos - estat.stats.tempsEstudiatAvui);
-      const fMin = Math.floor(falten);
-      const fSeg = Math.floor((falten - fMin)*60);
-      msg.textContent = `Estudia ${fMin}:${fSeg.toString().padStart(2,'0')} más en el TEMARIO (22 fichas) para desbloquear`;
-    }
-  }
+  const el = document.getElementById('pase-temps'); if(el) el.textContent = `${minuts}:${segons.toString().padStart(2,'0')} / ${TEMARIO_V14_CONFIG.paseMinutos}:00`;
+  const msg = document.getElementById('stats-motivacio'); if(msg) { if(estat.stats.paseCompletado) msg.textContent = "✅ Pase Activo 10min. A practicar 💪"; else { const falten = Math.max(0, TEMARIO_V14_CONFIG.paseMinutos - estat.stats.tempsEstudiatAvui); const fMin = Math.floor(falten); const fSeg = Math.floor((falten - fMin)*60); msg.textContent = `Estudia ${fMin}:${fSeg.toString().padStart(2,'0')} más en el TEMARIO (22 fichas) para desbloquear`; } }
 }
-
-// ===== V14 - FUNCIONES NUEVAS TEMARIO - SIN BORRAR NADA ANTERIOR =====
-function carregarTemari_V14(){
-  console.log("V14 Temario 22 fichas verticales - 10 min global");
-  setTimeout(()=>{
-    const visor = document.getElementById('visor-ficha-container');
-    if(visor &&!visor.querySelector('img')) obrirFichaJPG('ficha-t01a');
-  }, 600);
-}
-
-function carregarTemari(){
-  // Compatibilidad V12/V13 - ahora llama V14
-  carregarTemari_V14();
-}
-
+function carregarTemari_V14(){ console.log("V14 Temario 22 fichas verticales - 10 min global"); setTimeout(()=>{ const visor = document.getElementById('visor-ficha-container'); if(visor &&!visor.querySelector('img')) obrirFichaJPG('ficha-t01a'); }, 600); }
+function carregarTemari(){ carregarTemari_V14(); }
 function canviarTemariPrincipal(evt,id){
-  const container = document.getElementById('tab-temari');
-  if(!container) return;
-  // solo botones principales
-  const mainTabs = container.querySelectorAll(':scope >.sub-tabs:first-child >.sub-tab-btn');
-  mainTabs.forEach(b=>b.classList.remove('active'));
-  if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
-  const rapido = document.getElementById('temari-rapido');
-  const biblio = document.getElementById('temari-biblioteca');
-  if(rapido){ rapido.classList.remove('active'); rapido.style.display='none'; }
-  if(biblio){ biblio.classList.remove('active'); biblio.style.display='none'; }
-  const t=document.getElementById('temari-'+id);
-  if(t){ t.classList.add('active'); t.style.display='block'; }
-  if(id==='rapido'){ setTimeout(()=>obrirFichaJPG('ficha-t01a'),100); }
+  const container = document.getElementById('tab-temari'); if(!container) return;
+  const mainTabs = container.querySelectorAll(':scope >.sub-tabs:first-child >.sub-tab-btn'); mainTabs.forEach(b=>b.classList.remove('active')); if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
+  const rapido = document.getElementById('temari-rapido'); const biblio = document.getElementById('temari-biblioteca'); if(rapido){ rapido.classList.remove('active'); rapido.style.display='none'; } if(biblio){ biblio.classList.remove('active'); biblio.style.display='none'; }
+  const t=document.getElementById('temari-'+id); if(t){ t.classList.add('active'); t.style.display='block'; } if(id==='rapido'){ setTimeout(()=>obrirFichaJPG('ficha-t01a'),100); }
 }
-
 function canviarTemaFicha(evt,tema){
-  const rapido = document.getElementById('temari-rapido');
-  if(!rapido) return;
-  const temaBtns = rapido.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn');
-  temaBtns.forEach(b=>b.classList.remove('active'));
-  if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
-  rapido.querySelectorAll('.tema-cont').forEach(c=>{ c.classList.remove('active'); c.style.display='none'; });
-  const cont=document.getElementById('tema-'+tema);
-  if(cont){ cont.classList.add('active'); cont.style.display='block'; }
-  obrirFichaJPG('ficha-'+tema+'a');
+  const rapido = document.getElementById('temari-rapido'); if(!rapido) return;
+  const temaBtns = rapido.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn'); temaBtns.forEach(b=>b.classList.remove('active')); if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
+  rapido.querySelectorAll('.tema-cont').forEach(c=>{ c.classList.remove('active'); c.style.display='none'; }); const cont=document.getElementById('tema-'+tema); if(cont){ cont.classList.add('active'); cont.style.display='block'; } obrirFichaJPG('ficha-'+tema+'a');
 }
-
-function obrirFichaJPG(nombre){
-  const visor=document.getElementById('visor-ficha-container');
-  if(!visor) return;
+function obrirFichaJPG(nombreCorto){
+  const visor=document.getElementById('visor-ficha-container'); if(!visor) { const real = MAPA_FICHAS_LARGAS_V14[nombreCorto]||nombreCorto+'.jpg'; window.open('./'+real,'_blank'); return; }
   sumarTiempoEstudio();
-  visor.innerHTML=`<div style="padding:10px;text-align:center;color:#00D9FF;font-size:11px">⏳ Cargando ${nombre}.jpg - Scroll infinito vertical...</div><img src="./${nombre}.jpg" alt="${nombre}" style="width:100%;height:auto;display:block;border-radius:12px;" loading="lazy" onload="sumarTiempoEstudio(); iniciarComptadorTemari(); if(this.previousElementSibling) this.previousElementSibling.style.display='none';" onerror="this.parentElement.innerHTML='<div style=\\'padding:30px 20px;text-align:center;color:#ff4757;font-size:13px;background:#1a0a0a;border-radius:12px;border:1px solid #a00\\'>❌ No se encontró <b>${nombre}.jpg</b><br><br><small style=\\'color:#999\\'>Súbelo a raíz:./${nombre}.jpg<br>22 fichas: ficha-t01a.jpg hasta ficha-t11b.jpg</small><br><br><button class=\\'btn\\' onclick=\\'obrirFichaJPG(\\'ficha-t01a\\')\\'>Volver a T01A</button></div>'">`;
+  const nombreReal = MAPA_FICHAS_LARGAS_V14[nombreCorto] || (nombreCorto.endsWith('.jpg')? nombreCorto : nombreCorto+'.jpg');
+  const nombreCortoFallback = nombreCorto + '.jpg';
+  visor.innerHTML=`<div style="padding:10px;text-align:center;color:#00D9FF;font-size:11px">⏳ Cargando ${nombreCorto} → ${nombreReal} - Scroll vertical...</div><img src="./${nombreReal}" alt="${nombreCorto}" style="width:100%;height:auto;display:block;border-radius:12px;" loading="lazy" onload="sumarTiempoEstudio(); iniciarComptadorTemari(); if(this.previousElementSibling) this.previousElementSibling.style.display='none';" onerror="this.onerror=null; this.src='./${nombreCortoFallback}'; this.onerror=function(){this.parentElement.innerHTML='<div style=\\'padding:30px 20px;text-align:center;color:#ff4757;font-size:13px;background:#1a0a0a;border-radius:12px;border:1px solid #a00\\'>❌ No se encontró<br><b>${nombreReal}</b><br><small>${nombreCortoFallback}</small><br><br>Revisa GitHub: 22 fichas en raíz<br><br><button class=\\'btn\\' onclick=\\'obrirFichaJPG(\\'ficha-t01a\\')\\'>Volver a T01A</button></div>'}">`;
   setTimeout(()=>{ visor.scrollIntoView({behavior:'smooth',block:'start'}); }, 150);
 }
-
 function obrirBibliotecaOficial(id){
   const link = TEMARIO_V14_CONFIG.bibliotecaLinks[id];
   if(link) window.open(link,'_blank');
 }
-
 function getBibliotecaLinkParaPanel(panelId){
   if(!panelId) return null;
-  for(let key in MAPA_PANELLS_DETALLAT){
-    if(panelId.toUpperCase().startsWith(key)){
-      const bib = MAPA_PANELLS_DETALLAT[key].biblioteca;
-      if(bib) return { id: bib, link: TEMARIO_V14_CONFIG.bibliotecaLinks[bib], info: MAPA_PANELLS_DETALLAT[key] };
-    }
-  }
-  // fallback busca por familia P- R- etc
+  for(let key in MAPA_PANELLS_DETALLAT){ if(panelId.toUpperCase().startsWith(key)){ const bib = MAPA_PANELLS_DETALLAT[key].biblioteca; if(bib) return { id: bib, link: TEMARIO_V14_CONFIG.bibliotecaLinks[bib], info: MAPA_PANELLS_DETALLAT[key] }; } }
   const pref = panelId.substring(0,2).toUpperCase();
-  if(MAPA_PANELLS_DETALLAT[pref]){
-    const bib = MAPA_PANELLS_DETALLAT[pref].biblioteca;
-    return { id: bib, link: TEMARIO_V14_CONFIG.bibliotecaLinks[bib], info: MAPA_PANELLS_DETALLAT[pref] };
-  }
+  if(MAPA_PANELLS_DETALLAT[pref]){ const bib = MAPA_PANELLS_DETALLAT[pref].biblioteca; return { id: bib, link: TEMARIO_V14_CONFIG.bibliotecaLinks[bib], info: MAPA_PANELLS_DETALLAT[pref] }; }
   return null;
 }
-
-// Funciones viejas PDF eliminadas - no rompen nada
 function obrirPDF(){ console.warn("V14 obsoleto - usa obrirFichaJPG"); }
 function tancarPDF(){}
 
@@ -1551,9 +1463,7 @@ function obtenirDetallRealPregunta(pregunta) {
   if(codi.includes('S-100') || ruta.includes('S-100') || codi.match(/S-10[0-9]/) || nombre.includes('S-10')) return {...MAPA_PANELLS_DETALLAT['S-100'], panel: 'S-100'};
   if(codi.includes('S-200') || ruta.includes('S-200')) return {...MAPA_PANELLS_DETALLAT['S-200'], panel: 'S-200'};
   if(codi.includes('S-300') || ruta.includes('S-300')) return {...MAPA_PANELLS_DETALLAT['S-300'], panel: 'S-300'};
-  if(codi.startsWith('S-') || ruta.includes('S-')) {
-    if(codi.startsWith('S-1') || nombre.includes('SERVICIO') || q.includes('SERVICIO') || q.includes('GASOLINERA')) return {...MAPA_PANELLS_DETALLAT['S-100'], panel: 'S-100'};
-  }
+  if(codi.startsWith('S-') || ruta.includes('S-')) { if(codi.startsWith('S-1') || nombre.includes('SERVICIO') || q.includes('SERVICIO') || q.includes('GASOLINERA')) return {...MAPA_PANELLS_DETALLAT['S-100'], panel: 'S-100'}; }
   if(codi.startsWith('P-') || ruta.startsWith('P-')) return {...MAPA_PANELLS_DETALLAT['P-'], panel: 'P-'};
   if(codi.startsWith('R-') || ruta.startsWith('R-')) return {...MAPA_PANELLS_DETALLAT['R-'], panel: 'R-'};
   if(codi.startsWith('M-') || ruta.startsWith('M-') || q.includes('MOTOR') || q.includes('BATERIA') || q.includes('HIBRIDO')) return {...MAPA_PANELLS_DETALLAT['M-'], panel: 'M-'};
@@ -1562,19 +1472,14 @@ function obtenirDetallRealPregunta(pregunta) {
   for(let key in MAPEO_PALABRAS_CLAVE) { if((pregunta.q||pregunta.pregunta||'').toLowerCase().includes(key)) { const m = MAPEO_PALABRAS_CLAVE[key]; return { nom: m.subtema, desc: m.subtema, temari: 'TEMARIO 2', pag: m.pag, panel: key, biblioteca: '02' }; } }
   return { nom: pregunta.nombre_senal || pregunta.codi || 'General', desc: pregunta.nombre_senal || 'General', temari: 'TEMARIO 1', pag: 1, panel: codi||'', biblioteca: '02' };
 }
-
 function autoMapearTotesPreguntes() {
   let idCounter = 1;
   if(typeof PREGUNTES === 'undefined') { console.warn('PREGUNTES no definido aun'); return; }
   for(let cat in PREGUNTES) {
-    PREGUNTES[cat] = PREGUNTES[cat].map(p => {
-      const detall = obtenirDetallRealPregunta(p);
-      return {...p, id: p.id || idCounter++, subtema: detall.nom, pag: detall.pag, detallReal: detall, familia: detall.familia };
-    });
+    PREGUNTES[cat] = PREGUNTES[cat].map(p => { const detall = obtenirDetallRealPregunta(p); return {...p, id: p.id || idCounter++, subtema: detall.nom, pag: detall.pag, detallReal: detall, familia: detall.familia }; });
   }
-  console.log('✅ BLOQUE 2 V14 MAPEADO - 10 min + 22 fichas + Biblioteca 5 links. Total:', getTotalBanco());
+  console.log('✅ BLOQUE 2 V14 PRO MAPEADO - Total:', getTotalBanco());
 }
-
 function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
   if(!subtema || subtema === 'undefined') subtema = 'General'; if(!pagina) pagina = 1;
   if(!estat.stats.puntsDebils) estat.stats.puntsDebils = {};
@@ -1584,8 +1489,6 @@ function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
   if(!estat.stats.puntsDebils[categoria][clau]) { estat.stats.puntsDebils[categoria][clau] = {fallos: 0, pag: pagina, detall: detall||{nom:subtema,pag:pagina,temari:'TEMARIO 1',familia:subtema, biblioteca:'02'}}; }
   estat.stats.puntsDebils[categoria][clau].fallos++; guardar();
 }
-
-// ===== V14 - PUNTOS DEBILES CON REFERENCIA DIRECTA A BIBLIOTECA OFICIAL 01-05 =====
 function dibuixarPuntsDebils_V94() {
   const cont = document.getElementById('stats-debils-lista'); if(!cont) return;
   cont.innerHTML = '<h3 style="margin-bottom:15px; color:#00D9FF">📍 DONDE TIENES QUE MEJORAR - POR FAMILIA REAL + BIBLIOTECA OFICIAL</h3>';
@@ -1594,136 +1497,50 @@ function dibuixarPuntsDebils_V94() {
   const noms = ['🚦 SEÑALES','🪤 TRAMPAS','📋 NORMAS','⚙️ MECÁNICA','🚑 AUXILIOS','♻️ MEDIO AMBIENTE','♻️ MEDIO AMBIENTE'];
   categories.forEach((cat, i) => {
     const keyReal = cat==='medio_ambiente'?'medio_ambiente':cat;
-    if(!estat.stats.puntsDebils[keyReal] || Object.keys(estat.stats.puntsDebils[keyReal]).length===0) {
-      if(i<6) cont.innerHTML += `<div style="margin-bottom:15px; padding:12px; background:#1a1a1a; border-radius:8px;"><div style="font-weight:700; color:#00D9FF">${noms[i]}</div><div style="color:#666">Aún no tienes datos - Haz tests</div></div>`;
-      return;
-    }
+    if(!estat.stats.puntsDebils[keyReal] || Object.keys(estat.stats.puntsDebils[keyReal]).length===0) { if(i<6) cont.innerHTML += `<div style="margin-bottom:15px; padding:12px; background:#1a1a1a; border-radius:8px;"><div style="font-weight:700; color:#00D9FF">${noms[i]}</div><div style="color:#666">Aún no tienes datos - Haz tests</div></div>`; return; }
     let maxFallos = 0; let pitjorClau = 'General'; let detallMillor = null;
     for(let clau in estat.stats.puntsDebils[keyReal]) { if(estat.stats.puntsDebils[keyReal][clau].fallos > maxFallos) { maxFallos = estat.stats.puntsDebils[keyReal][clau].fallos; pitjorClau = clau; detallMillor = estat.stats.puntsDebils[keyReal][clau].detall; } }
     const detall = detallMillor || {nom:pitjorClau, desc:'', temari:'TEMARIO 1', pag:1, familia:pitjorClau, biblioteca:'02', panel:''};
-    const bibId = detall.biblioteca || '02';
-    const bibLink = (typeof TEMARIO_V14_CONFIG!=='undefined' && TEMARIO_V14_CONFIG.bibliotecaLinks[bibId])? TEMARIO_V14_CONFIG.bibliotecaLinks[bibId] : '#';
-    const bibNombres = {'01':'01 Señales RD465','02':'02 Normas','03':'03 Auxilios / Primeros Auxilios','04':'04 Mecánica','05':'05 Medio Ambiente'};
-    const bibNom = bibNombres[bibId]||`0${bibId} Biblioteca`;
-
-    cont.innerHTML += `<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;">
-      <div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div>
-      <div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div>
-      <div style="color:#ccc; font-size:12px; margin-bottom:8px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-        <div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Pág <b>${detall.pag||1}</b></div>
-        <button onclick="anarAPagina(${detall.pag||1})" style="background:#222; border:1px solid #00D9FF; border-radius:6px; padding:4px 10px; cursor:pointer; font-weight:700; color:#00D9FF; font-size:11px">Ir a Temario</button>
-      </div>
-      <div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;">
-        <div style="color:#00D9FF; font-size:11px; font-weight:700; margin-bottom:4px">📚 ESTUDIO PROFUNDO OPCIONAL - BIBLIOTECA OFICIAL:</div>
-        <button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%; text-align:left;">📖 ${bibNom} → Reforzar tema: ${detall.familia||detall.nom} ↗</button>
-        <div style="color:#999; font-size:10px; margin-top:6px; line-height:1.3">Link directo oficial DGT. No cuenta para pase 10 min. Es para reforzar cuando fallas mucho en esta familia.</div>
-      </div>
-    </div>`;
+    const bibId = detall.biblioteca || '02'; const bibLink = (typeof TEMARIO_V14_CONFIG!=='undefined' && TEMARIO_V14_CONFIG.bibliotecaLinks[bibId])? TEMARIO_V14_CONFIG.bibliotecaLinks[bibId] : '#';
+    const bibNombres = {'01':'01 Señales RD465','02':'02 Normas','03':'03 Auxilios / Primeros Auxilios','04':'04 Mecánica','05':'05 Medio Ambiente'}; const bibNom = bibNombres[bibId]||`0${bibId} Biblioteca`;
+    cont.innerHTML += `<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div><div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div><div style="color:#ccc; font-size:12px; margin-bottom:8px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div><div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;"><div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Pág <b>${detall.pag||1}</b></div><button onclick="anarAPagina(${detall.pag||1})" style="background:#222; border:1px solid #00D9FF; border-radius:6px; padding:4px 10px; cursor:pointer; font-weight:700; color:#00D9FF; font-size:11px">Ir a Temario</button></div><div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;"><div style="color:#00D9FF; font-size:11px; font-weight:700; margin-bottom:4px">📚 ESTUDIO PROFUNDO OPCIONAL - BIBLIOTECA OFICIAL:</div><button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%; text-align:left;">📖 ${bibNom} → Reforzar tema: ${detall.familia||detall.nom} ↗</button><div style="color:#999; font-size:10px; margin-top:6px; line-height:1.3">Link directo oficial DGT. No cuenta para pase 10 min. Es para reforzar cuando fallas mucho en esta familia.</div></div></div>`;
   });
 }
-
- function actualitzarOrientacioV11() {
-  const cont = document.getElementById('stats-orientacio-lista') || document.getElementById('orientacio-lista') || document.getElementById('stats-orientacio');
-  if(!cont) return;
-  cont.innerHTML = `
-    <div style="background:#0a0a1a; padding:16px; border-radius:12px; border:2px solid #00D9FF; margin-bottom:16px;">
-      <h3 style="color:#00D9FF; margin-bottom:10px;">🎯 CÓMO FUNCIONA EL EXAMEN DGT OFICIAL REAL</h3>
-      <div style="color:#fff; font-size:13px; line-height:1.6;">
-        <p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p>
-        <p>⏱️ <b>30 minutos</b> máximo - Con práctica lo haces en 10 min</p>
-        <p>✅ <b>27 aciertos mínimo</b> para aprobar - Máximo 3 fallos permitidos</p>
-        <p>🏫 <b>El día del examen:</b> Lleva DNI + Justificante cita. Llega 15 min antes.</p>
-        <p>💡 <b>Truco DGT:</b> Siempre la respuesta más segura y conservadora es la correcta.</p>
-      </div>
-    </div>
-    <h3 style="color:#00D9FF; margin:15px 0 10px;">📚 MÉTODO GASDRIVE V14 - 3 PASOS</h3>
-    <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #2ecc71; border-radius:8px;">
-      <div style="font-weight:700; color:#2ecc71;">1. TEMARIO 10 min/día - 22 fichas verticales T01-T11</div>
-      <div style="color:#ccc; font-size:12px;">Timer global 10 min → Desbloquea Pase +50 coins. Fichas JPG scroll infinito 8000px.</div>
-    </div>
-    <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:8px;">
-      <div style="font-weight:700; color:#FFD700;">2. TESTS de 15 preguntas por tanda</div>
-      <div style="color:#ccc; font-size:12px;">Rutina corta, sin aburrimiento. Cada 15 ves tu resultado y empiezas otra tanda nueva. Si fallas N-01 Alcohol te manda a Biblioteca 03.</div>
-    </div>
-    <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #00D9FF; border-radius:8px;">
-      <div style="font-weight:700; color:#00D9FF;">3. EXAMEN diario cuando llegues al 90%</div>
-      <div style="color:#ccc; font-size:12px;">Racha de 6 aprobados seguidos para ir seguro a DGT real. Biblioteca oficial 01-05 opcional para estudio profundo.</div>
-    </div>
-  `;
+function actualitzarOrientacioV11() {
+  const cont = document.getElementById('stats-orientacio-lista') || document.getElementById('orientacio-lista') || document.getElementById('stats-orientacio'); if(!cont) return;
+  cont.innerHTML = `<div style="background:#0a0a1a; padding:16px; border-radius:12px; border:2px solid #00D9FF; margin-bottom:16px;"><h3 style="color:#00D9FF; margin-bottom:10px;">🎯 CÓMO FUNCIONA EL EXAMEN DGT OFICIAL REAL</h3><div style="color:#fff; font-size:13px; line-height:1.6;"><p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p><p>⏱️ <b>30 minutos</b> máximo - Con práctica lo haces en 10 min</p><p>✅ <b>27 aciertos mínimo</b> para aprobar - Máximo 3 fallos permitidos</p><p>🏫 <b>El día del examen:</b> Lleva DNI + Justificante cita. Llega 15 min antes.</p><p>💡 <b>Truco DGT:</b> Siempre la respuesta más segura y conservadora es la correcta.</p></div></div><h3 style="color:#00D9FF; margin:15px 0 10px;">📚 MÉTODO GASDRIVE V14 - 3 PASOS</h3><div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #2ecc71; border-radius:8px;"><div style="font-weight:700; color:#2ecc71;">1. TEMARIO 10 min/día - 22 fichas verticales T01-T11</div><div style="color:#ccc; font-size:12px;">Timer global 10 min → Desbloquea Pase +50 coins. Fichas JPG scroll infinito.</div></div><div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:8px;"><div style="font-weight:700; color:#FFD700;">2. TESTS de 15 preguntas por tanda</div><div style="color:#ccc; font-size:12px;">Rutina corta. Si fallas N-01 Alcohol te manda a Biblioteca 03.</div></div><div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #00D9FF; border-radius:8px;"><div style="font-weight:700; color:#00D9FF;">3. EXAMEN diario cuando llegues al 90%</div><div style="color:#ccc; font-size:12px;">Racha de 6 aprobados seguidos para ir seguro a DGT real.</div></div>`;
 }
-
-function anarAPagina(pagina) {
-  canviarTab_V94(null, 'temari');
-  setTimeout(()=>{ if(typeof canviarTemariPrincipal==='function'){ document.querySelector('#tab-temari.sub-tab-btn')?.click(); } }, 300);
-}
-
+function anarAPagina(pagina) { canviarTab_V94(null, 'temari'); setTimeout(()=>{ if(typeof canviarTemariPrincipal==='function'){ document.querySelector('#tab-temari.sub-tab-btn')?.click(); } }, 300); }
 function actualitzarEstadistiques_V94() {
-  const tab = document.getElementById('tab-estadistiques') || document.getElementById('tab-estad') ;
-  if(!tab ||!tab.classList.contains('active')) {
-    const maybeActive = document.querySelector('.tab-content.active');
-    if(!maybeActive ||!maybeActive.id.includes('estad')) return;
-  }
-  const stats = calcularPreparacioDGT_V94();
-  const preparacioArrodonida = Math.round(stats.preparacio);
-  const falta = Math.max(0, 90 - preparacioArrodonida);
+  const tab = document.getElementById('tab-estadistiques') || document.getElementById('tab-estad') ; if(!tab ||!tab.classList.contains('active')) { const maybeActive = document.querySelector('.tab-content.active'); if(!maybeActive ||!maybeActive.id.includes('estad')) return; }
+  const stats = calcularPreparacioDGT_V94(); const preparacioArrodonida = Math.round(stats.preparacio); const falta = Math.max(0, 90 - preparacioArrodonida);
   const el1 = document.getElementById('stats-global-percent'); if(el1) el1.textContent = preparacioArrodonida + '%';
-  const el1b = document.getElementById('stats-global-falta') || document.getElementById('stats-global-text');
-  if(el1b) el1b.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Listo para DGT!` : `${preparacioArrodonida}% - Te falta ${falta}% para el 90%`;
+  const el1b = document.getElementById('stats-global-falta') || document.getElementById('stats-global-text'); if(el1b) el1b.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Listo para DGT!` : `${preparacioArrodonida}% - Te falta ${falta}% para el 90%`;
   const el2 = document.getElementById('stats-global-bar'); if(el2) el2.style.width = preparacioArrodonida + '%';
-  const el3 = document.getElementById('stats-domini-percent'); if(el3) el3.textContent = Math.round(stats.retencio) + '%';
-  const el4 = document.getElementById('stats-domini-bar'); if(el4) el4.style.width = Math.round(stats.retencio) + '%';
-  const el5 = document.getElementById('stats-constancia-percent'); if(el5) el5.textContent = Math.round(stats.constancia) + '%';
-  const el6 = document.getElementById('stats-constancia-bar'); if(el6) el6.style.width = Math.round(stats.constancia) + '%';
+  const el3 = document.getElementById('stats-domini-percent'); if(el3) el3.textContent = Math.round(stats.retencio) + '%'; const el4 = document.getElementById('stats-domini-bar'); if(el4) el4.style.width = Math.round(stats.retencio) + '%';
+  const el5 = document.getElementById('stats-constancia-percent'); if(el5) el5.textContent = Math.round(stats.constancia) + '%'; const el6 = document.getElementById('stats-constancia-bar'); if(el6) el6.style.width = Math.round(stats.constancia) + '%';
   const el7 = document.getElementById('stats-constancia-label'); if(el7) el7.textContent = `CONSTANCIA: ${stats.diesValids}/20 días válidos`;
-  const el8 = document.getElementById('stats-temari-percent'); if(el8) el8.textContent = Math.round(stats.cobertura) + '%';
-  const el9 = document.getElementById('stats-temari-bar'); if(el9) el9.style.width = Math.round(stats.cobertura) + '%';
-  const el10 = document.getElementById('stats-simulacres-percent'); if(el10) el10.textContent = Math.round(stats.estabilitat) + '%';
-  const el11 = document.getElementById('stats-simulacres-bar'); if(el11) el11.style.width = Math.round(stats.estabilitat) + '%';
+  const el8 = document.getElementById('stats-temari-percent'); if(el8) el8.textContent = Math.round(stats.cobertura) + '%'; const el9 = document.getElementById('stats-temari-bar'); if(el9) el9.style.width = Math.round(stats.cobertura) + '%';
+  const el10 = document.getElementById('stats-simulacres-percent'); if(el10) el10.textContent = Math.round(stats.estabilitat) + '%'; const el11 = document.getElementById('stats-simulacres-bar'); if(el11) el11.style.width = Math.round(stats.estabilitat) + '%';
   const el12 = document.getElementById('stats-examen-aprobados'); if(el12) el12.textContent = `Mejor racha: ${stats.maxRatxa}/6 aprobados seguidos`;
   dibujarGraficaEvolucion(); dibuixarPuntsDebils_V94(); actualitzarOrientacioV11();
 }
-
-function getDadesEvolucio() {
-  return estat.stats.historialEvolucio.map(h => {
-    let diaNum = '0';
-    if(h.dia && h.dia.includes('-')) { const parts = h.dia.split('-'); diaNum = parts[2] || parts[0] || '0'; if(diaNum.includes('T')) diaNum = diaNum.split('T')[0]; }
-    else if(h.dia && h.dia.includes('/')) { diaNum = h.dia.split('/')[0]; }
-    else { diaNum = (h.dia||'').toString().substring(0,2); }
-    diaNum = diaNum.replace(/^0+/, '') || '0'; return {dia: diaNum, global: Math.round(h.percent||0)};
-  });
-}
+function getDadesEvolucio() { return estat.stats.historialEvolucio.map(h => { let diaNum = '0'; if(h.dia && h.dia.includes('-')) { const parts = h.dia.split('-'); diaNum = parts[2] || parts[0] || '0'; if(diaNum.includes('T')) diaNum = diaNum.split('T')[0]; } else if(h.dia && h.dia.includes('/')) { diaNum = h.dia.split('/')[0]; } else { diaNum = (h.dia||'').toString().substring(0,2); } diaNum = diaNum.replace(/^0+/, '') || '0'; return {dia: diaNum, global: Math.round(h.percent||0)}; }); }
 function potFerTests() { comprovarNouDia(); return estat.stats.paseCompletado; }
-function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 10 - Math.floor(estat.stats.tempsEstudiatAvui)); const segQueFalten = Math.floor((10 - estat.stats.tempsEstudiatAvui - Math.floor(10 - estat.stats.tempsEstudiatAvui))*60); alert(`⛔ PASE BLOQUEADO V14\nEstudia ${minutsQueFalten}:${segQueFalten.toString().padStart(2,'0')} más en el TEMARIO (22 fichas T01-T11) para desbloquear los tests de hoy.\n\nTimer global 10 min con fichas verticales infinitas.`); }
+function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 10 - Math.floor(estat.stats.tempsEstudiatAvui)); const segQueFalten = Math.floor((10 - estat.stats.tempsEstudiatAvui - Math.floor(10 - estat.stats.tempsEstudiatAvui))*60); alert(`⛔ PASE BLOQUEADO V14\nEstudia ${minutsQueFalten}:${segQueFalten.toString().padStart(2,'0')} más en el TEMARIO (22 fichas T01-T11) para desbloquear los tests de hoy.`); }
 function barrejarArray(arr) { const a = arr.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function normalizarPregunta(p){ const q = p.q || p.pregunta || ''; const a = p.a || p.opcions || p.opciones || []; const ok = p.ok!==undefined? p.ok : (p.correcta!==undefined? p.correcta : 0); return {...p, q, a, ok, pregunta: q, opcions: a, correcta: ok}; }
-
-// ===== V13 - CARREGAR PREGUNTA 15 POR TANDA =====
 function carregarPregunta(cat) {
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   let catReal = catNet; if(catNet==='senales') catReal='senyals'; if(catNet==='normas') catReal='normes'; if(catNet==='auxilios') catReal='auxilis'; if(catNet==='medio_ambiente' || catNet==='medioambiente') catReal='mediambient';
   const s = estat.test[catNet] || estat.test[catReal]; if(!s) return;
   const banco = (typeof PREGUNTES!=='undefined' && PREGUNTES[catNet])? PREGUNTES[catNet] : (typeof PREGUNTES!=='undefined' && PREGUNTES[catReal]? PREGUNTES[catReal] : null);
   if(!banco || banco.length===0) return;
-
-  // === NUEVO: GENERAR TANDA DE 15 ===
-  if(!s.sesionPreguntas || s.sesionPreguntas.length===0 || s.sesionIndex >= s.totalSesion){
-    s.sesionPreguntas = barrejarArray(banco).slice(0, Math.min(15, banco.length));
-    s.sesionIndex = 0;
-    s.encertsSesion = 0;
-  }
-
-  const pOriginal = s.sesionPreguntas[s.sesionIndex];
-  if(!pOriginal) return;
-  const pNorm = normalizarPregunta(pOriginal);
-  const textCorrecte = pNorm.a[pNorm.ok];
-  const opcionsBarrejades = barrejarArray(pNorm.a);
-  const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
-  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.sesionIndex)};
-  s.current = p;
-
+  if(!s.sesionPreguntas || s.sesionPreguntas.length===0 || s.sesionIndex >= s.totalSesion){ s.sesionPreguntas = barrejarArray(banco).slice(0, Math.min(15, banco.length)); s.sesionIndex = 0; s.encertsSesion = 0; }
+  const pOriginal = s.sesionPreguntas[s.sesionIndex]; if(!pOriginal) return;
+  const pNorm = normalizarPregunta(pOriginal); const textCorrecte = pNorm.a[pNorm.ok]; const opcionsBarrejades = barrejarArray(pNorm.a); const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
+  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.sesionIndex)}; s.current = p;
   pintarImatgeSiExisteix(catNet, pOriginal); pintarImatgeSiExisteix(catReal, pOriginal);
-
   const preguntaEl = document.getElementById(`test-${catNet}-pregunta`) || document.getElementById(`test-${catReal}-pregunta`) || document.getElementById(`test-${cat}-pregunta`);
   if(preguntaEl){ const audioSafe = (p.q||'').replace(/'/g, "\\'"); preguntaEl.innerHTML = `${s.sesionIndex+1}/15 - ${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
   const acEl = document.getElementById(`test-${catNet}-aciertos`) || document.getElementById(`test-${catReal}-aciertos`); if(acEl) acEl.textContent = s.encertsSesion + '/' + s.totalSesion;
@@ -1734,10 +1551,7 @@ function carregarPregunta(cat) {
   const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; btnSig.textContent = (s.sesionIndex===s.totalSesion-1? 'Ver resultado →' : 'Siguiente →'); }
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreTest_V94(catReal, i, this); }; cont.appendChild(div); });
 }
-
 function parlar(text) { if('speechSynthesis' in window){ speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'es-ES'; utterance.rate = 0.9; speechSynthesis.speak(utterance); } }
-
-// ===== TESTS CON TIPS - V13 =====
 function respondreTest_V94(cat, idx, el) {
   if(!potFerTests()) return mostrarPopupPase();
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -1749,77 +1563,71 @@ function respondreTest_V94(cat, idx, el) {
   if(correcte) { el.classList.add('correcta'); s.encerts++; s.encertsSesion++; s.ratxa++; s.puntuacio += 10 + (s.ratxa * 2); estat.coins += 5; mostrarEmoji(true, el); }
   else { el.classList.add('incorrecta'); const ops = cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta'); s.ratxa = 0; registrarFallada(catNet, p.subtema, p.pag, p); mostrarEmoji(false, el); }
   actualizarMetricasTest(catNet, p.id, correcte); registrarHistorialPregunta(p.id, correcte); actualitzarCoins(); guardar();
-
-  // TIP EN TESTS - SIEMPRE
   const tipDiv = document.getElementById(`test-${catNet}-tip`) || document.getElementById(`test-${catReal}-tip`) || document.getElementById(`test-${cat}-tip`);
-  if(tipDiv){
-    const txt = p.tip || p.explicacion || p.explicacio || "";
-    if(txt){
-      tipDiv.innerHTML = `💡 <b>CONSEJO DGT:</b> ${txt}`;
-      tipDiv.style.display = 'block';
-      tipDiv.style.border = '2px solid #00D9FF';
-      tipDiv.style.background = '#fff9c4';
-      tipDiv.style.color = '#000';
-      tipDiv.style.padding = '14px';
-      tipDiv.style.borderRadius = '12px';
-      tipDiv.style.marginTop = '12px';
-      tipDiv.style.fontWeight = '600';
-      tipDiv.style.fontSize = '13px';
-      tipDiv.style.lineHeight = '1.4';
-    }
-  }
+  if(tipDiv){ const txt = p.tip || p.explicacion || p.explicacio || ""; if(txt){ tipDiv.innerHTML = `💡 <b>CONSEJO DGT:</b> ${txt}`; tipDiv.style.display = 'block'; tipDiv.style.border = '2px solid #00D9FF'; tipDiv.style.background = '#fff9c4'; tipDiv.style.color = '#000'; tipDiv.style.padding = '14px'; tipDiv.style.borderRadius = '12px'; tipDiv.style.marginTop = '12px'; tipDiv.style.fontWeight = '600'; tipDiv.style.fontSize = '13px'; tipDiv.style.lineHeight = '1.4'; } }
   const btnSig = document.getElementById(`btn-sig-test-${catNet}`) || document.getElementById(`btn-sig-test-${cat}`); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; }
 }
-
 function seguentTest(e, cat) {
-  e.preventDefault();
-  const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  const s = estat.test[catNet] || estat.test[cat];
-  if(!s) return;
-  s.sesionIndex++;
-  s.idx++;
-
-  // SI TERMINO LAS 15 -> MOSTRAR RESULTADO Y REINICIAR
+  e.preventDefault(); const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); const s = estat.test[catNet] || estat.test[cat]; if(!s) return; s.sesionIndex++; s.idx++;
   if(s.sesionIndex >= s.totalSesion){
-    const pct = Math.round((s.encertsSesion / s.totalSesion)*100);
-    const msg = s.encertsSesion >= 12? '🔥 ¡TANDA PERFECTA!' : s.encertsSesion >= 9? '💪 ¡Buen trabajo!' : '📚 Sigue practicando';
-    // Modal resultado tanda
-    const modal = document.createElement('div');
-    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    const pct = Math.round((s.encertsSesion / s.totalSesion)*100); const msg = s.encertsSesion >= 12? '🔥 ¡TANDA PERFECTA!' : s.encertsSesion >= 9? '💪 ¡Buen trabajo!' : '📚 Sigue practicando';
+    const modal = document.createElement('div'); modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
     modal.innerHTML = `<div style="background:#1a1a1a; border:3px solid #00D9FF; border-radius:20px; padding:24px; max-width:340px; width:100%; text-align:center;"><h2 style="color:#00D9FF; margin-bottom:10px;">${msg}</h2><div style="font-size:42px; font-weight:800; color:#FFD700; margin:10px 0;">${s.encertsSesion}/${s.totalSesion}</div><div style="color:#fff; font-size:18px;">${pct}% aciertos</div><div style="color:#2ecc71; margin-top:10px;">+${s.encertsSesion*5} coins ganados</div><button id="btn-continuar-tanda" style="background:#00D9FF; color:#000; border:none; padding:12px 20px; border-radius:12px; font-weight:800; margin-top:16px; width:100%; cursor:pointer;">Siguiente tanda de 15 →</button></div>`;
-    document.body.appendChild(modal);
-    document.getElementById('btn-continuar-tanda').onclick = () => {
-      modal.remove();
-      s.sesionPreguntas = [];
-      s.sesionIndex = 0;
-      s.encertsSesion = 0;
-      carregarPregunta(catNet);
-    };
+    document.body.appendChild(modal); document.getElementById('btn-continuar-tanda').onclick = () => { modal.remove(); s.sesionPreguntas = []; s.sesionIndex = 0; s.encertsSesion = 0; carregarPregunta(catNet); }; return;
+  } carregarPregunta(catNet);
+}
+// ===== FIX SIMULACROS CLIMA/CARRETERA/URBANO/EMERGENCIA - NO MAS CARGANDO INFINITO =====
+function carregarSituacio(cat) {
+  if(!cat) cat = sitCategoriaActiva;
+  const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  let keySit = catNorm;
+  if(catNorm==='urbano' || catNorm==='urba') keySit='urbà';
+  if(catNorm==='emergencia') keySit='emergència';
+  if(catNorm==='urbano') keySit='urbano';
+  // Busca en todas las variantes posibles
+  let banco = null;
+  if(typeof SITUACIONS!=='undefined'){
+    banco = SITUACIONS[cat] || SITUACIONS[catNorm] || SITUACIONS[keySit] || SITUACIONS['clima'] || null;
+    // Intenta mayusculas y sin acento
+    for(let k in SITUACIONS){ if(k.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")===catNorm) { banco = SITUACIONS[k]; break; } }
+  }
+  // Fallback a PREGUNTES si no hay SITUACIONS
+  if(!banco || banco.length===0){
+    if(typeof PREGUNTES!=='undefined'){
+      const fallbackCat = catNorm==='urbano'?'normas': catNorm==='carretera'?'normas': catNorm==='emergencia'?'auxilios': catNorm==='clima'?'normas':'general';
+      banco = PREGUNTES[fallbackCat] || PREGUNTES['general'] || [];
+    }
+  }
+  if(!banco || banco.length===0){
+    const preEl = document.getElementById(`sit-${cat}-pregunta`) || document.getElementById(`sit-${catNorm}-pregunta`) || document.getElementById(`sit-${keySit}-pregunta`);
+    if(preEl) preEl.textContent = `No hay datos de ${cat}. Revisa SITUACIONS.js - ${Object.keys(SITUACIONS||{}).join(', ')}`;
+    const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${catNorm}-opciones`);
+    if(cont) cont.innerHTML = `<div style="padding:20px;text-align:center;color:#999">No hay casos de ${cat}. Haz TEST primero para desbloquear.<br><button onclick="carregarPregunta('normas')" style="margin-top:10px;background:#00D9FF;border:none;padding:10px 16px;border-radius:8px;font-weight:700">Ir a TEST Normas</button></div>`;
     return;
   }
-  carregarPregunta(catNet);
-}
-
-// ===== SITUACIONES (igual) =====
-function carregarSituacio(cat) {
-  if(!cat) cat = sitCategoriaActiva; const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
-  const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm]; const banco = (typeof SITUACIONS!=='undefined' && SITUACIONS[cat])? SITUACIONS[cat] : (typeof SITUACIONS!=='undefined' && SITUACIONS[keySit]? SITUACIONS[keySit] : null); if(!banco) return;
-  const casos = barrejarArray(banco); if(!casos || casos.length === 0) return; const pOriginal = casos[s.idx % casos.length]; const pNorm = normalizarPregunta(pOriginal);
+  const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm] || estat.sit['clima'];
+  if(!s){ console.warn('estat.sit no tiene',cat); return; }
+  sitCategoriaActiva = catNorm;
+  const casos = barrejarArray(banco); if(!casos || casos.length === 0) return;
+  const pOriginal = casos[s.idx % casos.length]; const pNorm = normalizarPregunta(pOriginal);
   const opcionsBarrejades = barrejarArray(pNorm.a); const textCorrecte = pNorm.a[pNorm.ok]; const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte); const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte}; s.current = p;
-  const preEl = document.getElementById(`sit-${cat}-pregunta`) || document.getElementById(`sit-${keySit}-pregunta`); if(preEl) preEl.textContent = p.q;
-  const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`); if(!cont) return; cont.innerHTML = '';
-  p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreSituacio_V94(cat, i, this); }; cont.appendChild(div); });
+  const preEl = document.getElementById(`sit-${cat}-pregunta`) || document.getElementById(`sit-${keySit}-pregunta`) || document.getElementById(`sit-${catNorm}-pregunta`) || document.getElementById('sit-clima-pregunta');
+  if(preEl) preEl.textContent = p.q;
+  const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`) || document.getElementById(`sit-${catNorm}-opciones`) || document.getElementById('sit-clima-opciones');
+  if(!cont) return; cont.innerHTML = '';
+  p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreSituacio_V94(catNorm, i, this); }; cont.appendChild(div); });
+  const btn = document.getElementById(`btn-sig-sit-${cat}`) || document.getElementById(`btn-sig-sit-${catNorm}`) || document.getElementById('btn-sig-sit-clima');
+  if(btn){ btn.disabled=true; btn.style.opacity='0.4'; btn.textContent='Elige una opción'; }
 }
 function respondreSituacio_V94(cat, idx, el) {
   if(!potFerTests()) return mostrarPopupPase(); const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
-  const s = estat.sit[cat] || estat.sit[keySit]; const p = s.current; const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`); if(cont.querySelector('.correcta')) return;
+  const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm]; if(!s ||!s.current) return; const p = s.current; const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`) || document.getElementById(`sit-${catNorm}-opciones`) || document.getElementById('sit-clima-opciones'); if(!cont || cont.querySelector('.correcta')) return;
   cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada')); const correcte = idx === p.ok;
-  if(correcte) { el.classList.add('correcta'); s.encerts++; s.puntuacio += 15; estat.coins += 10; } else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); registrarFallada('examen', p.subtema, p.pag, p); }
-  actualizarMetricasCaso(cat, p.id, correcte); registrarHistorialPregunta(p.id, correcte); actualitzarCoins(); guardar();
+  if(correcte) { el.classList.add('correcta'); s.encerts++; s.puntuacio += 15; estat.coins += 10; } else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok]?.classList.add('correcta'); registrarFallada('examen', p.subtema, p.pag, p); }
+  actualizarMetricasCaso(catNorm, p.id, correcte); registrarHistorialPregunta(p.id, correcte); actualitzarCoins(); guardar();
+  const btn = document.getElementById(`btn-sig-sit-${cat}`) || document.getElementById(`btn-sig-sit-${catNorm}`) || document.getElementById('btn-sig-sit-clima'); if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.textContent='Siguiente →'; }
 }
-function seguentSituacio(e, cat) { e.preventDefault(); if(estat.sit[cat]) estat.sit[cat].idx++; carregarSituacio(cat); }
-
-// ===== EXAMEN SIN TIPS =====
+function seguentSituacio(e, cat) { e.preventDefault(); const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); if(estat.sit[cat]) estat.sit[cat].idx++; if(estat.sit[catNorm]) estat.sit[catNorm].idx++; carregarSituacio(catNorm||cat); }
 function iniciarExamen(e) {
   if(!potFerTests()) return mostrarPopupPase(); let totes = [];
   if(typeof PREGUNTES!== 'undefined') { for(let key in PREGUNTES) { if(Array.isArray(PREGUNTES[key])) totes = totes.concat(PREGUNTES[key]); } }
@@ -1828,195 +1636,70 @@ function iniciarExamen(e) {
   const btnIni = document.getElementById('btn-iniciar-examen'); if(btnIni) btnIni.style.display = 'none'; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig) btnSig.style.display = 'block';
   iniciarTimerExamen(); carregarPreguntaExamen();
 }
-function iniciarTimerExamen() {
-  clearInterval(estat.examen.timer); estat.examen.temps = 1800;
-  estat.examen.timer = setInterval(() => { estat.examen.temps--; const min = Math.floor(estat.examen.temps / 60); const seg = estat.examen.temps % 60; const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`; if(estat.examen.temps <= 0) finalitzarExamen(); }, 1000);
-}
+function iniciarTimerExamen() { clearInterval(estat.examen.timer); estat.examen.temps = 1800; estat.examen.timer = setInterval(() => { estat.examen.temps--; const min = Math.floor(estat.examen.temps / 60); const seg = estat.examen.temps % 60; const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`; if(estat.examen.temps <= 0) finalitzarExamen(); }, 1000); }
 function carregarPreguntaExamen() {
-  if(estat.examen.index >= 30) return finalitzarExamen();
-  const pOriginal = estat.examen.preguntes[estat.examen.index];
-  const pNorm = normalizarPregunta(pOriginal);
-  const textCorrecte = pNorm.a[pNorm.ok]; const opcionsBarrejades = barrejarArray(pNorm.a); const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
-  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || ('examen_' + estat.examen.index)};
-  estat.examen.preguntes[estat.examen.index] = p; pintarImatgeSiExisteix('examen', pOriginal);
-  const numEl = document.getElementById('examen-num'); if(numEl) numEl.textContent = estat.examen.index + 1;
-  const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts;
-  const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = `${(estat.examen.index/30)*100}%`;
-  const preEl = document.getElementById('examen-pregunta');
-  if(preEl) { const audioSafe = (p.q||'').replace(/'/g, "\\'"); preEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
-  const cont = document.getElementById('examen-opciones'); if(!cont) return; cont.innerHTML = '';
-  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; }
-  const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
+  if(estat.examen.index >= 30) return finalitzarExamen(); const pOriginal = estat.examen.preguntes[estat.examen.index]; const pNorm = normalizarPregunta(pOriginal); const textCorrecte = pNorm.a[pNorm.ok]; const opcionsBarrejades = barrejarArray(pNorm.a); const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
+  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || ('examen_' + estat.examen.index)}; estat.examen.preguntes[estat.examen.index] = p; pintarImatgeSiExisteix('examen', pOriginal);
+  const numEl = document.getElementById('examen-num'); if(numEl) numEl.textContent = estat.examen.index + 1; const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = `${(estat.examen.index/30)*100}%`;
+  const preEl = document.getElementById('examen-pregunta'); if(preEl) { const audioSafe = (p.q||'').replace(/'/g, "\\'"); preEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
+  const cont = document.getElementById('examen-opciones'); if(!cont) return; cont.innerHTML = ''; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; } const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreExamen(i, this); }; cont.appendChild(div); });
 }
-function respondreExamen(idx, el) {
-  const p = estat.examen.preguntes[estat.examen.index]; const cont = document.getElementById('examen-opciones');
-  if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
-  cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada')); const correcte = idx === p.ok;
-  if(correcte) { el.classList.add('correcta'); estat.examen.encerts++; estat.coins += 20; }
-  else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); estat.examen.fallos++; registrarFallada('examen', p.subtema, p.pag, p); }
-  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; }
-  const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; actualitzarCoins(); guardar();
-  const tipDiv = document.getElementById('examen-tip'); if(tipDiv){ tipDiv.innerHTML=''; tipDiv.style.display='none'; }
-}
+function respondreExamen(idx, el) { const p = estat.examen.preguntes[estat.examen.index]; const cont = document.getElementById('examen-opciones'); if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return; cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada')); const correcte = idx === p.ok; if(correcte) { el.classList.add('correcta'); estat.examen.encerts++; estat.coins += 20; } else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); estat.examen.fallos++; registrarFallada('examen', p.subtema, p.pag, p); } const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; } const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; actualitzarCoins(); guardar(); const tipDiv = document.getElementById('examen-tip'); if(tipDiv){ tipDiv.innerHTML=''; tipDiv.style.display='none'; } }
 function seguentPreguntaExamen(e) { e.preventDefault(); estat.examen.index++; if(estat.examen.index >= 30) { finalitzarExamen(); } else { carregarPreguntaExamen(); } }
 function finalitzarExamen() {
-  clearInterval(estat.examen.timer); estat.examen.activa = false; const nota = estat.examen.encerts; const aprovat = nota >= 27;
-  PROGRESO.examen.realitzats++; if(aprovat) PROGRESO.examen.aprovats++; PROGRESO.examen.historial.push({data: estat.stats.diaActual, nota}); guardar();
+  clearInterval(estat.examen.timer); estat.examen.activa = false; const nota = estat.examen.encerts; const aprovat = nota >= 27; PROGRESO.examen.realitzats++; if(aprovat) PROGRESO.examen.aprovats++; PROGRESO.examen.historial.push({data: estat.stats.diaActual, nota}); guardar();
   const res = document.getElementById('examen-resultat'); if(!res) return; res.style.display = 'block';
-  if(aprovat) { res.innerHTML = `<h2 style="color:#2ecc71">✅ ¡APROBADO!</h2><p style="font-size:24px">${nota}/30</p><button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>`; estat.coins += nota * 20; }
-  else { res.innerHTML = `<h2 style="color:#e74c3c">❌ SUSPENSO</h2><p style="font-size:24px">${nota}/30</p><p>Necesitas 27</p><button class="btn" onclick="reiniciarExamen()">Volver a intentar</button>`; }
+  if(aprovat) { res.innerHTML = `<h2 style="color:#2ecc71">✅ ¡APROBADO!</h2><p style="font-size:24px">${nota}/30</p><button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>`; estat.coins += nota * 20; } else { res.innerHTML = `<h2 style="color:#e74c3c">❌ SUSPENSO</h2><p style="font-size:24px">${nota}/30</p><p>Necesitas 27</p><button class="btn" onclick="reiniciarExamen()">Volver a intentar</button>`; }
   actualitzarCoins(); guardar(); actualitzarEstadistiques_V94();
 }
-function reiniciarExamen() {
-  const resEl = document.getElementById('examen-resultat'); if(resEl) resEl.style.display = 'none';
-  const btnIni = document.getElementById('btn-iniciar-examen'); if(btnIni) btnIni.style.display = 'block';
-  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig) btnSig.style.display = 'none';
-  const preEl = document.getElementById('examen-pregunta'); if(preEl) preEl.textContent = "Pulsa Inicia el Examen";
-  const opEl = document.getElementById('examen-opciones'); if(opEl) opEl.innerHTML = '';
-  const numEl = document.getElementById('examen-num'); if(numEl) numEl.textContent = '0';
-  const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = '0';
-  const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = '0%';
-  const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = '30:00';
-  const imgEl = document.getElementById('examen-imagen'); if(imgEl) imgEl.innerHTML = '';
-}
-
-// ===== GARAJE 17 + TIENDA 42 =====
+function reiniciarExamen() { const resEl = document.getElementById('examen-resultat'); if(resEl) resEl.style.display = 'none'; const btnIni = document.getElementById('btn-iniciar-examen'); if(btnIni) btnIni.style.display = 'block'; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig) btnSig.style.display = 'none'; const preEl = document.getElementById('examen-pregunta'); if(preEl) preEl.textContent = "Pulsa Inicia el Examen"; const opEl = document.getElementById('examen-opciones'); if(opEl) opEl.innerHTML = ''; const numEl = document.getElementById('examen-num'); if(numEl) numEl.textContent = '0'; const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = '0'; const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = '0%'; const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = '30:00'; const imgEl = document.getElementById('examen-imagen'); if(imgEl) imgEl.innerHTML = ''; }
 function carregarGaratge() {
-  const cont = document.getElementById('garage-lista') || document.getElementById('garaje-lista'); if(!cont) return; cont.innerHTML = '';
-  let hpTotal = 90;
-  estat.accessoris.forEach(id => {
-    const acc = (typeof ACCESORIOS!=='undefined'? ACCESORIOS.find(a => a.id === id) : null) || (typeof ACCESSORIS!=='undefined'? ACCESSORIS.find(a => a.id === id) : null);
-    if(acc) hpTotal += (acc.hp||0);
-  });
+  const cont = document.getElementById('garage-lista') || document.getElementById('garaje-lista'); if(!cont) return; cont.innerHTML = ''; let hpTotal = 90;
+  estat.accessoris.forEach(id => { const acc = (typeof ACCESORIOS!=='undefined'? ACCESORIOS.find(a => a.id === id) : null) || (typeof ACCESSORIS!=='undefined'? ACCESSORIS.find(a => a.id === id) : null); if(acc) hpTotal += (acc.hp||0); });
   const scoreEl = document.getElementById('garage-score') || document.getElementById('garaje-score'); if(scoreEl) scoreEl.textContent = `🏎️ ${hpTotal} CV - ${estat.coins} 💰`;
   const lista = (typeof COCHES!=='undefined'? COCHES : (typeof COTXES!=='undefined'? COTXES : []));
-  lista.forEach(cotxe => {
-    const id = cotxe.id; const nombre = cotxe.nombre || cotxe.nom || 'Coche'; const cv = cotxe.cv || 90;
-    const emoji = cotxe.emoji || '🚗'; const color = cotxe.color || ''; const precio = cotxe.precio || cotxe.preu || 200;
-    const desbloquejat = estat.cotxes.includes(id);
-    const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:12px;border-radius:12px;text-align:center;border:1px solid #333;margin-bottom:10px;';
-    div.innerHTML = `<div style="font-size:40px; filter:${color}">${emoji}</div><div style="color:#fff;font-size:13px;font-weight:700;">${nombre}</div><div style="color:#00D9FF;font-size:12px;">${cv} CV</div>${!desbloquejat? `<button onclick="comprarCotxe('${id}')" style="background:#00D9FF;border:none;padding:8px 12px;border-radius:8px;margin-top:6px;font-weight:700;cursor:pointer;width:100%;">Comprar ${precio} 💰</button>` : '<div style="color:#2ecc71;font-size:12px;margin-top:6px;">✓ En garaje</div>'}`;
-    cont.appendChild(div);
-  });
+  lista.forEach(cotxe => { const id = cotxe.id; const nombre = cotxe.nombre || cotxe.nom || 'Coche'; const cv = cotxe.cv || 90; const emoji = cotxe.emoji || '🚗'; const color = cotxe.color || ''; const precio = cotxe.precio || cotxe.preu || 200; const desbloquejat = estat.cotxes.includes(id); const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:12px;border-radius:12px;text-align:center;border:1px solid #333;margin-bottom:10px;'; div.innerHTML = `<div style="font-size:40px; filter:${color}">${emoji}</div><div style="color:#fff;font-size:13px;font-weight:700;">${nombre}</div><div style="color:#00D9FF;font-size:12px;">${cv} CV</div>${!desbloquejat? `<button onclick="comprarCotxe('${id}')" style="background:#00D9FF;border:none;padding:8px 12px;border-radius:8px;margin-top:6px;font-weight:700;cursor:pointer;width:100%;">Comprar ${precio} 💰</button>` : '<div style="color:#2ecc71;font-size:12px;margin-top:6px;">✓ En garaje</div>'}`; cont.appendChild(div); });
 }
-function comprarCotxe(id) {
-  const lista = (typeof COCHES!=='undefined'? COCHES : COTXES); const cotxe = lista.find(c => c.id === id); if(!cotxe) return;
-  const precio = cotxe.precio || cotxe.preu || 0;
-  if(estat.coins < precio) { alert('💰 Faltan monedas'); return; }
-  estat.coins -= precio; if(!estat.cotxes.includes(id)) estat.cotxes.push(id); guardar(); actualitzarCoins(); carregarGaratge();
-}
+function comprarCotxe(id) { const lista = (typeof COCHES!=='undefined'? COCHES : COTXES); const cotxe = lista.find(c => c.id === id); if(!cotxe) return; const precio = cotxe.precio || cotxe.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; } estat.coins -= precio; if(!estat.cotxes.includes(id)) estat.cotxes.push(id); guardar(); actualitzarCoins(); carregarGaratge(); }
 function carregarBotiga() {
   const cont = document.getElementById('emoji-tienda') || document.getElementById('tienda-lista'); if(!cont) return; cont.innerHTML = '';
-  const listaAcc = (typeof ACCESORIOS!=='undefined'? ACCESORIOS : (typeof ACCESSORIS!=='undefined'? ACCESSORIS : []));
-  const listaEmoji = (typeof EMOJI_TIENDA!=='undefined'? EMOJI_TIENDA : (typeof EMOJI_BOTIGA!=='undefined'? EMOJI_BOTIGA : []));
-  listaAcc.forEach(acc => {
-    const comprat = estat.accessoris.includes(acc.id); const precio = acc.precio || acc.preu || 0;
-    const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:10px;border-radius:10px;border:1px solid #333;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;';
-    div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px">${acc.emoji}</span><div><div style="color:#fff;font-size:12px;">${acc.nombre||acc.nom}</div><div style="color:#00D9FF;font-size:10px;">+${acc.hp} CV</div></div></div>${!comprat? `<button onclick="comprarAccessoris('${acc.id}')" style="background:#FFD700;border:none;padding:6px 10px;border-radius:6px;font-weight:700;cursor:pointer;">${precio} 💰</button>` : '<div style="color:#2ecc71">✓</div>'}`; cont.appendChild(div);
-  });
-  listaEmoji.forEach(emoji => {
-    const comprat = estat.emojis.includes(emoji.id); const precio = emoji.precio || emoji.preu || 0;
-    const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:10px;border-radius:10px;border:1px solid #333;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;';
-    div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px">${emoji.emoji}</span><span style="color:#fff;font-size:12px;">${emoji.nombre||emoji.nom}</span></div>${!comprat? `<button onclick="comprarEmoji('${emoji.id}')" style="background:#00D9FF;border:none;padding:6px 10px;border-radius:6px;font-weight:700;cursor:pointer;">${precio} 💰</button>` : '<div style="color:#2ecc71">✓</div>'}`; cont.appendChild(div);
-  });
+  const listaAcc = (typeof ACCESORIOS!=='undefined'? ACCESORIOS : (typeof ACCESSORIS!=='undefined'? ACCESSORIS : [])); const listaEmoji = (typeof EMOJI_TIENDA!=='undefined'? EMOJI_TIENDA : (typeof EMOJI_BOTIGA!=='undefined'? EMOJI_BOTIGA : []));
+  listaAcc.forEach(acc => { const comprat = estat.accessoris.includes(acc.id); const precio = acc.precio || acc.preu || 0; const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:10px;border-radius:10px;border:1px solid #333;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;'; div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px">${acc.emoji}</span><div><div style="color:#fff;font-size:12px;">${acc.nombre||acc.nom}</div><div style="color:#00D9FF;font-size:10px;">+${acc.hp} CV</div></div></div>${!comprat? `<button onclick="comprarAccessoris('${acc.id}')" style="background:#FFD700;border:none;padding:6px 10px;border-radius:6px;font-weight:700;cursor:pointer;">${precio} 💰</button>` : '<div style="color:#2ecc71">✓</div>'}`; cont.appendChild(div); });
+  listaEmoji.forEach(emoji => { const comprat = estat.emojis.includes(emoji.id); const precio = emoji.precio || emoji.preu || 0; const div = document.createElement('div'); div.style.cssText='background:#1a1a1a;padding:10px;border-radius:10px;border:1px solid #333;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;'; div.innerHTML = `<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:24px">${emoji.emoji}</span><span style="color:#fff;font-size:12px;">${emoji.nombre||emoji.nom}</span></div>${!comprat? `<button onclick="comprarEmoji('${emoji.id}')" style="background:#00D9FF;border:none;padding:6px 10px;border-radius:6px;font-weight:700;cursor:pointer;">${precio} 💰</button>` : '<div style="color:#2ecc71">✓</div>'}`; cont.appendChild(div); });
 }
-function comprarAccessoris(id) {
-  const lista = (typeof ACCESORIOS!=='undefined'? ACCESORIOS : ACCESSORIS); const acc = lista.find(a => a.id === id); if(!acc) return;
-  const precio = acc.precio || acc.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; }
-  estat.coins -= precio; if(!estat.accessoris.includes(id)) estat.accessoris.push(id); guardar(); actualitzarCoins(); carregarBotiga(); carregarGaratge();
-}
-function comprarEmoji(id) {
-  const lista = (typeof EMOJI_TIENDA!=='undefined'? EMOJI_TIENDA : EMOJI_BOTIGA); const emoji = lista.find(e => e.id === id); if(!emoji) return;
-  const precio = emoji.precio || emoji.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; }
-  estat.coins -= precio; if(!estat.emojis.includes(id)) estat.emojis.push(id); guardar(); actualitzarCoins(); carregarBotiga();
-}
-
-// ===== V14 - TEMARIO NUEVO - 22 FICHAS JPG + BIBLIOTECA 5 LINKS - REEMPLAZA PDFs VIEJOS =====
-function carregarTemari() {
-  // V14: ya no usa PDFs, ahora usa 22 fichas verticales. Si existe visor nuevo, abre T01A
-  if(typeof carregarTemari_V14==='function'){ carregarTemari_V14(); return; }
-  const container = document.getElementById('temari-lista') || document.getElementById('temario-lista');
-  if(container){
-    container.innerHTML = `<div style="text-align:center; color:#666; padding:20px;">V14 activo - 22 fichas en pestaña ESTUDIO RÁPIDO 10 MIN</div>`;
-  }
-}
-
-function obrirPDF(ruta) {
-  // V14: PDFs obsoletos, redirige a biblioteca o fichas
-  console.warn('V14 - obrirPDF obsoleto, usa obrirFichaJPG o obrirBibliotecaOficial');
-  const mapPdfToBib = {
-    '01_Senales_Tomo_I_RD_465_2025.pdf': '01',
-    '02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf': '02',
-    '03_Manual_IX_Primeros_Auxilios_2025.pdf': '03',
-    '04_Manual_VIII_Mecanica_2024.pdf': '04',
-    '05_Medio_Ambiente_Distintivos_DGT_2025.pdf': '05'
-  };
-  for(let k in mapPdfToBib){ if(ruta.includes(k.substring(0,4)) || ruta.includes(k)){ if(typeof obrirBibliotecaOficial==='function'){ obrirBibliotecaOficial(mapPdfToBib[k]); return; } } }
-  // fallback: abre primera ficha
-  if(typeof obrirFichaJPG==='function') obrirFichaJPG('ficha-t01a');
-}
-
-function tancarPDF() {
-  const modal = document.getElementById('pdf-modal'); if(modal) modal.remove();
-}
-
-// ===== TIPS =====
+function comprarAccessoris(id) { const lista = (typeof ACCESORIOS!=='undefined'? ACCESORIOS : ACCESSORIS); const acc = lista.find(a => a.id === id); if(!acc) return; const precio = acc.precio || acc.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; } estat.coins -= precio; if(!estat.accessoris.includes(id)) estat.accessoris.push(id); guardar(); actualitzarCoins(); carregarBotiga(); carregarGaratge(); }
+function comprarEmoji(id) { const lista = (typeof EMOJI_TIENDA!=='undefined'? EMOJI_TIENDA : EMOJI_BOTIGA); const emoji = lista.find(e => e.id === id); if(!emoji) return; const precio = emoji.precio || emoji.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; } estat.coins -= precio; if(!estat.emojis.includes(id)) estat.emojis.push(id); guardar(); actualitzarCoins(); carregarBotiga(); }
+function carregarTemari() { if(typeof carregarTemari_V14==='function'){ carregarTemari_V14(); return; } const container = document.getElementById('temari-lista') || document.getElementById('temario-lista'); if(container){ container.innerHTML = `<div style="text-align:center; color:#666; padding:20px;">V14 activo - 22 fichas en pestaña ESTUDIO RÁPIDO 10 MIN</div>`; } }
+function obrirPDF(ruta) { console.warn('V14 - obrirPDF obsoleto, usa obrirFichaJPG o obrirBibliotecaOficial'); const mapPdfToBib = { '01_Senales_Tomo_I_RD_465_2025.pdf': '01', '02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf': '02', '03_Manual_IX_Primeros_Auxilios_2025.pdf': '03', '04_Manual_VIII_Mecanica_2024.pdf': '04', '05_Medio_Ambiente_Distintivos_DGT_2025.pdf': '05' }; for(let k in mapPdfToBib){ if(ruta.includes(k.substring(0,4)) || ruta.includes(k)){ if(typeof obrirBibliotecaOficial==='function'){ obrirBibliotecaOficial(mapPdfToBib[k]); return; } } } if(typeof obrirFichaJPG==='function') obrirFichaJPG('ficha-t01a'); }
+function tancarPDF() { const modal = document.getElementById('pdf-modal'); if(modal) modal.remove(); }
 function carregarTips() {
-  if(typeof TIPS === 'undefined' ||!TIPS || TIPS.length===0){
-    const cont = document.getElementById('tip-content');
-    if(cont) cont.innerHTML = '<div style="color:#999; text-align:center; padding:20px;">No hay tips cargados.<br>Verifica TIPS.js</div>';
-    return;
-  }
-  tipsData = TIPS;
-  currentTip = 0;
-  mostrarTip();
+  if(typeof TIPS === 'undefined' ||!TIPS || TIPS.length===0){ const cont = document.getElementById('tip-content'); if(cont) cont.innerHTML = '<div style="color:#999; text-align:center; padding:20px;">No hay tips cargados.<br>Verifica TIPS.js</div>'; return; }
+  tipsData = TIPS; currentTip = 0; mostrarTip();
 }
 function mostrarTip() {
-  if (!tipsData || tipsData.length === 0) return;
-  const tip = tipsData[currentTip];
-  const txt = tip.txt || tip.texto || tip.tip || '';
-  const emoji = tip.emoji || '💡';
-  const contentEl = document.getElementById('tip-content');
-  if(contentEl){
-    contentEl.innerHTML = `
-      <div style="text-align:center;">
-        <div style="font-size:56px; margin-bottom:12px; filter:drop-shadow(0 0 10px #00D9FF);">${emoji}</div>
-        <div style="color:#FFD700; font-size:12px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">CONSEJO DGT ${currentTip+1}/${tipsData.length}</div>
-        <div style="background:#fff9c4; color:#000; padding:16px; border-radius:14px; border:3px solid #00D9FF; font-size:15px; font-weight:600; line-height:1.5; text-align:left; box-shadow:0 0 20px rgba(0,217,255,0.3);">${txt}</div>
-      </div>`;
-  }
-  const counterEl = document.getElementById('tip-counter');
-  if(counterEl) counterEl.textContent = `${currentTip + 1} / ${tipsData.length}`;
+  if (!tipsData || tipsData.length === 0) return; const tip = tipsData[currentTip]; const txt = tip.txt || tip.texto || tip.tip || ''; const emoji = tip.emoji || '💡'; const contentEl = document.getElementById('tip-content');
+  if(contentEl){ contentEl.innerHTML = `<div style="text-align:center;"><div style="font-size:56px; margin-bottom:12px; filter:drop-shadow(0 0 10px #00D9FF);">${emoji}</div><div style="color:#FFD700; font-size:12px; font-weight:800; letter-spacing:1px; margin-bottom:10px;">CONSEJO DGT ${currentTip+1}/${tipsData.length}</div><div style="background:#fff9c4; color:#000; padding:16px; border-radius:14px; border:3px solid #00D9FF; font-size:15px; font-weight:600; line-height:1.5; text-align:left; box-shadow:0 0 20px rgba(0,217,255,0.3);">${txt}</div></div>`; }
+  const counterEl = document.getElementById('tip-counter'); if(counterEl) counterEl.textContent = `${currentTip + 1} / ${tipsData.length}`;
 }
 function nextTip(e) { if(e) e.preventDefault(); if(!tipsData || tipsData.length===0) return; currentTip = (currentTip + 1) % tipsData.length; mostrarTip(); }
 function prevTip(e) { if(e) e.preventDefault(); if(!tipsData || tipsData.length===0) return; currentTip = (currentTip - 1 + tipsData.length) % tipsData.length; mostrarTip(); }
-
 function dibujarGraficaEvolucion() {
   const canvas = document.getElementById('grafica-evolucion'); if(!canvas) return; const ctx = canvas.getContext('2d'); const dades = getDadesEvolucio();
-  if(canvas.width === 0) canvas.width = canvas.offsetWidth || 300; if(canvas.height === 0) canvas.height = 200;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(canvas.width === 0) canvas.width = canvas.offsetWidth || 300; if(canvas.height === 0) canvas.height = 200; ctx.clearRect(0,0,canvas.width,canvas.height);
   if(dades.length === 0){ ctx.fillStyle = '#666'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Haz tests 2 días para ver evolución', canvas.width/2, canvas.height/2); return; }
   ctx.strokeStyle = '#333'; ctx.lineWidth = 1; for(let i = 0; i <= 4; i++) { const y = 30 + (i * (canvas.height-60)/4); ctx.beginPath(); ctx.moveTo(30, y); ctx.lineTo(canvas.width-30, y); ctx.stroke(); }
-  ctx.strokeStyle = '#00D9FF'; ctx.lineWidth = 3; ctx.beginPath();
-  dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
+  ctx.strokeStyle = '#00D9FF'; ctx.lineWidth = 3; ctx.beginPath(); dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
 }
 function mostrarIntro(){}
-function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "V14 - 10 min + 22 fichas verticales ¡Vamos! 💪"; }
-
+function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "V14 PRO - 10 min + 22 fichas + Tests con imagen ¡Vamos! 💪"; }
 function canviarTab_V94(e, tab) {
   const tabTemari = document.getElementById('tab-temari'); if(tabTemari && tabTemari.classList.contains('active') && tempsIniciTemari!== null) { const minutsPassats = (Date.now() - tempsIniciTemari) / 1000 / 60; estat.stats.tempsEstudiatAvui += minutsPassats; tempsIniciTemari = null; guardar(); }
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  const targetTab = document.getElementById('tab-' + tab); if(targetTab) targetTab.classList.add('active');
-  if(e && e.target) { const btn = e.target.closest('.tab-btn'); if(btn) btn.classList.add('active'); }
-  if(tab === 'garage' || tab === 'garaje') carregarGaratge();
-  if(tab === 'tienda' || tab === 'botiga') carregarBotiga();
-  if(tab === 'temari' || tab === 'temario') { if(typeof carregarTemari_V14==='function') carregarTemari_V14(); else carregarTemari(); iniciarComptadorTemari(); }
-  if(tab === 'tips') carregarTips();
-  if(tab === 'test') { carregarPregunta('senales'); }
-  if(tab === 'estadistiques' || tab === 'estadisticas') actualitzarEstadistiques_V94();
+  const targetTab = document.getElementById('tab-' + tab); if(targetTab) targetTab.classList.add('active'); if(e && e.target) { const btn = e.target.closest('.tab-btn'); if(btn) btn.classList.add('active'); }
+  if(tab === 'garage' || tab === 'garaje') carregarGaratge(); if(tab === 'tienda' || tab === 'botiga') carregarBotiga(); if(tab === 'temari' || tab === 'temario') { if(typeof carregarTemari_V14==='function') carregarTemari_V14(); else carregarTemari(); iniciarComptadorTemari(); }
+  if(tab === 'tips') carregarTips(); if(tab === 'test') { carregarPregunta('senales'); } if(tab === 'estadistiques' || tab === 'estadisticas') actualitzarEstadistiques_V94();
 }
-
 function canviarSubTab(e, tab, subtab) {
   const tabId = tab === 'sit'? 'situaciones' : (tab === 'stats' || tab === 'estad')? 'estadistiques' : tab;
   const contenidor = document.getElementById('tab-' + tabId); if(!contenidor) return;
@@ -2027,13 +1710,7 @@ function canviarSubTab(e, tab, subtab) {
   let encontrado = false; idsPosibles.forEach(id=>{ const el=document.getElementById(id); if(el &&!encontrado){ el.classList.add('active'); encontrado=true; } });
   if(tab === 'test') carregarPregunta(subNorm); if(tab === 'sit') carregarSituacio(subtab); if(tab === 'stats' || tab === 'estad') { actualitzarEstadistiques_V94(); }
 }
-
 function mostrarEmoji(encert, element) {
-  const llista = encert? ['✅','💪','🔥'] : ['❌','💥','😅'];
-  const emoji = llista[Math.floor(Math.random() * llista.length)];
-  const span = document.createElement('span'); span.textContent = emoji; span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;pointer-events:none;';
-  element.style.position = 'relative'; element.appendChild(span); setTimeout(() => span.remove(), 600);
-  if(navigator.vibrate) navigator.vibrate(encert? [30,20,30] : 100);
+  const llista = encert? ['✅','💪','🔥'] : ['❌','💥','😅']; const emoji = llista[Math.floor(Math.random() * llista.length)]; const span = document.createElement('span'); span.textContent = emoji; span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;pointer-events:none;'; element.style.position = 'relative'; element.appendChild(span); setTimeout(() => span.remove(), 600); if(navigator.vibrate) navigator.vibrate(encert? [30][20][30] : 100);
 }
-
 if('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }); }
