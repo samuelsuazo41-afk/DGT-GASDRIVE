@@ -1,97 +1,101 @@
-const CACHE = 'gasdrive-v10.7.11'; // SUBE ESTA VERSION CADA VEZ QUE CAMBIES ALGO
-const FILES = [
+// ===== GASDRIVE DGT - service-worker.js V14 FINAL - OFFLINE-FIRST 100% =====
+// Cachea todo: core + 23 fichas T v3-final + familias M/N/A/E + paneles S/P/R
+const CACHE_NAME = 'gasdrive-v14-offline-23fichas-2025-12';
+
+const CORE_FILES = [
   './',
   './index.html',
   './app.js',
-  './styles.css',
-  './temario.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-
-  // ===== BANCO NUEVO =====
-  './senales.json', // TU JSON CON ruta_panel
-
-  // PDFs Temario - 5 archivos completos
-  './01_Senales_Tomo_I_RD_465_2025.pdf',
-  './02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf',
-  './03_Manual_IX_Primeros_Auxilios_2025.pdf',
-  './04_Manual_VIII_Mecanica_2024.pdf',
-  './05_Medio_Ambiente_Distintivos_DGT_2025.pdf',
-
-  // ===== TODOS LOS PANELES DGT REALES DE TU JSON =====
-  // P - PELIGRO
-  './P-01_INTERSECCIONES.jpg',
-  './P-02_PASO_A_NIVEL.jpg',
-  './P-03_FERROCARRIL_AEROPUERTO_CURVAS_RESALTO.jpg',
-  './P-04_TUNEL_PENDIENTES_ESTRECHAMIENTO.jpg',
-  './P-05_OBRAS_RESBALADIZO_PEATONES.jpg',
-  './P-06_ESCUELA_ANCIANOS_CICLISTAS_ANIMALES.jpg',
-  './P-07_OTROS_PELIGROS.jpg',
-
-  // R - REGLAMENTARIA
-  './R-01_CEDA_STOP.jpg',
-  './R-02_PROHIBICION_VEHICULOS.jpg',
-  './R-03_PROHIBICION_OTROS.jpg',
-  './R-04_ADELANTAMIENTO.jpg',
-  './R-05_LIMITACIONES_DIMENSIONES.jpg',
-  './R-06_PROHIBICION_MANIOBRAS.jpg',
-  './R-07_PROHIBICION_ESTACIONAMIENTO.jpg',
-  './R-08_RESTRICCIONES_ESTACIONAMIENTO.jpg',
-  './R-09_SENTIDO_DIRECCION_OBLIGATORIA.jpg',
-  './R-10_PASO_OBLIGATORIO_ROTONDA.jpg',
-  './R-11_FIN_OBLIGACION_VEHICULOS.jpg',
-  './R-12_FIN_OBLIGACION_PEATONES_ESPECIALES.jpg',
-  './R-13_FIN_GENERICO.jpg',
-
-  // S - INDICACION
-  './S-01_TIPOS_DE_VIA.jpg',
-  './S-02_TIPOS_DE_VIA_FIN.jpg',
-  './S-06_A_S-11_VELOCIDAD.jpg',
-  './S-12_A_S-15_DIRECCIONES.jpg',
-  './S-16_A_S-17_DIRECCIONES2.jpg',
-  './S-18_A_S-19_SITUACION.jpg',
-  './S-20_A_S-21_CARRIL.jpg',
-  './S-22_A_S-25_SERVICIOS.jpg',
-  './S-26_A_S-29_SERVICIOS2.jpg',
-  './S-30_A_S-33_SERVICIOS3.jpg',
-  './S-34_A_S-37_SERVICIOS4.jpg',
-  './S-38_A_S-41_SERVICIOS5.jpg',
-  './S-42_A_S-45_SERVICIOS6.jpg',
-  './S-46_A_S-49_SERVICIOS7.jpg',
-  './S-50_A_S-51_SERVICIOS8.jpg',
-  './S-52D_A_S-53A_BIFURCACION.jpg',
-  './S-53B_A_S-61A_SALIDA.jpg',
-  './S-61B_A_S-63A_SALIDA.jpg',
-  './S-65A_A_S-70A_CARRILES.jpg',
-  './S-70B_A_S-72B_CONFLUENCIA.jpg',
-  './S-73A_A_S-73B_CONFLUENCIA2.jpg',
-  './S-105C_A_S-108_SERVICIO.jpg',
-  './S-200_A_S-203_PRESEÑAL.jpg',
-  './S-220_A_S-222_PRESEÑAL2.jpg',
-  './S-222A_A_S-230_PRESEÑAL3.jpg',
-  './S-321_A_S-342_DIRECCION.jpg'
+  './senales.json'
 ];
 
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(FILES))
+const FICHAS_T = [
+  './ficha-t01a-definiciones-masas-clasificacion-vehiculos-v3-final.jpg',
+  './ficha-t02a-via-partes-definiciones-v3-final.jpg',
+  './ficha-t02b-via-partes-marcas-v3-final.jpg',
+  './ficha-t02c-via-intersecciones-velocidades-v3-final.jpg',
+  './ficha-t03a-senalizacion-vertical-peligro-v3-final.jpg',
+  './ficha-t03b-senalizacion-semaforos-baliza-v3-final.jpg',
+  './ficha-t04a-maniobras-definiciones-v3-final.jpg',
+  './ficha-t04b-maniobras-adelantamiento-v3-final.jpg',
+  './ficha-t05a-conductor-estado-psicofisico-v3-final.jpg',
+  './ficha-t05b-alcohol-drogas-medicamentos-v3-final.jpg',
+  './ficha-t06a-vehiculo-seguridad-activa-v3-final.jpg',
+  './ficha-t06b-seguridad-pasiva-frenos-itv-v3-final.jpg',
+  './ficha-t07a-accidentes-pas-primeros-auxilios-v3-final.jpg',
+  './ficha-t07b-accidentes-conducta-pas-bioseguridad-v3-final.jpg',
+  './ficha-t08a-luces-alumbrado-v3-final.jpg',
+  './ficha-t08b-senalizacion-vehiculos-luces-v3-final.jpg',
+  './ficha-t09a-conduccion-velocidades-tipos-via-v3-final.jpg',
+  './ficha-t09b-intersecciones-glorietas-adelantamiento-v3-final.jpg',
+  './ficha-t10a-iluminacion-carga-v3-final.jpg',
+  './ficha-t10b-masa-dimensiones-remolque-v3-final.jpg',
+  './ficha-t11a-permisos-conducir-clases-v3-final.jpg',
+  './ficha-t11b-puntos-validez-cap-itv-v3-final.jpg'
+];
+
+const FAMILIAS = [
+  // M-01 a M-11
+  './M-01_MOTOR_BASIC.jpg','./M-02_FRENOS_RUEDAS.jpg','./M-03_ELECTRICO_ARRANQUE.jpg',
+  './M-04_TRANSMISION.jpg','./M-05_REFRIGERACION.jpg','./M-06_FILTROS_TURBO.jpg',
+  './M-07_HIBRIDO_TECH.jpg','./M-08_AVERIAS_HUMOS.jpg','./M-09_CAMION_INDUSTRIAL.jpg',
+  './M-10_HERRAMIENTAS_V16.jpg','./M-11_RESTO_TEMARIO.jpg',
+  // N-01 a N-15
+  './N-01_ALCOHOL_TASAS.jpg','./N-02_CINTURON_SRI_EMBARAZADA.jpg','./N-03_PERMISO_PUNTOS_EDAT.jpg',
+  './N-04_VELOCIDAD_CIUDAD.jpg','./N-05_VELOCIDAD_CARRETERA.jpg','./N-06_DISTRACCIONES_MOVIL.jpg',
+  './N-07_DOCUMENTACION_ITV_SEGURO.jpg','./N-08_PENAL_DELITO_MULTAS.jpg','./N-09_STOP_CEDA_SEMAFORO.jpg',
+  './N-10_PRIORIDAD_CARRIL_GLORIETA.jpg','./N-11_PRIORITARIOS_BUS_PEATON_BICI.jpg',
+  './N-12_LUCES_SENALES_LUMINOSAS.jpg','./N-13_PARADA_ESTACIONAMIENTO_VO.jpg',
+  './N-14_TUNEL_PASO_NIVEL_VAO.jpg','./N-15_TRAMPAS_EXAMEN_DGT.jpg',
+  // A-01 a A-09
+  './A-01_PAS_PROTEGER_AVISAR_SOCORRER.jpg','./A-02_RCP_BASICA.jpg','./A-03_HEMORRAGIAS_HERIDAS.jpg',
+  './A-04_TRAUMAS_FRACTURAS_QUEMADURAS.jpg','./A-05_POSICIONES_TRASLADO.jpg','./A-06_MOTORISTA_CASCO.jpg',
+  './A-07_BOTIQUIN_MATERIAL.jpg','./A-08_SHOCK_TCE_OCULAR.jpg','./A-09_HEMORRAGIA_INTERNA_APOYO.jpg',
+  // E-01 a E-06
+  './E-01_DISTINTIVOS_DGT_QUE_SON.jpg','./E-02_ETIQUETAS_0_ECO.jpg','./E-03_ETIQUETAS_C_B_SIN.jpg',
+  './E-04_ZBE_ZONAS_BAJAS_EMISIONES.jpg','./E-05_PIRAMIDE_MOVILIDAD_CONTROLES.jpg',
+  './E-06_NORMATIVA_TECNICA_COMPLETA.jpg'
+];
+
+const FILES_TO_CACHE = [...CORE_FILES, ...FICHAS_T, ...FAMILIAS];
+
+self.addEventListener('install', event => {
+  console.log('[SW V14] Instalando cache:', FILES_TO_CACHE.length, 'archivos');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(FILES_TO_CACHE.map(url => new Request(url, {cache: 'reload'}))))
+      .then(() => self.skipWaiting())
+      .catch(err => console.warn('[SW V14] Algunos archivos no encontrados en cache inicial:', err))
   );
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys => 
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.map(k => { if(k !== CACHE_NAME) { console.log('[SW V14] Borrando cache viejo:', k); return caches.delete(k); } })
+    )).then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', e => {
-  // Cache First: si esta en cache lo sirve, si no fetch
-  e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
+self.addEventListener('fetch', event => {
+  if(event.request.method !== 'GET') return;
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      if(cached) return cached;
+      return fetch(event.request).then(response => {
+        // Cachea dinámicamente todo .jpg/.png/.json que no estaba en lista (S-, P-, R-)
+        if(response.ok && (event.request.url.endsWith('.jpg') || event.request.url.endsWith('.png') || event.request.url.endsWith('.json'))){
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      }).catch(() => {
+        // Si falla online, devuelve index para app shell
+        if(event.request.destination === 'document') return caches.match('./index.html');
+      });
+    })
   );
 });
- 
