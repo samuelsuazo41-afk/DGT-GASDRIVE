@@ -1148,12 +1148,27 @@ const EMOJI_TIENDA = [
 ];
 
 // ===== GASDRIVE DGT ES V13 - BLOQUE 1 FINAL - 15 PREGUNTAS POR TANDA + ESTADISTICA + FAMILIA REAL =====
+// ===== ACTUALIZADO V14 - 10 MIN GLOBAL + 22 FICHAS VERTICALES + BIBLIOTECA 5 LINKS =====
 let tipsData = [];
 let currentTip = 0;
 let tempsIniciTemari = null;
 let contadorTemari = null;
 let sitCategoriaActiva = 'clima';
 const SENALES_SVG = {};
+
+// ===== V14 - CONFIG NUEVO TEMARIO - 10 MIN + 22 FICHAS =====
+const TEMARIO_V14_CONFIG = {
+  temas: ['t01','t02','t03','t04','t05','t06','t07','t08','t09','t10','t11'],
+  totalFichas: 22,
+  paseMinutos: 10,
+  bibliotecaLinks: {
+    '01': 'https://share.google/OB30FJpKxoUxfUwZT',
+    '02': 'https://share.google/cdTfRzcGeB9s9xnuQ',
+    '03': 'https://share.google/d16o0xmNpIAQ6Nh1c',
+    '04': 'https://share.google/tW0GEXMT1rJlb5Vqt',
+    '05': 'https://share.google/i2dZbEcYBk2QaCx2t'
+  }
+};
 
 // COMPATIBILIDAD ES - FIX BUGS PANTALLA CARGANDO Y PANELES
 if(typeof PREGUNTAS!=='undefined' && typeof PREGUNTES==='undefined'){ var PREGUNTES = PREGUNTAS; }
@@ -1172,30 +1187,30 @@ if(typeof PREGUNTES!=='undefined'){
 
 // ===== V12 MAPA FAMILIAS REALES - PARA P.DÉBILES ESPECÍFICO =====
 const MAPA_PANELLS_DETALLAT = {
-  'N-01': { nom: 'Alcohol y Drogas Tasas', desc: '0,25 aire / 0,5 sangre - Novel 0,15 / 0,3 - N-01', temari: 'TEMARIO 2', pag: 22, familia: 'NORMAS ALCOHOL' },
-  'N-02': { nom: 'Cinturón y SRI Embarazada', desc: 'Cinturón todos, niño hasta 1,35m SRI detrás - N-02', temari: 'TEMARIO 2', pag: 33, familia: 'NORMAS SEGURIDAD' },
-  'N-03': { nom: 'Permiso Puntos y Edad', desc: 'B 18 años - Novel 8 puntos - General 12 - Máx 15 - N-03', temari: 'TEMARIO 2', pag: 18, familia: 'NORMAS PERMISO' },
-  'N-04': { nom: 'Velocidad Ciudad 20/30/50', desc: 'Zona 20=20, 1 carril=30, 2 carriles=50 - N-04', temari: 'TEMARIO 2', pag: 40, familia: 'NORMAS VELOCIDAD CIUDAD' },
-  'N-05': { nom: 'Velocidad Carretera 90/120', desc: 'Turismo 90 convencional, 120 autopista - N-05', temari: 'TEMARIO 2', pag: 45, familia: 'NORMAS VELOCIDAD CARRETERA' },
-  'N-06': { nom: 'Distracciones Móvil', desc: 'Móvil manos libres 200€+6 puntos, auriculares prohibido - N-06', temari: 'TEMARIO 2', pag: 34, familia: 'NORMAS DISTRACCIÓN' },
-  'N-07': { nom: 'Documentación ITV Seguro', desc: 'ITV 4 años después cada 2 hasta 10 después anual - N-07', temari: 'TEMARIO 2', pag: 38, familia: 'NORMAS DOCS' },
-  'N-08': { nom: 'Penal Delito Multas', desc: 'Delito 0,60 aire, velocidad +60 ciudad +80 carretera - N-08', temari: 'TEMARIO 2', pag: 30, familia: 'NORMAS PENAL' },
-  'N-09': { nom: 'Stop Ceda Semáforo', desc: 'Stop línea, ceda si no viene nadie, ámbar fijo parar - N-09', temari: 'TEMARIO 2', pag: 50, familia: 'NORMAS SEÑALES REGULACIÓN' },
-  'N-10': { nom: 'Prioridad Carril Glorieta', desc: 'Glorieta prioridad dentro, salir exterior derecha - N-10', temari: 'TEMARIO 2', pag: 12, familia: 'NORMAS PRIORIDAD GLORIETA' },
-  'N-11': { nom: 'Prioritarios Bus Peatón Bici', desc: 'Bus no carril bus, cebra prioridad peatón, bici 1,5m - N-11', temari: 'TEMARIO 2', pag: 15, familia: 'NORMAS PRIORITARIOS' },
-  'N-12': { nom: 'Luces Señales Luminosas V16', desc: 'Cruce noche obligatorio, V16 2026 obligatorio - N-12', temari: 'TEMARIO 2', pag: 55, familia: 'NORMAS LUCES' },
-  'N-13': { nom: 'Parada Estacionamiento Arcén', desc: 'Parada <2min conductor dentro, doble fila prohibido - N-13', temari: 'TEMARIO 2', pag: 60, familia: 'NORMAS PARADA' },
-  'N-14': { nom: 'Túnel Paso Nivel VAO', desc: 'Túnel cruce, VAO mínimo 2 ocupantes moto sí - N-14', temari: 'TEMARIO 2', pag: 65, familia: 'NORMAS TÚNEL VAO' },
-  'N-15': { nom: 'Trampas Examen DGT', desc: 'Respuesta más segura siempre correcta, palabras absolutas trampa - N-15', temari: 'TEMARIO 2', pag: 110, familia: 'NORMAS TRAMPAS' },
-  'P-': { nom: 'Señales Peligro Triangulares', desc: 'Señales verticales de peligro - Forma triangular amarilla - Familia P-', temari: 'TEMARIO 1', pag: 53, familia: 'SEÑALES PELIGRO' },
-  'R-': { nom: 'Señales Prohibición / Obligación', desc: 'Señales verticales circulares - Prohibición rojo, Obligación azul - Familia R-', temari: 'TEMARIO 1', pag: 46, familia: 'SEÑALES REGULACIÓN' },
-  'S-100': { nom: 'Servicios S-100 Familia', desc: 'Señales información servicios azul con pictograma blanco - WC, gasolinera, hotel - S-105c a S-108', temari: 'TEMARIO 1', pag: 70, familia: 'SEÑALES SERVICIOS' },
-  'S-200': { nom: 'Preseñalización S-200', desc: 'Preseñalización direcciones - Familia S-200', temari: 'TEMARIO 1', pag: 75, familia: 'SEÑALES PRESEÑAL' },
-  'S-300': { nom: 'Dirección S-300', desc: 'Señales dirección - Familia S-300', temari: 'TEMARIO 1', pag: 80, familia: 'SEÑALES DIRECCIÓN' },
-  'S-400': { nom: 'Localización y Confirmación', desc: 'Señales S-400 confirmación', temari: 'TEMARIO 1', pag: 82, familia: 'SEÑALES LOCALIZACIÓN' },
-  'M-': { nom: 'Mecánica Híbrida', desc: 'Motor eléctrico, batería litio, freno regenerativo, ESP, EBS - Familia M-', temari: 'TEMARIO 4', pag: 85, familia: 'MECÁNICA HÍBRIDA' },
-  'A-': { nom: 'Auxilios Motorista Casco', desc: 'Motorista casco no quitar si respira, RCP, hemorragias - Familia A-', temari: 'TEMARIO 3', pag: 96, familia: 'AUXILIOS MOTORISTA' },
-  'E-': { nom: 'Medio Ambiente ZBE', desc: 'ZBE zonas bajas emisiones, distintivo ambiental - Familia E-', temari: 'TEMARIO 5', pag: 103, familia: 'MEDIO AMBIENTE ZBE' }
+  'N-01': { nom: 'Alcohol y Drogas Tasas', desc: '0,25 aire / 0,5 sangre - Novel 0,15 / 0,3 - N-01', temari: 'TEMARIO 2', pag: 22, familia: 'NORMAS ALCOHOL', biblioteca: '03' },
+  'N-02': { nom: 'Cinturón y SRI Embarazada', desc: 'Cinturón todos, niño hasta 1,35m SRI detrás - N-02', temari: 'TEMARIO 2', pag: 33, familia: 'NORMAS SEGURIDAD', biblioteca: '03' },
+  'N-03': { nom: 'Permiso Puntos y Edad', desc: 'B 18 años - Novel 8 puntos - General 12 - Máx 15 - N-03', temari: 'TEMARIO 2', pag: 18, familia: 'NORMAS PERMISO', biblioteca: '02' },
+  'N-04': { nom: 'Velocidad Ciudad 20/30/50', desc: 'Zona 20=20, 1 carril=30, 2 carriles=50 - N-04', temari: 'TEMARIO 2', pag: 40, familia: 'NORMAS VELOCIDAD CIUDAD', biblioteca: '02' },
+  'N-05': { nom: 'Velocidad Carretera 90/120', desc: 'Turismo 90 convencional, 120 autopista - N-05', temari: 'TEMARIO 2', pag: 45, familia: 'NORMAS VELOCIDAD CARRETERA', biblioteca: '02' },
+  'N-06': { nom: 'Distracciones Móvil', desc: 'Móvil manos libres 200€+6 puntos, auriculares prohibido - N-06', temari: 'TEMARIO 2', pag: 34, familia: 'NORMAS DISTRACCIÓN', biblioteca: '02' },
+  'N-07': { nom: 'Documentación ITV Seguro', desc: 'ITV 4 años después cada 2 hasta 10 después anual - N-07', temari: 'TEMARIO 2', pag: 38, familia: 'NORMAS DOCS', biblioteca: '04' },
+  'N-08': { nom: 'Penal Delito Multas', desc: 'Delito 0,60 aire, velocidad +60 ciudad +80 carretera - N-08', temari: 'TEMARIO 2', pag: 30, familia: 'NORMAS PENAL', biblioteca: '02' },
+  'N-09': { nom: 'Stop Ceda Semáforo', desc: 'Stop línea, ceda si no viene nadie, ámbar fijo parar - N-09', temari: 'TEMARIO 2', pag: 50, familia: 'NORMAS SEÑALES REGULACIÓN', biblioteca: '01' },
+  'N-10': { nom: 'Prioridad Carril Glorieta', desc: 'Glorieta prioridad dentro, salir exterior derecha - N-10', temari: 'TEMARIO 2', pag: 12, familia: 'NORMAS PRIORIDAD GLORIETA', biblioteca: '02' },
+  'N-11': { nom: 'Prioritarios Bus Peatón Bici', desc: 'Bus no carril bus, cebra prioridad peatón, bici 1,5m - N-11', temari: 'TEMARIO 2', pag: 15, familia: 'NORMAS PRIORITARIOS', biblioteca: '02' },
+  'N-12': { nom: 'Luces Señales Luminosas V16', desc: 'Cruce noche obligatorio, V16 2026 obligatorio - N-12', temari: 'TEMARIO 2', pag: 55, familia: 'NORMAS LUCES', biblioteca: '04' },
+  'N-13': { nom: 'Parada Estacionamiento Arcén', desc: 'Parada <2min conductor dentro, doble fila prohibido - N-13', temari: 'TEMARIO 2', pag: 60, familia: 'NORMAS PARADA', biblioteca: '02' },
+  'N-14': { nom: 'Túnel Paso Nivel VAO', desc: 'Túnel cruce, VAO mínimo 2 ocupantes moto sí - N-14', temari: 'TEMARIO 2', pag: 65, familia: 'NORMAS TÚNEL VAO', biblioteca: '02' },
+  'N-15': { nom: 'Trampas Examen DGT', desc: 'Respuesta más segura siempre correcta, palabras absolutas trampa - N-15', temari: 'TEMARIO 2', pag: 110, familia: 'NORMAS TRAMPAS', biblioteca: '02' },
+  'P-': { nom: 'Señales Peligro Triangulares', desc: 'Señales verticales de peligro - Forma triangular amarilla - Familia P-', temari: 'TEMARIO 1', pag: 53, familia: 'SEÑALES PELIGRO', biblioteca: '01' },
+  'R-': { nom: 'Señales Prohibición / Obligación', desc: 'Señales verticales circulares - Prohibición rojo, Obligación azul - Familia R-', temari: 'TEMARIO 1', pag: 46, familia: 'SEÑALES REGULACIÓN', biblioteca: '01' },
+  'S-100': { nom: 'Servicios S-100 Familia', desc: 'Señales información servicios azul con pictograma blanco - WC, gasolinera, hotel - S-105c a S-108', temari: 'TEMARIO 1', pag: 70, familia: 'SEÑALES SERVICIOS', biblioteca: '01' },
+  'S-200': { nom: 'Preseñalización S-200', desc: 'Preseñalización direcciones - Familia S-200', temari: 'TEMARIO 1', pag: 75, familia: 'SEÑALES PRESEÑAL', biblioteca: '01' },
+  'S-300': { nom: 'Dirección S-300', desc: 'Señales dirección - Familia S-300', temari: 'TEMARIO 1', pag: 80, familia: 'SEÑALES DIRECCIÓN', biblioteca: '01' },
+  'S-400': { nom: 'Localización y Confirmación', desc: 'Señales S-400 confirmación', temari: 'TEMARIO 1', pag: 82, familia: 'SEÑALES LOCALIZACIÓN', biblioteca: '01' },
+  'M-': { nom: 'Mecánica Híbrida', desc: 'Motor eléctrico, batería litio, freno regenerativo, ESP, EBS - Familia M-', temari: 'TEMARIO 4', pag: 85, familia: 'MECÁNICA HÍBRIDA', biblioteca: '04' },
+  'A-': { nom: 'Auxilios Motorista Casco', desc: 'Motorista casco no quitar si respira, RCP, hemorragias - Familia A-', temari: 'TEMARIO 3', pag: 96, familia: 'AUXILIOS MOTORISTA', biblioteca: '03' },
+  'E-': { nom: 'Medio Ambiente ZBE', desc: 'ZBE zonas bajas emisiones, distintivo ambiental - Familia E-', temari: 'TEMARIO 5', pag: 103, familia: 'MEDIO AMBIENTE ZBE', biblioteca: '05' }
 };
 
 function pintarImatgeSiExisteix(cat, pregunta) {
@@ -1280,7 +1295,7 @@ let estat = {
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 
 function init() {
-  console.log("GasDrive V13 - BLOQUE 1 - 15 preguntas por tanda - Fix 1% + Familias Reales");
+  console.log("GasDrive V14 - BLOQUE 1 - 10 min global + 22 fichas verticales + 15 preguntas tanda");
   if(typeof PREGUNTES!== 'undefined'){
     if((!PREGUNTES.mecanica || PREGUNTES.mecanica.length===0) && typeof BANCO_MECANICA_66!== 'undefined'){ PREGUNTES.mecanica = BANCO_MECANICA_66; }
     if((!PREGUNTES.normas || PREGUNTES.normas.length===0) && typeof BANCO_PREGUNTAS_NORMAS_V1!== 'undefined'){ PREGUNTES.normas = BANCO_PREGUNTAS_NORMAS_V1; }
@@ -1294,6 +1309,7 @@ function init() {
   try{ if(typeof carregarGaratge==='function') carregarGaratge(); }catch(e){}
   try{ if(typeof carregarBotiga==='function') carregarBotiga(); }catch(e){}
   try{ if(typeof carregarTemari==='function') carregarTemari(); }catch(e){}
+  try{ if(typeof carregarTemari_V14==='function') carregarTemari_V14(); }catch(e){}
   actualitzarMissatgeMotivacional();
 }
 
@@ -1375,15 +1391,49 @@ function calcularPreparacioDGT_V94() {
 }
 
 function iniciarComptadorTemari() {
-  if (contadorTemari) clearInterval(contadorTemari); comprovarNouDia(); actualitzarPaseUI();
+  if (contadorTemari) clearInterval(contadorTemari);
+  comprovarNouDia();
+  actualitzarPaseUI();
   contadorTemari = setInterval(() => {
     const vistaTemariActiva = document.getElementById('tab-temari')?.classList.contains('active');
     if (vistaTemariActiva) {
       if (tempsIniciTemari === null) { tempsIniciTemari = Date.now(); }
-      else { const ara = Date.now(); const segundos = (ara - tempsIniciTemari) / 1000; if (segundos >= 5) { estat.stats.tempsEstudiatAvui += segundos / 60; tempsIniciTemari = ara; guardar(); actualitzarPaseUI(); } }
-      if (estat.stats.tempsEstudiatAvui >= 20 &&!estat.stats.paseCompletado) { estat.stats.paseCompletado = true; estat.coins += 50; guardar(); alert(`✅ PASE DESBLOQUEADO!\nHas estudiado 20 minutos. +50 coins`); actualitzarEstadistiques_V94(); }
-    } else { if (tempsIniciTemari!== null) { const ara = Date.now(); const segundos = (ara - tempsIniciTemari) / 1000; estat.stats.tempsEstudiatAvui += segundos / 60; tempsIniciTemari = null; guardar(); actualitzarPaseUI(); } }
+      else {
+        const ara = Date.now();
+        const segundos = (ara - tempsIniciTemari) / 1000;
+        if (segundos >= 3) { // V14: cada 3 seg suma para scroll infinito
+          estat.stats.tempsEstudiatAvui += segundos / 60;
+          tempsIniciTemari = ara;
+          guardar();
+          actualitzarPaseUI();
+        }
+      }
+      if (estat.stats.tempsEstudiatAvui >= TEMARIO_V14_CONFIG.paseMinutos &&!estat.stats.paseCompletado) {
+        estat.stats.paseCompletado = true;
+        estat.coins += 50;
+        guardar();
+        alert(`✅ PASE DESBLOQUEADO V14!\nHas estudiado ${TEMARIO_V14_CONFIG.paseMinutos} minutos con fichas verticales. +50 coins`);
+        if(typeof actualitzarEstadistiques_V94==='function') actualitzarEstadistiques_V94();
+      }
+    } else {
+      if (tempsIniciTemari!== null) {
+        const ara = Date.now();
+        const segundos = (ara - tempsIniciTemari) / 1000;
+        estat.stats.tempsEstudiatAvui += segundos / 60;
+        tempsIniciTemari = null;
+        guardar();
+        actualitzarPaseUI();
+      }
+    }
   }, 1000);
+}
+
+function sumarTiempoEstudio() {
+  if(tempsIniciTemari===null) tempsIniciTemari = Date.now();
+  else {
+    const ara = Date.now(); const diff = (ara - tempsIniciTemari)/1000;
+    if(diff>1){ estat.stats.tempsEstudiatAvui += diff/60; tempsIniciTemari = ara; guardar(); actualitzarPaseUI(); }
+  }
 }
 
 function comprovarNouDia() {
@@ -1400,12 +1450,99 @@ function comprovarNouDia() {
 
 function actualitzarPaseUI() {
   const minuts = Math.floor(estat.stats.tempsEstudiatAvui || 0);
-  const el = document.getElementById('pase-temps'); if(el) el.textContent = `${minuts} min`;
-  const msg = document.getElementById('stats-motivacio'); if(msg) { if(estat.stats.paseCompletado) msg.textContent = "Pase Activo. A practicar 💪"; else { const falten = Math.max(0, 20 - minuts); msg.textContent = `Estudia ${falten} minutos más en el TEMARIO para desbloquear`; } }
+  const segons = Math.floor(((estat.stats.tempsEstudiatAvui || 0) - minuts)*60);
+  const el = document.getElementById('pase-temps');
+  if(el) el.textContent = `${minuts}:${segons.toString().padStart(2,'0')} / ${TEMARIO_V14_CONFIG.paseMinutos}:00`;
+  const msg = document.getElementById('stats-motivacio');
+  if(msg) {
+    if(estat.stats.paseCompletado) msg.textContent = "✅ Pase Activo 10min. A practicar 💪";
+    else {
+      const falten = Math.max(0, TEMARIO_V14_CONFIG.paseMinutos - estat.stats.tempsEstudiatAvui);
+      const fMin = Math.floor(falten);
+      const fSeg = Math.floor((falten - fMin)*60);
+      msg.textContent = `Estudia ${fMin}:${fSeg.toString().padStart(2,'0')} más en el TEMARIO (22 fichas) para desbloquear`;
+    }
+  }
 }
 
+// ===== V14 - FUNCIONES NUEVAS TEMARIO - SIN BORRAR NADA ANTERIOR =====
+function carregarTemari_V14(){
+  console.log("V14 Temario 22 fichas verticales - 10 min global");
+  setTimeout(()=>{
+    const visor = document.getElementById('visor-ficha-container');
+    if(visor &&!visor.querySelector('img')) obrirFichaJPG('ficha-t01a');
+  }, 600);
+}
+
+function carregarTemari(){
+  // Compatibilidad V12/V13 - ahora llama V14
+  carregarTemari_V14();
+}
+
+function canviarTemariPrincipal(evt,id){
+  const container = document.getElementById('tab-temari');
+  if(!container) return;
+  // solo botones principales
+  const mainTabs = container.querySelectorAll(':scope >.sub-tabs:first-child >.sub-tab-btn');
+  mainTabs.forEach(b=>b.classList.remove('active'));
+  if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
+  const rapido = document.getElementById('temari-rapido');
+  const biblio = document.getElementById('temari-biblioteca');
+  if(rapido){ rapido.classList.remove('active'); rapido.style.display='none'; }
+  if(biblio){ biblio.classList.remove('active'); biblio.style.display='none'; }
+  const t=document.getElementById('temari-'+id);
+  if(t){ t.classList.add('active'); t.style.display='block'; }
+  if(id==='rapido'){ setTimeout(()=>obrirFichaJPG('ficha-t01a'),100); }
+}
+
+function canviarTemaFicha(evt,tema){
+  const rapido = document.getElementById('temari-rapido');
+  if(!rapido) return;
+  const temaBtns = rapido.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn');
+  temaBtns.forEach(b=>b.classList.remove('active'));
+  if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
+  rapido.querySelectorAll('.tema-cont').forEach(c=>{ c.classList.remove('active'); c.style.display='none'; });
+  const cont=document.getElementById('tema-'+tema);
+  if(cont){ cont.classList.add('active'); cont.style.display='block'; }
+  obrirFichaJPG('ficha-'+tema+'a');
+}
+
+function obrirFichaJPG(nombre){
+  const visor=document.getElementById('visor-ficha-container');
+  if(!visor) return;
+  sumarTiempoEstudio();
+  visor.innerHTML=`<div style="padding:10px;text-align:center;color:#00D9FF;font-size:11px">⏳ Cargando ${nombre}.jpg - Scroll infinito vertical...</div><img src="./${nombre}.jpg" alt="${nombre}" style="width:100%;height:auto;display:block;border-radius:12px;" loading="lazy" onload="sumarTiempoEstudio(); iniciarComptadorTemari(); if(this.previousElementSibling) this.previousElementSibling.style.display='none';" onerror="this.parentElement.innerHTML='<div style=\\'padding:30px 20px;text-align:center;color:#ff4757;font-size:13px;background:#1a0a0a;border-radius:12px;border:1px solid #a00\\'>❌ No se encontró <b>${nombre}.jpg</b><br><br><small style=\\'color:#999\\'>Súbelo a raíz:./${nombre}.jpg<br>22 fichas: ficha-t01a.jpg hasta ficha-t11b.jpg</small><br><br><button class=\\'btn\\' onclick=\\'obrirFichaJPG(\\'ficha-t01a\\')\\'>Volver a T01A</button></div>'">`;
+  setTimeout(()=>{ visor.scrollIntoView({behavior:'smooth',block:'start'}); }, 150);
+}
+
+function obrirBibliotecaOficial(id){
+  const link = TEMARIO_V14_CONFIG.bibliotecaLinks[id];
+  if(link) window.open(link,'_blank');
+}
+
+function getBibliotecaLinkParaPanel(panelId){
+  if(!panelId) return null;
+  for(let key in MAPA_PANELLS_DETALLAT){
+    if(panelId.toUpperCase().startsWith(key)){
+      const bib = MAPA_PANELLS_DETALLAT[key].biblioteca;
+      if(bib) return { id: bib, link: TEMARIO_V14_CONFIG.bibliotecaLinks[bib], info: MAPA_PANELLS_DETALLAT[key] };
+    }
+  }
+  // fallback busca por familia P- R- etc
+  const pref = panelId.substring(0,2).toUpperCase();
+  if(MAPA_PANELLS_DETALLAT[pref]){
+    const bib = MAPA_PANELLS_DETALLAT[pref].biblioteca;
+    return { id: bib, link: TEMARIO_V14_CONFIG.bibliotecaLinks[bib], info: MAPA_PANELLS_DETALLAT[pref] };
+  }
+  return null;
+}
+
+// Funciones viejas PDF eliminadas - no rompen nada
+function obrirPDF(){ console.warn("V14 obsoleto - usa obrirFichaJPG"); }
+function tancarPDF(){}
+
 function obtenirDetallRealPregunta(pregunta) {
-  if(!pregunta) return { nom: 'General', desc: 'General', temari: 'TEMARIO 1', pag: 1, panel: '' };
+  if(!pregunta) return { nom: 'General', desc: 'General', temari: 'TEMARIO 1', pag: 1, panel: '', biblioteca: '02' };
   const codi = (pregunta.codi || pregunta.panel_id || '').toUpperCase();
   const nombre = (pregunta.nombre_senal || pregunta.nombre || '').toUpperCase();
   const ruta = (pregunta.ruta_panel || pregunta.ruta || '').toUpperCase();
@@ -1422,8 +1559,8 @@ function obtenirDetallRealPregunta(pregunta) {
   if(codi.startsWith('M-') || ruta.startsWith('M-') || q.includes('MOTOR') || q.includes('BATERIA') || q.includes('HIBRIDO')) return {...MAPA_PANELLS_DETALLAT['M-'], panel: 'M-'};
   if(codi.startsWith('A-') || ruta.startsWith('A-') || q.includes('CASCO') || q.includes('RCP') || q.includes('HEMORRAGIA')) return {...MAPA_PANELLS_DETALLAT['A-'], panel: 'A-'};
   if(codi.startsWith('E-') || ruta.startsWith('E-') || q.includes('ZBE') || q.includes('CONTAMINACION')) return {...MAPA_PANELLS_DETALLAT['E-'], panel: 'E-'};
-  for(let key in MAPEO_PALABRAS_CLAVE) { if((pregunta.q||pregunta.pregunta||'').toLowerCase().includes(key)) { const m = MAPEO_PALABRAS_CLAVE[key]; return { nom: m.subtema, desc: m.subtema, temari: 'TEMARIO 2', pag: m.pag, panel: key }; } }
-  return { nom: pregunta.nombre_senal || pregunta.codi || 'General', desc: pregunta.nombre_senal || 'General', temari: 'TEMARIO 1', pag: 1, panel: codi||'' };
+  for(let key in MAPEO_PALABRAS_CLAVE) { if((pregunta.q||pregunta.pregunta||'').toLowerCase().includes(key)) { const m = MAPEO_PALABRAS_CLAVE[key]; return { nom: m.subtema, desc: m.subtema, temari: 'TEMARIO 2', pag: m.pag, panel: key, biblioteca: '02' }; } }
+  return { nom: pregunta.nombre_senal || pregunta.codi || 'General', desc: pregunta.nombre_senal || 'General', temari: 'TEMARIO 1', pag: 1, panel: codi||'', biblioteca: '02' };
 }
 
 function autoMapearTotesPreguntes() {
@@ -1435,7 +1572,7 @@ function autoMapearTotesPreguntes() {
       return {...p, id: p.id || idCounter++, subtema: detall.nom, pag: detall.pag, detallReal: detall, familia: detall.familia };
     });
   }
-  console.log('✅ BLOQUE 1 V13 MAPEADO - 15 por tanda listo. Total:', getTotalBanco());
+  console.log('✅ BLOQUE 2 V14 MAPEADO - 10 min + 22 fichas + Biblioteca 5 links. Total:', getTotalBanco());
 }
 
 function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
@@ -1444,14 +1581,15 @@ function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
   if(!estat.stats.puntsDebils[categoria]) estat.stats.puntsDebils[categoria] = {};
   let clau = subtema; let detall = null;
   if(preguntaOriginal) { detall = obtenirDetallRealPregunta(preguntaOriginal); clau = `${detall.familia} | ${detall.nom}`; pagina = detall.pag; }
-  if(!estat.stats.puntsDebils[categoria][clau]) { estat.stats.puntsDebils[categoria][clau] = {fallos: 0, pag: pagina, detall: detall||{nom:subtema,pag:pagina,temari:'TEMARIO 1',familia:subtema}}; }
+  if(!estat.stats.puntsDebils[categoria][clau]) { estat.stats.puntsDebils[categoria][clau] = {fallos: 0, pag: pagina, detall: detall||{nom:subtema,pag:pagina,temari:'TEMARIO 1',familia:subtema, biblioteca:'02'}}; }
   estat.stats.puntsDebils[categoria][clau].fallos++; guardar();
 }
 
+// ===== V14 - PUNTOS DEBILES CON REFERENCIA DIRECTA A BIBLIOTECA OFICIAL 01-05 =====
 function dibuixarPuntsDebils_V94() {
   const cont = document.getElementById('stats-debils-lista'); if(!cont) return;
-  cont.innerHTML = '<h3 style="margin-bottom:15px; color:#00D9FF">📍 DONDE TIENES QUE MEJORAR AHORA MISMO - POR FAMILIA REAL</h3>';
-  if(!estat.stats.puntsDebils || Object.keys(estat.stats.puntsDebils).length === 0) { cont.innerHTML += '<div style="text-align:center;color:#999; padding:20px;">Haz más tests para detectar tus puntos débiles reales<br><small>El sistema lee panel_id N-01..N-15, S-100, M-, A-, E-</small></div>'; return; }
+  cont.innerHTML = '<h3 style="margin-bottom:15px; color:#00D9FF">📍 DONDE TIENES QUE MEJORAR - POR FAMILIA REAL + BIBLIOTECA OFICIAL</h3>';
+  if(!estat.stats.puntsDebils || Object.keys(estat.stats.puntsDebils).length === 0) { cont.innerHTML += '<div style="text-align:center;color:#999; padding:20px;">Haz más tests para detectar tus puntos débiles reales<br><small>El sistema lee panel_id N-01..N-15, S-100, M-, A-, E- y te manda a biblioteca oficial 01-05</small></div>'; return; }
   const categories = ['senales','trampas','normas','mecanica','auxilios','medio_ambiente','mediambient'];
   const noms = ['🚦 SEÑALES','🪤 TRAMPAS','📋 NORMAS','⚙️ MECÁNICA','🚑 AUXILIOS','♻️ MEDIO AMBIENTE','♻️ MEDIO AMBIENTE'];
   categories.forEach((cat, i) => {
@@ -1462,8 +1600,26 @@ function dibuixarPuntsDebils_V94() {
     }
     let maxFallos = 0; let pitjorClau = 'General'; let detallMillor = null;
     for(let clau in estat.stats.puntsDebils[keyReal]) { if(estat.stats.puntsDebils[keyReal][clau].fallos > maxFallos) { maxFallos = estat.stats.puntsDebils[keyReal][clau].fallos; pitjorClau = clau; detallMillor = estat.stats.puntsDebils[keyReal][clau].detall; } }
-    const detall = detallMillor || {nom:pitjorClau, desc:'', temari:'TEMARIO 1', pag:1, familia:pitjorClau};
-    cont.innerHTML += `<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div><div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div><div style="color:#ccc; font-size:12px; margin-bottom:6px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div><div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Página <b>${detall.pag||1}</b> <button onclick="anarAPagina(${detall.pag||1})" style="background:#00D9FF; border:none; border-radius:6px; padding:4px 10px; margin-left:8px; cursor:pointer; font-weight:700; color:#000">Ir</button></div></div>`;
+    const detall = detallMillor || {nom:pitjorClau, desc:'', temari:'TEMARIO 1', pag:1, familia:pitjorClau, biblioteca:'02', panel:''};
+    const bibId = detall.biblioteca || '02';
+    const bibLink = (typeof TEMARIO_V14_CONFIG!=='undefined' && TEMARIO_V14_CONFIG.bibliotecaLinks[bibId])? TEMARIO_V14_CONFIG.bibliotecaLinks[bibId] : '#';
+    const bibNombres = {'01':'01 Señales RD465','02':'02 Normas','03':'03 Auxilios / Primeros Auxilios','04':'04 Mecánica','05':'05 Medio Ambiente'};
+    const bibNom = bibNombres[bibId]||`0${bibId} Biblioteca`;
+
+    cont.innerHTML += `<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;">
+      <div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div>
+      <div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div>
+      <div style="color:#ccc; font-size:12px; margin-bottom:8px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Pág <b>${detall.pag||1}</b></div>
+        <button onclick="anarAPagina(${detall.pag||1})" style="background:#222; border:1px solid #00D9FF; border-radius:6px; padding:4px 10px; cursor:pointer; font-weight:700; color:#00D9FF; font-size:11px">Ir a Temario</button>
+      </div>
+      <div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;">
+        <div style="color:#00D9FF; font-size:11px; font-weight:700; margin-bottom:4px">📚 ESTUDIO PROFUNDO OPCIONAL - BIBLIOTECA OFICIAL:</div>
+        <button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%; text-align:left;">📖 ${bibNom} → Reforzar tema: ${detall.familia||detall.nom} ↗</button>
+        <div style="color:#999; font-size:10px; margin-top:6px; line-height:1.3">Link directo oficial DGT. No cuenta para pase 10 min. Es para reforzar cuando fallas mucho en esta familia.</div>
+      </div>
+    </div>`;
   });
 }
 
@@ -1481,23 +1637,26 @@ function dibuixarPuntsDebils_V94() {
         <p>💡 <b>Truco DGT:</b> Siempre la respuesta más segura y conservadora es la correcta.</p>
       </div>
     </div>
-    <h3 style="color:#00D9FF; margin:15px 0 10px;">📚 MÉTODO GASDRIVE - 3 PASOS</h3>
+    <h3 style="color:#00D9FF; margin:15px 0 10px;">📚 MÉTODO GASDRIVE V14 - 3 PASOS</h3>
     <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #2ecc71; border-radius:8px;">
-      <div style="font-weight:700; color:#2ecc71;">1. TEMARIO 20 min/día (5 min x temario)</div>
-      <div style="color:#ccc; font-size:12px;">Te desbloquea el PASE y +50 coins.</div>
+      <div style="font-weight:700; color:#2ecc71;">1. TEMARIO 10 min/día - 22 fichas verticales T01-T11</div>
+      <div style="color:#ccc; font-size:12px;">Timer global 10 min → Desbloquea Pase +50 coins. Fichas JPG scroll infinito 8000px.</div>
     </div>
     <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:8px;">
-      <div style="font-weight:700; color:#FFD700;">2. TESTS de 15 preguntas</div>
-      <div style="color:#ccc; font-size:12px;">Rutina corta, sin aburrimiento. Cada 15 ves tu resultado y empiezas otra tanda nueva.</div>
+      <div style="font-weight:700; color:#FFD700;">2. TESTS de 15 preguntas por tanda</div>
+      <div style="color:#ccc; font-size:12px;">Rutina corta, sin aburrimiento. Cada 15 ves tu resultado y empiezas otra tanda nueva. Si fallas N-01 Alcohol te manda a Biblioteca 03.</div>
     </div>
     <div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #00D9FF; border-radius:8px;">
       <div style="font-weight:700; color:#00D9FF;">3. EXAMEN diario cuando llegues al 90%</div>
-      <div style="color:#ccc; font-size:12px;">Racha de 6 aprobados seguidos para ir seguro a DGT real.</div>
+      <div style="color:#ccc; font-size:12px;">Racha de 6 aprobados seguidos para ir seguro a DGT real. Biblioteca oficial 01-05 opcional para estudio profundo.</div>
     </div>
   `;
 }
 
-function anarAPagina(pagina) { canviarTab_V94(null, 'temari'); }
+function anarAPagina(pagina) {
+  canviarTab_V94(null, 'temari');
+  setTimeout(()=>{ if(typeof canviarTemariPrincipal==='function'){ document.querySelector('#tab-temari.sub-tab-btn')?.click(); } }, 300);
+}
 
 function actualitzarEstadistiques_V94() {
   const tab = document.getElementById('tab-estadistiques') || document.getElementById('tab-estad') ;
@@ -1535,7 +1694,7 @@ function getDadesEvolucio() {
   });
 }
 function potFerTests() { comprovarNouDia(); return estat.stats.paseCompletado; }
-function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 20 - Math.floor(estat.stats.tempsEstudiatAvui)); alert(`⛔ PASE BLOQUEADO\nEstudia ${minutsQueFalten} minutos más en el TEMARIO para desbloquear los tests de hoy.`); }
+function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 10 - Math.floor(estat.stats.tempsEstudiatAvui)); const segQueFalten = Math.floor((10 - estat.stats.tempsEstudiatAvui - Math.floor(10 - estat.stats.tempsEstudiatAvui))*60); alert(`⛔ PASE BLOQUEADO V14\nEstudia ${minutsQueFalten}:${segQueFalten.toString().padStart(2,'0')} más en el TEMARIO (22 fichas T01-T11) para desbloquear los tests de hoy.\n\nTimer global 10 min con fichas verticales infinitas.`); }
 function barrejarArray(arr) { const a = arr.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function normalizarPregunta(p){ const q = p.q || p.pregunta || ''; const a = p.a || p.opcions || p.opciones || []; const ok = p.ok!==undefined? p.ok : (p.correcta!==undefined? p.correcta : 0); return {...p, q, a, ok, pregunta: q, opcions: a, correcta: ok}; }
 
@@ -1722,7 +1881,7 @@ function reiniciarExamen() {
   const imgEl = document.getElementById('examen-imagen'); if(imgEl) imgEl.innerHTML = '';
 }
 
-// ===== GARAJE 17 + TIENDA 42 - FIX COMPATIBILIDAD =====
+// ===== GARAJE 17 + TIENDA 42 =====
 function carregarGaratge() {
   const cont = document.getElementById('garage-lista') || document.getElementById('garaje-lista'); if(!cont) return; cont.innerHTML = '';
   let hpTotal = 90;
@@ -1773,26 +1932,36 @@ function comprarEmoji(id) {
   estat.coins -= precio; if(!estat.emojis.includes(id)) estat.emojis.push(id); guardar(); actualitzarCoins(); carregarBotiga();
 }
 
-// ===== TEMARIO 5 PDFs EXACTOS - FIX 404 =====
+// ===== V14 - TEMARIO NUEVO - 22 FICHAS JPG + BIBLIOTECA 5 LINKS - REEMPLAZA PDFs VIEJOS =====
 function carregarTemari() {
-  const container = document.getElementById('temari-lista') || document.getElementById('temario-lista'); if(!container) return;
-  container.innerHTML = `
-  <div class="temari-item" onclick="obrirPDF('01_Senales_Tomo_I_RD_465_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚦</div><div><div style="color:#fff;font-weight:700">01 - Señales Tomo I RD 465/2025</div></div></div>
-  <div class="temari-item" onclick="obrirPDF('02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">📋</div><div><div style="color:#fff;font-weight:700">02 - Normas Circulación Tomo II</div></div></div>
-  <div class="temari-item" onclick="obrirPDF('03_Manual_IX_Primeros_Auxilios_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">🚑</div><div><div style="color:#fff;font-weight:700">03 - Primeros Auxilios 2025</div></div></div>
-  <div class="temari-item" onclick="obrirPDF('04_Manual_VIII_Mecanica_2024.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">⚙️</div><div><div style="color:#fff;font-weight:700">04 - Mecánica 2024</div></div></div>
-  <div class="temari-item" onclick="obrirPDF('05_Medio_Ambiente_Distintivos_DGT_2025.pdf')" style="background:#1a1a1a;padding:16px;border-radius:12px;margin-bottom:10px;border:1px solid #00D9FF;cursor:pointer;display:flex;align-items:center;gap:12px;"><div style="font-size:32px">♻️</div><div><div style="color:#fff;font-weight:700">05 - Medio Ambiente DGT 2025</div></div></div>`;
+  // V14: ya no usa PDFs, ahora usa 22 fichas verticales. Si existe visor nuevo, abre T01A
+  if(typeof carregarTemari_V14==='function'){ carregarTemari_V14(); return; }
+  const container = document.getElementById('temari-lista') || document.getElementById('temario-lista');
+  if(container){
+    container.innerHTML = `<div style="text-align:center; color:#666; padding:20px;">V14 activo - 22 fichas en pestaña ESTUDIO RÁPIDO 10 MIN</div>`;
+  }
 }
-function obrirPDF(ruta) {
-  const nombre = ruta.split('/').pop();
-  const modal = document.createElement('div'); modal.id = 'pdf-modal';
-  modal.style.cssText = `position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;`;
-  modal.innerHTML = `<div style="background:#1a1a1a;padding:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333"><button onclick="tancarPDF()" style="background:#00D9FF;border:none;color:#000;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;">← Volver</button><div style="color:#fff;font-size:12px;font-weight:700;">${nombre}</div><div style="width:60px"></div></div><iframe src="./${nombre}" style="flex:1;border:none;width:100%;background:#fff"></iframe>`;
-  document.body.appendChild(modal);
-}
-function tancarPDF() { const modal = document.getElementById('pdf-modal'); if(modal) modal.remove(); }
 
-// ===== TIPS REPARADO - V13 =====
+function obrirPDF(ruta) {
+  // V14: PDFs obsoletos, redirige a biblioteca o fichas
+  console.warn('V14 - obrirPDF obsoleto, usa obrirFichaJPG o obrirBibliotecaOficial');
+  const mapPdfToBib = {
+    '01_Senales_Tomo_I_RD_465_2025.pdf': '01',
+    '02_Normas_Circulacion_Tomo_II_Edicion_2024.pdf': '02',
+    '03_Manual_IX_Primeros_Auxilios_2025.pdf': '03',
+    '04_Manual_VIII_Mecanica_2024.pdf': '04',
+    '05_Medio_Ambiente_Distintivos_DGT_2025.pdf': '05'
+  };
+  for(let k in mapPdfToBib){ if(ruta.includes(k.substring(0,4)) || ruta.includes(k)){ if(typeof obrirBibliotecaOficial==='function'){ obrirBibliotecaOficial(mapPdfToBib[k]); return; } } }
+  // fallback: abre primera ficha
+  if(typeof obrirFichaJPG==='function') obrirFichaJPG('ficha-t01a');
+}
+
+function tancarPDF() {
+  const modal = document.getElementById('pdf-modal'); if(modal) modal.remove();
+}
+
+// ===== TIPS =====
 function carregarTips() {
   if(typeof TIPS === 'undefined' ||!TIPS || TIPS.length===0){
     const cont = document.getElementById('tip-content');
@@ -1833,7 +2002,7 @@ function dibujarGraficaEvolucion() {
   dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
 }
 function mostrarIntro(){}
-function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "¡Vas por buen camino! 💪"; }
+function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "V14 - 10 min + 22 fichas verticales ¡Vamos! 💪"; }
 
 function canviarTab_V94(e, tab) {
   const tabTemari = document.getElementById('tab-temari'); if(tabTemari && tabTemari.classList.contains('active') && tempsIniciTemari!== null) { const minutsPassats = (Date.now() - tempsIniciTemari) / 1000 / 60; estat.stats.tempsEstudiatAvui += minutsPassats; tempsIniciTemari = null; guardar(); }
@@ -1842,7 +2011,7 @@ function canviarTab_V94(e, tab) {
   if(e && e.target) { const btn = e.target.closest('.tab-btn'); if(btn) btn.classList.add('active'); }
   if(tab === 'garage' || tab === 'garaje') carregarGaratge();
   if(tab === 'tienda' || tab === 'botiga') carregarBotiga();
-  if(tab === 'temari' || tab === 'temario') { carregarTemari(); iniciarComptadorTemari(); }
+  if(tab === 'temari' || tab === 'temario') { if(typeof carregarTemari_V14==='function') carregarTemari_V14(); else carregarTemari(); iniciarComptadorTemari(); }
   if(tab === 'tips') carregarTips();
   if(tab === 'test') { carregarPregunta('senales'); }
   if(tab === 'estadistiques' || tab === 'estadisticas') actualitzarEstadistiques_V94();
@@ -1868,4 +2037,3 @@ function mostrarEmoji(encert, element) {
 }
 
 if('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW registrado')).catch(err => console.log('SW error:', err)); }); }
-  
