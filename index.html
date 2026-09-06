@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V12.8 PRO</title>
+<title>GasDrive DGT ES V14 PRO</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -17,7 +17,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .tabs::-webkit-scrollbar{display:none}
 .tab-btn{flex:1;min-width:70px;padding:11px 4px;background:none;border:none;color:#666;font-size:10px;cursor:pointer;transition:0.2s}
 .tab-btn.active{color:#00D9FF;background:#1a1a1a}
-.tab-btn .emoji{font-size:19px;display:block;margin-bottom:3px}
+.tab-btn.emoji{font-size:19px;display:block;margin-bottom:3px}
 .tab-content{display:none;padding:12px;animation:fadeIn 0.3s;padding-bottom:80px;min-height:calc(100vh - 140px)}
 .tab-content.active{display:block}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -74,8 +74,8 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .orientacio-card h3{color:#00D9FF;margin-top:12px;font-size:15px}
 .orientacio-card p{color:#999;font-size:13px;margin:5px 0}
 .quadre-pictograma { width: 100%; min-height: 140px; background: linear-gradient(145deg, #1a1a2e, #16213e); border: 2px solid rgba(0, 217, 255, 0.5); border-radius: 16px; box-shadow: 0 0 20px rgba(0, 217, 255, 0.15), inset 0 0 15px rgba(0,0,0,0.3); display: block; margin: 0; padding: 10px; box-sizing: border-box; flex-shrink: 0; overflow: hidden; position: relative; z-index: 1; }
-.quadre-pictograma .placeholder { color: rgba(0, 217, 255, 0.4); font-size: 14px; font-weight: 500; text-align: center; user-select: none; padding: 20px; }
-.test-emojis { display: none !important; }
+.quadre-pictograma.placeholder { color: rgba(0, 217, 255, 0.4); font-size: 14px; font-weight: 500; text-align: center; user-select: none; padding: 20px; }
+.test-emojis { display: none!important; }
 .tip-box { background: linear-gradient(135deg, #332a00 0%, #2a2a00 100%); border: 3px solid #00D9FF; border-left: 5px solid #FFD700; padding: 14px 15px; border-radius: 12px; font-size: 14px; font-weight: 700; color: #FFD700; line-height: 1.4; margin: 0; box-shadow: 0 0 15px rgba(0,217,255,0.3); display: none; flex-shrink: 0; width: 100%; box-sizing: border-box; position: relative; z-index: 2; }
 .stats-falta{ text-align:center; color:#FFD700; font-size:13px; font-weight:700; margin:8px 0 4px; line-height:1.3; background:rgba(255,215,0,0.08); padding:8px; border-radius:8px; border:1px dashed rgba(255,215,0,0.3); }
 .evolucio-mot{ text-align:center; color:#00D9FF; font-size:12px; font-weight:600; margin:12px 0 4px; padding:10px; background:#0a0a0a; border-radius:8px; border:1px solid #333; line-height:1.4; }
@@ -90,6 +90,10 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .icon{width:18px;height:18px;stroke-width:2;vertical-align:middle;display:inline-block;stroke:#00D9FF;fill:none}
 .orientacio-subcontent{display:none}.orientacio-subcontent.actiu{display:block;animation:fadeIn 0.3s}
 .mc-text{font-size:13px;line-height:1.7;color:#ddd}
+/* V14 NUEVO */
+.tema-cont{display:none}.tema-cont.active{display:block;animation:fadeIn 0.3s}
+#visor-ficha-container{width:100%;background:#0a0a0a;border-radius:12px;border:1px solid #333;min-height:400px;overflow:hidden;position:relative}
+#visor-ficha-container img{width:100%;height:auto;display:block;border-radius:12px}
 </style>
 </head>
 <body>
@@ -113,7 +117,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
       <div class="progress-bar"><div class="progress-fill" id="stats-global-bar"></div></div>
       <div class="stats-falta" id="stats-global-falta">0% - Calculando preparación...</div>
       <div class="stats-falta" id="stats-resum-falta" style="display:none"></div>
-      <div style="text-align:center;color:#999;font-size:13px;margin:10px 0" id="stats-motivacio">Estudia 20min en el Temario para desbloquear</div>
+      <div style="text-align:center;color:#999;font-size:13px;margin:10px 0" id="stats-motivacio">Estudia 10min en el Temario para desbloquear</div>
     </div>
     <div class="stat-card"><div class="stat-card-header"><div><span>💪</span> <b>Retención</b></div><div style="font-size:20px;font-weight:800;color:#00D9FF" id="stats-domini-percent">0%</div></div><div class="progress-bar"><div class="progress-fill" id="stats-domini-bar"></div></div><div style="color:#666;font-size:11px;margin-top:6px">Preguntas que dominas 3 días seguidos</div></div>
     <div class="stat-card"><div class="stat-card-header"><div><span>📅</span> <b id="stats-constancia-label">CONSTANCIA: 0/20 días</b></div><div style="font-size:20px;font-weight:800;color:#00D9FF" id="stats-constancia-percent">0%</div></div><div class="progress-bar"><div class="progress-fill" id="stats-constancia-bar"></div></div></div>
@@ -133,15 +137,15 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   <div id="stats-pase" class="sub-content">
     <div class="card pase-card">
       <div class="big">⏰</div>
-      <h2>PASE DIARIO 20 MIN</h2>
-      <p>Estudia 20 minutos en el TEMARIO para desbloquear los tests de hoy</p>
+      <h2>PASE DIARIO 10 MIN</h2>
+      <p>Estudia 10 minutos en el TEMARIO (22 fichas verticales) para desbloquear los tests de hoy</p>
       <div style="font-size:30px;font-weight:900;color:#00D9FF" id="pase-temps">0 min</div>
-      <div class="pase-consell" id="pase-consell">💡 Consejo V12: Haz 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS = 20 min. Así tocas todos los temarios cada día.</div>
+      <div class="pase-consell" id="pase-consell">💡 Consejo V14: Haz scroll en T01 Señales + T02 Normas + T05 Alcohol + T09 Mecánica = 10 min total. Timer global, todo suma.</div>
     </div>
   </div>
   <div id="stats-orientacio" class="sub-content">
     <div class="card orientacio-card">
-      <h2>🧭 Plan de Estudio Completo V12</h2>
+      <h2>🧭 Plan de Estudio Completo V14</h2>
       <div id="stats-orientacio-lista"></div>
       <div id="orientacio-lista" style="display:none"></div>
     </div>
@@ -166,7 +170,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
       <div class="stats"><div>Aciertos: <span id="test-senyals-aciertos">0</span></div><div>Racha: <span id="test-senyals-racha">0</span>🔥</div><div>Score: <span id="test-senyals-score">0</span></div></div>
       <div class="progress-bar"><div class="progress-fill" id="test-senyals-progress"></div></div>
       <div id="test-senyals-imagen" class="quadre-pictograma"><div class="placeholder">Cargando señal...</div></div>
-      <div id="test-senyals-tip" class="tip-box"></div> 
+      <div id="test-senyals-tip" class="tip-box"></div>
       <div id="test-senyals-emojis" class="test-emojis"></div>
       <div class="pregunta" id="test-senyals-pregunta">Cargando...</div>
       <div id="test-senyals-opciones"></div>
@@ -207,7 +211,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
     <div class="stats"><div>Pregunta: <span id="examen-num">0</span>/30</div><div>Tiempo: <span id="examen-timer">30:00</span></div><div>Aciertos: <span id="examen-aciertos">0</span></div></div>
     <div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div>
     <div id="examen-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div>
-    <div id="examen-tip" class="tip-box"></div> 
+    <div id="examen-tip" class="tip-box"></div>
     <div id="examen-emojis" class="test-emojis"></div>
     <div class="pregunta" id="examen-pregunta">Pulsa Inicia el Examen</div>
     <div id="examen-opciones"></div>
@@ -220,7 +224,65 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 <div id="tab-garage" class="tab-content"><div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div><div id="garaje-lista" style="display:none"></div></div></div>
 <div id="tab-tienda" class="tab-content"><div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div></div>
 <div id="tab-tips" class="tab-content"><div class="card"><h2>💡 CONSEJO DGT</h2><div id="tip-content"></div><div style="display:flex;gap:10px;margin-top:15px"><button class="btn" style="flex:1" onclick="prevTip(event)">ANTERIOR</button><span id="tip-counter" style="align-self:center">1/100</span><button class="btn" style="flex:1" onclick="nextTip(event)">SIGUIENTE</button></div></div></div>
-<div id="tab-temari" class="tab-content"><div class="card"><h2>📖 TEMARIOS OFICIALES</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Estudia los temarios completos DGT. 20min para desbloquear - Consejo: 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS</p><div id="temari-lista"></div></div></div>
+
+<!-- ========= V14 NUEVO TEMARIO ========= -->
+<div id="tab-temari" class="tab-content">
+  <div class="sub-tabs">
+    <button class="sub-tab-btn active" onclick="canviarTemariPrincipal(event,'rapido')">⚡ ESTUDIO RÁPIDO 10 MIN</button>
+    <button class="sub-tab-btn" onclick="canviarTemariPrincipal(event,'biblioteca')">📚 BIBLIOTECA OFICIAL</button>
+  </div>
+
+  <div id="temari-rapido" class="sub-content active" style="display:block">
+    <div class="sub-tabs" style="margin-top:10px; flex-wrap:nowrap; overflow-x:auto">
+      <button class="sub-tab-btn active" onclick="canviarTemaFicha(event,'t01')">T01</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t02')">T02</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t03')">T03</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t04')">T04</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t05')">T05</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t06')">T06</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t07')">T07</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t08')">T08</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t09')">T09</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t10')">T10</button>
+      <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t11')">T11</button>
+    </div>
+
+    <div id="tema-t01" class="tema-cont active" style="display:block"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn active" onclick="obrirFichaJPG('ficha-t01a')">✨ ficha-t01a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t01b')">ficha-t01b</button></div></div>
+    <div id="tema-t02" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t02a')">ficha-t02a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t02b')">ficha-t02b</button></div></div>
+    <div id="tema-t03" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t03a')">ficha-t03a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t03b')">ficha-t03b</button></div></div>
+    <div id="tema-t04" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t04a')">ficha-t04a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t04b')">ficha-t04b</button></div></div>
+    <div id="tema-t05" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t05a')">ficha-t05a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t05b')">ficha-t05b</button></div></div>
+    <div id="tema-t06" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t06a')">ficha-t06a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t06b')">ficha-t06b</button></div></div>
+    <div id="tema-t07" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t07a')">ficha-t07a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t07b')">ficha-t07b</button></div></div>
+    <div id="tema-t08" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t08a')">ficha-t08a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t08b')">ficha-t08b</button></div></div>
+    <div id="tema-t09" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t09a')">ficha-t09a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t09b')">ficha-t09b</button></div></div>
+    <div id="tema-t10" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t10a')">ficha-t10a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t10b')">ficha-t10b</button></div></div>
+    <div id="tema-t11" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t11a')">ficha-t11a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t11b')">ficha-t11b</button></div></div>
+
+    <div id="visor-ficha-container">
+      <div style="padding:40px 20px; text-align:center; color:#666; font-size:13px">👆 Pulsa una ficha arriba<br>22 fichas verticales • Scroll infinito • 10 min → Pase desbloqueado</div>
+    </div>
+    <div style="text-align:center; margin-top:10px; color:#FFD700; font-size:11px; background:rgba(255,215,0,0.08); padding:8px; border-radius:8px; border:1px dashed rgba(255,215,0,0.3)">Timer Global: todo lo que abras en T01-T11 suma para los 10 min. 22 fichas totales.</div>
+  </div>
+
+  <div id="temari-biblioteca" class="sub-content">
+    <div class="sub-tabs" style="margin-top:10px; flex-wrap:wrap">
+      <button class="sub-tab-btn active" onclick="obrirBibliotecaOficial('01')">01 Señales</button>
+      <button class="sub-tab-btn" onclick="obrirBibliotecaOficial('02')">02 Normas</button>
+      <button class="sub-tab-btn" onclick="obrirBibliotecaOficial('03')">03 Auxilios</button>
+      <button class="sub-tab-btn" onclick="obrirBibliotecaOficial('04')">04 Mecánica</button>
+      <button class="sub-tab-btn" onclick="obrirBibliotecaOficial('05')">05 Medio Ambiente</button>
+    </div>
+    <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px">
+      <div class="card" style="border:1px solid #00D9FF; cursor:pointer" onclick="window.open('https://share.google/OB30FJpKxoUxfUwZT','_blank')"><h3>🅰️ 01 Señales RD 465/2025</h3><p style="font-size:12px;color:#999">BOE Oficial • Señalización vertical</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/cdTfRzcGeB9s9xnuQ','_blank')"><h3>📋 02 Normas Circulación Tomo II</h3><p style="font-size:12px;color:#999">Reglamento General Circulación</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/d16o0xmNpIAQ6Nh1c','_blank')"><h3>🚑 03 Primeros Auxilios</h3><p style="font-size:12px;color:#999">PAS • RCP • Manual IX 2025</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/tW0GEXMT1rJlb5Vqt','_blank')"><h3>🔧 04 Mecánica</h3><p style="font-size:12px;color:#999">Manual VIII 2024</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/i2dZbEcYBk2QaCx2t','_blank')"><h3>🌱 05 Medio Ambiente</h3><p style="font-size:12px;color:#999">Distintivos DGT • ZBE 2025</p></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;font-size:11px;color:#FFD700">💡 Opcional, no cuenta para Pase. Link directo oficial sin intermediarios.</div>
+    </div>
+  </div>
+</div>
 
 <div class="tabs">
   <button class="tab-btn active" onclick="canviarTab_V94(event,'estadistiques')"><span class="emoji">📊</span>ESTAD</button>
@@ -233,10 +295,11 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   <button class="tab-btn" onclick="canviarTab_V94(event,'temari')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<script src="./app.js?v=12.8"></script>
+<script src="./app.js?v=14.0"></script>
 <script>
+// ===== ORIENTACION (se mantiene) =====
 function canviarOrientacio(evt,id){
-  document.querySelectorAll('#stats-orientacio .sub-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#stats-orientacio.sub-tab-btn').forEach(b=>b.classList.remove('active'));
   if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
   document.querySelectorAll('.orientacio-subcontent').forEach(c=>{c.classList.remove('actiu');c.style.display='none';});
   const t=document.getElementById('orientacio-'+id);
@@ -246,187 +309,56 @@ function inyectarOrientacionFix(){
   const cont=document.getElementById('stats-orientacio');
   if(!cont) return;
   if(document.getElementById('orientacio-am')) return;
-  cont.innerHTML=`
-<div class="card" style="max-width:440px;border:2px solid #00D9FF">
-  <h2>🎯 CÓMO FUNCIONA EL EXAMEN DGT OFICIAL REAL</h2>
-  <div style="font-size:13px;line-height:1.6;color:#ddd">
-    <p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p>
-    <p>⏱️ <b>30 minutos máximo</b> - Con práctica lo haces en 10 min</p>
-    <p>✅ <b>27 aciertos mínimo para aprobar</b> - Máximo 3 fallos permitidos</p>
-    <p>👮 <b>El día del examen:</b> Lleva DNI + Justificante cita. Llega 15 min antes. Aula con ordenadores. Resultado al momento en pantalla. Si suspendes, puedes repetir en 7-15 días.</p>
-    <p>💡 <b>Truco DGT que nadie explica:</b> Siempre la respuesta más segura y conservadora es la correcta. Palabras absolutas como "siempre, nunca, en todo caso" son trampa.</p>
-  </div>
-</div>
-
-<div class="card" style="max-width:440px;border:2px solid #FFD700">
-  <h2 style="color:#FFD700">📚 MÉTODO GASDRIVE - 3 PASOS QUE YA TIENES EN EL PASE</h2>
-  <div style="display:flex;flex-direction:column;gap:12px">
-    <div style="background:#0f2e0f;border-left:4px solid #2ecc71;padding:12px;border-radius:8px">
-      <div style="font-weight:900;color:#2ecc71;font-size:13px">1. Empieza por el TEMARIO - 5 minutos cada temario al día (20 min total PASE)</div>
-      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">No estudies 20 min seguidos de un temario. Haz 5 min SEÑALES + 5 min NORMAS + 5 min MECÁNICA + 5 min AUXILIOS y MEDIO AMBIENTE. Esto te desbloquea el PASE y te da +50 coins. El contador cuenta automático cuando estás en TEMARIO.</div>
-    </div>
-    <div style="background:#332a00;border-left:4px solid #FFD700;padding:12px;border-radius:8px">
-      <div style="font-weight:900;color:#FFD700;font-size:13px">2. Haz TESTS diarios para mejorar porcentaje de preparación</div>
-      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Practica 30-60 tests diarios. El % no es solo aciertos. Es: 30% Retención (preguntas que dominas 3 días seguidos) + 40% Constancia (20 días válidos 30-60 preguntas 85% aciertos) + 20% Cobertura 7 días + 10% Estabilidad exámenes. Cuando llegues al 90% estás listo.</div>
-    </div>
-    <div style="background:#001a33;border-left:4px solid #00D9FF;padding:12px;border-radius:8px">
-      <div style="font-weight:900;color:#00D9FF;font-size:13px">3. Haz el EXAMEN - Pruébate en examen diario para mejorar preparación</div>
-      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Cuando tengas 90% global, haz 1 simulacro diario. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen son 30 preguntas mezcla de todos los paneles N-01..N-15 + S-100 + M- + A- + E-.</div>
-    </div>
-    <div style="background:#0a0a0a;border:1px dashed rgba(0,217,255,0.4);padding:12px;border-radius:8px">
-      <div style="font-weight:900;color:#00D9FF;font-size:12px">📍 Plan de Estudio Trampas + Familias Reales</div>
-      <div style="font-size:11px;color:#999;margin-top:4px;line-height:1.5">Cada panel tiene 5-6 preguntas con mismo pictograma. Si fallas N-01 alcohol, todas las de N-01 son misma familia. Si fallas S-105c servicios, son familia S-100 azul con pictograma blanco WC/gasolinera/hotel. No estudies 2 horas seguidas. Estudia 5 minutos cada temario, después 30-60 tests, después 1 examen. Constancia > intensidad. El sistema detecta si fallas en señales verticales de peligro P-, prohibición R-, o información S-100 y te lo dice exacto.</div>
-    </div>
-  </div>
-</div>
-
-<div class="card" style="max-width:440px;border:2px solid #00D9FF">
-  <h2>🧭 ORIENTACIÓN - 8 MINICURSOS</h2>
-  <div class="sub-tabs" style="flex-wrap:wrap">
-    <button class="sub-tab-btn active" onclick="canviarOrientacio(event,'am')">🛵 AM</button>
-    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'a1')">A1</button>
-    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'a2')">A2</button>
-    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'b')">🚗 B</button>
-    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'be')">B+E</button>
-    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'c')">🚚 C</button>
-    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'masas')">⚖️ MMA</button>
-    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'via')">🛣️ VIA</button>
-  </div>
-
-  <div id="orientacio-am" class="orientacio-subcontent actiu" style="display:block">
-    <div style="text-align:center"><svg class="mini-picto" viewBox="0 0 100 50"><path d="M12 35 L60 8 L82 28 L84 38 L20 40 Z M16 38 A8 8 0 1 0 31 38 M66 38 A8 8 0 1 0 81 38"/></svg><div style="font-size:11px;color:#00D9FF;font-weight:700">L1e · L6e · Art.4 Reglamento Vehículos</div></div>
-    <span class="mc-badge">1/8 • AM 15 AÑOS • 45 km/h • 50cc / 4kW</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      Ciclomotor de 2/3 ruedas con velocidad máxima por construcción de 45 km/h. Combustión ≤50cc. Eléctrico ≤4kW. Cuadriciclo ligero L6e: 4 ruedas, masa en vacío &lt;350kg sin baterías, mismo límite 45 km/h. El L7e de 400kg ya es categoría B1.
-      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara ~70kg / MMA ~160kg:</b> Ligero, pero a 45 km/h sin casco la lesividad es crítica.</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
-      - 1 pasajero si ficha técnica indica 2 plazas homologadas.<br>- Circular por arcén derecho transitable.<br>- Carga pequeña en baca sin ocultar alumbrado.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.38</b></div>
-      - Autopista, autovía, vía para automóviles.<br>- Remolcar, auriculares, transportar menores de 12 años. Excepción 7-12 con padre/madre/tutor, casco infantil y reposapiés.
-      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0">
-        <div style="display:flex;gap:8px;align-items:center"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 11 7 11s7-6 7-11a7 7 0 0 0-7-7z"/></svg><b style="font-size:12px;color:#00D9FF">A-06 CASCO + M-11 MECÁNICA</b></div>
-        <div style="font-size:12px;margin-top:6px">Casco ECE 22.05/22.06 obligatorio. Sanción 200€ + 4 puntos. Chaleco: llevar en el vehículo y poner en caso de avería interurbana. Luces de cruce siempre. Presión cada 2 semanas. Frenada 70% delante 30% detrás.</div>
-      </div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN B</b><div style="font-size:12px;color:#FFD700;margin-top:4px">N-01 Alcohol 0,5/0,25 - en AM sigue siendo 0,5 aunque seas novel. R-101 Prohibido ciclomotores. Circular a 70km/h = sin carnet sin seguro.</div></div>
-    </div>
-  </div>
-
-  <div id="orientacio-a1" class="orientacio-subcontent">
-    <span class="mc-badge">2/8 • A1 16 AÑOS • 125cc • 11kW • 0,1kW/kg</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      Motocicleta ≤125cc, ≤11kW (15CV), relación potencia/peso ≤0,1kW/kg. Triciclo ≤15kW. Incluye AM. Edad mínima 16 años.
-      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara ~110kg / MMA ~250kg:</b> Moto 100kg con 11kW = 0,11kW/kg → NO válida. Necesita 110kg mínimo.</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
-      - 125cc con y sin sidecar.<br>- Pasajero si homologada 2 plazas.<br>- Autopista y autovía máximo 120km/h.<br>- Remolque ligero 50% tara.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.5</b></div>
-      - &gt;125cc o &gt;11kW o relación &gt;0,1.<br>- Convalidación B+3 años solo España.<br>- Mercancías peligrosas sin ADR.
-      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><div style="display:flex;gap:8px;align-items:center"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 11 7 11s7-6 7-11a7 7 0 0 0-7-7z"/></svg><b style="font-size:12px;color:#00D9FF">A-06 CASCO + M-11</b></div><div style="font-size:12px;margin-top:6px">Casco integral ECE 22.06. Guantes obligatorios. Neumático mín 1,6mm, cadena 2-3cm, frenada 70/30.</div></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">Convalidación B+3 años solo España. Novel 0,3/0,15. B con 1 año no puedes A1.</div></div>
-    </div>
-  </div>
-
-  <div id="orientacio-a2" class="orientacio-subcontent">
-    <span class="mc-badge">3/8 • A2 18 AÑOS • 35kW 47CV • 0,2kW/kg</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      ≤35kW (47CV), relación ≤0,2kW/kg, no derivada de vehículo con más del doble de potencia de origen.
-      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara ~180kg / MMA ~380kg:</b> MT-07 55kW limitada 35kW SÍ (&lt;70kW origen) Ducati 90kW NO (&gt;70kW origen)</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
-      - Todas A1.<br>- Motos hasta 47CV limitadas legalmente.<br>- Triciclos &gt;15kW.<br>- Acceso A con 20a + 2a A2 + curso 9h.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.7</b></div>
-      - &gt;35kW o relación &gt;0,2.<br>- Limitar moto origen &gt;70kW.<br>- A directo con 21a sin 2a A2.
-      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">M-11 MECÁNICA + A-06</b><div style="font-size:12px;margin-top:6px">ABS obligatorio &gt;125cc nuevas. CBS &lt;125cc. Cadena, DOT4, presión en frío.</div></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">Relación 0,2kW/kg A2. Doble potencia origen 70kW máximo para limitar. A con 20a solo con 2a A2 + curso 9h.</div></div>
-    </div>
-  </div>
-
-  <div id="orientacio-b" class="orientacio-subcontent">
-    <div style="text-align:center"><svg class="mini-picto" viewBox="0 0 100 40"><path d="M10 26 L20 12 L75 12 L90 20 L88 32 L10 32 Z M20 32 A7 7 0 1 0 34 32 M66 32 A7 7 0 1 0 80 32"/></svg></div>
-    <span class="mc-badge" style="background:#FFD700;color:#000">4/8 • B ACTIVO • 3500kg • 4250kg CONJUNTO</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      Art.5: MMA ≤3500kg, 8 pasajeros + conductor (9 total). Remolque ≤750kg. Conjunto máximo B: 4250kg MMA. Incluye AM, A1 con +3a, cuadriciclos.
-      <div style="background:#0f0f0f;border:1px solid #FFD700;border-radius:8px;padding:10px;margin:10px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> <b>Ejemplo 100%:</b> Coche 2000kg + Remolque 1000kg = 3000kg → &lt;4250 → SÍ B. Coche 3500+1000=4500 → &gt;4250 → NO B+E</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
-      - Turismo hasta 9 plazas, furgoneta 3500kg.<br>- Remolque ligero 750kg.<br>- Triciclos y cuadriciclos pesados L7e.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.5 y 9</b></div>
-      - &gt;3500kg MMA o &gt;9 plazas.<br>- Conjunto &gt;4250kg sin B+E.<br>- Camión C1 sin C1.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg><b style="color:#FFD700">E-01 TARA / MMA / MOM</b></div>
-      <b>Tara:</b> Vacío con fluidos y herramientas, sin conductor.<br><b>MOM:</b> Tara+75kg.<br><b>MMA:</b> Máximo fabricante ficha ITV.<br><b>Útil:</b> MMA-Tara.
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;margin-top:10px"><b style="color:#FFD700;font-size:12px">🎯 ERRORES QUE SUSPENDEN B</b><div style="font-size:12px;color:#FFD700">Glorieta interior sin intermitente, Stop 2 segundos, MMA conjunto 4250 no 3500, Alcohol 0,25 es aire no sangre.</div></div>
-    </div>
-  </div>
-
-  <div id="orientacio-be" class="orientacio-subcontent">
-    <span class="mc-badge">5/8 • B+E • HASTA 7000kg</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      B + remolque MMA &gt;750kg hasta 7000kg MMA conjunto. Ej 3500+3500=7000 límite. 18a + B. Caravanas grandes y remolques caballos.
-      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara tractor 1500kg / Remolque 1200kg / MMA conjunto 6500kg:</b> Caravana pesada necesita B+E si supera 750kg MMA remolque y conjunto &gt;4250kg.</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
-      - Remolque &gt;750kg hasta 3500kg MMA.<br>- Conjunto hasta 7000kg MMA total.<br>- Caravanas &gt;750kg, portacoches, portacaballos.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite</b></div>
-      - Conjuntos &gt;7000kg MMA, necesitas C1+E.<br>- Remolque sin ITV propia si &gt;750kg.<br>- Velocidad &gt;90 en autovía con remolque.
-      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">M-11 + E-01 MASAS Y VELOCIDAD</b><div style="font-size:12px;margin-top:6px">Longitud máxima conjunto turismo+remolque 18,75m. Anchura remolque 2,55m. Altura 4m. Con remolque: Autovía 90, convencional 80, ciudad 50. Nunca 120 con remolque.</div></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">B+E hasta 7000kg MMA conjunto. Remolque &gt;750kg necesita matrícula propia blanca+roja, ITV propia, seguro propio y placa SP.</div></div>
-    </div>
-  </div>
-
-  <div id="orientacio-c" class="orientacio-subcontent">
-    <span class="mc-badge" style="background:#666">6/8 • C/C1 • CAMIÓN</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      C1: 3500kg a 7500kg MMA, edad 18 años. C: &gt;3500kg sin límite superior, edad 21 años (18 años con CAP inicial). Incluye C1 y B. No incluye D.
-      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Tara camión 8000kg / MMA 18000kg / Útil 10000kg:</b> 2 ejes 18t, 3 ejes 25t (26t neumático), 4 ejes 31t, tren 40t, 44t contenedor 40 pies.</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>
-      - Camión &gt;3500kg hasta 18000kg 2 ejes.<br>- Remolque ligero 750kg.<br>- Tacógrafo digital y tarjeta conductor.<br>- Transporte profesional con CAP.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite</b></div>
-      - Bus D, ni C+E sin obtener C+E.<br>- Exceder masas por eje: simple motor 11,5t, no motor 10t.<br>- Conducir sin CAP o tacógrafo.
-      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">TACÓGRAFO - HORARIO PROFESIONAL</b><div style="font-size:12px;margin-top:6px">Conducción 4h30 + pausa 45min (15+30). Diaria 9h ampliable 10h 2 veces/semana. Semanal 56h quincenal 90h. Descanso diario 11h reducible 9h 3 veces. CAP 140h.</div></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN B (MERCANCÍAS)</b><div style="font-size:12px;color:#FFD700">Masas máximas 2 ejes 18t 3 ejes 25t tren 40t. Velocidad camión autovía 90 convencional 80. Alcohol profesional 0,3/0,15.</div></div>
-    </div>
-  </div>
-
-  <div id="orientacio-masas" class="orientacio-subcontent">
-    <span class="mc-badge" style="background:#FFD700;color:#000">7/8 • E-01 • TARA/MMA/MOM • 4 PREGUNTAS FIJAS EXAMEN</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      Infografía oficial que caen 4 preguntas fijas en examen B. Es la base para entender si puedes llevar remolque y si vas sobrecargado.
-      <div style="background:#0f0f0f;border:1px solid #FFD700;border-radius:8px;padding:10px;margin:10px 0;font-size:12px"><b>Tara:</b> Vacío lleno fluidos herramientas sin conductor.<br><b>MOM:</b> Tara + 75kg conductor.<br><b>MMA:</b> Masa máxima autorizada fabricante.<br><b>Real:</b> Peso momento circular.<br><b>Útil:</b> MMA - Tara.</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite entender</b></div>
-      - Si cargas 1600kg con furgoneta Tara 2000 MMA 3500 útil 1500kg → vas 100kg sobrecargado.<br>- MOM es lo que pesa cuando te pesan en báscula contigo dentro.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite confundir</b></div>
-      - Tara NO incluye conductor, MOM SÍ incluye 75kg.<br>- MMA no es peso real, es máximo legal ficha ITV.
-      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">M-11 MASAS POR EJE Y DIMENSIONES</b><div style="font-size:12px;margin-top:6px">Tándem &lt;1m 11,5t, 1-1,3m 16t, 1,3-1,8m 18t. Tridem &lt;1,3m 21t, &gt;1,3m 24t. Longitud turismo 12m, camión 12m, bus 15m, articulado 18,75m, tren 16,5m, conjunto 18,75m. Anchura 2,55m (2,60 frigorífico). Altura 4m.</div></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 TRUCO EXAMEN B</b><div style="font-size:12px;color:#FFD700">Tara NO incluye conductor. MOM SÍ incluye 75kg. MMA es la que sale en ficha ITV. Ejemplo Tara 2000 MOM 2075 MMA 3500 útil 1500kg.</div></div>
-    </div>
-  </div>
-
-  <div id="orientacio-via" class="orientacio-subcontent">
-    <span class="mc-badge" style="background:#FFD700;color:#000">8/8 • PARTES DE LA VÍA + VEHÍCULOS ESPECIALES</span>
-    <div class="mc-text">
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
-      Glosario oficial DGT de partes de la vía y vehículos especiales V-... que caen 3-4 preguntas en examen con foto.
-      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px"><svg class="icon" style="stroke:#FFD700"><path d="M12 2v20M2 12h20"/></svg> <b>Plataforma vs Calzada:</b> Plataforma = Calzada + Arcenes. Calzada = solo vehículos. Arcén = franja contigua no destinada a circulación excepto excepciones. Mediana = separa calzadas, nunca pisar.</div>
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite identificar</b></div>
-      - <b>Plataforma:</b> Zona carretera para uso de vehículos, formada por calzada + arcenes.<br>- <b>Calzada:</b> Parte destinada a circulación de vehículos.<br>- <b>Carril:</b> Franja longitudinal.<br>- <b>Arcén:</b> Franja contigua a calzada.<br>- <b>Acera:</b> Zona elevada para peatones.<br>- <b>Mediana:</b> Separa calzadas. No aparcar nunca.<br>- <b>Cuneta:</b> Canal de desagüe.
-      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite confundir</b></div>
-      - Arcén no es acera. Arcén vehículos excepcionalmente, acera solo peatones.<br>- Mediana no se puede pisar ni para adelantar.
-      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">V- VEHÍCULOS ESPECIALES</b><div style="font-size:12px;margin-top:6px"><b>V-1:</b> Prioritario (policía, bomberos, ambulancia) luz azul + sirena, prioridad absoluta.<br><b>V-2:</b> Obra/servicio luz naranja.<br><b>V-5:</b> Vehículo lento &lt;60km/h triángulo rojo.<br><b>V-16:</b> Preseñalización de peligro - luz naranja obligatoria desde 2026, sustituye triángulos.<br><b>V-13:</b> Conductor novel L verde 1 año.<br><b>V-20:</b> Panel carga que sobresale.</div></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">V-16 luz naranja obligatoria 2026 sustituye triángulos. V-1 azul policía/bomberos. V-2 naranja obra. Plataforma = calzada + arcenes. Mediana nunca pisar.</div></div>
-    </div>
-  </div>
-
-</div>
-  `;
+  cont.innerHTML=`<div class="card" style="max-width:440px;border:2px solid #00D9FF"><h2>🎯 CÓMO FUNCIONA EL EXAMEN DGT OFICIAL REAL</h2><div style="font-size:13px;line-height:1.6;color:#ddd"><p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p><p>⏱️ <b>30 minutos máximo</b> - Con práctica lo haces en 10 min</p><p>✅ <b>27 aciertos mínimo para aprobar</b> - Máximo 3 fallos permitidos</p></div></div><div class="card" style="max-width:440px;border:2px solid #FFD700"><h2 style="color:#FFD700">📚 MÉTODO GASDRIVE - 3 PASOS</h2><div style="display:flex;flex-direction:column;gap:12px"><div style="background:#0f2e0f;border-left:4px solid #2ecc71;padding:12px;border-radius:8px"><div style="font-weight:900;color:#2ecc71;font-size:13px">1. TEMARIO 10 MIN (22 fichas verticales)</div></div><div style="background:#332a00;border-left:4px solid #FFD700;padding:12px;border-radius:8px"><div style="font-weight:900;color:#FFD700;font-size:13px">2. TESTS diarios</div></div><div style="background:#001a33;border-left:4px solid #00D9FF;padding:12px;border-radius:8px"><div style="font-weight:900;color:#00D9FF;font-size:13px">3. EXAMEN diario</div></div></div></div><div class="card" style="max-width:440px;border:2px solid #00D9FF"><h2>🧭 ORIENTACIÓN - 8 MINICURSOS</h2><div class="sub-tabs" style="flex-wrap:wrap"><button class="sub-tab-btn active" onclick="canviarOrientacio(event,'am')">🛵 AM</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'a1')">A1</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'a2')">A2</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'b')">🚗 B</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'be')">B+E</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'c')">🚚 C</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'masas')">⚖️ MMA</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'via')">🛣️ VIA</button></div><div id="orientacio-am" class="orientacio-subcontent actiu" style="display:block"><span class="mc-badge">1/8 • AM 15 AÑOS</span><div class="mc-text">Contenido AM...</div></div></div>`;
   const first=document.getElementById('orientacio-am');
   if(first){first.style.display='block';first.classList.add('actiu');}
 }
 window.addEventListener('load',()=>{setTimeout(inyectarOrientacionFix,400);setTimeout(inyectarOrientacionFix,1200);});
 const obs=new MutationObserver(()=>{if(document.getElementById('stats-orientacio')&&!document.getElementById('orientacio-am')){inyectarOrientacionFix();}});
 obs.observe(document.body,{childList:true,subtree:true});
+
+// ===== V14 TEMARIO - FUNCIONES NUEVAS =====
+function canviarTemariPrincipal(evt,id){
+  const container = document.getElementById('tab-temari');
+  const btns = container.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn');
+  btns.forEach(b=>b.classList.remove('active'));
+  if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
+  document.getElementById('temari-rapido').classList.remove('active'); document.getElementById('temari-rapido').style.display='none';
+  document.getElementById('temari-biblioteca').classList.remove('active'); document.getElementById('temari-biblioteca').style.display='none';
+  const t=document.getElementById('temari-'+id);
+  if(t){t.classList.add('active');t.style.display='block';}
+  if(id==='rapido'){setTimeout(()=>obrirFichaJPG('ficha-t01a'),100);}
+}
+function canviarTemaFicha(evt,tema){
+  const rapido = document.getElementById('temari-rapido');
+  rapido.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn').forEach(b=>b.classList.remove('active'));
+  if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
+  rapido.querySelectorAll('.tema-cont').forEach(c=>{c.classList.remove('active');c.style.display='none';});
+  const cont=document.getElementById('tema-'+tema);
+  if(cont){cont.classList.add('active');cont.style.display='block';}
+  obrirFichaJPG('ficha-'+tema+'a');
+}
+function obrirFichaJPG(nombre){
+  const visor=document.getElementById('visor-ficha-container');
+  if(!visor) return;
+  visor.innerHTML=`<div style="padding:10px;text-align:center;color:#666;font-size:11px">Cargando ${nombre}...</div><img src="./${nombre}.jpg" alt="${nombre}" style="width:100%;height:auto;display:block;" loading="lazy" onload="if(typeof sumarTiempoEstudio==='function'){sumarTiempoEstudio();} if(typeof iniciarContadorTemari==='function'){iniciarContadorTemari();}" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px;text-align:center;color:#a00;font-size:13px\\'>❌ No se encontró ${nombre}.jpg<br><small style=\\'color:#666\\'>Súbelo a la carpeta raíz del proyecto</small></div>'">`;
+  visor.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function obrirBibliotecaOficial(id){
+  const links={'01':'https://share.google/OB30FJpKxoUxfUwZT','02':'https://share.google/cdTfRzcGeB9s9xnuQ','03':'https://share.google/d16o0xmNpIAQ6Nh1c','04':'https://share.google/tW0GEXMT1rJlb5Vqt','05':'https://share.google/i2dZbEcYBk2QaCx2t'};
+  if(links[id]) window.open(links[id],'_blank');
+}
+const _origCanviarTab=window.canviarTab_V94;
+window.canviarTab_V94=function(evt,tab){
+  if(_origCanviarTab) _origCanviarTab(evt,tab);
+  else{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    const t=document.getElementById('tab-'+tab); if(t) t.classList.add('active');
+  }
+  if(tab==='temari'){setTimeout(()=>{obrirFichaJPG('ficha-t01a');},300);}
+}
 </script>
 </body>
-</html> 
+</html>
