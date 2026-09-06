@@ -90,7 +90,6 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .icon{width:18px;height:18px;stroke-width:2;vertical-align:middle;display:inline-block;stroke:#00D9FF;fill:none}
 .orientacio-subcontent{display:none}.orientacio-subcontent.actiu{display:block;animation:fadeIn 0.3s}
 .mc-text{font-size:13px;line-height:1.7;color:#ddd}
-/* V14 NUEVO */
 .tema-cont{display:none}.tema-cont.active{display:block;animation:fadeIn 0.3s}
 #visor-ficha-container{width:100%;background:#0a0a0a;border-radius:12px;border:1px solid #333;min-height:400px;overflow:hidden;position:relative}
 #visor-ficha-container img{width:100%;height:auto;display:block;border-radius:12px}
@@ -133,7 +132,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
       <div id="stats-evolucio-explicacio" style="color:#666;font-size:11px;text-align:center;margin-top:8px;line-height:1.4">Cada punto es tu % global. Si la línea sube, vas bien. Si baja, repasa puntos débiles.</div>
     </div>
   </div>
-  <div id="stats-debils" class="sub-content"><div class="card"><h2>🎯 Puntos Débiles Por Familia Real</h2><div id="stats-debils-lista">Haz más tests para detectar tus puntos débiles reales<br><small style="color:#666">El sistema lee panel_id N-01..N-15, S-100, P-, R-, M-, A-, E-</small></div></div></div>
+  <div id="stats-debils" class="sub-content"><div class="card"><h2>🎯 Puntos Débiles Por Familia Real</h2><div id="stats-debils-lista">Haz más tests para detectar tus puntos débiles reales</div></div></div>
   <div id="stats-pase" class="sub-content">
     <div class="card pase-card">
       <div class="big">⏰</div>
@@ -165,31 +164,12 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
     <div class="card"><h2>📝 TEST GENERAL</h2><div class="stats"><div>Aciertos: <span id="test-general-aciertos">0</span></div><div>Racha: <span id="test-general-racha">0</span>🔥</div><div>Score: <span id="test-general-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div><div id="test-general-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-general-tip" class="tip-box"></div><div id="test-general-emojis" class="test-emojis"></div><div class="pregunta" id="test-general-pregunta">Cargando...</div><div id="test-general-opciones"></div><div class="feedback" id="test-general-feedback"></div><button class="btn-sig" id="btn-sig-test-general" onclick="seguentTest(event,'general')" disabled>SIGUIENTE</button></div>
   </div>
   <div id="test-senyals" class="sub-content">
-    <div class="card">
-      <h2>🚸 TEST SEÑALES</h2>
-      <div class="stats"><div>Aciertos: <span id="test-senyals-aciertos">0</span></div><div>Racha: <span id="test-senyals-racha">0</span>🔥</div><div>Score: <span id="test-senyals-score">0</span></div></div>
-      <div class="progress-bar"><div class="progress-fill" id="test-senyals-progress"></div></div>
-      <div id="test-senyals-imagen" class="quadre-pictograma"><div class="placeholder">Cargando señal...</div></div>
-      <div id="test-senyals-tip" class="tip-box"></div>
-      <div id="test-senyals-emojis" class="test-emojis"></div>
-      <div class="pregunta" id="test-senyals-pregunta">Cargando...</div>
-      <div id="test-senyals-opciones"></div>
-      <div class="feedback" id="test-senyals-feedback"></div>
-      <button class="btn-sig" id="btn-sig-test-senyals" onclick="seguentTest(event,'senyals')" disabled>SIGUIENTE</button>
-    </div>
+    <div class="card"><h2>🚸 TEST SEÑALES</h2><div class="stats"><div>Aciertos: <span id="test-senyals-aciertos">0</span></div><div>Racha: <span id="test-senyals-racha">0</span>🔥</div><div>Score: <span id="test-senyals-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-senyals-progress"></div></div><div id="test-senyals-imagen" class="quadre-pictograma"><div class="placeholder">Cargando señal...</div></div><div id="test-senyals-tip" class="tip-box"></div><div id="test-senyals-emojis" class="test-emojis"></div><div class="pregunta" id="test-senyals-pregunta">Cargando...</div><div id="test-senyals-opciones"></div><div class="feedback" id="test-senyals-feedback"></div><button class="btn-sig" id="btn-sig-test-senyals" onclick="seguentTest(event,'senyals')" disabled>SIGUIENTE</button></div>
   </div>
-  <div id="test-normes" class="sub-content">
-    <div class="card"><h2>📋 TEST NORMAS</h2><div class="stats"><div>Aciertos: <span id="test-normes-aciertos">0</span></div><div>Racha: <span id="test-normes-racha">0</span>🔥</div><div>Score: <span id="test-normes-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-normes-progress"></div></div><div id="test-normes-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-normes-tip" class="tip-box"></div><div id="test-normes-emojis" class="test-emojis"></div><div class="pregunta" id="test-normes-pregunta">Cargando...</div><div id="test-normes-opciones"></div><div class="feedback" id="test-normes-feedback"></div><button class="btn-sig" id="btn-sig-test-normes" onclick="seguentTest(event,'normes')" disabled>SIGUIENTE</button></div>
-  </div>
-  <div id="test-mecanica" class="sub-content">
-    <div class="card"><h2>🔧 TEST MECÁNICA</h2><div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span></div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div><div id="test-mecanica-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-mecanica-tip" class="tip-box"></div><div id="test-mecanica-emojis" class="test-emojis"></div><div class="pregunta" id="test-mecanica-pregunta">Cargando...</div><div id="test-mecanica-opciones"></div><div class="feedback" id="test-mecanica-feedback"></div><button class="btn-sig" id="btn-sig-test-mecanica" onclick="seguentTest(event,'mecanica')" disabled>SIGUIENTE</button></div>
-  </div>
-  <div id="test-auxilis" class="sub-content">
-    <div class="card"><h2>🚑 TEST AUXILIOS</h2><div class="stats"><div>Aciertos: <span id="test-auxilis-aciertos">0</span></div><div>Racha: <span id="test-auxilis-racha">0</span>🔥</div><div>Score: <span id="test-auxilis-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-auxilis-progress"></div></div><div id="test-auxilis-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-auxilis-tip" class="tip-box"></div><div id="test-auxilis-emojis" class="test-emojis"></div><div class="pregunta" id="test-auxilis-pregunta">Cargando...</div><div id="test-auxilis-opciones"></div><div class="feedback" id="test-auxilis-feedback"></div><button class="btn-sig" id="btn-sig-test-auxilis" onclick="seguentTest(event,'auxilis')" disabled>SIGUIENTE</button></div>
-  </div>
-  <div id="test-mediambient" class="sub-content">
-    <div class="card"><h2>🌱 TEST MEDIO AMBIENTE</h2><div class="stats"><div>Aciertos: <span id="test-mediambient-aciertos">0</span></div><div>Racha: <span id="test-mediambient-racha">0</span>🔥</div><div>Score: <span id="test-mediambient-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mediambient-progress"></div></div><div id="test-mediambient-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-mediambient-tip" class="tip-box"></div><div id="test-mediambient-emojis" class="test-emojis"></div><div class="pregunta" id="test-mediambient-pregunta">Cargando...</div><div id="test-mediambient-opciones"></div><div class="feedback" id="test-mediambient-feedback"></div><button class="btn-sig" id="btn-sig-test-mediambient" onclick="seguentTest(event,'mediambient')" disabled>SIGUIENTE</button></div>
-  </div>
+  <div id="test-normes" class="sub-content"><div class="card"><h2>📋 TEST NORMAS</h2><div class="stats"><div>Aciertos: <span id="test-normes-aciertos">0</span></div><div>Racha: <span id="test-normes-racha">0</span>🔥</div><div>Score: <span id="test-normes-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-normes-progress"></div></div><div id="test-normes-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-normes-tip" class="tip-box"></div><div id="test-normes-emojis" class="test-emojis"></div><div class="pregunta" id="test-normes-pregunta">Cargando...</div><div id="test-normes-opciones"></div><div class="feedback" id="test-normes-feedback"></div><button class="btn-sig" id="btn-sig-test-normes" onclick="seguentTest(event,'normes')" disabled>SIGUIENTE</button></div></div>
+  <div id="test-mecanica" class="sub-content"><div class="card"><h2>🔧 TEST MECÁNICA</h2><div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span></div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div><div id="test-mecanica-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-mecanica-tip" class="tip-box"></div><div id="test-mecanica-emojis" class="test-emojis"></div><div class="pregunta" id="test-mecanica-pregunta">Cargando...</div><div id="test-mecanica-opciones"></div><div class="feedback" id="test-mecanica-feedback"></div><button class="btn-sig" id="btn-sig-test-mecanica" onclick="seguentTest(event,'mecanica')" disabled>SIGUIENTE</button></div></div>
+  <div id="test-auxilis" class="sub-content"><div class="card"><h2>🚑 TEST AUXILIOS</h2><div class="stats"><div>Aciertos: <span id="test-auxilis-aciertos">0</span></div><div>Racha: <span id="test-auxilis-racha">0</span>🔥</div><div>Score: <span id="test-auxilis-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-auxilis-progress"></div></div><div id="test-auxilis-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-auxilis-tip" class="tip-box"></div><div id="test-auxilis-emojis" class="test-emojis"></div><div class="pregunta" id="test-auxilis-pregunta">Cargando...</div><div id="test-auxilis-opciones"></div><div class="feedback" id="test-auxilis-feedback"></div><button class="btn-sig" id="btn-sig-test-auxilis" onclick="seguentTest(event,'auxilis')" disabled>SIGUIENTE</button></div></div>
+  <div id="test-mediambient" class="sub-content"><div class="card"><h2>🌱 TEST MEDIO AMBIENTE</h2><div class="stats"><div>Aciertos: <span id="test-mediambient-aciertos">0</span></div><div>Racha: <span id="test-mediambient-racha">0</span>🔥</div><div>Score: <span id="test-mediambient-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mediambient-progress"></div></div><div id="test-mediambient-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-mediambient-tip" class="tip-box"></div><div id="test-mediambient-emojis" class="test-emojis"></div><div class="pregunta" id="test-mediambient-pregunta">Cargando...</div><div id="test-mediambient-opciones"></div><div class="feedback" id="test-mediambient-feedback"></div><button class="btn-sig" id="btn-sig-test-mediambient" onclick="seguentTest(event,'mediambient')" disabled>SIGUIENTE</button></div></div>
 </div>
 
 <div id="tab-situaciones" class="tab-content">
@@ -206,32 +186,18 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 </div>
 
 <div id="tab-examen" class="tab-content">
-  <div class="card">
-    <h2>📋 EXAMEN OFICIAL DGT</h2>
-    <div class="stats"><div>Pregunta: <span id="examen-num">0</span>/30</div><div>Tiempo: <span id="examen-timer">30:00</span></div><div>Aciertos: <span id="examen-aciertos">0</span></div></div>
-    <div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div>
-    <div id="examen-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div>
-    <div id="examen-tip" class="tip-box"></div>
-    <div id="examen-emojis" class="test-emojis"></div>
-    <div class="pregunta" id="examen-pregunta">Pulsa Inicia el Examen</div>
-    <div id="examen-opciones"></div>
-    <div id="examen-resultat" style="display:none"></div>
-    <button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button>
-    <button class="btn-sig" id="btn-sig-examen" onclick="seguentPreguntaExamen(event)" disabled style="display:none">SIGUIENTE</button>
-  </div>
+  <div class="card"><h2>📋 EXAMEN OFICIAL DGT</h2><div class="stats"><div>Pregunta: <span id="examen-num">0</span>/30</div><div>Tiempo: <span id="examen-timer">30:00</span></div><div>Aciertos: <span id="examen-aciertos">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div><div id="examen-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="examen-tip" class="tip-box"></div><div id="examen-emojis" class="test-emojis"></div><div class="pregunta" id="examen-pregunta">Pulsa Inicia el Examen</div><div id="examen-opciones"></div><div id="examen-resultat" style="display:none"></div><button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button><button class="btn-sig" id="btn-sig-examen" onclick="seguentPreguntaExamen(event)" disabled style="display:none">SIGUIENTE</button></div>
 </div>
 
 <div id="tab-garage" class="tab-content"><div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div><div id="garaje-lista" style="display:none"></div></div></div>
 <div id="tab-tienda" class="tab-content"><div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div></div>
 <div id="tab-tips" class="tab-content"><div class="card"><h2>💡 CONSEJO DGT</h2><div id="tip-content"></div><div style="display:flex;gap:10px;margin-top:15px"><button class="btn" style="flex:1" onclick="prevTip(event)">ANTERIOR</button><span id="tip-counter" style="align-self:center">1/100</span><button class="btn" style="flex:1" onclick="nextTip(event)">SIGUIENTE</button></div></div></div>
 
-<!-- ========= V14 NUEVO TEMARIO ========= -->
 <div id="tab-temari" class="tab-content">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="canviarTemariPrincipal(event,'rapido')">⚡ ESTUDIO RÁPIDO 10 MIN</button>
     <button class="sub-tab-btn" onclick="canviarTemariPrincipal(event,'biblioteca')">📚 BIBLIOTECA OFICIAL</button>
   </div>
-
   <div id="temari-rapido" class="sub-content active" style="display:block">
     <div class="sub-tabs" style="margin-top:10px; flex-wrap:nowrap; overflow-x:auto">
       <button class="sub-tab-btn active" onclick="canviarTemaFicha(event,'t01')">T01</button>
@@ -246,8 +212,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
       <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t10')">T10</button>
       <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t11')">T11</button>
     </div>
-
-    <div id="tema-t01" class="tema-cont active" style="display:block"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn active" onclick="obrirFichaJPG('ficha-t01a')">✨ ficha-t01a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t01b')">ficha-t01b</button></div></div>
+    <div id="tema-t01" class="tema-cont active" style="display:block"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn active" onclick="obrirFichaJPG('ficha-t01a')">✨ ficha-t01a</button></div></div>
     <div id="tema-t02" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t02a')">ficha-t02a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t02b')">ficha-t02b</button></div></div>
     <div id="tema-t03" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t03a')">ficha-t03a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t03b')">ficha-t03b</button></div></div>
     <div id="tema-t04" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t04a')">ficha-t04a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t04b')">ficha-t04b</button></div></div>
@@ -258,13 +223,9 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
     <div id="tema-t09" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t09a')">ficha-t09a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t09b')">ficha-t09b</button></div></div>
     <div id="tema-t10" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t10a')">ficha-t10a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t10b')">ficha-t10b</button></div></div>
     <div id="tema-t11" class="tema-cont"><div class="sub-tabs" style="margin:10px 0"><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t11a')">ficha-t11a</button><button class="sub-tab-btn" onclick="obrirFichaJPG('ficha-t11b')">ficha-t11b</button></div></div>
-
-    <div id="visor-ficha-container">
-      <div style="padding:40px 20px; text-align:center; color:#666; font-size:13px">👆 Pulsa una ficha arriba<br>22 fichas verticales • Scroll infinito • 10 min → Pase desbloqueado</div>
-    </div>
+    <div id="visor-ficha-container"><div style="padding:40px 20px; text-align:center; color:#666; font-size:13px">👆 Pulsa una ficha arriba<br>22 fichas verticales • Scroll infinito • 10 min → Pase desbloqueado</div></div>
     <div style="text-align:center; margin-top:10px; color:#FFD700; font-size:11px; background:rgba(255,215,0,0.08); padding:8px; border-radius:8px; border:1px dashed rgba(255,215,0,0.3)">Timer Global: todo lo que abras en T01-T11 suma para los 10 min. 22 fichas totales.</div>
   </div>
-
   <div id="temari-biblioteca" class="sub-content">
     <div class="sub-tabs" style="margin-top:10px; flex-wrap:wrap">
       <button class="sub-tab-btn active" onclick="obrirBibliotecaOficial('01')">01 Señales</button>
@@ -274,12 +235,12 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
       <button class="sub-tab-btn" onclick="obrirBibliotecaOficial('05')">05 Medio Ambiente</button>
     </div>
     <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px">
-      <div class="card" style="border:1px solid #00D9FF; cursor:pointer" onclick="window.open('https://share.google/OB30FJpKxoUxfUwZT','_blank')"><h3>🅰️ 01 Señales RD 465/2025</h3><p style="font-size:12px;color:#999">BOE Oficial • Señalización vertical</p></div>
-      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/cdTfRzcGeB9s9xnuQ','_blank')"><h3>📋 02 Normas Circulación Tomo II</h3><p style="font-size:12px;color:#999">Reglamento General Circulación</p></div>
-      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/d16o0xmNpIAQ6Nh1c','_blank')"><h3>🚑 03 Primeros Auxilios</h3><p style="font-size:12px;color:#999">PAS • RCP • Manual IX 2025</p></div>
-      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/tW0GEXMT1rJlb5Vqt','_blank')"><h3>🔧 04 Mecánica</h3><p style="font-size:12px;color:#999">Manual VIII 2024</p></div>
-      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="window.open('https://share.google/i2dZbEcYBk2QaCx2t','_blank')"><h3>🌱 05 Medio Ambiente</h3><p style="font-size:12px;color:#999">Distintivos DGT • ZBE 2025</p></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;font-size:11px;color:#FFD700">💡 Opcional, no cuenta para Pase. Link directo oficial sin intermediarios.</div>
+      <div class="card" style="border:1px solid #00D9FF; cursor:pointer" onclick="obrirBibliotecaOficial('01')"><h3>🅰️ 01 Señales RD 465/2025</h3><p style="font-size:12px;color:#999">BOE Oficial • sede.dgt.gob.es</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="obrirBibliotecaOficial('02')"><h3>📋 02 Normas Circulación Tomo II</h3><p style="font-size:12px;color:#999">Reglamento General Circulación</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="obrirBibliotecaOficial('03')"><h3>🚑 03 Primeros Auxilios</h3><p style="font-size:12px;color:#999">PAS • RCP • Manual IX 2025</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="obrirBibliotecaOficial('04')"><h3>🔧 04 Mecánica</h3><p style="font-size:12px;color:#999">Manual VIII 2024</p></div>
+      <div class="card" style="border:1px solid #333; cursor:pointer" onclick="obrirBibliotecaOficial('05')"><h3>🌱 05 Medio Ambiente</h3><p style="font-size:12px;color:#999">Distintivos DGT • ZBE 2025</p></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;font-size:11px;color:#FFD700">💡 Opcional, no cuenta para Pase. Link directo oficial DGT sede.dgt.gob.es</div>
     </div>
   </div>
 </div>
@@ -297,7 +258,31 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 
 <script src="./app.js?v=14.0"></script>
 <script>
-// ===== ORIENTACION (se mantiene) =====
+// ===== V14 PRO - MAPA FICHAS LARGAS REALES + ORIENTACION 8 MINICURSOS COMPLETO DEL RESGUARDO =====
+const MAPA_FICHAS_LARGAS_INDEX = {
+  'ficha-t01a': 'ficha-t01a-definiciones-masas-clasificacion-vehiculos-v3-final.jpg',
+  'ficha-t02a': 'ficha-t02a-via-partes-definiciones-v3-final.jpg',
+  'ficha-t02b': 'ficha-t02b-via-partes-marcas-v3-final.jpg',
+  'ficha-t02c': 'ficha-t02c-via-intersecciones-velocidades-v3-final.jpg',
+  'ficha-t03a': 'ficha-t03a-senalizacion-vertical-peligro-v3-final.jpg',
+  'ficha-t03b': 'ficha-t03b-senalizacion-semaforos-baliza-v3-final.jpg',
+  'ficha-t04a': 'ficha-t04a-maniobras-definiciones-v3-final.jpg',
+  'ficha-t04b': 'ficha-t04b-maniobras-adelantamiento-v3-final.jpg',
+  'ficha-t05a': 'ficha-t05a-conductor-estado-psicofisico-v3-final.jpg',
+  'ficha-t05b': 'ficha-t05b-alcohol-drogas-medicamentos-v3-final.jpg',
+  'ficha-t06a': 'ficha-t06a-vehiculo-seguridad-activa-v3-final.jpg',
+  'ficha-t06b': 'ficha-t06b-seguridad-pasiva-frenos-itv-v3-final.jpg',
+  'ficha-t07a': 'ficha-t07a-accidentes-pas-primeros-auxilios-v3-final.jpg',
+  'ficha-t07b': 'ficha-t07b-accidentes-conducta-pas-bioseguridad-v3-final.jpg',
+  'ficha-t08a': 'ficha-t08a-luces-alumbrado-v3-final.jpg',
+  'ficha-t08b': 'ficha-t08b-senalizacion-vehiculos-luces-v3-final.jpg',
+  'ficha-t09a': 'ficha-t09a-conduccion-velocidades-tipos-via-v3-final.jpg',
+  'ficha-t09b': 'ficha-t09b-intersecciones-glorietas-adelantamiento-v3-final.jpg',
+  'ficha-t10a': 'ficha-t10a-iluminacion-carga-v3-final.jpg',
+  'ficha-t10b': 'ficha-t10b-masa-dimensiones-remolque-v3-final.jpg',
+  'ficha-t11a': 'ficha-t11a-permisos-conducir-clases-v3-final.jpg',
+  'ficha-t11b': 'ficha-t11b-puntos-validez-cap-itv-v3-final.jpg'
+};
 function canviarOrientacio(evt,id){
   document.querySelectorAll('#stats-orientacio.sub-tab-btn').forEach(b=>b.classList.remove('active'));
   if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
@@ -308,8 +293,122 @@ function canviarOrientacio(evt,id){
 function inyectarOrientacionFix(){
   const cont=document.getElementById('stats-orientacio');
   if(!cont) return;
-  if(document.getElementById('orientacio-am')) return;
-  cont.innerHTML=`<div class="card" style="max-width:440px;border:2px solid #00D9FF"><h2>🎯 CÓMO FUNCIONA EL EXAMEN DGT OFICIAL REAL</h2><div style="font-size:13px;line-height:1.6;color:#ddd"><p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p><p>⏱️ <b>30 minutos máximo</b> - Con práctica lo haces en 10 min</p><p>✅ <b>27 aciertos mínimo para aprobar</b> - Máximo 3 fallos permitidos</p></div></div><div class="card" style="max-width:440px;border:2px solid #FFD700"><h2 style="color:#FFD700">📚 MÉTODO GASDRIVE - 3 PASOS</h2><div style="display:flex;flex-direction:column;gap:12px"><div style="background:#0f2e0f;border-left:4px solid #2ecc71;padding:12px;border-radius:8px"><div style="font-weight:900;color:#2ecc71;font-size:13px">1. TEMARIO 10 MIN (22 fichas verticales)</div></div><div style="background:#332a00;border-left:4px solid #FFD700;padding:12px;border-radius:8px"><div style="font-weight:900;color:#FFD700;font-size:13px">2. TESTS diarios</div></div><div style="background:#001a33;border-left:4px solid #00D9FF;padding:12px;border-radius:8px"><div style="font-weight:900;color:#00D9FF;font-size:13px">3. EXAMEN diario</div></div></div></div><div class="card" style="max-width:440px;border:2px solid #00D9FF"><h2>🧭 ORIENTACIÓN - 8 MINICURSOS</h2><div class="sub-tabs" style="flex-wrap:wrap"><button class="sub-tab-btn active" onclick="canviarOrientacio(event,'am')">🛵 AM</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'a1')">A1</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'a2')">A2</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'b')">🚗 B</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'be')">B+E</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'c')">🚚 C</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'masas')">⚖️ MMA</button><button class="sub-tab-btn" onclick="canviarOrientacio(event,'via')">🛣️ VIA</button></div><div id="orientacio-am" class="orientacio-subcontent actiu" style="display:block"><span class="mc-badge">1/8 • AM 15 AÑOS</span><div class="mc-text">Contenido AM...</div></div></div>`;
+  if(document.getElementById('orientacio-am') && document.getElementById('orientacio-am').innerHTML.length>100) return;
+  cont.innerHTML=`
+<div class="card" style="max-width:440px;border:2px solid #00D9FF">
+  <h2>🎯 CÓMO FUNCIONA EL EXAMEN DGT OFICIAL REAL</h2>
+  <div style="font-size:13px;line-height:1.6;color:#ddd">
+    <p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p>
+    <p>⏱️ <b>30 minutos máximo</b> - Con práctica lo haces en 10 min</p>
+    <p>✅ <b>27 aciertos mínimo para aprobar</b> - Máximo 3 fallos permitidos</p>
+    <p>👮 <b>El día del examen:</b> Lleva DNI + Justificante cita. Llega 15 min antes. Aula con ordenadores. Resultado al momento en pantalla. Si suspendes, puedes repetir en 7-15 días.</p>
+    <p>💡 <b>Truco DGT que nadie explica:</b> Siempre la respuesta más segura y conservadora es la correcta. Palabras absolutas como "siempre, nunca, en todo caso" son trampa.</p>
+  </div>
+</div>
+<div class="card" style="max-width:440px;border:2px solid #FFD700">
+  <h2 style="color:#FFD700">📚 MÉTODO GASDRIVE - 3 PASOS QUE YA TIENES EN EL PASE</h2>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="background:#0f2e0f;border-left:4px solid #2ecc71;padding:12px;border-radius:8px">
+      <div style="font-weight:900;color:#2ecc71;font-size:13px">1. Empieza por el TEMARIO - 5 minutos cada temario al día (10 min total PASE V14)</div>
+      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">No estudies 10 min seguidos de un temario. Haz scroll en T01 Señales + T02 Normas + T05 Alcohol + T09 Mecánica. Esto te desbloquea el PASE y te da +50 coins. El contador cuenta automático cuando estás en TEMARIO.</div>
+    </div>
+    <div style="background:#332a00;border-left:4px solid #FFD700;padding:12px;border-radius:8px">
+      <div style="font-weight:900;color:#FFD700;font-size:13px">2. Haz TESTS diarios para mejorar porcentaje de preparación</div>
+      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Practica 30-60 tests diarios. El % no es solo aciertos. Es: 30% Retención (preguntas que dominas 3 días seguidos) + 40% Constancia (20 días válidos 30-60 preguntas 85% aciertos) + 20% Cobertura 7 días + 10% Estabilidad exámenes. Cuando llegues al 90% estás listo.</div>
+    </div>
+    <div style="background:#001a33;border-left:4px solid #00D9FF;padding:12px;border-radius:8px">
+      <div style="font-weight:900;color:#00D9FF;font-size:13px">3. Haz el EXAMEN - Pruébate en examen diario para mejorar preparación</div>
+      <div style="font-size:12px;color:#ccc;margin-top:4px;line-height:1.5">Cuando tengas 90% global, haz 1 simulacro diario. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen son 30 preguntas mezcla de todos los paneles N-01..N-15 + S-100 + M- + A- + E-.</div>
+    </div>
+  </div>
+</div>
+<div class="card" style="max-width:440px;border:2px solid #00D9FF">
+  <h2>🧭 ORIENTACIÓN - 8 MINICURSOS COMPLETOS</h2>
+  <div class="sub-tabs" style="flex-wrap:wrap">
+    <button class="sub-tab-btn active" onclick="canviarOrientacio(event,'am')">🛵 AM</button>
+    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'a1')">A1</button>
+    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'a2')">A2</button>
+    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'b')">🚗 B</button>
+    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'be')">B+E</button>
+    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'c')">🚚 C</button>
+    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'masas')">⚖️ MMA</button>
+    <button class="sub-tab-btn" onclick="canviarOrientacio(event,'via')">🛣️ VIA</button>
+  </div>
+  <div id="orientacio-am" class="orientacio-subcontent actiu" style="display:block">
+    <div style="text-align:center"><svg class="mini-picto" viewBox="0 0 100 50"><path d="M12 35 L60 8 L82 28 L84 38 L20 40 Z M16 38 A8 8 0 1 0 31 38 M66 38 A8 8 0 1 0 81 38"/></svg><div style="font-size:11px;color:#00D9FF;font-weight:700">L1e · L6e · Art.4 Reglamento Vehículos</div></div>
+    <span class="mc-badge">1/8 • AM 15 AÑOS • 45 km/h • 50cc / 4kW</span>
+    <div class="mc-text">
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg><b style="color:#00D9FF">¿Qué es exactamente?</b></div>
+      Ciclomotor 2/3 ruedas 45 km/h máx. Combustión ≤50cc. Eléctrico ≤4kW. Cuadriciclo ligero L6e: 4 ruedas, masa vacío <350kg sin baterías, mismo límite 45 km/h.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px">💡 <b>Tara ~70kg / MMA ~160kg:</b> Ligero, pero a 45 km/h sin casco la lesividad es crítica.</div>
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#2ecc71"><path d="M5 12l5 5L20 7"/></svg><b style="color:#2ecc71">Qué te permite</b></div>- 1 pasajero si ficha técnica indica 2 plazas.<br>- Circular por arcén derecho transitable.<br>- Carga pequeña en baca sin ocultar alumbrado.
+      <div style="display:flex;gap:8px;align-items:center;margin:12px 0 6px"><svg class="icon" style="stroke:#ff4757"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><b style="color:#ff4757">Qué no te permite - Art.38</b></div>- Autopista, autovía, vía para automóviles.<br>- Remolcar, auriculares, transportar menores de 12 años.
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">A-06 CASCO + M-11 MECÁNICA</b><div style="font-size:12px;margin-top:6px">Casco ECE 22.05/22.06 obligatorio. Sanción 200€ + 4 puntos. Chaleco: llevar en vehículo y poner en caso avería interurbana. Luces cruce siempre.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN B</b><div style="font-size:12px;color:#FFD700;margin-top:4px">N-01 Alcohol 0,5/0,25 - en AM sigue siendo 0,5 aunque seas novel. R-101 Prohibido ciclomotores.</div></div>
+    </div>
+  </div>
+  <div id="orientacio-a1" class="orientacio-subcontent">
+    <span class="mc-badge">2/8 • A1 16 AÑOS • 125cc • 11kW • 0,1kW/kg</span>
+    <div class="mc-text">
+      <b style="color:#00D9FF">¿Qué es exactamente?</b><br>Motocicleta ≤125cc, ≤11kW (15CV), relación potencia/peso ≤0,1kW/kg. Triciclo ≤15kW. Incluye AM. Edad 16 años.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px">💡 <b>Tara ~110kg / MMA ~250kg:</b> Moto 100kg con 11kW = 0,11kW/kg → NO válida. Necesita 110kg mínimo.</div>
+      <b style="color:#2ecc71">Qué te permite</b><br>- 125cc con y sin sidecar.<br>- Pasajero si homologada 2 plazas.<br>- Autopista 120km/h.<br><b style="color:#ff4757">Qué no te permite</b><br>- >125cc o >11kW.<br>- Convalidación B+3 años solo España.
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;margin-top:8px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">Convalidación B+3 años solo España. Novel 0,3/0,15.</div></div>
+    </div>
+  </div>
+  <div id="orientacio-a2" class="orientacio-subcontent">
+    <span class="mc-badge">3/8 • A2 18 AÑOS • 35kW 47CV • 0,2kW/kg</span>
+    <div class="mc-text">
+      <b style="color:#00D9FF">¿Qué es exactamente?</b><br>≤35kW (47CV), relación ≤0,2kW/kg, no derivada de vehículo con más del doble de potencia de origen.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px">💡 <b>Tara ~180kg / MMA ~380kg:</b> MT-07 55kW limitada 35kW SÍ (&lt;70kW origen) Ducati 90kW NO</div>
+      <b style="color:#2ecc71">Qué te permite</b><br>- Todas A1.<br>- Motos hasta 47CV limitadas legalmente.<br>- Acceso A con 20a + 2a A2 + curso 9h.<br>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;margin-top:8px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE</b><div style="font-size:12px;color:#FFD700">Relación 0,2kW/kg A2. Doble potencia origen 70kW máximo para limitar.</div></div>
+    </div>
+  </div>
+  <div id="orientacio-b" class="orientacio-subcontent">
+    <span class="mc-badge" style="background:#FFD700;color:#000">4/8 • B ACTIVO • 3500kg • 4250kg CONJUNTO</span>
+    <div class="mc-text">
+      <b style="color:#00D9FF">¿Qué es exactamente?</b><br>Art.5: MMA ≤3500kg, 8 pasajeros + conductor (9 total). Remolque ≤750kg. Conjunto máximo B: 4250kg MMA. Incluye AM, A1 con +3a.
+      <div style="background:#0f0f0f;border:1px solid #FFD700;border-radius:8px;padding:10px;margin:10px 0;font-size:12px">💡 <b>Ejemplo 100%:</b> Coche 2000kg + Remolque 1000kg = 3000kg → &lt;4250 → SÍ B. Coche 3500+1000=4500 → &gt;4250 → NO B+E</div>
+      <b style="color:#FFD700">E-01 TARA / MMA / MOM</b><br><b>Tara:</b> Vacío con fluidos sin conductor.<br><b>MOM:</b> Tara+75kg.<br><b>MMA:</b> Máximo fabricante.<br><b>Útil:</b> MMA-Tara.
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;margin-top:10px"><b style="color:#FFD700;font-size:12px">🎯 ERRORES QUE SUSPENDEN B</b><div style="font-size:12px;color:#FFD700">Glorieta interior sin intermitente, Stop 2 segundos, MMA conjunto 4250 no 3500, Alcohol 0,25 es aire no sangre.</div></div>
+    </div>
+  </div>
+  <div id="orientacio-be" class="orientacio-subcontent">
+    <span class="mc-badge">5/8 • B+E • HASTA 7000kg</span>
+    <div class="mc-text">
+      <b style="color:#00D9FF">¿Qué es exactamente?</b><br>B + remolque MMA >750kg hasta 7000kg MMA conjunto. Ej 3500+3500=7000 límite. 18a + B.
+      <div style="background:#001a33;border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">M-11 + E-01 MASAS Y VELOCIDAD</b><div style="font-size:12px;margin-top:6px">Longitud máxima conjunto turismo+remolque 18,75m. Con remolque: Autovía 90, convencional 80, ciudad 50. Nunca 120 con remolque.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">B+E hasta 7000kg MMA conjunto. Remolque >750kg necesita matrícula propia blanca+roja, ITV propia.</div></div>
+    </div>
+  </div>
+  <div id="orientacio-c" class="orientacio-subcontent">
+    <span class="mc-badge" style="background:#666">6/8 • C/C1 • CAMIÓN</span>
+    <div class="mc-text">
+      <b style="color:#00D9FF">¿Qué es exactamente?</b><br>C1: 3500-7500kg MMA, 18a. C: >3500kg sin límite, 21a (18a con CAP). Incluye C1 y B.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px">💡 <b>Tara camión 8000kg / MMA 18000kg / Útil 10000kg:</b> 2 ejes 18t, 3 ejes 25t (26t neumático), 4 ejes 31t, tren 40t.</div>
+      <div style="background:#001a33;border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">TACÓGRAFO</b><div style="font-size:12px;margin-top:6px">Conducción 4h30 + pausa 45min (15+30). Diaria 9h ampliable 10h 2 veces/semana. Semanal 56h quincenal 90h. Descanso diario 11h reducible 9h 3 veces. CAP 140h.</div></div>
+    </div>
+  </div>
+  <div id="orientacio-masas" class="orientacio-subcontent">
+    <span class="mc-badge" style="background:#FFD700;color:#000">7/8 • E-01 • TARA/MMA/MOM • 4 PREGUNTAS FIJAS</span>
+    <div class="mc-text">
+      <b style="color:#00D9FF">¿Qué es exactamente?</b><br>Infografía oficial que caen 4 preguntas fijas en examen B.
+      <div style="background:#0f0f0f;border:1px solid #FFD700;border-radius:8px;padding:10px;margin:10px 0;font-size:12px"><b>Tara:</b> Vacío lleno fluidos herramientas sin conductor.<br><b>MOM:</b> Tara + 75kg conductor.<br><b>MMA:</b> Masa máxima autorizada fabricante.<br><b>Útil:</b> MMA - Tara.</div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 TRUCO EXAMEN B</b><div style="font-size:12px;color:#FFD700">Tara NO incluye conductor. MOM SÍ incluye 75kg. MMA es la que sale en ficha ITV. Ejemplo Tara 2000 MOM 2075 MMA 3500 útil 1500kg.</div></div>
+    </div>
+  </div>
+  <div id="orientacio-via" class="orientacio-subcontent">
+    <span class="mc-badge" style="background:#FFD700;color:#000">8/8 • PARTES DE LA VÍA + VEHÍCULOS ESPECIALES</span>
+    <div class="mc-text">
+      <b style="color:#00D9FF">¿Qué es exactamente?</b><br>Glosario oficial DGT de partes de la vía y vehículos especiales V-... que caen 3-4 preguntas en examen.
+      <div style="background:#0f0f0f;border:1px solid #333;border-radius:8px;padding:8px;margin:8px 0;font-size:12px">💡 <b>Plataforma vs Calzada:</b> Plataforma = Calzada + Arcenes. Calzada = solo vehículos. Arcén = franja contigua no destinada a circulación excepto excepciones. Mediana = separa calzadas, nunca pisar.</div>
+      <div style="background:#001a33;border:1px solid rgba(0,217,255,0.4);border-radius:10px;padding:10px;margin:12px 0"><b style="font-size:12px;color:#00D9FF">V- VEHÍCULOS ESPECIALES</b><div style="font-size:12px;margin-top:6px"><b>V-1:</b> Prioritario (policía, bomberos, ambulancia) luz azul + sirena.<br><b>V-2:</b> Obra/servicio luz naranja.<br><b>V-5:</b> Vehículo lento &lt;60km/h triángulo rojo.<br><b>V-16:</b> Preseñalización peligro luz naranja obligatoria desde 2026.<br><b>V-13:</b> Conductor novel L verde 1 año.<br><b>V-20:</b> Panel carga que sobresale.</div></div>
+      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px"><b style="color:#FFD700;font-size:12px">🎯 ESTO CAE EN EL EXAMEN</b><div style="font-size:12px;color:#FFD700">V-16 luz naranja obligatoria 2026 sustituye triángulos. V-1 azul policía/bomberos. Plataforma = calzada + arcenes.</div></div>
+    </div>
+  </div>
+</div>
+  `;
   const first=document.getElementById('orientacio-am');
   if(first){first.style.display='block';first.classList.add('actiu');}
 }
@@ -317,11 +416,11 @@ window.addEventListener('load',()=>{setTimeout(inyectarOrientacionFix,400);setTi
 const obs=new MutationObserver(()=>{if(document.getElementById('stats-orientacio')&&!document.getElementById('orientacio-am')){inyectarOrientacionFix();}});
 obs.observe(document.body,{childList:true,subtree:true});
 
-// ===== V14 TEMARIO - FUNCIONES NUEVAS =====
 function canviarTemariPrincipal(evt,id){
   const container = document.getElementById('tab-temari');
-  const btns = container.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn');
-  btns.forEach(b=>b.classList.remove('active'));
+  if(!container) return;
+  const mainBtns = container.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn');
+  mainBtns.forEach(b=>b.classList.remove('active'));
   if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
   document.getElementById('temari-rapido').classList.remove('active'); document.getElementById('temari-rapido').style.display='none';
   document.getElementById('temari-biblioteca').classList.remove('active'); document.getElementById('temari-biblioteca').style.display='none';
@@ -331,33 +430,29 @@ function canviarTemariPrincipal(evt,id){
 }
 function canviarTemaFicha(evt,tema){
   const rapido = document.getElementById('temari-rapido');
-  rapido.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn').forEach(b=>b.classList.remove('active'));
+  if(!rapido) return;
+  rapido.querySelectorAll(':scope >.sub-tabs:first-child >.sub-tab-btn, :scope >.sub-tabs >.sub-tab-btn').forEach(b=>b.classList.remove('active'));
   if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
   rapido.querySelectorAll('.tema-cont').forEach(c=>{c.classList.remove('active');c.style.display='none';});
   const cont=document.getElementById('tema-'+tema);
   if(cont){cont.classList.add('active');cont.style.display='block';}
   obrirFichaJPG('ficha-'+tema+'a');
 }
-function obrirFichaJPG(nombre){
+function obrirFichaJPG(nombreCorto){
   const visor=document.getElementById('visor-ficha-container');
-  if(!visor) return;
-  visor.innerHTML=`<div style="padding:10px;text-align:center;color:#666;font-size:11px">Cargando ${nombre}...</div><img src="./${nombre}.jpg" alt="${nombre}" style="width:100%;height:auto;display:block;" loading="lazy" onload="if(typeof sumarTiempoEstudio==='function'){sumarTiempoEstudio();} if(typeof iniciarContadorTemari==='function'){iniciarContadorTemari();}" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px;text-align:center;color:#a00;font-size:13px\\'>❌ No se encontró ${nombre}.jpg<br><small style=\\'color:#666\\'>Súbelo a la carpeta raíz del proyecto</small></div>'">`;
-  visor.scrollIntoView({behavior:'smooth',block:'start'});
+  if(!visor) {
+    const real = MAPA_FICHAS_LARGAS_INDEX[nombreCorto] || nombreCorto + '.jpg';
+    window.open('./'+real,'_blank'); return;
+  }
+  if(typeof sumarTiempoEstudio==='function') sumarTiempoEstudio();
+  const nombreReal = MAPA_FICHAS_LARGAS_INDEX[nombreCorto] || (nombreCorto.endsWith('.jpg')? nombreCorto : nombreCorto + '.jpg');
+  const cortoFallback = nombreCorto + '.jpg';
+  visor.innerHTML=`<div style="padding:10px;text-align:center;color:#00D9FF;font-size:11px">⏳ Cargando ${nombreCorto} → ${nombreReal}...</div><img src="./${nombreReal}" alt="${nombreCorto}" style="width:100%;height:auto;display:block;border-radius:12px;" loading="lazy" onload="if(typeof sumarTiempoEstudio==='function'){sumarTiempoEstudio();} if(typeof iniciarComptadorTemari==='function'){iniciarComptadorTemari();} if(this.previousElementSibling) this.previousElementSibling.style.display='none';" onerror="this.onerror=null; this.src='./${cortoFallback}'; this.onerror=function(){this.parentElement.innerHTML='<div style=\\'padding:30px 20px;text-align:center;color:#ff4757;font-size:13px;background:#1a0a0a;border-radius:12px;border:1px solid #a00\\'>❌ No se encontró<br><b>${nombreReal}</b><br><small>${cortoFallback}</small><br><br>22 fichas en raíz del proyecto<br><br><button class=\\'btn\\' onclick=\\'obrirFichaJPG(\\'ficha-t01a\\')\\'>Volver a T01A</button></div>'}">`;
+  setTimeout(()=>{ visor.scrollIntoView({behavior:'smooth',block:'start'}); }, 150);
 }
 function obrirBibliotecaOficial(id){
-  const links={'01':'https://share.google/OB30FJpKxoUxfUwZT','02':'https://share.google/cdTfRzcGeB9s9xnuQ','03':'https://share.google/d16o0xmNpIAQ6Nh1c','04':'https://share.google/tW0GEXMT1rJlb5Vqt','05':'https://share.google/i2dZbEcYBk2QaCx2t'};
+  const links={'01':'https://sede.dgt.gob.es/es/la-dgt/normas-y-senales/senales/','02':'https://sede.dgt.gob.es/Galerias/seguridad-vial/normativa-circulacion/reglamento-general-circulacion/','03':'https://sede.dgt.gob.es/es/la-dgt/normas-y-senales/senales/manual-primeros-auxilios/','04':'https://sede.dgt.gob.es/es/vehiculos/mecanica-y-mantenimiento/','05':'https://sede.dgt.gob.es/es/vehiculos/distintivo-ambiental/'};
   if(links[id]) window.open(links[id],'_blank');
-}
-const _origCanviarTab=window.canviarTab_V94;
-window.canviarTab_V94=function(evt,tab){
-  if(_origCanviarTab) _origCanviarTab(evt,tab);
-  else{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
-    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-    const t=document.getElementById('tab-'+tab); if(t) t.classList.add('active');
-  }
-  if(tab==='temari'){setTimeout(()=>{obrirFichaJPG('ficha-t01a');},300);}
 }
 </script>
 </body>
