@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V14 PRO</title>
+<title>GasDrive DGT ES V14.3.2 PRO</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -73,24 +73,19 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 .pase-card{text-align:center}
 .orientacio-card h3{color:#00D9FF;margin-top:12px;font-size:15px}
 .orientacio-card p{color:#999;font-size:13px;margin:5px 0}
-.quadre-pictograma { width: 100%; min-height: 140px; background: linear-gradient(145deg, #1a1a2e, #16213e); border: 2px solid rgba(0, 217, 255, 0.5); border-radius: 16px; box-shadow: 0 0 20px rgba(0, 217, 255, 0.15), inset 0 0 15px rgba(0,0,0,0.3); display: block; margin: 0; padding: 10px; box-sizing: border-box; flex-shrink: 0; overflow: hidden; position: relative; z-index: 1; }
+.quadre-pictograma { width: 100%; min-height: 60px; background: linear-gradient(145deg, #1a1a2e, #16213e); border: 2px solid rgba(0, 217, 255, 0.5); border-radius: 16px; box-shadow: 0 0 20px rgba(0, 217, 255, 0.15), inset 0 0 15px rgba(0,0,0,0.3); display: none; margin: 0; padding: 10px; box-sizing: border-box; flex-shrink: 0; overflow: hidden; position: relative; z-index: 1; }
 .quadre-pictograma.placeholder { color: rgba(0, 217, 255, 0.4); font-size: 14px; font-weight: 500; text-align: center; user-select: none; padding: 20px; }
 .test-emojis { display: none!important; }
 .tip-box { background: linear-gradient(135deg, #332a00 0%, #2a2a00 100%); border: 3px solid #00D9FF; border-left: 5px solid #FFD700; padding: 14px 15px; border-radius: 12px; font-size: 14px; font-weight: 700; color: #FFD700; line-height: 1.4; margin: 0; box-shadow: 0 0 15px rgba(0,217,255,0.3); display: none; flex-shrink: 0; width: 100%; box-sizing: border-box; position: relative; z-index: 2; }
 .stats-falta{ text-align:center; color:#FFD700; font-size:13px; font-weight:700; margin:8px 0 4px; line-height:1.3; background:rgba(255,215,0,0.08); padding:8px; border-radius:8px; border:1px dashed rgba(255,215,0,0.3); }
 .evolucio-mot{ text-align:center; color:#00D9FF; font-size:12px; font-weight:600; margin:12px 0 4px; padding:10px; background:#0a0a0a; border-radius:8px; border:1px solid #333; line-height:1.4; }
 .pase-consell{ color:#999; font-size:11px; margin-top:10px; line-height:1.4; background:#111; padding:10px; border-radius:8px; }
-.orientacio-bloc{ margin-bottom:12px; padding:12px; background:#1a1a1a; border-radius:8px; }
-.orientacio-bloc.verd{ border-left:4px solid #2ecc71; }
-.orientacio-bloc.groc{ border-left:4px solid #FFD700; }
-.orientacio-bloc.blau{ border-left:4px solid #00D9FF; }
-.debil-card{ margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px; }
-.mini-picto{width:64px;height:40px;stroke:#00D9FF;fill:none;stroke-width:2.2;display:block;margin:0 auto}
-.mc-badge{display:inline-block;background:#00D9FF;color:#000;font-size:10px;font-weight:900;padding:3px 8px;border-radius:10px;margin:6px 0}
-.icon{width:18px;height:18px;stroke-width:2;vertical-align:middle;display:inline-block;stroke:#00D9FF;fill:none}
-.orientacio-subcontent{display:none}.orientacio-subcontent.actiu{display:block;animation:fadeIn 0.3s}
-.mc-text{font-size:13px;line-height:1.7;color:#ddd}
-.tema-cont{display:none}.tema-cont.active{display:block;animation:fadeIn 0.3s}
+.carnets-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.carnet-mini{background:#1a1a1a;border:1px solid #00D9FF;border-radius:10px;padding:8px;text-align:center}
+.carnet-mini b{color:#00D9FF;font-size:13px;display:block}
+.carnet-mini small{color:#ccc;font-size:9px;line-height:1.2;display:block;margin-top:3px}
+.tema-titulo-nativo{background:#001a33;border-left:4px solid #00D9FF;padding:10px 12px;border-radius:8px;margin:10px 0;font-size:13px;color:#fff}
+.tema-titulo-nativo b{color:#FFD700}
 #visor-ficha-container{width:100%;background:#0a0a0a;border-radius:12px;border:1px solid #333;min-height:400px;overflow:hidden;position:relative}
 #visor-ficha-container img{width:100%;height:auto;display:block;border-radius:12px}
 </style>
@@ -115,38 +110,34 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
       <div style="font-size:48px;font-weight:900;color:#00D9FF;text-align:center" id="stats-global-percent">0%</div>
       <div class="progress-bar"><div class="progress-fill" id="stats-global-bar"></div></div>
       <div class="stats-falta" id="stats-global-falta">0% - Calculando preparación...</div>
-      <div class="stats-falta" id="stats-resum-falta" style="display:none"></div>
       <div style="text-align:center;color:#999;font-size:13px;margin:10px 0" id="stats-motivacio">Estudia 10min en el Temario para desbloquear</div>
     </div>
-    <div class="stat-card"><div class="stat-card-header"><div><span>💪</span> <b>Retención</b></div><div style="font-size:20px;font-weight:800;color:#00D9FF" id="stats-domini-percent">0%</div></div><div class="progress-bar"><div class="progress-fill" id="stats-domini-bar"></div></div><div style="color:#666;font-size:11px;margin-top:6px">Preguntas que dominas 3 días seguidos</div></div>
+    <div class="stat-card"><div class="stat-card-header"><div><span>💪</span> <b>Retención</b></div><div style="font-size:20px;font-weight:800;color:#00D9FF" id="stats-domini-percent">0%</div></div><div class="progress-bar"><div class="progress-fill" id="stats-domini-bar"></div></div></div>
     <div class="stat-card"><div class="stat-card-header"><div><span>📅</span> <b id="stats-constancia-label">CONSTANCIA: 0/20 días</b></div><div style="font-size:20px;font-weight:800;color:#00D9FF" id="stats-constancia-percent">0%</div></div><div class="progress-bar"><div class="progress-fill" id="stats-constancia-bar"></div></div></div>
     <div class="stat-card"><div class="stat-card-header"><div><span>📖</span> <b>Cobertura 7 días</b></div><div style="font-size:20px;font-weight:800;color:#00D9FF" id="stats-temari-percent">0%</div></div><div class="progress-bar"><div class="progress-fill" id="stats-temari-bar"></div></div></div>
     <div class="stat-card"><div class="stat-card-header"><div><span>📋</span> <b>Estabilidad Simulacros</b></div><div style="font-size:20px;font-weight:800;color:#00D9FF" id="stats-simulacres-percent">0%</div></div><div class="progress-bar"><div class="progress-fill" id="stats-simulacres-bar"></div></div><div style="color:#999;font-size:12px;margin-top:5px" id="stats-examen-aprobados">Mejor racha: 0/6</div></div>
-    <button class="btn-dgt" id="btn-dgt-oficial"><div style="text-align:center"><span>🚗</span> <b>PRESENTARME AL EXAMEN DGT OFICIAL</b></div><div style="text-align:center;color:#000;font-size:12px;margin-top:8px">Necesitas 90% para desbloquear</div></button>
   </div>
   <div id="stats-evolucio" class="sub-content">
     <div class="card">
       <h2>📈 Evolución Últimos 7 Días</h2>
       <canvas id="grafica-evolucion" width="380" height="200" style="width:100%;background:#0a0a0a;border-radius:10px;border:1px solid #333"></canvas>
       <div id="evolucio-motivacio" class="evolucio-mot">Haz tests 2 días para ver evolución real</div>
-      <div id="stats-evolucio-explicacio" style="color:#666;font-size:11px;text-align:center;margin-top:8px;line-height:1.4">Cada punto es tu % global. Si la línea sube, vas bien. Si baja, repasa puntos débiles.</div>
     </div>
   </div>
-  <div id="stats-debils" class="sub-content"><div class="card"><h2>🎯 Puntos Débiles Por Familia Real</h2><div id="stats-debils-lista">Haz más tests para detectar tus puntos débiles reales</div></div></div>
+  <div id="stats-debils" class="sub-content"><div class="card"><h2>🎯 Puntos Débiles</h2><div id="stats-debils-lista"></div></div></div>
   <div id="stats-pase" class="sub-content">
     <div class="card pase-card">
       <div class="big">⏰</div>
       <h2>PASE DIARIO 10 MIN</h2>
-      <p>Estudia 10 minutos en el TEMARIO (22 fichas verticales) para desbloquear los tests de hoy</p>
+      <p>Estudia 10 minutos en el TEMARIO (22 fichas verticales) para desbloquear los tests</p>
       <div style="font-size:30px;font-weight:900;color:#00D9FF" id="pase-temps">0 min</div>
-      <div class="pase-consell" id="pase-consell">💡 Consejo V14: Haz scroll en T01 Señales + T02 Normas + T05 Alcohol + T09 Mecánica = 10 min total. Timer global, todo suma.</div>
+      <div class="pase-consell" id="pase-consell">💡 Haz scroll en T01-T11 = 10 min total. Timer global.</div>
     </div>
   </div>
   <div id="stats-orientacio" class="sub-content">
     <div class="card orientacio-card">
-      <h2>🧭 Plan de Estudio Completo V14</h2>
+      <h2>🧭 Plan de Estudio</h2>
       <div id="stats-orientacio-lista"></div>
-      <div id="orientacio-lista" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -161,35 +152,22 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
     <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','mediambient')">🌱 Medio Ambiente</button>
   </div>
   <div id="test-general" class="sub-content active">
-    <div class="card"><h2>📝 TEST GENERAL</h2><div class="stats"><div>Aciertos: <span id="test-general-aciertos">0</span></div><div>Racha: <span id="test-general-racha">0</span>🔥</div><div>Score: <span id="test-general-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div><div id="test-general-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-general-tip" class="tip-box"></div><div id="test-general-emojis" class="test-emojis"></div><div class="pregunta" id="test-general-pregunta">Cargando...</div><div id="test-general-opciones"></div><div class="feedback" id="test-general-feedback"></div><button class="btn-sig" id="btn-sig-test-general" onclick="seguentTest(event,'general')" disabled>SIGUIENTE</button></div>
+    <div class="card"><h2>📝 TEST GENERAL</h2><div class="stats"><div>Aciertos: <span id="test-general-aciertos">0</span></div><div>Racha: <span id="test-general-racha">0</span>🔥</div><div>Score: <span id="test-general-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-general-progress"></div></div><div id="test-general-imagen" class="quadre-pictograma"></div><div id="test-general-tip" class="tip-box"></div><div class="pregunta" id="test-general-pregunta">Cargando...</div><div id="test-general-opciones"></div><div class="feedback" id="test-general-feedback"></div><button class="btn-sig" id="btn-sig-test-general" onclick="seguentTest(event,'general')" disabled>SIGUIENTE</button></div>
   </div>
   <div id="test-senyals" class="sub-content">
-    <div class="card"><h2>🚸 TEST SEÑALES</h2><div class="stats"><div>Aciertos: <span id="test-senyals-aciertos">0</span></div><div>Racha: <span id="test-senyals-racha">0</span>🔥</div><div>Score: <span id="test-senyals-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-senyals-progress"></div></div><div id="test-senyals-imagen" class="quadre-pictograma"><div class="placeholder">Cargando señal...</div></div><div id="test-senyals-tip" class="tip-box"></div><div id="test-senyals-emojis" class="test-emojis"></div><div class="pregunta" id="test-senyals-pregunta">Cargando...</div><div id="test-senyals-opciones"></div><div class="feedback" id="test-senyals-feedback"></div><button class="btn-sig" id="btn-sig-test-senyals" onclick="seguentTest(event,'senyals')" disabled>SIGUIENTE</button></div>
+    <div class="card"><h2>🚸 TEST SEÑALES</h2><div class="stats"><div>Aciertos: <span id="test-senyals-aciertos">0</span></div><div>Racha: <span id="test-senyals-racha">0</span>🔥</div><div>Score: <span id="test-senyals-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-senyals-progress"></div></div><div id="test-senyals-imagen" class="quadre-pictograma"></div><div id="test-senyals-tip" class="tip-box"></div><div class="pregunta" id="test-senyals-pregunta">Cargando...</div><div id="test-senyals-opciones"></div><div class="feedback" id="test-senyals-feedback"></div><button class="btn-sig" id="btn-sig-test-senyals" onclick="seguentTest(event,'senyals')" disabled>SIGUIENTE</button></div>
   </div>
-  <div id="test-normes" class="sub-content"><div class="card"><h2>📋 TEST NORMAS</h2><div class="stats"><div>Aciertos: <span id="test-normes-aciertos">0</span></div><div>Racha: <span id="test-normes-racha">0</span>🔥</div><div>Score: <span id="test-normes-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-normes-progress"></div></div><div id="test-normes-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-normes-tip" class="tip-box"></div><div id="test-normes-emojis" class="test-emojis"></div><div class="pregunta" id="test-normes-pregunta">Cargando...</div><div id="test-normes-opciones"></div><div class="feedback" id="test-normes-feedback"></div><button class="btn-sig" id="btn-sig-test-normes" onclick="seguentTest(event,'normes')" disabled>SIGUIENTE</button></div></div>
-  <div id="test-mecanica" class="sub-content"><div class="card"><h2>🔧 TEST MECÁNICA</h2><div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span></div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div><div id="test-mecanica-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-mecanica-tip" class="tip-box"></div><div id="test-mecanica-emojis" class="test-emojis"></div><div class="pregunta" id="test-mecanica-pregunta">Cargando...</div><div id="test-mecanica-opciones"></div><div class="feedback" id="test-mecanica-feedback"></div><button class="btn-sig" id="btn-sig-test-mecanica" onclick="seguentTest(event,'mecanica')" disabled>SIGUIENTE</button></div></div>
-  <div id="test-auxilis" class="sub-content"><div class="card"><h2>🚑 TEST AUXILIOS</h2><div class="stats"><div>Aciertos: <span id="test-auxilis-aciertos">0</span></div><div>Racha: <span id="test-auxilis-racha">0</span>🔥</div><div>Score: <span id="test-auxilis-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-auxilis-progress"></div></div><div id="test-auxilis-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-auxilis-tip" class="tip-box"></div><div id="test-auxilis-emojis" class="test-emojis"></div><div class="pregunta" id="test-auxilis-pregunta">Cargando...</div><div id="test-auxilis-opciones"></div><div class="feedback" id="test-auxilis-feedback"></div><button class="btn-sig" id="btn-sig-test-auxilis" onclick="seguentTest(event,'auxilis')" disabled>SIGUIENTE</button></div></div>
-  <div id="test-mediambient" class="sub-content"><div class="card"><h2>🌱 TEST MEDIO AMBIENTE</h2><div class="stats"><div>Aciertos: <span id="test-mediambient-aciertos">0</span></div><div>Racha: <span id="test-mediambient-racha">0</span>🔥</div><div>Score: <span id="test-mediambient-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mediambient-progress"></div></div><div id="test-mediambient-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="test-mediambient-tip" class="tip-box"></div><div id="test-mediambient-emojis" class="test-emojis"></div><div class="pregunta" id="test-mediambient-pregunta">Cargando...</div><div id="test-mediambient-opciones"></div><div class="feedback" id="test-mediambient-feedback"></div><button class="btn-sig" id="btn-sig-test-mediambient" onclick="seguentTest(event,'mediambient')" disabled>SIGUIENTE</button></div></div>
-</div>
-
-<div id="tab-situaciones" class="tab-content">
-  <div class="sub-tabs">
-    <button class="sub-tab-btn active" onclick="canviarSubTab(event,'sit','clima')">🌧️ Clima</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'sit','urbà')">🏙️ Urbano</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'sit','carretera')">🛣️ Carretera</button>
-    <button class="sub-tab-btn" onclick="canviarSubTab(event,'sit','emergència')">🚨 Emergencia</button>
-  </div>
-  <div id="sit-clima" class="sub-content active"><div class="card"><h2>🌧️ SIMULACROS CLIMA</h2><div class="stats"><div>Aciertos: <span id="sit-clima-aciertos">0</span></div><div>Score: <span id="sit-clima-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="sit-clima-progress"></div></div><div id="sit-clima-imagen" class="quadre-pictograma" style="display:none"></div><div id="sit-clima-tip" class="tip-box"></div><div class="pregunta" id="sit-clima-pregunta">Cargando...</div><div id="sit-clima-opciones"></div><div class="feedback" id="sit-clima-feedback"></div><button class="btn-sig" id="btn-sig-sit-clima" onclick="seguentSituacio(event,'clima')" disabled>SIGUIENTE</button></div></div>
-  <div id="sit-urbà" class="sub-content"><div class="card"><h2>🏙️ SIMULACROS URBANO</h2><div class="stats"><div>Aciertos: <span id="sit-urbà-aciertos">0</span></div><div>Score: <span id="sit-urbà-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="sit-urbà-progress"></div></div><div id="sit-urbà-imagen" class="quadre-pictograma" style="display:none"></div><div id="sit-urbà-tip" class="tip-box"></div><div class="pregunta" id="sit-urbà-pregunta">Cargando...</div><div id="sit-urbà-opciones"></div><div class="feedback" id="sit-urbà-feedback"></div><button class="btn-sig" id="btn-sig-sit-urbà" onclick="seguentSituacio(event,'urbà')" disabled>SIGUIENTE</button></div></div>
-  <div id="sit-carretera" class="sub-content"><div class="card"><h2>🛣️ SIMULACROS CARRETERA</h2><div class="stats"><div>Aciertos: <span id="sit-carretera-aciertos">0</span></div><div>Score: <span id="sit-carretera-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="sit-carretera-progress"></div></div><div id="sit-carretera-imagen" class="quadre-pictograma" style="display:none"></div><div id="sit-carretera-tip" class="tip-box"></div><div class="pregunta" id="sit-carretera-pregunta">Cargando...</div><div id="sit-carretera-opciones"></div><div class="feedback" id="sit-carretera-feedback"></div><button class="btn-sig" id="btn-sig-sit-carretera" onclick="seguentSituacio(event,'carretera')" disabled>SIGUIENTE</button></div></div>
-  <div id="sit-emergència" class="sub-content"><div class="card"><h2>🚨 SIMULACROS EMERGENCIA</h2><div class="stats"><div>Aciertos: <span id="sit-emergència-aciertos">0</span></div><div>Score: <span id="sit-emergència-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="sit-emergència-progress"></div></div><div id="sit-emergència-imagen" class="quadre-pictograma" style="display:none"></div><div id="sit-emergència-tip" class="tip-box"></div><div class="pregunta" id="sit-emergència-pregunta">Cargando...</div><div id="sit-emergència-opciones"></div><div class="feedback" id="sit-emergència-feedback"></div><button class="btn-sig" id="btn-sig-sit-emergència" onclick="seguentSituacio(event,'emergència')" disabled>SIGUIENTE</button></div></div>
+  <div id="test-normes" class="sub-content"><div class="card"><h2>📋 TEST NORMAS</h2><div class="stats"><div>Aciertos: <span id="test-normes-aciertos">0</span></div><div>Racha: <span id="test-normes-racha">0</span>🔥</div><div>Score: <span id="test-normes-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-normes-progress"></div></div><div id="test-normes-imagen" class="quadre-pictograma"></div><div id="test-normes-tip" class="tip-box"></div><div class="pregunta" id="test-normes-pregunta">Cargando...</div><div id="test-normes-opciones"></div><div class="feedback" id="test-normes-feedback"></div><button class="btn-sig" id="btn-sig-test-normes" onclick="seguentTest(event,'normes')" disabled>SIGUIENTE</button></div></div>
+  <div id="test-mecanica" class="sub-content"><div class="card"><h2>🔧 TEST MECÁNICA</h2><div class="stats"><div>Aciertos: <span id="test-mecanica-aciertos">0</span></div><div>Racha: <span id="test-mecanica-racha">0</span>🔥</div><div>Score: <span id="test-mecanica-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mecanica-progress"></div></div><div id="test-mecanica-imagen" class="quadre-pictograma"></div><div id="test-mecanica-tip" class="tip-box"></div><div class="pregunta" id="test-mecanica-pregunta">Cargando...</div><div id="test-mecanica-opciones"></div><div class="feedback" id="test-mecanica-feedback"></div><button class="btn-sig" id="btn-sig-test-mecanica" onclick="seguentTest(event,'mecanica')" disabled>SIGUIENTE</button></div></div>
+  <div id="test-auxilis" class="sub-content"><div class="card"><h2>🚑 TEST AUXILIOS</h2><div class="stats"><div>Aciertos: <span id="test-auxilis-aciertos">0</span></div><div>Racha: <span id="test-auxilis-racha">0</span>🔥</div><div>Score: <span id="test-auxilis-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-auxilis-progress"></div></div><div id="test-auxilis-imagen" class="quadre-pictograma"></div><div id="test-auxilis-tip" class="tip-box"></div><div class="pregunta" id="test-auxilis-pregunta">Cargando...</div><div id="test-auxilis-opciones"></div><div class="feedback" id="test-auxilis-feedback"></div><button class="btn-sig" id="btn-sig-test-auxilis" onclick="seguentTest(event,'auxilis')" disabled>SIGUIENTE</button></div></div>
+  <div id="test-mediambient" class="sub-content"><div class="card"><h2>🌱 TEST MEDIO AMBIENTE</h2><div class="stats"><div>Aciertos: <span id="test-mediambient-aciertos">0</span></div><div>Racha: <span id="test-mediambient-racha">0</span>🔥</div><div>Score: <span id="test-mediambient-score">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="test-mediambient-progress"></div></div><div id="test-mediambient-imagen" class="quadre-pictograma"></div><div id="test-mediambient-tip" class="tip-box"></div><div class="pregunta" id="test-mediambient-pregunta">Cargando...</div><div id="test-mediambient-opciones"></div><div class="feedback" id="test-mediambient-feedback"></div><button class="btn-sig" id="btn-sig-test-mediambient" onclick="seguentTest(event,'mediambient')" disabled>SIGUIENTE</button></div></div>
 </div>
 
 <div id="tab-examen" class="tab-content">
-  <div class="card"><h2>📋 EXAMEN OFICIAL DGT</h2><div class="stats"><div>Pregunta: <span id="examen-num">0</span>/30</div><div>Tiempo: <span id="examen-timer">30:00</span></div><div>Aciertos: <span id="examen-aciertos">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div><div id="examen-imagen" class="quadre-pictograma"><div class="placeholder">Sin pictograma</div></div><div id="examen-tip" class="tip-box"></div><div id="examen-emojis" class="test-emojis"></div><div class="pregunta" id="examen-pregunta">Pulsa Inicia el Examen</div><div id="examen-opciones"></div><div id="examen-resultat" style="display:none"></div><button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button><button class="btn-sig" id="btn-sig-examen" onclick="seguentPreguntaExamen(event)" disabled style="display:none">SIGUIENTE</button></div>
+  <div class="card"><h2>📋 EXAMEN OFICIAL DGT</h2><div class="stats"><div>Pregunta: <span id="examen-num">0</span>/30</div><div>Tiempo: <span id="examen-timer">30:00</span></div><div>Aciertos: <span id="examen-aciertos">0</span></div></div><div class="progress-bar"><div class="progress-fill" id="examen-progress"></div></div><div id="examen-imagen" class="quadre-pictograma"></div><div id="examen-tip" class="tip-box"></div><div class="pregunta" id="examen-pregunta">Pulsa Inicia el Examen</div><div id="examen-opciones"></div><div id="examen-resultat" style="display:none"></div><button class="btn-sig" id="btn-iniciar-examen" onclick="iniciarExamen(event)">INICIAR EXAMEN</button><button class="btn-sig" id="btn-sig-examen" onclick="seguentPreguntaExamen(event)" disabled style="display:none">SIGUIENTE</button></div>
 </div>
 
-<div id="tab-garage" class="tab-content"><div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div><div id="garaje-lista" style="display:none"></div></div></div>
+<div id="tab-garage" class="tab-content"><div class="card"><h2>🏁 TU GARAJE</h2><div class="score-big" id="garage-score">🏎️ 90 CV</div><div id="garage-lista"></div></div></div>
 <div id="tab-tienda" class="tab-content"><div class="card"><h2>🛒 TIENDA</h2><p style="margin-bottom:12px;font-size:13px;color:#999">Cambia tus puntos por coches y accesorios</p><div class="emoji-shop" id="emoji-tienda"></div></div></div>
 <div id="tab-tips" class="tab-content"><div class="card"><h2>💡 CONSEJO DGT</h2><div id="tip-content"></div><div style="display:flex;gap:10px;margin-top:15px"><button class="btn" style="flex:1" onclick="prevTip(event)">ANTERIOR</button><span id="tip-counter" style="align-self:center">1/100</span><button class="btn" style="flex:1" onclick="nextTip(event)">SIGUIENTE</button></div></div></div>
 
@@ -199,6 +177,21 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
     <button class="sub-tab-btn" onclick="canviarTemariPrincipal(event,'biblioteca')">📚 BIBLIOTECA OFICIAL</button>
   </div>
   <div id="temari-rapido" class="sub-content active" style="display:block">
+    <div class="card" style="max-width:440px">
+      <h2>🏍️ 8 MINICURSOS CARNETS - RESUMEN RÁPIDO</h2>
+      <div class="carnets-grid">
+        <div class="carnet-mini"><b>AM</b><small>15 años<br>Ciclomotor 45km/h</small></div>
+        <div class="carnet-mini"><b>A1</b><small>16 años<br>125cc / 11kW</small></div>
+        <div class="carnet-mini"><b>A2</b><small>18 años<br>35kW / 0,2kW/kg</small></div>
+        <div class="carnet-mini"><b>A</b><small>24 años<br>Todas las motos</small></div>
+        <div class="carnet-mini"><b>B</b><small>18 años<br>Turismo 3500kg + remolque 750kg</small></div>
+        <div class="carnet-mini"><b>B+E</b><small>18 años + B<br>Remolque >750kg hasta 3500kg</small></div>
+        <div class="carnet-mini"><b>C1 / C</b><small>18/21 años<br>Camión >3500kg</small></div>
+        <div class="carnet-mini"><b>D1 / D</b><small>21/24 años<br>Bus +9 plazas</small></div>
+      </div>
+      <div style="font-size:11px;color:#999;text-align:center;margin-top:6px">Toca TEST después de leer fichas • El B es el que vas a sacar tú</div>
+    </div>
+
     <div class="sub-tabs" id="temas-tabs" style="margin-top:10px; flex-wrap:nowrap; overflow-x:auto">
       <button class="sub-tab-btn active" onclick="canviarTemaFicha(event,'t01')">T01</button>
       <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t02')">T02</button>
@@ -212,21 +205,19 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
       <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t10')">T10</button>
       <button class="sub-tab-btn" onclick="canviarTemaFicha(event,'t11')">T11</button>
     </div>
-    <!-- SUBTAPS CORRECTAS 11 TEMAS x 2 FICHAS -->
-    <div id="subfichas-container" style="display:flex; gap:8px; flex-wrap:wrap; padding:12px; background:#111; border-radius:10px; margin:10px 0;"></div>
 
+    <div id="tema-nativo-titulo" class="tema-titulo-nativo"><b>TEMA 1:</b> DEFINICIONES Y CLASIFICACIÓN - Masas, dimensiones, vehículos</div>
+    <div id="subfichas-container" style="display:flex; gap:8px; flex-wrap:wrap; padding:12px; background:#111; border-radius:10px; margin:10px 0;"></div>
     <div id="visor-ficha-container"><div style="padding:40px 20px; text-align:center; color:#666; font-size:13px">👆 Pulsa un tema T01-T11 arriba<br>2 fichas por tema • 22 totales • 10 min → Pase desbloqueado</div></div>
     <div style="text-align:center; margin-top:10px; color:#FFD700; font-size:11px; background:rgba(255,215,0,0.08); padding:8px; border-radius:8px; border:1px dashed rgba(255,215,0,0.3)">Timer Global: todo lo que abras en T01-T11 suma para los 10 min. 22 fichas totales.</div>
   </div>
   <div id="temari-biblioteca" class="sub-content">
     <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px">
-      <!-- 5 LINKS INTACTOS TAL CUAL EN ROJO - 2 LINEAS COMPLETAS -->
       <div class="card" style="border:2px solid #00D9FF; cursor:pointer" onclick="window.open('https://share.google/OB30FJpKxoUxfUwZT','_blank')"><h3>📚 Temario Directo 1</h3><p style="font-size:10px;color:#00D9FF; word-break:break-all;">https://share.google/OB30FJpKxoUxfUwZT</p></div>
       <div class="card" style="border:2px solid #00D9FF; cursor:pointer" onclick="window.open('https://share.google/cdTfRzcGeB9s9xnuQ','_blank')"><h3>📚 Temario Directo 2</h3><p style="font-size:10px;color:#00D9FF; word-break:break-all;">https://share.google/cdTfRzcGeB9s9xnuQ</p></div>
       <div class="card" style="border:2px solid #00D9FF; cursor:pointer" onclick="window.open('https://share.google/d16o0xmNpIAQ6Nh1c','_blank')"><h3>📚 Temario Directo 3</h3><p style="font-size:10px;color:#00D9FF; word-break:break-all;">https://share.google/d16o0xmNpIAQ6Nh1c</p></div>
       <div class="card" style="border:2px solid #00D9FF; cursor:pointer" onclick="window.open('https://share.google/tW0GEXMT1rJlb5Vqt','_blank')"><h3>📚 Temario Directo 4</h3><p style="font-size:10px;color:#00D9FF; word-break:break-all;">https://share.google/tW0GEXMT1rJlb5Vqt</p></div>
       <div class="card" style="border:2px solid #00D9FF; cursor:pointer" onclick="window.open('https://share.google/i2dZbEcYBk2QaCx2t','_blank')"><h3>📚 Temario Directo 5</h3><p style="font-size:10px;color:#00D9FF; word-break:break-all;">https://share.google/i2dZbEcYBk2QaCx2t</p></div>
-      <div style="background:#332a00;border-left:4px solid #FFD700;padding:10px;border-radius:6px;font-size:11px;color:#FFD700">💡 Links intactos tal cual en rojo - 2 líneas completas - directos - no temporales</div>
     </div>
   </div>
 </div>
@@ -234,18 +225,31 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
 <div class="tabs">
   <button class="tab-btn active" onclick="canviarTab_V94(event,'estadistiques')"><span class="emoji">📊</span>ESTAD</button>
   <button class="tab-btn" onclick="canviarTab_V94(event,'test')"><span class="emoji">📝</span>TEST</button>
-  <button class="tab-btn" onclick="canviarTab_V94(event,'situaciones')"><span class="emoji">🚙</span>SIMULACROS</button>
   <button class="tab-btn" onclick="canviarTab_V94(event,'examen')"><span class="emoji">📋</span>EXAMEN</button>
+  <button class="tab-btn" onclick="canviarTab_V94(event,'temari')"><span class="emoji">📖</span>TEMARIO</button>
   <button class="tab-btn" onclick="canviarTab_V94(event,'garage')"><span class="emoji">🏁</span>GARAJE</button>
   <button class="tab-btn" onclick="canviarTab_V94(event,'tienda')"><span class="emoji">🛍</span>TIENDA</button>
   <button class="tab-btn" onclick="canviarTab_V94(event,'tips')"><span class="emoji">💡</span>TIPS</button>
-  <button class="tab-btn" onclick="canviarTab_V94(event,'temari')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<script src="./app.js?v=14.2"></script>
+<script src="./app.js?v=14.3.1"></script>
 <script>
-// ===== V14.2 - SOLO SUBTAPS - SIN DUPLICAR RUTAS - RUTAS VIENEN DE APP.JS =====
-const MAPA_TEMAS_2_FICHAS = {
+// ===== V14.3.2 - TEMAS NATIVOS + 8 CARNETS + FIX MAPA =====
+const MAPA_TEMAS_NATIVOS = {
+  't01': 'TEMA 1: DEFINICIONES Y CLASIFICACIÓN - Masas, dimensiones, tipos de vehículos, MMA',
+  't02': 'TEMA 2: LA VÍA - Partes de la vía, marcas viales, intersecciones, velocidades',
+  't03': 'TEMA 3: SEÑALIZACIÓN - Vertical P/R/S, semáforos, balizamiento, agentes',
+  't04': 'TEMA 4: MANIOBRAS - Incorporación, desplazamiento, adelantamiento, parada',
+  't05': 'TEMA 5: CONDUCTOR - Estado psicofísico, alcohol, drogas, medicamentos, sanciones',
+  't06': 'TEMA 6: VEHÍCULO - Seguridad activa, pasiva, frenos, neumáticos, ITV, mantenimiento',
+  't07': 'TEMA 7: ACCIDENTES - PAS, primeros auxilios, RCP, hemorragias, conducta',
+  't08': 'TEMA 8: ALUMBRADO - Luces, señalización vehículos, V-16 2026',
+  't09': 'TEMA 9: CONDUCCIÓN - Velocidades, tiempos, intersecciones, glorietas',
+  't10': 'TEMA 10: CARGA Y DIMENSIONES - Iluminación, masa, remolque, señales V',
+  't11': 'TEMA 11: PERMISOS - Clases AM/A/B/C/D, puntos, validez, CAP, ITV'
+};
+
+const MAPA_TEMAS_2_FICHAS_V32 = {
   't01': ['ficha-t01a','ficha-t02a'],
   't02': ['ficha-t02b','ficha-t02c'],
   't03': ['ficha-t03a','ficha-t03b'],
@@ -272,13 +276,17 @@ function canviarTemaFicha(evt, tema){
   if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
   else document.querySelector(`#temas-tabs button[onclick*="${tema}"]`)?.classList.add('active');
 
+  const tituloEl = document.getElementById('tema-nativo-titulo');
+  if(tituloEl){ tituloEl.innerHTML = `<b>${MAPA_TEMAS_NATIVOS[tema]||tema.toUpperCase()}</b>`; }
+
   const cont = document.getElementById('subfichas-container');
   if(!cont) return;
   cont.innerHTML = '';
-  (MAPA_TEMAS_2_FICHAS[tema]||[]).forEach((ficha, idx)=>{
+  (MAPA_TEMAS_2_FICHAS_V32[tema]||[]).forEach((ficha, idx)=>{
     const btn = document.createElement('button');
     btn.className = 'sub-tab-btn' + (idx===0?' active':'');
-    btn.textContent = '✨ ' + ficha;
+    const nombreCorto = ficha.replace('ficha-','').toUpperCase();
+    btn.textContent = '✨ ' + nombreCorto;
     btn.onclick = (e)=>{
       cont.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));
       e.currentTarget.classList.add('active');
@@ -286,26 +294,10 @@ function canviarTemaFicha(evt, tema){
     };
     cont.appendChild(btn);
   });
-  // Abre primera ficha del tema usando la función de app.js que ya tiene las rutas
-  if(typeof obrirFichaJPG === 'function') obrirFichaJPG(MAPA_TEMAS_2_FICHAS[tema][0]);
+  if(typeof obrirFichaJPG === 'function') obrirFichaJPG(MAPA_TEMAS_2_FICHAS_V32[tema][0]);
 }
 
-function canviarOrientacio(evt,id){
-  document.querySelectorAll('#stats-orientacio.sub-tab-btn').forEach(b=>b.classList.remove('active'));
-  if(evt&&evt.currentTarget) evt.currentTarget.classList.add('active');
-  document.querySelectorAll('.orientacio-subcontent').forEach(c=>{c.classList.remove('actiu');c.style.display='none';});
-  const t=document.getElementById('orientacio-'+id);
-  if(t){t.style.display='block';t.classList.add('actiu');}
-}
-
-function inyectarOrientacionFix(){
-  const cont=document.getElementById('stats-orientacio-lista');
-  if(!cont || document.getElementById('orientacio-am')) return;
-  // Tu orientación 8 minicursos viene de app.js - no duplicamos aquí
-  if(typeof actualitzarOrientacioV11 === 'function') actualitzarOrientacioV11();
-}
 window.addEventListener('load',()=>{
-  setTimeout(inyectarOrientacionFix,600);
   setTimeout(()=>{ if(document.getElementById('temari-rapido')) canviarTemaFicha(null,'t01'); }, 800);
 });
 </script>
