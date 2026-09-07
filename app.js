@@ -1147,7 +1147,7 @@ const EMOJI_TIENDA = [
   {id:'e6', emoji:'⚡', nombre:'Rayo', precio:700}
 ];
 
-// ===== GASDRIVE DGT ES V14.2 FINAL - BLOQUE 1 - FIX 22 FICHAS REALES + 5 LINKS DIRECTOS TEMARIO + PASE 10 MIN =====
+// ===== GASDRIVE DGT ES V14.3.1 FINAL - BLOQUE 1 - FIX IMAGEN + SIGUIENTE + TIP =====
 let tipsData = [];
 let currentTip = 0;
 let tempsIniciTemari = null;
@@ -1155,7 +1155,7 @@ let contadorTemari = null;
 let sitCategoriaActiva = 'clima';
 const SENALES_SVG = {};
 
-// ===== V14.2 - 22 FICHAS REALES LARGAS - NOMBRES EXACTOS DE TU REPO RAIZ - NO MODIFICAR =====
+// ===== V14.3.1 - 22 FICHAS REALES LARGAS =====
 const MAPA_FICHAS_LARGAS_V14 = {
   'ficha-t01a': 'ficha-t01a-definiciones-masas-clasificacion-v3-final.jpg',
   'ficha-t02a': 'ficha-t02a-via-partes-definiciones-v3-final.jpg',
@@ -1181,7 +1181,6 @@ const MAPA_FICHAS_LARGAS_V14 = {
   'ficha-t11b': 'ficha-t11b-puntos-validez-cap-itv-v3-final.jpg'
 };
 
-// ===== 5 LINKS TEMARIO DIRECTOS - COPIADOS TAL CUAL ME ENVIASTE EN ROJO - 2 LINEAS COMPLETAS - NO MODIFICAR - NO SON TEMPORALES =====
 const TEMARIO_DGT_LINKS_FIJOS = [
   "https://share.google/OB30FJpKxoUxfUwZT",
   "https://share.google/cdTfRzcGeB9s9xnuQ",
@@ -1245,30 +1244,78 @@ const MAPA_PANELLS_DETALLAT = {
   'E-': { nom: 'Medio Ambiente ZBE', desc: 'ZBE zonas bajas emisiones, distintivo ambiental - Familia E-', temari: 'TEMARIO 5', pag: 103, familia: 'MEDIO AMBIENTE ZBE', biblioteca: '05' }
 };
 
-// ===== FIX IMAGENES 15 RUTAS + LOWERCASE PARA GITHUB PAGES =====
+// ===== FIX V14.3.1 - IMAGENES SIMPLIFICADO - USA MISMA RUTA_PANEL + OCULTA EN EXAMEN SI NO HAY JPG =====
 function pintarImatgeSiExisteix(cat, pregunta) {
   if (!pregunta) return;
-  const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  let imgDiv = document.getElementById(`test-${catNet}-imagen`) || document.getElementById(`test-${cat}-imagen`) || document.getElementById(`test-mecanica-imagen`) || document.getElementById(`test-mecànica-imagen`) || document.getElementById(`test-mediambient-imagen`) || document.getElementById(`test-medioambiente-imagen`) || document.getElementById(`test-medio_ambiente-imagen`) || document.getElementById(`test-auxilis-imagen`) || document.getElementById(`test-auxilios-imagen`) || document.getElementById(`test-normes-imagen`) || document.getElementById(`test-normas-imagen`) || document.getElementById(`test-senyals-imagen`) || document.getElementById(`test-senales-imagen`) || document.getElementById(`test-general-imagen`) || document.getElementById(`test-trampes-imagen`) || document.getElementById(`examen-imagen`);
+  const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g,"-");
+  const isExamen = catNet.includes('examen');
+
+  let imgDiv = document.getElementById(`test-${catNet}-imagen`)
+    || document.getElementById(`test-${cat}-imagen`)
+    || document.getElementById('examen-imagen')
+    || document.getElementById(`test-mecanica-imagen`) || document.getElementById(`test-mecànica-imagen`)
+    || document.getElementById(`test-mediambient-imagen`) || document.getElementById(`test-medioambiente-imagen`) || document.getElementById(`test-medio_ambiente-imagen`)
+    || document.getElementById(`test-auxilis-imagen`) || document.getElementById(`test-auxilios-imagen`)
+    || document.getElementById(`test-normes-imagen`) || document.getElementById(`test-normas-imagen`)
+    || document.getElementById(`test-senyals-imagen`) || document.getElementById(`test-senales-imagen`)
+    || document.getElementById(`test-general-imagen`) || document.getElementById(`test-trampes-imagen`) || document.getElementById(`test-trampas-imagen`);
+
   if (!imgDiv) return;
-  const ruta = (pregunta.ruta_panel || pregunta.ruta || "").trim();
+
+  const rutaRaw = (pregunta.ruta_panel || pregunta.ruta || "").trim();
   const panelId = pregunta.panel_id || pregunta.codi || '';
-  const esPanel = ruta && /^(P-|R-|S-|M-|A-|E-|N-)/.test(ruta) || ruta.toLowerCase().endsWith('.jpg');
-  const rutaConPrefix = panelId? `${panelId} - ${ruta}` : ruta;
-  if (ruta && esPanel) {
-    const r1 = `./${ruta}`; const r2 = `./${rutaConPrefix}`; const r3 = `./${ruta.toLowerCase()}`; const r4 = `./${rutaConPrefix.toLowerCase()}`; const r5 = `./assets/paneles/${ruta}`; const r6 = `./assets/paneles/${rutaConPrefix}`; const r7 = `./paneles/${ruta}`; const r8 = `./paneles/${rutaConPrefix}`; const r9 = `./assets/mecanica/${ruta}`; const r10 = `./assets/medioambiente/${ruta}`; const r11 = `./assets/auxilios/${ruta}`; const r12 = `./assets/normas/${ruta}`; const r13 = `./assets/senyals/${ruta}`; const r14 = `./assets/${ruta}`; const r15 = `./assets/${ruta.toLowerCase()}`;
-    imgDiv.innerHTML = `<div style="background:#0a0a1a; padding:12px; border-radius:16px; border:3px solid #00D9FF; box-shadow:0 0 25px rgba(0,217,255,0.3);"><img src="${r1}" alt="${panelId}" style="width:100%; height:auto; max-height:340px; object-fit:contain; border-radius:12px; display:block;" onerror="this.onerror=null; this.src='${r2}'; this.onerror=function(){this.onerror=null; this.src='${r3}'; this.onerror=function(){this.onerror=null; this.src='${r4}'; this.onerror=function(){this.onerror=null; this.src='${r5}'; this.onerror=function(){this.onerror=null; this.src='${r6}'; this.onerror=function(){this.onerror=null; this.src='${r7}'; this.onerror=function(){this.onerror=null; this.src='${r8}'; this.onerror=function(){this.onerror=null; this.src='${r9}'; this.onerror=function(){this.onerror=null; this.src='${r10}'; this.onerror=function(){this.onerror=null; this.src='${r11}'; this.onerror=function(){this.onerror=null; this.src='${r12}'; this.onerror=function(){this.onerror=null; this.src='${r13}'; this.onerror=function(){this.onerror=null; this.src='${r14}'; this.onerror=function(){this.onerror=null; this.src='${r15}'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='block';}}}}}}}}}}}}}}}}}"/><div style="display:none; color:#ff6b6b; text-align:center; padding:15px;">❌ No encontrado: ${ruta}<br><small>${rutaConPrefix}</small></div><div style="text-align:center; color:#888; font-size:11px; margin-top:8px;">Panel: ${panelId||'N/A'} - ${ruta}</div></div>`;
-    imgDiv.style.display = 'block'; return;
+
+  // 1. Si hay ruta JPG real (N-03, M-, A-, E- etc) -> mostrar siempre igual que en TEST
+  if (rutaRaw && rutaRaw.toLowerCase().endsWith('.jpg')) {
+    const src1 = `./${rutaRaw}`;
+    const src2 = `./${rutaRaw.toLowerCase()}`;
+    imgDiv.innerHTML = `<div style="background:#0a0a1a; padding:12px; border-radius:16px; border:3px solid #00D9FF; box-shadow:0 0 25px rgba(0,217,255,0.3);">
+      <img src="${src1}" alt="${panelId}" style="width:100%; height:auto; max-height:340px; object-fit:contain; border-radius:12px; display:block;" loading="lazy"
+      onerror="this.onerror=null; this.src='${src2}'; this.onerror=function(){ ${isExamen? "this.parentElement.parentElement.style.display='none'" : "this.style.display='none'"} }">
+      <div style="text-align:center; color:#666; font-size:11px; margin-top:6px;">${panelId} - ${rutaRaw}</div>
+    </div>`;
+    imgDiv.style.display = 'block';
+    return;
   }
+
+  // 2. Si hay emoji (P- R- S-) -> mostrar emoji
   if (pregunta.emoji) {
-    let htmlEmojis = ''; try { const segmenter = new Intl.Segmenter('es', { granularity: 'grapheme' }); const segs = [...segmenter.segment(pregunta.emoji)].map(s => s.segment); const size = segs.length > 2? '26px' : segs.length === 2? '32px' : '42px'; htmlEmojis = segs.map(s => `<span style="font-size:${size}; line-height:1;">${s}</span>`).join(''); } catch(e) { htmlEmojis = [...pregunta.emoji].map(s=>`<span style="font-size:32px">${s}</span>`).join(''); }
-    const forma = pregunta.forma || 'cuadrado-azul'; let extraStyle = forma==='circulo-rojo'? 'border:6px solid #e53935; border-radius:50%; background:white;' : forma==='triangulo-amarillo'? 'border:6px solid #fdd835; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); background:white; width:130px; height:115px;' : 'border:6px solid #1e88e5; border-radius:16px; background:white;';
+    let htmlEmojis = '';
+    try {
+      const segmenter = new Intl.Segmenter('es', { granularity: 'grapheme' });
+      const segs = [...segmenter.segment(pregunta.emoji)].map(s => s.segment);
+      const size = segs.length > 2? '26px' : segs.length === 2? '32px' : '42px';
+      htmlEmojis = segs.map(s => `<span style="font-size:${size}; line-height:1;">${s}</span>`).join('');
+    } catch(e) {
+      htmlEmojis = [...pregunta.emoji].map(s=>`<span style="font-size:32px">${s}</span>`).join('');
+    }
+    const forma = pregunta.forma || 'cuadrado-azul';
+    let extraStyle = forma==='circulo-rojo'? 'border:6px solid #e53935; border-radius:50%; background:white;' : forma==='triangulo-amarillo'? 'border:6px solid #fdd835; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); background:white; width:130px; height:115px;' : 'border:6px solid #1e88e5; border-radius:16px; background:white;';
     imgDiv.innerHTML = `<div style="width:120px; height:120px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(0,217,255,0.15); ${extraStyle}"><div style="display:flex; gap:3px; flex-wrap:wrap; justify-content:center; align-items:center; ${forma==='triangulo-amarillo'?'margin-top:18px':''}">${htmlEmojis}</div></div>`;
-    imgDiv.style.display='block'; return;
+    imgDiv.style.display='block';
+    return;
   }
-  imgDiv.innerHTML = `<div class="placeholder" style="color:#00aaff; text-align:center; padding:20px; border:2px dashed rgba(0,217,255,0.3); border-radius:12px;">Sin pictograma<br><small>${pregunta.id||''}</small></div>`;
+
+  // 3. FIX CLAVE V14.3.1: En EXAMEN si no hay imagen real, OCULTAR - no mostrar "Sin pictograma"
+  if (isExamen) {
+    imgDiv.style.display='none';
+    imgDiv.innerHTML='';
+    return;
+  }
+
+  // 4. En TEST si no hay imagen, no mostrar nada tampoco (limpio)
+  imgDiv.style.display='none';
+  imgDiv.innerHTML='';
 }
 
+// FIX UNIVERSAL BOTON SIGUIENTE
+function desbloquearSiguienteUniversal(){
+  document.querySelectorAll('[id^="btn-sig-"], [id^="btn-seguir"],.btn-siguiente').forEach(b=>{
+    b.disabled=false; b.removeAttribute('disabled'); b.style.opacity='1'; b.style.pointerEvents='auto'; b.style.display='block';
+  });
+}
+
+// Resto igual que tu V14.2...
 function getTotalBanco(){ let total=0; if(typeof PREGUNTES!=='undefined') for(let cat in PREGUNTES) if(Array.isArray(PREGUNTES[cat])) total+=PREGUNTES[cat].length; if(typeof SITUACIONS!=='undefined') for(let cat in SITUACIONS) if(Array.isArray(SITUACIONS[cat])) total+=SITUACIONS[cat].length; return total; }
 const MAPEO_PALABRAS_CLAVE = {
   'velocidad': {subtema: 'Velocidad y Limites', pag: 22}, 'alcohol': {subtema: 'Alcohol y Drogas', pag: 26}, 'drogas': {subtema: 'Alcohol y Drogas', pag: 26},
@@ -1317,7 +1364,7 @@ let estat = {
 };
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 function init() {
-  console.log("GasDrive V14.2 PRO - 22 fichas reales + links temario directos");
+  console.log("GasDrive V14.3.1 PRO - Fix imagen examen + siguiente");
   if(typeof PREGUNTES!=='undefined'){
     if((!PREGUNTES.mecanica || PREGUNTES.mecanica.length===0) && typeof BANCO_MECANICA_66!== 'undefined'){ PREGUNTES.mecanica = BANCO_MECANICA_66; }
     if((!PREGUNTES.normas || PREGUNTES.normas.length===0) && typeof BANCO_PREGUNTAS_NORMAS_V1!== 'undefined'){ PREGUNTES.normas = BANCO_PREGUNTAS_NORMAS_V1; }
@@ -1406,7 +1453,7 @@ function iniciarComptadorTemari() {
     if (vistaTemariActiva) {
       if (tempsIniciTemari === null) { tempsIniciTemari = Date.now(); }
       else { const ara = Date.now(); const segundos = (ara - tempsIniciTemari) / 1000; if (segundos >= 3) { estat.stats.tempsEstudiatAvui += segundos / 60; tempsIniciTemari = ara; guardar(); actualitzarPaseUI(); } }
-      if (estat.stats.tempsEstudiatAvui >= TEMARIO_V14_CONFIG.paseMinutos &&!estat.stats.paseCompletado) { estat.stats.paseCompletado = true; estat.coins += 50; guardar(); alert(`✅ PASE DESBLOQUEADO V14.2!\nHas estudiado ${TEMARIO_V14_CONFIG.paseMinutos} minutos con fichas verticales. +50 coins`); if(typeof actualitzarEstadistiques_V94==='function') actualitzarEstadistiques_V94(); }
+      if (estat.stats.tempsEstudiatAvui >= TEMARIO_V14_CONFIG.paseMinutos &&!estat.stats.paseCompletado) { estat.stats.paseCompletado = true; estat.coins += 50; guardar(); alert(`✅ PASE DESBLOQUEADO V14.3.1!\nHas estudiado ${TEMARIO_V14_CONFIG.paseMinutos} minutos con fichas verticales. +50 coins`); if(typeof actualitzarEstadistiques_V94==='function') actualitzarEstadistiques_V94(); }
     } else { if (tempsIniciTemari!== null) { const ara = Date.now(); const segundos = (ara - tempsIniciTemari) / 1000; estat.stats.tempsEstudiatAvui += segundos / 60; tempsIniciTemari = null; guardar(); actualitzarPaseUI(); } }
   }, 1000);
 }
@@ -1428,7 +1475,7 @@ function actualitzarPaseUI() {
   const el = document.getElementById('pase-temps'); if(el) el.textContent = `${minuts}:${segons.toString().padStart(2,'0')} / ${TEMARIO_V14_CONFIG.paseMinutos}:00`;
   const msg = document.getElementById('stats-motivacio'); if(msg) { if(estat.stats.paseCompletado) msg.textContent = "✅ Pase Activo 10min. A practicar 💪"; else { const falten = Math.max(0, TEMARIO_V14_CONFIG.paseMinutos - estat.stats.tempsEstudiatAvui); const fMin = Math.floor(falten); const fSeg = Math.floor((falten - fMin)*60); msg.textContent = `Estudia ${fMin}:${fSeg.toString().padStart(2,'0')} más en el TEMARIO (22 fichas) para desbloquear`; } }
 }
-function carregarTemari_V14(){ console.log("V14.2 Temario 22 fichas verticales + 5 links directos share.google - 10 min global"); setTimeout(()=>{ const visor = document.getElementById('visor-ficha-container'); if(visor &&!visor.querySelector('img')) obrirFichaJPG('ficha-t01a'); }, 600); }
+function carregarTemari_V14(){ console.log("V14.3.1 Temario 22 fichas"); setTimeout(()=>{ const visor = document.getElementById('visor-ficha-container'); if(visor &&!visor.querySelector('img')) obrirFichaJPG('ficha-t01a'); }, 600); }
 function carregarTemari(){ carregarTemari_V14(); }
 function canviarTemariPrincipal(evt,id){
   const container = document.getElementById('tab-temari'); if(!container) return;
@@ -1460,7 +1507,7 @@ function getBibliotecaLinkParaPanel(panelId){
   if(MAPA_PANELLS_DETALLAT[pref]){ const bib = MAPA_PANELLS_DETALLAT[pref].biblioteca; return { id: bib, link: TEMARIO_V14_CONFIG.bibliotecaLinks[bib], info: MAPA_PANELLS_DETALLAT[pref] }; }
   return null;
 }
-function obrirPDF(){ console.warn("V14.2 obsoleto - usa obrirFichaJPG"); }
+function obrirPDF(){ console.warn("V14.3.1 obsoleto - usa obrirFichaJPG"); }
 function tancarPDF(){}
 
 function obtenirDetallRealPregunta(pregunta) {
@@ -1488,7 +1535,7 @@ function autoMapearTotesPreguntes() {
   for(let cat in PREGUNTES) {
     PREGUNTES[cat] = PREGUNTES[cat].map(p => { const detall = obtenirDetallRealPregunta(p); return {...p, id: p.id || idCounter++, subtema: detall.nom, pag: detall.pag, detallReal: detall, familia: detall.familia }; });
   }
-  console.log('✅ BLOQUE 2 V14.2 MAPEADO - Total:', getTotalBanco());
+  console.log('✅ V14.3.1 MAPEADO - Total:', getTotalBanco());
 }
 function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
   if(!subtema || subtema === 'undefined') subtema = 'General'; if(!pagina) pagina = 1;
@@ -1502,9 +1549,9 @@ function registrarFallada(categoria, subtema, pagina, preguntaOriginal) {
 function dibuixarPuntsDebils_V94() {
   const cont = document.getElementById('stats-debils-lista'); if(!cont) return;
   cont.innerHTML = '<h3 style="margin-bottom:15px; color:#00D9FF">📍 DONDE TIENES QUE MEJORAR - POR FAMILIA REAL + BIBLIOTECA OFICIAL</h3>';
-  if(!estat.stats.puntsDebils || Object.keys(estat.stats.puntsDebils).length === 0) { cont.innerHTML += '<div style="text-align:center;color:#999; padding:20px;">Haz más tests para detectar tus puntos débiles reales<br><small>El sistema lee panel_id N-01..N-15, S-100, M-, A-, E- y te manda a biblioteca oficial share.google directa</small></div>'; return; }
+  if(!estat.stats.puntsDebils || Object.keys(estat.stats.puntsDebils).length === 0) { cont.innerHTML += '<div style="text-align:center;color:#999; padding:20px;">Haz más tests para detectar tus puntos débiles reales<br><small>El sistema lee panel_id N-01..N-15, S-100, M-, A-, E- y te manda a biblioteca oficial</small></div>'; return; }
   const categories = ['senales','trampas','normas','mecanica','auxilios','medio_ambiente','mediambient'];
-  const noms = ['🚦 SEÑALES','🪤 TRAMPAS','📋 NORMAS','⚙️ MECÁNICA','🚑 AUXILIOS','♻️ MEDIO AMBIENTE','♻️ MEDIO AMBIENTE'];
+  const noms = ['🚦 SEÑALES','🪤 TRAMPAS','📋 NORMAS','⚙️ MECÁNICA','🚑 AUXILIOS','♻️ MEDIO AMBIENTE'];
   categories.forEach((cat, i) => {
     const keyReal = cat==='medio_ambiente'?'medio_ambiente':cat;
     if(!estat.stats.puntsDebils[keyReal] || Object.keys(estat.stats.puntsDebils[keyReal]).length===0) { if(i<6) cont.innerHTML += `<div style="margin-bottom:15px; padding:12px; background:#1a1a1a; border-radius:8px;"><div style="font-weight:700; color:#00D9FF">${noms[i]}</div><div style="color:#666">Aún no tienes datos - Haz tests</div></div>`; return; }
@@ -1513,19 +1560,19 @@ function dibuixarPuntsDebils_V94() {
     const detall = detallMillor || {nom:pitjorClau, desc:'', temari:'TEMARIO 1', pag:1, familia:pitjorClau, biblioteca:'02', panel:''};
     const bibId = detall.biblioteca || '02'; const bibLink = (typeof TEMARIO_V14_CONFIG!=='undefined' && TEMARIO_V14_CONFIG.bibliotecaLinks[bibId])? TEMARIO_V14_CONFIG.bibliotecaLinks[bibId] : TEMARIO_DGT_LINKS_FIJOS[0];
     const bibNombres = {'01':'01 Temario Directo 1','02':'02 Temario Directo 2','03':'03 Temario Directo 3','04':'04 Temario Directo 4','05':'05 Temario Directo 5'}; const bibNom = bibNombres[bibId]||`0${bibId} Temario Directo`;
-    cont.innerHTML += `<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div><div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div><div style="color:#ccc; font-size:12px; margin-bottom:8px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div><div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;"><div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Pág <b>${detall.pag||1}</b></div><button onclick="anarAPagina(${detall.pag||1})" style="background:#222; border:1px solid #00D9FF; border-radius:6px; padding:4px 10px; cursor:pointer; font-weight:700; color:#00D9FF; font-size:11px">Ir a Temario</button></div><div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;"><div style="color:#00D9FF; font-size:11px; font-weight:700; margin-bottom:4px">📚 ESTUDIO PROFUNDO - TEMARIO DIRECTO OFICIAL:</div><button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%; text-align:left;">📖 ${bibNom} → Reforzar tema: ${detall.familia||detall.nom} ↗</button><div style="color:#999; font-size:10px; margin-top:6px; line-height:1.3">Link directo intacto share.google - va directo al temario que encerraste en rojo.</div></div></div>`;
+    cont.innerHTML += `<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div><div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div><div style="color:#ccc; font-size:12px; margin-bottom:8px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div><div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;"><div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Pág <b>${detall.pag||1}</b></div><button onclick="anarAPagina(${detall.pag||1})" style="background:#222; border:1px solid #00D9FF; border-radius:6px; padding:4px 10px; cursor:pointer; font-weight:700; color:#00D9FF; font-size:11px">Ir a Temario</button></div><div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;"><div style="color:#00D9FF; font-size:11px; font-weight:700; margin-bottom:4px">📚 ESTUDIO PROFUNDO - TEMARIO DIRECTO OFICIAL:</div><button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%; text-align:left;">📖 ${bibNom} → Reforzar tema: ${detall.familia||detall.nom} ↗</button></div></div>`;
   });
 }
 function actualitzarOrientacioV11() {
   const cont = document.getElementById('stats-orientacio-lista') || document.getElementById('orientacio-lista') || document.getElementById('stats-orientacio'); if(!cont) return;
-  cont.innerHTML = `<div style="background:#0a0a1a; padding:16px; border-radius:12px; border:2px solid #00D9FF; margin-bottom:16px;"><h3 style="color:#00D9FF; margin-bottom:10px;">🎯 CÓMO FUNCIONA EL EXAMEN DGT OFICIAL REAL</h3><div style="color:#fff; font-size:13px; line-height:1.6;"><p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p><p>⏱️ <b>30 minutos</b> máximo - Con práctica lo haces en 10 min</p><p>✅ <b>27 aciertos mínimo</b> para aprobar - Máximo 3 fallos permitidos</p><p>🏫 <b>El día del examen:</b> Lleva DNI + Justificante cita. Llega 15 min antes.</p><p>💡 <b>Truco DGT:</b> Siempre la respuesta más segura y conservadora es la correcta.</p></div></div><h3 style="color:#00D9FF; margin:15px 0 10px;">📚 MÉTODO GASDRIVE V14.2 - 3 PASOS</h3><div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #2ecc71; border-radius:8px;"><div style="font-weight:700; color:#2ecc71;">1. TEMARIO 10 min/día - 22 fichas verticales T01-T11</div><div style="color:#ccc; font-size:12px;">Timer global 10 min → Desbloquea Pase +50 coins. Fichas JPG scroll infinito. Links directos share.google arriba.</div></div><div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:8px;"><div style="font-weight:700; color:#FFD700;">2. TESTS de 15 preguntas por tanda</div><div style="color:#ccc; font-size:12px;">Rutina corta. Si fallas N-01 Alcohol te manda a Temario directo 3.</div></div><div style="margin-bottom:12px; padding:12px; background:#1a1a1a; border-left:4px solid #00D9FF; border-radius:8px;"><div style="font-weight:700; color:#00D9FF;">3. EXAMEN diario cuando llegues al 90%</div><div style="color:#ccc; font-size:12px;">Racha de 6 aprobados seguidos para ir seguro a DGT real.</div></div>`;
+  cont.innerHTML = `<div style="background:#0a0a1a; padding:16px; border-radius:12px; border:2px solid #00D9FF; margin-bottom:16px;"><h3 style="color:#00D9FF; margin-bottom:10px;">🎯 EXAMEN DGT OFICIAL</h3><div style="color:#fff; font-size:13px; line-height:1.6;"><p>📋 30 preguntas - 3 opciones, 1 correcta</p><p>⏱️ 30 minutos - 27 aciertos para aprobar</p></div></div>`;
 }
-function anarAPagina(pagina) { canviarTab_V94(null, 'temari'); setTimeout(()=>{ if(typeof canviarTemariPrincipal==='function'){ document.querySelector('#tab-temari.sub-tab-btn')?.click(); } }, 300); }
+function anarAPagina(pagina) { canviarTab_V94(null, 'temari'); }
 function actualitzarEstadistiques_V94() {
   const tab = document.getElementById('tab-estadistiques') || document.getElementById('tab-estad') ; if(!tab ||!tab.classList.contains('active')) { const maybeActive = document.querySelector('.tab-content.active'); if(!maybeActive ||!maybeActive.id.includes('estad')) return; }
   const stats = calcularPreparacioDGT_V94(); const preparacioArrodonida = Math.round(stats.preparacio); const falta = Math.max(0, 90 - preparacioArrodonida);
   const el1 = document.getElementById('stats-global-percent'); if(el1) el1.textContent = preparacioArrodonida + '%';
-  const el1b = document.getElementById('stats-global-falta') || document.getElementById('stats-global-text'); if(el1b) el1b.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Listo para DGT!` : `${preparacioArrodonida}% - Te falta ${falta}% para el 90%`;
+  const el1b = document.getElementById('stats-global-falta') || document.getElementById('stats-global-text'); if(el1b) el1b.textContent = preparacioArrodonida >= 90? `✅ ${preparacioArrodonida}% - ¡Listo para DGT!` : `${preparacioArrodonida}% - Te falta ${falta}%`;
   const el2 = document.getElementById('stats-global-bar'); if(el2) el2.style.width = preparacioArrodonida + '%';
   const el3 = document.getElementById('stats-domini-percent'); if(el3) el3.textContent = Math.round(stats.retencio) + '%'; const el4 = document.getElementById('stats-domini-bar'); if(el4) el4.style.width = Math.round(stats.retencio) + '%';
   const el5 = document.getElementById('stats-constancia-percent'); if(el5) el5.textContent = Math.round(stats.constancia) + '%'; const el6 = document.getElementById('stats-constancia-bar'); if(el6) el6.style.width = Math.round(stats.constancia) + '%';
@@ -1537,9 +1584,11 @@ function actualitzarEstadistiques_V94() {
 }
 function getDadesEvolucio() { return estat.stats.historialEvolucio.map(h => { let diaNum = '0'; if(h.dia && h.dia.includes('-')) { const parts = h.dia.split('-'); diaNum = parts[2] || parts[0] || '0'; if(diaNum.includes('T')) diaNum = diaNum.split('T')[0]; } else if(h.dia && h.dia.includes('/')) { diaNum = h.dia.split('/')[0]; } else { diaNum = (h.dia||'').toString().substring(0,2); } diaNum = diaNum.replace(/^0+/, '') || '0'; return {dia: diaNum, global: Math.round(h.percent||0)}; }); }
 function potFerTests() { comprovarNouDia(); return estat.stats.paseCompletado; }
-function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 10 - Math.floor(estat.stats.tempsEstudiatAvui)); const segQueFalten = Math.floor((10 - estat.stats.tempsEstudiatAvui - Math.floor(10 - estat.stats.tempsEstudiatAvui))*60); alert(`⛔ PASE BLOQUEADO V14.2\nEstudia ${minutsQueFalten}:${segQueFalten.toString().padStart(2,'0')} más en el TEMARIO (22 fichas T01-T11) para desbloquear los tests de hoy.`); }
+function mostrarPopupPase() { const minutsQueFalten = Math.max(0, 10 - Math.floor(estat.stats.tempsEstudiatAvui)); alert(`⛔ PASE BLOQUEADO V14.3.1\nEstudia ${minutsQueFalten} min más en TEMARIO para desbloquear.`); }
 function barrejarArray(arr) { const a = arr.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function normalizarPregunta(p){ const q = p.q || p.pregunta || ''; const a = p.a || p.opcions || p.opciones || []; const ok = p.ok!==undefined? p.ok : (p.correcta!==undefined? p.correcta : 0); return {...p, q, a, ok, pregunta: q, opcions: a, correcta: ok}; }
+
+// ===== V14.3.1 - CARGAR TEST 15 POR TANDA - FIX DEFINITIVO =====
 function carregarPregunta(cat) {
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   let catReal = catNet; if(catNet==='senales') catReal='senyals'; if(catNet==='normas') catReal='normes'; if(catNet==='auxilios') catReal='auxilis'; if(catNet==='medio_ambiente' || catNet==='medioambiente') catReal='mediambient';
@@ -1549,7 +1598,7 @@ function carregarPregunta(cat) {
   if(!s.sesionPreguntas || s.sesionPreguntas.length===0 || s.sesionIndex >= s.totalSesion){ s.sesionPreguntas = barrejarArray(banco).slice(0, Math.min(15, banco.length)); s.sesionIndex = 0; s.encertsSesion = 0; }
   const pOriginal = s.sesionPreguntas[s.sesionIndex]; if(!pOriginal) return;
   const pNorm = normalizarPregunta(pOriginal); const textCorrecte = pNorm.a[pNorm.ok]; const opcionsBarrejades = barrejarArray(pNorm.a); const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
-  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.sesionIndex)}; s.current = p;
+  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || (catNet + '_' + s.sesionIndex), ruta_panel: pOriginal.ruta_panel, ruta: pOriginal.ruta, emoji: pOriginal.emoji, forma: pOriginal.forma, tip: pOriginal.tip, explicacio: pOriginal.explicacio, subtema: pOriginal.subtema, pag: pOriginal.pag}; s.current = p; s.currentOriginal = pOriginal;
   pintarImatgeSiExisteix(catNet, pOriginal); pintarImatgeSiExisteix(catReal, pOriginal);
   const preguntaEl = document.getElementById(`test-${catNet}-pregunta`) || document.getElementById(`test-${catReal}-pregunta`) || document.getElementById(`test-${cat}-pregunta`);
   if(preguntaEl){ const audioSafe = (p.q||'').replace(/'/g, "\\'"); preguntaEl.innerHTML = `${s.sesionIndex+1}/15 - ${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
@@ -1563,84 +1612,55 @@ function carregarPregunta(cat) {
 }
 function parlar(text) { if('speechSynthesis' in window){ speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'es-ES'; utterance.rate = 0.9; speechSynthesis.speak(utterance); } }
 
-// ===== FIX V14.2 - DESBLOQUEO UNIVERSAL SIGUIENTE + TIP SIEMPRE VISIBLE =====
-function desbloquearSiguienteUniversal(){
-  const ids = ['btn-sig-test-senales','btn-sig-test-senyals','btn-sig-test-normas','btn-sig-test-normes','btn-sig-test-mecanica','btn-sig-test-auxilios','btn-sig-test-auxilis','btn-sig-test-medio_ambiente','btn-sig-test-mediambient','btn-sig-test-medioambiente','btn-sig-test-general','btn-sig-test-trampas','btn-sig-test-trampes','btn-sig-examen','btn-sig-sit-clima','btn-sig-sit-urbano','btn-sig-sit-carretera','btn-sig-sit-emergencia','siguiente-btn','btn-sig'];
-  ids.forEach(id=>{
-    const b = document.getElementById(id);
-    if(b){ b.disabled=false; b.style.opacity='1'; b.style.pointerEvents='auto'; b.classList.remove('bloqueado','disabled'); }
-  });
-}
-
+// ===== FIX V14.3.1 - RESPONDER TEST - DESBLOQUEO TOTAL + TIP FIJO =====
 function respondreTest_V94(cat, idx, el) {
   if(!potFerTests()) return mostrarPopupPase();
   const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const s = estat.test[catNet] || estat.test[cat]; if(!s ||!s.current) return;
   const p = s.current;
-  const cont = document.getElementById(`test-${catNet}-opciones`) || document.getElementById(`test-${cat}-opciones`) || document.getElementById(`test-${catNet}-opciones`);
+  const cont = document.getElementById(`test-${catNet}-opciones`) || document.getElementById(`test-${cat}-opciones`);
   if(!cont || cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return;
   cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada'));
   const correcte = idx === p.ok;
   if(correcte) { el.classList.add('correcta'); s.encerts++; s.encertsSesion++; s.ratxa++; s.puntuacio += 10 + (s.ratxa * 2); estat.coins += 5; mostrarEmoji(true, el); }
-  else { el.classList.add('incorrecta'); const ops = cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta'); s.ratxa = 0; registrarFallada(catNet, p.subtema, p.pag, p); mostrarEmoji(false, el); }
+  else { el.classList.add('incorrecta'); const ops = cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta'); s.ratxa = 0; registrarFallada(catNet, p.subtema, p.pag, s.currentOriginal||p); mostrarEmoji(false, el); }
   actualizarMetricasTest(catNet, p.id, correcte); registrarHistorialPregunta(p.id, correcte); actualitzarCoins(); guardar();
-  // FIX V14.2 - TIP SIEMPRE VISIBLE - NUNCA VACIO
   const tipDiv = document.getElementById(`test-${catNet}-tip`) || document.getElementById(`test-${cat}-tip`);
   if(tipDiv){
-    const txtReal = p.tip || p.explicacion || p.explicacio || "";
-    const txtFinal = txtReal!==""? txtReal : `CONSEJO DGT: Repasa la ficha T-${(p.tema||'').toUpperCase()} en TEMARIO. La respuesta más segura y conservadora es la correcta.`;
+    const txtReal = (s.currentOriginal?.tip || s.currentOriginal?.explicacio || p.tip || p.explicacio || "").trim();
+    const txtFinal = txtReal!==""? txtReal : `Recuerda: la respuesta más segura y conservadora es siempre la correcta en DGT. Repasa ficha ${p.subtema||'general'}.`;
     tipDiv.innerHTML = `💡 <b>CONSEJO DGT:</b> ${txtFinal}`;
-    tipDiv.style.display = 'block'; tipDiv.style.border = '2px solid #00D9FF'; tipDiv.style.background = '#fff9c4'; tipDiv.style.color = '#000'; tipDiv.style.padding = '14px'; tipDiv.style.borderRadius = '12px'; tipDiv.style.marginTop = '12px'; tipDiv.style.fontWeight = '600'; tipDiv.style.fontSize = '13px'; tipDiv.style.lineHeight = '1.4';
+    tipDiv.style.display = 'block'; tipDiv.style.border = '2px solid #00D9FF'; tipDiv.style.background = '#fff9c4'; tipDiv.style.color = '#000'; tipDiv.style.padding = '14px'; tipDiv.style.borderRadius = '12px'; tipDiv.style.marginTop = '12px'; tipDiv.style.fontWeight = '600'; tipDiv.style.fontSize = '13px';
   }
-  desbloquearSiguienteUniversal();
+  // FIX SIGUIENTE - desbloqueo forzado triple
+  setTimeout(()=>{ desbloquearSiguienteUniversal(); }, 10);
+  setTimeout(()=>{ desbloquearSiguienteUniversal(); }, 150);
+  setTimeout(()=>{ desbloquearSiguienteUniversal(); }, 400);
 }
 function seguentTest(e, cat) {
   e.preventDefault(); const catNet = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); const s = estat.test[catNet] || estat.test[cat]; if(!s) return; s.sesionIndex++; s.idx++;
   if(s.sesionIndex >= s.totalSesion){
     const pct = Math.round((s.encertsSesion / s.totalSesion)*100); const msg = s.encertsSesion >= 12? '🔥 ¡TANDA PERFECTA!' : s.encertsSesion >= 9? '💪 ¡Buen trabajo!' : '📚 Sigue practicando';
     const modal = document.createElement('div'); modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
-    modal.innerHTML = `<div style="background:#1a1a1a; border:3px solid #00D9FF; border-radius:20px; padding:24px; max-width:340px; width:100%; text-align:center;"><h2 style="color:#00D9FF; margin-bottom:10px;">${msg}</h2><div style="font-size:42px; font-weight:800; color:#FFD700; margin:10px 0;">${s.encertsSesion}/${s.totalSesion}</div><div style="color:#fff; font-size:18px;">${pct}% aciertos</div><div style="color:#2ecc71; margin-top:10px;">+${s.encertsSesion*5} coins ganados</div><button id="btn-continuar-tanda" style="background:#00D9FF; color:#000; border:none; padding:12px 20px; border-radius:12px; font-weight:800; margin-top:16px; width:100%; cursor:pointer;">Siguiente tanda de 15 →</button></div>`;
+    modal.innerHTML = `<div style="background:#1a1a1a; border:3px solid #00D9FF; border-radius:20px; padding:24px; max-width:340px; width:100%; text-align:center;"><h2 style="color:#00D9FF; margin-bottom:10px;">${msg}</h2><div style="font-size:42px; font-weight:800; color:#FFD700; margin:10px 0;">${s.encertsSesion}/${s.totalSesion}</div><div style="color:#fff; font-size:18px;">${pct}% aciertos</div><div style="color:#2ecc71; margin-top:10px;">+${s.encertsSesion*5} coins</div><button id="btn-continuar-tanda" style="background:#00D9FF; color:#000; border:none; padding:12px 20px; border-radius:12px; font-weight:800; margin-top:16px; width:100%; cursor:pointer;">Siguiente tanda de 15 →</button></div>`;
     document.body.appendChild(modal); document.getElementById('btn-continuar-tanda').onclick = () => { modal.remove(); s.sesionPreguntas = []; s.sesionIndex = 0; s.encertsSesion = 0; carregarPregunta(catNet); }; return;
   } carregarPregunta(catNet);
 }
 function carregarSituacio(cat) {
   if(!cat) cat = sitCategoriaActiva;
   const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-  let keySit = catNorm;
-  if(catNorm==='urbano' || catNorm==='urba') keySit='urbà';
-  if(catNorm==='emergencia') keySit='emergència';
-  if(catNorm==='urbano') keySit='urbano';
+  let keySit = catNorm; if(catNorm==='urbano' || catNorm==='urba') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència'; if(catNorm==='urbano') keySit='urbano';
   let banco = null;
-  if(typeof SITUACIONS!=='undefined'){
-    banco = SITUACIONS[cat] || SITUACIONS[catNorm] || SITUACIONS[keySit] || SITUACIONS['clima'] || null;
-    for(let k in SITUACIONS){ if(k.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")===catNorm) { banco = SITUACIONS[k]; break; } }
-  }
-  if(!banco || banco.length===0){
-    if(typeof PREGUNTES!=='undefined'){
-      const fallbackCat = catNorm==='urbano'?'normas': catNorm==='carretera'?'normas': catNorm==='emergencia'?'auxilios': catNorm==='clima'?'normas':'general';
-      banco = PREGUNTES[fallbackCat] || PREGUNTES['general'] || [];
-    }
-  }
-  if(!banco || banco.length===0){
-    const preEl = document.getElementById(`sit-${cat}-pregunta`) || document.getElementById(`sit-${catNorm}-pregunta`) || document.getElementById(`sit-${keySit}-pregunta`);
-    if(preEl) preEl.textContent = `No hay datos de ${cat}. Revisa SITUACIONS.js - ${Object.keys(SITUACIONS||{}).join(', ')}`;
-    const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${catNorm}-opciones`);
-    if(cont) cont.innerHTML = `<div style="padding:20px;text-align:center;color:#999">No hay casos de ${cat}. Haz TEST primero para desbloquear.<br><button onclick="carregarPregunta('normas')" style="margin-top:10px;background:#00D9FF;border:none;padding:10px 16px;border-radius:8px;font-weight:700">Ir a TEST Normas</button></div>`;
-    return;
-  }
-  const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm] || estat.sit['clima'];
-  if(!s){ console.warn('estat.sit no tiene',cat); return; }
-  sitCategoriaActiva = catNorm;
+  if(typeof SITUACIONS!=='undefined'){ banco = SITUACIONS[cat] || SITUACIONS[catNorm] || SITUACIONS[keySit] || SITUACIONS['clima'] || null; for(let k in SITUACIONS){ if(k.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")===catNorm) { banco = SITUACIONS[k]; break; } } }
+  if(!banco || banco.length===0){ if(typeof PREGUNTES!=='undefined'){ const fallbackCat = catNorm==='urbano'?'normas': catNorm==='carretera'?'normas': catNorm==='emergencia'?'auxilios': catNorm==='clima'?'normas':'general'; banco = PREGUNTES[fallbackCat] || PREGUNTES['general'] || []; } }
+  if(!banco || banco.length===0) return;
+  const s = estat.sit[cat] || estat.sit[keySit] || estat.sit[catNorm] || estat.sit['clima']; if(!s){ return; } sitCategoriaActiva = catNorm;
   const casos = barrejarArray(banco); if(!casos || casos.length === 0) return;
-  const pOriginal = casos[s.idx % casos.length]; const pNorm = normalizarPregunta(pOriginal);
-  const opcionsBarrejades = barrejarArray(pNorm.a); const textCorrecte = pNorm.a[pNorm.ok]; const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte); const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte}; s.current = p;
-  const preEl = document.getElementById(`sit-${cat}-pregunta`) || document.getElementById(`sit-${keySit}-pregunta`) || document.getElementById(`sit-${catNorm}-pregunta`) || document.getElementById('sit-clima-pregunta');
-  if(preEl) preEl.textContent = p.q;
-  const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`) || document.getElementById(`sit-${catNorm}-opciones`) || document.getElementById('sit-clima-opciones');
-  if(!cont) return; cont.innerHTML = '';
+  const pOriginal = casos[s.idx % casos.length]; const pNorm = normalizarPregunta(pOriginal); const opcionsBarrejades = barrejarArray(pNorm.a); const textCorrecte = pNorm.a[pNorm.ok]; const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte); const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte}; s.current = p;
+  const preEl = document.getElementById(`sit-${cat}-pregunta`) || document.getElementById(`sit-${keySit}-pregunta`) || document.getElementById(`sit-${catNorm}-pregunta`) || document.getElementById('sit-clima-pregunta'); if(preEl) preEl.textContent = p.q;
+  const cont = document.getElementById(`sit-${cat}-opciones`) || document.getElementById(`sit-${keySit}-opciones`) || document.getElementById(`sit-${catNorm}-opciones`) || document.getElementById('sit-clima-opciones'); if(!cont) return; cont.innerHTML = '';
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreSituacio_V94(catNorm, i, this); }; cont.appendChild(div); });
-  const btn = document.getElementById(`btn-sig-sit-${cat}`) || document.getElementById(`btn-sig-sit-${catNorm}`) || document.getElementById('btn-sig-sit-clima');
-  if(btn){ btn.disabled=true; btn.style.opacity='0.4'; btn.textContent='Elige una opción'; }
+  const btn = document.getElementById(`btn-sig-sit-${cat}`) || document.getElementById(`btn-sig-sit-${catNorm}`) || document.getElementById('btn-sig-sit-clima'); if(btn){ btn.disabled=true; btn.style.opacity='0.4'; }
 }
 function respondreSituacio_V94(cat, idx, el) {
   if(!potFerTests()) return mostrarPopupPase(); const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); let keySit = cat; if(catNorm==='urbano') keySit='urbà'; if(catNorm==='emergencia') keySit='emergència';
@@ -1651,6 +1671,8 @@ function respondreSituacio_V94(cat, idx, el) {
   const btn = document.getElementById(`btn-sig-sit-${cat}`) || document.getElementById(`btn-sig-sit-${catNorm}`) || document.getElementById('btn-sig-sit-clima'); if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.textContent='Siguiente →'; }
 }
 function seguentSituacio(e, cat) { e.preventDefault(); const catNorm = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); if(estat.sit[cat]) estat.sit[cat].idx++; if(estat.sit[catNorm]) estat.sit[catNorm].idx++; carregarSituacio(catNorm||cat); }
+
+// ===== V14.3.1 - EXAMEN 30 - FIX IMAGEN + TIP + SIGUIENTE =====
 function iniciarExamen(e) {
   if(!potFerTests()) return mostrarPopupPase(); let totes = [];
   if(typeof PREGUNTES!== 'undefined') { for(let key in PREGUNTES) { if(Array.isArray(PREGUNTES[key])) totes = totes.concat(PREGUNTES[key]); } }
@@ -1661,14 +1683,32 @@ function iniciarExamen(e) {
 }
 function iniciarTimerExamen() { clearInterval(estat.examen.timer); estat.examen.temps = 1800; estat.examen.timer = setInterval(() => { estat.examen.temps--; const min = Math.floor(estat.examen.temps / 60); const seg = estat.examen.temps % 60; const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = `${min.toString().padStart(2,'0')}:${seg.toString().padStart(2,'0')}`; if(estat.examen.temps <= 0) finalitzarExamen(); }, 1000); }
 function carregarPreguntaExamen() {
-  if(estat.examen.index >= 30) return finalitzarExamen(); const pOriginal = estat.examen.preguntes[estat.examen.index]; const pNorm = normalizarPregunta(pOriginal); const textCorrecte = pNorm.a[pNorm.ok]; const opcionsBarrejades = barrejarArray(pNorm.a); const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
-  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || ('examen_' + estat.examen.index)}; estat.examen.preguntes[estat.examen.index] = p; pintarImatgeSiExisteix('examen', pOriginal);
+  if(estat.examen.index >= 30) return finalitzarExamen();
+  const pOriginal = estat.examen.preguntes[estat.examen.index];
+  const pNorm = normalizarPregunta(pOriginal);
+  const textCorrecte = pNorm.a[pNorm.ok];
+  const opcionsBarrejades = barrejarArray(pNorm.a);
+  const nouIndexCorrecte = opcionsBarrejades.indexOf(textCorrecte);
+  const p = {...pNorm, a: opcionsBarrejades, ok: nouIndexCorrecte, q: pNorm.q, id: pOriginal.id || ('examen_' + estat.examen.index), ruta_panel: pOriginal.ruta_panel, ruta: pOriginal.ruta, emoji: pOriginal.emoji, forma: pOriginal.forma, tip: pOriginal.tip, explicacio: pOriginal.explicacio};
+  estat.examen.preguntes[estat.examen.index] = p;
+  estat.examen.currentOriginal = pOriginal;
+  // V14.3.1: usa misma ruta_panel que TEST - si no hay JPG oculta
+  pintarImatgeSiExisteix('examen', pOriginal);
   const numEl = document.getElementById('examen-num'); if(numEl) numEl.textContent = estat.examen.index + 1; const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = `${(estat.examen.index/30)*100}%`;
   const preEl = document.getElementById('examen-pregunta'); if(preEl) { const audioSafe = (p.q||'').replace(/'/g, "\\'"); preEl.innerHTML = `${p.q} <button class="btn-audio" onclick="parlar('${audioSafe}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; margin-left:8px;">🔊</button>`; }
-  const cont = document.getElementById('examen-opciones'); if(!cont) return; cont.innerHTML = ''; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; } const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
+  const cont = document.getElementById('examen-opciones'); if(!cont) return; cont.innerHTML = ''; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = true; btnSig.style.opacity = '0.4'; btnSig.style.pointerEvents='none'; } const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; }
   p.a.forEach((txt, i) => { const div = document.createElement('div'); div.className = 'opcio'; div.textContent = txt; div.onclick = function() { respondreExamen(i, this); }; cont.appendChild(div); });
 }
-function respondreExamen(idx, el) { const p = estat.examen.preguntes[estat.examen.index]; const cont = document.getElementById('examen-opciones'); if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return; cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada')); const correcte = idx === p.ok; if(correcte) { el.classList.add('correcta'); estat.examen.encerts++; estat.coins += 20; } else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); estat.examen.fallos++; registrarFallada('examen', p.subtema, p.pag, p); } const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; } const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; actualitzarCoins(); guardar(); const tipDiv = document.getElementById('examen-tip'); if(tipDiv){ tipDiv.innerHTML=''; tipDiv.style.display='none'; } }
+function respondreExamen(idx, el) {
+  const p = estat.examen.preguntes[estat.examen.index]; const cont = document.getElementById('examen-opciones'); if(cont.querySelector('.correcta') || cont.querySelector('.incorrecta')) return; cont.querySelectorAll('.opcio').forEach(o => o.classList.add('bloquejada')); const correcte = idx === p.ok;
+  if(correcte) { el.classList.add('correcta'); estat.examen.encerts++; estat.coins += 20; } else { el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok].classList.add('correcta'); estat.examen.fallos++; registrarFallada('examen', p.subtema, p.pag, estat.examen.currentOriginal||p); }
+  const btnSig = document.getElementById('btn-sig-examen'); if(btnSig){ btnSig.disabled = false; btnSig.style.opacity = '1'; btnSig.style.pointerEvents='auto'; }
+  const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = estat.examen.encerts; actualitzarCoins(); guardar();
+  // TIP examen siempre visible
+  const tipDiv = document.getElementById('examen-tip');
+  if(tipDiv){ const orig = estat.examen.currentOriginal||p; const txtReal = (orig.tip||orig.explicacio||p.tip||"").trim(); const txtFinal = txtReal!==""? txtReal : "Aplica la norma más segura. En duda, la opción conservadora es la correcta."; tipDiv.innerHTML = `💡 <b>CONSEJO:</b> ${txtFinal}`; tipDiv.style.display='block'; tipDiv.style.background='#fff9c4'; tipDiv.style.color='#000'; tipDiv.style.padding='12px'; tipDiv.style.borderRadius='10px'; tipDiv.style.marginTop='10px'; }
+  desbloquearSiguienteUniversal();
+}
 function seguentPreguntaExamen(e) { e.preventDefault(); estat.examen.index++; if(estat.examen.index >= 30) { finalitzarExamen(); } else { carregarPreguntaExamen(); } }
 function finalitzarExamen() {
   clearInterval(estat.examen.timer); estat.examen.activa = false; const nota = estat.examen.encerts; const aprovat = nota >= 27; PROGRESO.examen.realitzats++; if(aprovat) PROGRESO.examen.aprovats++; PROGRESO.examen.historial.push({data: estat.stats.diaActual, nota}); guardar();
@@ -1676,7 +1716,7 @@ function finalitzarExamen() {
   if(aprovat) { res.innerHTML = `<h2 style="color:#2ecc71">✅ ¡APROBADO!</h2><p style="font-size:24px">${nota}/30</p><button class="btn" onclick="reiniciarExamen()">Hacer otro examen</button>`; estat.coins += nota * 20; } else { res.innerHTML = `<h2 style="color:#e74c3c">❌ SUSPENSO</h2><p style="font-size:24px">${nota}/30</p><p>Necesitas 27</p><button class="btn" onclick="reiniciarExamen()">Volver a intentar</button>`; }
   actualitzarCoins(); guardar(); actualitzarEstadistiques_V94();
 }
-function reiniciarExamen() { const resEl = document.getElementById('examen-resultat'); if(resEl) resEl.style.display = 'none'; const btnIni = document.getElementById('btn-iniciar-examen'); if(btnIni) btnIni.style.display = 'block'; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig) btnSig.style.display = 'none'; const preEl = document.getElementById('examen-pregunta'); if(preEl) preEl.textContent = "Pulsa Inicia el Examen"; const opEl = document.getElementById('examen-opciones'); if(opEl) opEl.innerHTML = ''; const numEl = document.getElementById('examen-num'); if(numEl) numEl.textContent = '0'; const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = '0'; const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = '0%'; const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = '30:00'; const imgEl = document.getElementById('examen-imagen'); if(imgEl) imgEl.innerHTML = ''; }
+function reiniciarExamen() { const resEl = document.getElementById('examen-resultat'); if(resEl) resEl.style.display = 'none'; const btnIni = document.getElementById('btn-iniciar-examen'); if(btnIni) btnIni.style.display = 'block'; const btnSig = document.getElementById('btn-sig-examen'); if(btnSig) btnSig.style.display = 'none'; const preEl = document.getElementById('examen-pregunta'); if(preEl) preEl.textContent = "Pulsa Inicia el Examen"; const opEl = document.getElementById('examen-opciones'); if(opEl) opEl.innerHTML = ''; const numEl = document.getElementById('examen-num'); if(numEl) numEl.textContent = '0'; const acEl = document.getElementById('examen-aciertos'); if(acEl) acEl.textContent = '0'; const progEl = document.getElementById('examen-progress'); if(progEl) progEl.style.width = '0%'; const timerEl = document.getElementById('examen-timer'); if(timerEl) timerEl.textContent = '30:00'; const imgEl = document.getElementById('examen-imagen'); if(imgEl) imgEl.innerHTML = ''; const tipEl = document.getElementById('examen-tip'); if(tipEl){ tipEl.innerHTML=''; tipEl.style.display='none'; } }
 function carregarGaratge() {
   const cont = document.getElementById('garage-lista') || document.getElementById('garaje-lista'); if(!cont) return; cont.innerHTML = ''; let hpTotal = 90;
   estat.accessoris.forEach(id => { const acc = (typeof ACCESORIOS!=='undefined'? ACCESORIOS.find(a => a.id === id) : null) || (typeof ACCESSORIS!=='undefined'? ACCESSORIS.find(a => a.id === id) : null); if(acc) hpTotal += (acc.hp||0); });
@@ -1693,8 +1733,8 @@ function carregarBotiga() {
 }
 function comprarAccessoris(id) { const lista = (typeof ACCESORIOS!=='undefined'? ACCESORIOS : ACCESSORIS); const acc = lista.find(a => a.id === id); if(!acc) return; const precio = acc.precio || acc.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; } estat.coins -= precio; if(!estat.accessoris.includes(id)) estat.accessoris.push(id); guardar(); actualitzarCoins(); carregarBotiga(); carregarGaratge(); }
 function comprarEmoji(id) { const lista = (typeof EMOJI_TIENDA!=='undefined'? EMOJI_TIENDA : EMOJI_BOTIGA); const emoji = lista.find(e => e.id === id); if(!emoji) return; const precio = emoji.precio || emoji.preu || 0; if(estat.coins < precio) { alert('💰 Faltan monedas'); return; } estat.coins -= precio; if(!estat.emojis.includes(id)) estat.emojis.push(id); guardar(); actualitzarCoins(); carregarBotiga(); }
-function carregarTemari() { if(typeof carregarTemari_V14==='function'){ carregarTemari_V14(); return; } const container = document.getElementById('temari-lista') || document.getElementById('temario-lista'); if(container){ container.innerHTML = `<div style="text-align:center; color:#666; padding:20px;">V14.2 activo - 22 fichas + 5 links directos share.google - pestaña ESTUDIO RÁPIDO 10 MIN</div>`; } }
-function obrirPDF(ruta) { console.warn('V14.2 - obrirPDF obsoleto, usa obrirFichaJPG o obrirBibliotecaOficial'); if(typeof obrirBibliotecaOficial==='function'){ obrirBibliotecaOficial('01'); return; } if(typeof obrirFichaJPG==='function') obrirFichaJPG('ficha-t01a'); }
+function carregarTemari() { if(typeof carregarTemari_V14==='function'){ carregarTemari_V14(); return; } }
+function obrirPDF(ruta) { if(typeof obrirBibliotecaOficial==='function'){ obrirBibliotecaOficial('01'); return; } if(typeof obrirFichaJPG==='function') obrirFichaJPG('ficha-t01a'); }
 function tancarPDF() { const modal = document.getElementById('pdf-modal'); if(modal) modal.remove(); }
 function carregarTips() {
   if(typeof TIPS === 'undefined' ||!TIPS || TIPS.length===0){ const cont = document.getElementById('tip-content'); if(cont) cont.innerHTML = '<div style="color:#999; text-align:center; padding:20px;">No hay tips cargados.<br>Verifica TIPS.js</div>'; return; }
@@ -1715,7 +1755,7 @@ function dibujarGraficaEvolucion() {
   ctx.strokeStyle = '#00D9FF'; ctx.lineWidth = 3; ctx.beginPath(); dades.forEach((d,i)=>{ const x = 30 + (i * (canvas.width-60)/Math.max(1, dades.length-1)); const y = canvas.height - 30 - (d.global/100 * (canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke();
 }
 function mostrarIntro(){}
-function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "V14.2 - 22 fichas + 5 links temario directo + Tests con imagen y TIP fijo ¡Vamos! 💪"; }
+function actualitzarMissatgeMotivacional() { const el = document.getElementById('motivacio'); if(el) el.textContent = "V14.3.1 - Fix EXAMEN + SIGUIENTE + TIP 💪"; }
 function canviarTab_V94(e, tab) {
   const tabTemari = document.getElementById('tab-temari'); if(tabTemari && tabTemari.classList.contains('active') && tempsIniciTemari!== null) { const minutsPassats = (Date.now() - tempsIniciTemari) / 1000 / 60; estat.stats.tempsEstudiatAvui += minutsPassats; tempsIniciTemari = null; guardar(); }
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1736,4 +1776,4 @@ function canviarSubTab(e, tab, subtab) {
 function mostrarEmoji(encert, element) {
   const llista = encert? ['✅','💪','🔥'] : ['❌','💥','😅']; const emoji = llista[Math.floor(Math.random() * llista.length)]; const span = document.createElement('span'); span.textContent = emoji; span.style.cssText = 'position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;pointer-events:none;'; element.style.position = 'relative'; element.appendChild(span); setTimeout(() => span.remove(), 600); if(navigator.vibrate) navigator.vibrate(encert? [30][20][30] : 100);
 }
-if('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW V14.2 registrado')).catch(err => console.log('SW error:', err)); }); }
+if('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW V14.3.1 registrado')).catch(err => console.log('SW error:', err)); }); }
