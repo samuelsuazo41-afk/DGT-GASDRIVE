@@ -1,41 +1,39 @@
-// ===== GASDRIVE DGT - service-worker.js V14.1 PRO - OFFLINE-FIRST 100% =====
-// 👉 PARA FORZAR ACTUALIZACIÓN EN MÓVILES: sube este número: v14.1 -> v14.2 -> v14.3 etc.
-// Cada vez que cambies este string, todos los usuarios descargarán la nueva versión automáticamente
-const CACHE_VERSION = 'v14.1';
-const CACHE_NAME = `gasdrive-${CACHE_VERSION}-23fichas-2025-12`;
+// ===== GASDRIVE DGT - service-worker.js V14.2 FINAL - 22 FICHAS REALES EXACTAS =====
+const CACHE_VERSION = 'v14.2-22fichas-reales-fix';
+const CACHE_NAME = `gasdrive-${CACHE_VERSION}-2025-12`;
 
 const CORE_FILES = [
   './',
   './index.html',
-  './app.js',
+  './app.js?v=14.2',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
   './senales.json'
 ];
 
-// 22 FICHAS REALES V3-FINAL - TUS NOMBRES LARGOS EXACTOS DE GITHUB
+// 22 FICHAS REALES - NOMBRES EXACTOS DE TU REPO RAIZ - CORREGIDOS 100%
 const FICHAS_T = [
-  './ficha-t01a-definiciones-masas-clasificacion-vehiculos-v3-final.jpg',
+  './ficha-t01a-definiciones-masas-clasificacion-v3-final.jpg',
   './ficha-t02a-via-partes-definiciones-v3-final.jpg',
   './ficha-t02b-via-partes-marcas-v3-final.jpg',
   './ficha-t02c-via-intersecciones-velocidades-v3-final.jpg',
   './ficha-t03a-senalizacion-vertical-peligro-v3-final.jpg',
-  './ficha-t03b-senalizacion-semaforos-baliza-v3-final.jpg',
+  './ficha-t03b-senalizacion-semaforos-balizamiento-v3-final.jpg',
   './ficha-t04a-maniobras-definiciones-v3-final.jpg',
-  './ficha-t04b-maniobras-adelantamiento-v3-final.jpg',
+  './ficha-t04b-maniobras-adelantamiento-parada-v3-final.jpg',
   './ficha-t05a-conductor-estado-psicofisico-v3-final.jpg',
-  './ficha-t05b-alcohol-drogas-medicamentos-v3-final.jpg',
+  './ficha-t05b-alcohol-drogas-medicamentos-sanciones-v3-final.jpg',
   './ficha-t06a-vehiculo-seguridad-activa-v3-final.jpg',
-  './ficha-t06b-seguridad-pasiva-frenos-itv-v3-final.jpg',
+  './ficha-t06b-seguridad-pasiva-frenos-itv-mantenimiento-v3-final.jpg',
   './ficha-t07a-accidentes-pas-primeros-auxilios-v3-final.jpg',
-  './ficha-t07b-accidentes-conducta-pas-bioseguridad-v3-final.jpg',
+  './ficha-t07b-accidentes-conducta-pas-v3-final.jpg',
   './ficha-t08a-luces-alumbrado-v3-final.jpg',
   './ficha-t08b-senalizacion-vehiculos-luces-v3-final.jpg',
-  './ficha-t09a-conduccion-velocidades-tipos-via-v3-final.jpg',
+  './ficha-t09a-conduccion-velocidades-tiempos-v3-final.jpg',
   './ficha-t09b-intersecciones-glorietas-adelantamiento-v3-final.jpg',
   './ficha-t10a-iluminacion-carga-v3-final.jpg',
-  './ficha-t10b-masa-dimensiones-remolque-v3-final.jpg',
+  './ficha-t10b-masa-dimensiones-remolque-senales-v-v3-final.jpg',
   './ficha-t11a-permisos-conducir-clases-v3-final.jpg',
   './ficha-t11b-puntos-validez-cap-itv-v3-final.jpg'
 ];
@@ -62,12 +60,12 @@ const FAMILIAS = [
 const FILES_TO_CACHE = [...CORE_FILES, ...FICHAS_T, ...FAMILIAS];
 
 self.addEventListener('install', event => {
-  console.log(`[SW ${CACHE_VERSION}] Instalando:`, FILES_TO_CACHE.length, 'archivos');
+  console.log(`[SW ${CACHE_VERSION}] Instalando:`, FILES_TO_CACHE.length, 'archivos - 22 fichas reales');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(FILES_TO_CACHE.map(url => new Request(url, {cache: 'reload'}))))
       .then(() => self.skipWaiting())
-      .catch(err => console.warn(`[SW ${CACHE_VERSION}] Algunos archivos no encontrados:`, err))
+      .catch(err => console.warn(`[SW ${CACHE_VERSION}] Algunos archivos no encontrados (familias opcionales):`, err))
   );
 });
 
