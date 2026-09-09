@@ -1218,18 +1218,14 @@ function obrirPDF(){console.warn("V14.3.7 obsoleto - usa obrirFichaJPG");}
 function tancarPDF(){}
 
 function obtenirDetallRealPregunta(pregunta){if(!pregunta)return{nom:'General',desc:'General',temari:'TEMARIO 1',pag:1,panel:'',biblioteca:'02'};const codi=(pregunta.codi||pregunta.panel_id||'').toUpperCase();const nombre=(pregunta.nombre_senal||pregunta.nombre||'').toUpperCase();const ruta=(pregunta.ruta_panel||pregunta.ruta||'').toUpperCase();const q=(pregunta.q||pregunta.pregunta||'').toUpperCase();for(let i=1;i<=15;i++){const key=`N-${i.toString().padStart(2,'0')}`;if(codi.includes(key)||ruta.includes(key)||nombre.includes(key)){return{...MAPA_PANELLS_DETALLAT[key],panel:key};}}if(codi.includes('S-100')||ruta.includes('S-100')||codi.match(/S-10[0-9]/)||nombre.includes('S-10'))return{...MAPA_PANELLS_DETALLAT['S-100'],panel:'S-100'};if(codi.includes('S-200')||ruta.includes('S-200'))return{...MAPA_PANELLS_DETALLAT['S-200'],panel:'S-200'};if(codi.includes('S-300')||ruta.includes('S-300'))return{...MAPA_PANELLS_DETALLAT['S-300'],panel:'S-300'};if(codi.startsWith('S-')||ruta.includes('S-')){if(codi.startsWith('S-1')||nombre.includes('SERVICIO')||q.includes('SERVICIO')||q.includes('GASOLINERA'))return{...MAPA_PANELLS_DETALLAT['S-100'],panel:'S-100'};}if(codi.startsWith('P-')||ruta.startsWith('P-'))return{...MAPA_PANELLS_DETALLAT['P-'],panel:'P-'};if(codi.startsWith('R-')||ruta.startsWith('R-'))return{...MAPA_PANELLS_DETALLAT['R-'],panel:'R-'};if(codi.startsWith('M-')||ruta.startsWith('M-')||q.includes('MOTOR')||q.includes('BATERIA')||q.includes('HIBRIDO'))return{...MAPA_PANELLS_DETALLAT['M-'],panel:'M-'};if(codi.startsWith('A-')||ruta.startsWith('A-')||q.includes('CASCO')||q.includes('RCP')||q.includes('HEMORRAGIA'))return{...MAPA_PANELLS_DETALLAT['A-'],panel:'A-'};if(codi.startsWith('E-')||ruta.startsWith('E-')||q.includes('ZBE')||q.includes('CONTAMINACION'))return{...MAPA_PANELLS_DETALLAT['E-'],panel:'E-'};for(let key in MAPEO_PALABRAS_CLAVE){if((pregunta.q||pregunta.pregunta||'').toLowerCase().includes(key)){const m=MAPEO_PALABRAS_CLAVE[key];return{nom:m.subtema,desc:m.subtema,temari:'TEMARIO 2',pag:m.pag,panel:key,biblioteca:'02'};}}return{nom:pregunta.nombre_senal||pregunta.codi||'General',desc:pregunta.nombre_senal||'General',temari:'TEMARIO 1',pag:1,panel:codi||'',biblioteca:'02'};}
-function autoMapearTotesPreguntes(){let idCounter=1;if(typeof PREGUNTES==='undefined'){console.warn('PREGUNTES no definido aun');return;}for(let cat in PREGUNTES){PREGUNTES[cat]=PREGUNTES[cat].map(p=>{const detall=obtenirDetallRealPregunta(p);return{...p,id:p.id||idCounter++,subtema:detall.nom,pag:detall.pag,detallReal:detall,familia:detall.familia};});}console.log('✅ V14.3.8 MAPEADO - Total:',getTotalBanco());}
+function autoMapearTotesPreguntes(){let idCounter=1;if(typeof PREGUNTES==='undefined'){console.warn('PREGUNTES no definido aun');return;}for(let cat in PREGUNTES){PREGUNTES[cat]=PREGUNTES[cat].map(p=>{const detall=obtenirDetallRealPregunta(p);return{...p,id:p.id||idCounter++,subtema:detall.nom,pag:detall.pag,detallReal:detall,familia:detall.familia};});}console.log('✅ V14.3.12 MAPEADO - Total:',getTotalBanco());}
 function registrarFallada(categoria,subtema,pagina,preguntaOriginal){if(!subtema||subtema==='undefined')subtema='General';if(!pagina)pagina=1;if(!estat.stats.puntsDebils)estat.stats.puntsDebils={};if(!estat.stats.puntsDebils[categoria])estat.stats.puntsDebils[categoria]={};let clau=subtema;let detall=null;if(preguntaOriginal){detall=obtenirDetallRealPregunta(preguntaOriginal);clau=`${detall.familia} | ${detall.nom}`;pagina=detall.pag;}if(!estat.stats.puntsDebils[categoria][clau]){estat.stats.puntsDebils[categoria][clau]={fallos:0,pag:pagina,detall:detall||{nom:subtema,pag:pagina,temari:'TEMARIO 1',familia:subtema,biblioteca:'02'}};}estat.stats.puntsDebils[categoria][clau].fallos++;guardar();}
-function dibuixarPuntsDebils_V94(){const cont=document.getElementById('stats-debils-lista');if(!cont)return;cont.innerHTML='<h3 style="margin-bottom:15px; color:#00D9FF">📍 DONDE TIENES QUE MEJORAR - POR FAMILIA REAL + BIBLIOTECA OFICIAL</h3>';if(!estat.stats.puntsDebils||Object.keys(estat.stats.puntsDebils).length===0){cont.innerHTML+='<div style="text-align:center;color:#999; padding:20px;">Haz más tests para detectar tus puntos débiles reales<br><small>El sistema lee panel_id N-01..N-15, S-100, M-, A-, E- y te manda a biblioteca oficial</small></div>';return;}const categories=['senales','trampas','normas','mecanica','auxilios','medio_ambiente','mediambient'];const noms=['🚦 SEÑALES','🪤 TRAMPAS','📋 NORMAS','⚙️ MECÁNICA','🚑 AUXILIOS','♻️ MEDIO AMBIENTE'];categories.forEach((cat,i)=>{const keyReal=cat==='medio_ambiente'?'medio_ambiente':cat;if(!estat.stats.puntsDebils[keyReal]||Object.keys(estat.stats.puntsDebils[keyReal]).length===0){if(i<6)cont.innerHTML+=`<div style="margin-bottom:15px; padding:12px; background:#1a1a1a; border-radius:8px;"><div style="font-weight:700; color:#00D9FF">${noms[i]}</div><div style="color:#666">Aún no tienes datos - Haz tests</div></div>`;return;}let maxFallos=0;let pitjorClau='General';let detallMillor=null;for(let clau in estat.stats.puntsDebils[keyReal]){if(estat.stats.puntsDebils[keyReal][clau].fallos>maxFallos){maxFallos=estat.stats.puntsDebils[keyReal][clau].fallos;pitjorClau=clau;detallMillor=estat.stats.puntsDebils[keyReal][clau].detall;}}const detall=detallMillor||{nom:pitjorClau,desc:'',temari:'TEMARIO 1',pag:1,familia:pitjorClau,biblioteca:'02',panel:''};const bibId=detall.biblioteca||'02';const bibLink=(typeof TEMARIO_V14_CONFIG!=='undefined'&&TEMARIO_V14_CONFIG.bibliotecaLinks[bibId])?TEMARIO_V14_CONFIG.bibliotecaLinks[bibId]:TEMARIO_DGT_LINKS_FIJOS[0];const bibNombres={'01':'01 Temario Directo 1','02':'02 Temario Directo 2','03':'03 Temario Directo 3','04':'04 Temario Directo 4','05':'05 Temario Directo 5'};const bibNom=bibNombres[bibId]||`0${bibId} Temario Directo`;cont.innerHTML+=`<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px; font-size:15px">${noms[i]}</div><div style="color:#fff; font-weight:600; margin-bottom:4px">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b></div><div style="color:#ccc; font-size:12px; margin-bottom:8px">${detall.desc||detall.nom} - ${maxFallos} fallos ${detall.panel?` - Panel ${detall.panel}`:''}</div><div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;"><div style="color:#00D9FF; font-size:13px">👉 Repasa <b>${detall.temari||'TEMARIO 1'}</b> - Pág <b>${detall.pag||1}</b></div><button onclick="anarAPagina(${detall.pag||1})" style="background:#222; border:1px solid #00D9FF; border-radius:6px; padding:4px 10px; cursor:pointer; font-weight:700; color:#00D9FF; font-size:11px">Ir a Temario</button></div><div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;"><div style="color:#00D9FF; font-size:11px; font-weight:700; margin-bottom:4px">📚 ESTUDIO PROFUNDO - TEMARIO DIRECTO OFICIAL:</div><button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%; text-align:left;">📖 ${bibNom} → Reforzar tema: ${detall.familia||detall.nom} ↗</button></div></div>`;});}
-function actualitzarOrientacioV11(){const cont=document.getElementById('stats-orientacio-lista')||document.getElementById('orientacio-lista')||document.getElementById('stats-orientacio');if(!cont)return;cont.innerHTML=`<div style="background:#0a0a1a; padding:16px; border-radius:12px; border:2px solid #00D9FF; margin-bottom:16px;"><h3 style="color:#00D9FF; margin-bottom:10px;">🎯 EXAMEN DGT OFICIAL</h3><div style="color:#fff; font-size:13px; line-height:1.6;"><p>📋 30 preguntas - 3 opciones, 1 correcta</p><p>⏱️ 30 minutos - 27 aciertos para aprobar</p></div></div>`;}
-function anarAPagina(pagina){canviarTab_V94(null,'temari');}
-function actualitzarEstadistiques_V94(){const tab=document.getElementById('tab-estadistiques')||document.getElementById('tab-estad');if(!tab||!tab.classList.contains('active')){const maybeActive=document.querySelector('.tab-content.active');if(!maybeActive||!maybeActive.id.includes('estad'))return;}const stats=calcularPreparacioDGT_V94();const preparacioArrodonida=Math.round(stats.preparacio);const falta=Math.max(0,90-preparacioArrodonida);const el1=document.getElementById('stats-global-percent');if(el1)el1.textContent=preparacioArrodonida+'%';const el1b=document.getElementById('stats-global-falta')||document.getElementById('stats-global-text');if(el1b)el1b.textContent=preparacioArrodonida>=90?`✅ ${preparacioArrodonida}% - ¡Listo para DGT!`:`${preparacioArrodonida}% - Te falta ${falta}%`;const el2=document.getElementById('stats-global-bar');if(el2)el2.style.width=preparacioArrodonida+'%';const el3=document.getElementById('stats-domini-percent');if(el3)el3.textContent=Math.round(stats.retencio)+'%';const el4=document.getElementById('stats-domini-bar');if(el4)el4.style.width=Math.round(stats.retencio)+'%';const el5=document.getElementById('stats-constancia-percent');if(el5)el5.textContent=Math.round(stats.constancia)+'%';const el6=document.getElementById('stats-constancia-bar');if(el6)el6.style.width=Math.round(stats.constancia)+'%';const el7=document.getElementById('stats-constancia-label');if(el7)el7.textContent=`CONSTANCIA: ${stats.diesValids}/20 días válidos`;const el8=document.getElementById('stats-temari-percent');if(el8)el8.textContent=Math.round(stats.cobertura)+'%';const el9=document.getElementById('stats-temari-bar');if(el9)el9.style.width=Math.round(stats.cobertura)+'%';const el10=document.getElementById('stats-simulacres-percent');if(el10)el10.textContent=Math.round(stats.estabilitat)+'%';const el11=document.getElementById('stats-simulacres-bar');if(el11)el11.style.width=Math.round(stats.estabilitat)+'%';const el12=document.getElementById('stats-examen-aprobados');if(el12)el12.textContent=`Mejor racha: ${stats.maxRatxa}/6 aprobados seguidos`;dibujarGraficaEvolucion();dibuixarPuntsDebils_V94();actualitzarOrientacioV11();}
-function getDadesEvolucio(){return estat.stats.historialEvolucio.map(h=>{let diaNum='0';if(h.dia&&h.dia.includes('-')){diaNum=h.dia.split('-')[2]||'0';if(diaNum.includes('T'))diaNum=diaNum.split('T')[0];}else if(h.dia&&h.dia.includes('/')){diaNum=h.dia.split('/')[0];}else{diaNum=(h.dia||'').toString().substring(0,2);}diaNum=diaNum.replace(/^0+/,'')||'0';return{dia:diaNum,global:Math.round(h.percent||0)};});}
-function potFerTests(){comprovarNouDia();return estat.stats.paseCompletado;}
-function mostrarPopupPase(){const minutsQueFalten=Math.max(0,10-Math.floor(estat.stats.tempsEstudiatAvui));alert(`⛔ PASE BLOQUEADO V14.3.8\nEstudia ${minutsQueFalten} min más en TEMARIO para desbloquear.`);}
 function barrejarArray(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function normalizarPregunta(p){const q=p.q||p.pregunta||'';const a=p.a||p.opcions||p.opciones||[];const ok=p.ok!==undefined?p.ok:(p.correcta!==undefined?p.correcta:0);return{...p,q,a,ok,pregunta:q,opcions:a,correcta:ok};}
-// ===== TEST 5 TEMARIOS - INTACTO DE TU BLOQUE (PERFECTO) =====
+function potFerTests(){comprovarNouDia();return estat.stats.paseCompletado;}
+function mostrarPopupPase(){const minutsQueFalten=Math.max(0,10-Math.floor(estat.stats.tempsEstudiatAvui));alert(`⛔ PASE BLOQUEADO V14.3.12\nEstudia ${minutsQueFalten} min más en TEMARIO para desbloquear.`);}
+
+// ===== TEST 5 TEMARIOS - INTACTO PERFECTO DE TU BLOQUE =====
 function carregarPregunta(cat){
   const catNet=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
   let catReal=catNet; if(catNet==='senales') catReal='senyals'; if(catNet==='normas') catReal='normes'; if(catNet==='auxilios') catReal='auxilis'; if(catNet==='medio_ambiente'||catNet==='medioambiente') catReal='mediambient';
@@ -1295,7 +1291,7 @@ function seguentTest(e,cat){
   }
   carregarPregunta(catNet);
 }
-// ===== SIMULACROS 4 TESTS - MISMA FORMULA QUE TEST Y EXAMEN - FIX BOTON =====
+// ===== SIMULACROS 4 TESTS - INTACTO PERFECTO - USA TU BANCO YA GUARDADO =====
 function carregarSituacio(cat){
   if(!cat) cat=sitCategoriaActiva;
   const catNorm=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
@@ -1421,9 +1417,118 @@ function mostrarTip(){if(!tipsData.length)return;const tip=tipsData[currentTip];
 function nextTip(e){if(e)e.preventDefault();currentTip=(currentTip+1)%tipsData.length;mostrarTip();}
 function prevTip(e){if(e)e.preventDefault();currentTip=(currentTip-1+tipsData.length)%tipsData.length;mostrarTip();}
 function dibujarGraficaEvolucion(){const canvas=document.getElementById('grafica-evolucion'); if(!canvas) return; const ctx=canvas.getContext('2d'); const dades=getDadesEvolucio(); if(dades.length<2){ctx.fillStyle='#666'; ctx.textAlign='center'; ctx.fillText('Haz tests 2 días para ver evolución',canvas.width/2,canvas.height/2); return;} ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#00D9FF'; ctx.lineWidth=3; ctx.beginPath(); dades.forEach((d,i)=>{const x=30+(i*(canvas.width-60)/Math.max(1,dades.length-1)); const y=canvas.height-30-(d.global/100*(canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);}); ctx.stroke();}
+// ===== ESTADISTICA FIX DEFINITIVO - SOLO ESTE BLOQUE CAMBIADO - V14.3.12 =====
+function dibuixarPuntsDebils_V94(){
+  const cont=document.getElementById('stats-debils-lista'); if(!cont) return;
+  cont.innerHTML='';
+  if(!estat.stats.puntsDebils||Object.keys(estat.stats.puntsDebils).length===0){
+    cont.innerHTML='<div style="text-align:center;color:#999; padding:20px;">Haz más tests para detectar tus puntos débiles reales<br><small>El sistema lee panel_id N-01..N-15, S-100, M-, A-, E- y te manda a biblioteca oficial</small></div>';
+    return;
+  }
+  const categories=['senales','trampas','normas','mecanica','auxilios','medio_ambiente','mediambient'];
+  const noms=['🚦 SEÑALES','🪤 TRAMPAS','📋 NORMAS','⚙️ MECÁNICA','🚑 AUXILIOS','♻️ MEDIO AMBIENTE'];
+  categories.forEach((cat,i)=>{
+    const keyReal=cat==='medio_ambiente'?'medio_ambiente':cat;
+    if(!estat.stats.puntsDebils[keyReal]||Object.keys(estat.stats.puntsDebils[keyReal]).length===0){
+      if(i<6) cont.innerHTML+=`<div style="margin-bottom:15px; padding:12px; background:#1a1a1a; border-radius:8px;"><div style="font-weight:700; color:#00D9FF">${noms[i]}</div><div style="color:#666">Aún no tienes datos - Haz tests</div></div>`;
+      return;
+    }
+    let maxFallos=0; let pitjorClau='General'; let detallMillor=null;
+    for(let clau in estat.stats.puntsDebils[keyReal]){
+      if(estat.stats.puntsDebils[keyReal][clau].fallos>maxFallos){ maxFallos=estat.stats.puntsDebils[keyReal][clau].fallos; pitjorClau=clau; detallMillor=estat.stats.puntsDebils[keyReal][clau].detall; }
+    }
+    const detall=detallMillor||{nom:pitjorClau,desc:'',temari:'TEMARIO 1',pag:1,familia:pitjorClau,biblioteca:'02',panel:''};
+    const bibId=detall.biblioteca||'02';
+    const bibLink=(typeof TEMARIO_V14_CONFIG!=='undefined'&&TEMARIO_V14_CONFIG.bibliotecaLinks[bibId])?TEMARIO_V14_CONFIG.bibliotecaLinks[bibId]:TEMARIO_DGT_LINKS_FIJOS[0];
+    cont.innerHTML+=`<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px;">${noms[i]}</div><div style="color:#fff; font-weight:600;">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b> - ${maxFallos} fallos ${detall.panel?` - ${detall.panel}`:''}</div><div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;"><button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%;">📖 Reforzar: ${detall.familia||detall.nom} ↗</button></div></div>`;
+  });
+}
+function actualitzarOrientacioV11(){
+  const cont=document.getElementById('stats-orientacio-lista')||document.getElementById('orientacio-lista')||document.getElementById('stats-orientacio');
+  if(!cont) return;
+  cont.innerHTML=`<div style="background:#0a0a1a; padding:16px; border-radius:12px; border:2px solid #00D9FF; margin-bottom:14px;">
+    <h3 style="color:#00D9FF; margin-bottom:10px; text-align:center">🎯 EXAMEN DGT OFICIAL REAL</h3>
+    <div style="color:#fff; font-size:13px; line-height:1.6;">
+      <p>📋 <b>30 preguntas</b> - 3 opciones, 1 correcta</p><p>⏱️ <b>30 minutos</b> - 27 aciertos para aprobar</p><p>💡 Truco: la más segura es la correcta. Palabras absolutas = trampa</p>
+    </div>
+  </div>
+  <div style="margin-bottom:12px; padding:12px; background:#0a1a0a; border-left:4px solid #2ecc71; border-radius:10px;"><div style="font-weight:700; color:#2ecc71;">1. TEMARIO 10 min/día - 22 fichas T01-T11</div><div style="color:#ccc; font-size:12px; margin-top:6px;">Timer global, scroll vertical, +50 coins, desbloquea tests</div></div>
+  <div style="margin-bottom:12px; padding:12px; background:#1a1600; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#FFD700;">2. TESTS 30 al día - Fórmula real</div><div style="color:#ccc; font-size:12px; margin-top:6px;">30% Retención + 40% Constancia (20 días) + 20% Cobertura + 10% Estabilidad</div></div>
+  <div style="margin-bottom:12px; padding:12px; background:#001a33; border-left:4px solid #00D9FF; border-radius:10px;"><div style="font-weight:700; color:#00D9FF;">3. EXAMEN diario al 90%</div><div style="color:#ccc; font-size:12px; margin-top:6px;">Racha 6 aprobados seguidos para ir seguro a DGT real</div></div>`;
+}
+function anarAPagina(pagina){canviarTab_V94(null,'temari');}
+function actualitzarEstadistiques_V94(){
+  const stats=calcularPreparacioDGT_V94();
+  const el1=document.getElementById('stats-global-percent'); if(el1) el1.textContent=Math.round(stats.preparacio)+'%';
+  const falta=Math.max(0,90-Math.round(stats.preparacio));
+  const el1b=document.getElementById('stats-global-falta'); if(el1b) el1b.textContent=stats.preparacio>=90?`✅ ${Math.round(stats.preparacio)}% - ¡Listo para DGT!`:`${Math.round(stats.preparacio)}% - Te falta ${falta}%`;
+  const el2=document.getElementById('stats-global-bar'); if(el2) el2.style.width=Math.round(stats.preparacio)+'%';
+  const el3=document.getElementById('stats-domini-percent'); if(el3) el3.textContent=Math.round(stats.retencio)+'%';
+  const el4=document.getElementById('stats-domini-bar'); if(el4) el4.style.width=Math.round(stats.retencio)+'%';
+  const el5=document.getElementById('stats-constancia-percent'); if(el5) el5.textContent=Math.round(stats.constancia)+'%';
+  const el6=document.getElementById('stats-constancia-bar'); if(el6) el6.style.width=Math.round(stats.constancia)+'%';
+  const el7=document.getElementById('stats-constancia-label'); if(el7) el7.textContent=`CONSTANCIA: ${stats.diesValids}/20 días válidos`;
+  const el8=document.getElementById('stats-temari-percent'); if(el8) el8.textContent=Math.round(stats.cobertura)+'%';
+  const el9=document.getElementById('stats-temari-bar'); if(el9) el9.style.width=Math.round(stats.cobertura)+'%';
+  const el10=document.getElementById('stats-simulacres-percent'); if(el10) el10.textContent=Math.round(stats.estabilitat)+'%';
+  const el11=document.getElementById('stats-simulacres-bar'); if(el11) el11.style.width=Math.round(stats.estabilitat)+'%';
+  const el12=document.getElementById('stats-examen-aprobados'); if(el12) el12.textContent=`Mejor racha: ${stats.maxRatxa}/6 aprobados seguidos`;
+  dibujarGraficaEvolucion(); dibuixarPuntsDebils_V94(); actualitzarOrientacioV11();
+  // FIX PASE
+  const paseEl=document.getElementById('pase-temps');
+  if(paseEl){
+    const m=Math.floor(estat.stats.tempsEstudiatAvui||0);
+    const s=Math.floor(((estat.stats.tempsEstudiatAvui||0)-m)*60);
+    paseEl.textContent=`${m}:${s.toString().padStart(2,'0')} / 10:00`;
+  }
+}
+function getDadesEvolucio(){return estat.stats.historialEvolucio.map(h=>{let diaNum='0';if(h.dia&&h.dia.includes('-')){diaNum=h.dia.split('-')[2]||'0';if(diaNum.includes('T'))diaNum=diaNum.split('T')[0];}else if(h.dia&&h.dia.includes('/')){diaNum=h.dia.split('/')[0];}else{diaNum=(h.dia||'').toString().substring(0,2);}diaNum=diaNum.replace(/^0+/,'')||'0';return{dia:diaNum,global:Math.round(h.percent||0)};});}
 function mostrarIntro(){}
-function actualitzarMissatgeMotivacional(){const el=document.getElementById('motivacio');if(el)el.textContent="V14.3.8 FINAL - TODO OK 💪";}
-function canviarTab_V94(e,tab){const tabTemari=document.getElementById('tab-temari');if(tabTemari&&tabTemari.classList.contains('active')&&tempsIniciTemari!==null){estat.stats.tempsEstudiatAvui+=(Date.now()-tempsIniciTemari)/1000/60;tempsIniciTemari=null;guardar();}document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));const target=document.getElementById('tab-'+tab);if(target)target.classList.add('active');if(e&&e.target){const btn=e.target.closest('.tab-btn');if(btn)btn.classList.add('active');}if(tab==='garage'||tab==='garaje')carregarGaratge();if(tab==='tienda'||tab==='botiga')carregarBotiga();if(tab==='temari'){carregarTemari_V14();iniciarComptadorTemari();}if(tab==='tips')carregarTips();if(tab==='test')carregarPregunta('senales');if(tab==='estadistiques'||tab==='estadisticas')actualitzarEstadistiques_V94();}
-function canviarSubTab(e,tab,subtab){const tabId=tab==='sit'?'situaciones':(tab==='stats'||tab==='estad')?'estadistiques':tab;const contenidor=document.getElementById('tab-'+tabId);if(!contenidor)return;contenidor.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));contenidor.querySelectorAll('.sub-content').forEach(c=>c.classList.remove('active'));if(e&&e.target)e.target.classList.add('active');const subNorm=subtab.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const ids=[`test-${subtab}`,`test-${subNorm}`,`sit-${subtab}`,`sit-${subNorm}`];let ok=false;ids.forEach(id=>{const el=document.getElementById(id);if(el&&!ok){el.classList.add('active');ok=true;}});if(tab==='test')carregarPregunta(subNorm);if(tab==='sit')carregarSituacio(subtab);if(tab==='stats')actualitzarEstadistiques_V94();}
+function actualitzarMissatgeMotivacional(){const el=document.getElementById('motivacio');if(el)el.textContent="V14.3.12 FINAL - ESTAD 100% FIX 💪";}
+// ===== FIX NAVEGACIÓN ESTAD - EVITA VACÍO =====
+function canviarTab_V94(e,tab){
+  const tabTemari=document.getElementById('tab-temari');
+  if(tabTemari&&tabTemari.classList.contains('active')&&tempsIniciTemari!==null){estat.stats.tempsEstudiatAvui+=(Date.now()-tempsIniciTemari)/1000/60;tempsIniciTemari=null;guardar();}
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const target=document.getElementById('tab-'+tab); if(target) target.classList.add('active');
+  if(e&&e.target){const btn=e.target.closest('.tab-btn'); if(btn) btn.classList.add('active');}
+  if(tab==='garage'||tab==='garaje')carregarGaratge();
+  if(tab==='tienda'||tab==='botiga')carregarBotiga();
+  if(tab==='temari'){carregarTemari_V14();iniciarComptadorTemari();}
+  if(tab==='tips')carregarTips();
+  if(tab==='test')carregarPregunta('senales');
+  if(tab==='estadistiques'||tab==='estadisticas'||tab==='estad'){
+    // Fuerza que RESUMEN esté activo por defecto y pinte todo
+    setTimeout(()=>{
+      const cont=document.getElementById('tab-estadistiques'); if(!cont) return;
+      cont.querySelectorAll('.sub-tab-btn').forEach((b,i)=>{b.classList.remove('active'); if(i===0) b.classList.add('active');});
+      cont.querySelectorAll('.sub-content').forEach(c=>c.classList.remove('active'));
+      const resum=document.getElementById('stats-resum'); if(resum) resum.classList.add('active');
+      actualitzarEstadistiques_V94();
+    },50);
+  }
+}
+function canviarSubTab(e,tab,subtab){
+  const tabId=tab==='sit'?'situaciones':(tab==='stats'||tab==='estad')?'estadistiques':tab;
+  const contenidor=document.getElementById('tab-'+tabId); if(!contenidor) return;
+  contenidor.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));
+  contenidor.querySelectorAll('.sub-content').forEach(c=>c.classList.remove('active'));
+  if(e&&e.target) e.target.classList.add('active');
+  const subNorm=subtab.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  const mapa={'resum':'stats-resum','resumen':'stats-resum','evolucio':'stats-evolucio','evolucion':'stats-evolucio','debils':'stats-debils','debiles':'stats-debils','pase':'stats-pase','orientacio':'stats-orientacio','orientacion':'stats-orientacio'};
+  const idReal=mapa[subNorm]||`test-${subtab}`||`sit-${subtab}`||`stats-${subNorm}`;
+  const el=document.getElementById(idReal)||document.getElementById(`test-${subNorm}`)||document.getElementById(`sit-${subtab}`)||document.getElementById(`sit-${subNorm}`);
+  if(el) el.classList.add('active');
+  if(tab==='test')carregarPregunta(subNorm);
+  if(tab==='sit')carregarSituacio(subtab);
+  if(tab==='stats'||tab==='estad'){
+    if(subNorm==='resum'||subNorm==='resumen') actualitzarEstadistiques_V94();
+    if(subNorm==='evolucio'||subNorm==='evolucion') { dibujarGraficaEvolucion(); const mot=document.getElementById('evolucio-motivacio'); if(mot){ const hist=estat.stats.historialEvolucio||[]; mot.textContent=hist.length>=2?`Evolución ${hist.length} días`:'Haz tests 2 días para ver evolución real'; } }
+    if(subNorm==='debils'||subNorm==='debiles') dibuixarPuntsDebils_V94();
+    if(subNorm==='pase'){ const paseEl=document.getElementById('pase-temps'); if(paseEl){ const m=Math.floor(estat.stats.tempsEstudiatAvui||0); const s=Math.floor(((estat.stats.tempsEstudiatAvui||0)-m)*60); paseEl.textContent=`${m}:${s.toString().padStart(2,'0')} / 10:00`; } }
+    if(subNorm==='orientacio'||subNorm==='orientacion') actualitzarOrientacioV11();
+  }
+}
 function mostrarEmoji(encert,element){const span=document.createElement('span');span.textContent=encert?'✅':'❌';span.style.cssText='position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;';element.style.position='relative';element.appendChild(span);setTimeout(()=>span.remove(),600);}
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').then(()=>console.log('SW V14.3.8 FINAL')).catch(()=>{});});}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').then(()=>console.log('SW V14.3.12 FINAL ESTAD FIX')).catch(()=>{});});}
