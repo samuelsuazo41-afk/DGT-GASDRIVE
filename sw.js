@@ -1,5 +1,5 @@
 // ===== GASDRIVE DGT - service-worker.js V14.2 FINAL - 22 FICHAS REALES EXACTAS =====
-const CACHE_VERSION = 'v14.16-22fichas-reales-fix';
+const CACHE_VERSION = 'v14.17-22fichas-reales-fix';
 const CACHE_NAME = `gasdrive-${CACHE_VERSION}-2025-12`;
 
 const CORE_FILES = [
