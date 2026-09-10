@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V14.3.16 PRO</title>
+<title>GasDrive DGT ES V14.3.15 PRO</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -104,7 +104,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   <div id="motivacio" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
 </div>
 
-<div id="tab-estadistiques" class="tab-content active">
+<div id="tab-estadistiques" class="tab-content">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="canviarSubTab(event,'stats','resum')">📊 RESUMEN</button>
     <button class="sub-tab-btn" onclick="canviarSubTab(event,'stats','evolucio')">📈 EVOLUCIÓN</button>
@@ -153,7 +153,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   </div>
 </div>
 
-<div id="tab-test" class="tab-content">
+<div id="tab-test" class="tab-content active">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="canviarSubTab(event,'test','general')">📝 General</button>
     <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','senyals')">🚸 Señales</button>
@@ -254,11 +254,9 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   <button class="tab-btn" onclick="canviarTab_V94(event,'temari')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<script src="./preguntas.js"></script>
-<script src="./situaciones.js"></script>
-<script src="./app.js?v=14.3.16"></script>
+<script src="./app.js?v=14.3.1"></script>
 <script>
-// ===== V14.3.16 - ESTAD INICIO COOL - FIX DEFINITIVO =====
+// ===== V14.3.4 - FIX DEFINITIVO - NO BORRA NADA - SOLO AÑADE =====
 const MAPA_TEMAS_NATIVOS = {
   't01': 'TEMA 1: DEFINICIONES Y CLASIFICACIÓN - Masas, MMA, dimensiones, vehículos',
   't02': 'TEMA 2: LA VÍA - Partes, marcas viales, intersecciones, velocidades 20/30/50',
@@ -320,6 +318,7 @@ function canviarTemaFicha(evt, tema){
   });
   if(typeof obrirFichaJPG === 'function') obrirFichaJPG(MAPA_TEMAS_2_FICHAS[tema][0]);
 }
+// ===== ORIENTACION PILDORAS FIX - SOBRESCRIBE LA DE APP.JS PERO MANTIENE TODO LO DEMAS =====
 function actualitzarOrientacioV11_FIX(){
   const cont = document.getElementById('stats-orientacio-lista');
   if(!cont) return;
@@ -330,33 +329,42 @@ function actualitzarOrientacioV11_FIX(){
       <p>📋 <b>30 preguntas</b> tipo test - 3 opciones, 1 correcta siempre</p>
       <p>⏱️ <b>30 minutos máximo</b> - Con práctica lo haces en 10 min</p>
       <p>✅ <b>27 aciertos mínimo</b> para aprobar - Máximo 3 fallos</p>
-      <p>👮 <b>El día del examen:</b> DNI + justificante cita. Llega 15 min antes.</p>
-      <p>💡 <b>Truco DGT:</b> La respuesta más segura y conservadora es la correcta.</p>
+      <p>👮 <b>El día del examen:</b> DNI + justificante cita. Llega 15 min antes. Ordenador en aula DGT. Resultado inmediato.</p>
+      <p>💡 <b>Truco DGT:</b> La respuesta más segura y conservadora es la correcta. Palabras absolutas = trampa.</p>
     </div>
   </div>
   <h3 style="color:#FFD700; margin:14px 0 8px; text-align:center">📚 MÉTODO GASDRIVE - 3 PASOS</h3>
   <div style="margin-bottom:12px; padding:12px; background:#0a1a0a; border-left:4px solid #2ecc71; border-radius:10px;">
-    <div style="font-weight:700; color:#2ecc71; font-size:14px">1. TEMARIO 10 min/día - 22 fichas T01-T11</div>
-    <div style="color:#ccc; font-size:12px; margin-top:6px;">Fichas JPG verticales + 5 links oficiales share.google</div>
+    <div style="font-weight:700; color:#2ecc71; font-size:14px">1. TEMARIO 10 min/día - 22 fichas verticales T01-T11</div>
+    <div style="color:#ccc; font-size:12px; margin-top:6px; line-height:1.5">No hagas 10 min de golpe. Haz scroll 2-3 min en T01 Señales + T02 Normas + T05 Alcohol + T09 Mecánica = 10 min. Timer global suma todo. Te da +50 coins y desbloquea tests del día. Fichas JPG scroll infinito + 5 links directos share.google</div>
   </div>
   <div style="margin-bottom:12px; padding:12px; background:#1a1600; border-left:4px solid #FFD700; border-radius:10px;">
-    <div style="font-weight:700; color:#FFD700; font-size:14px">2. TESTS 30-60 al día</div>
-    <div style="color:#ccc; font-size:12px; margin-top:6px;">Retención + Constancia + Cobertura</div>
+    <div style="font-weight:700; color:#FFD700; font-size:14px">2. TESTS 15 preguntas por tanda - 30 a 60 al día</div>
+    <div style="color:#ccc; font-size:12px; margin-top:6px; line-height:1.5">El % no es solo aciertos. Fórmula real: 30% Retención (3 días seguidos dominada) + 40% Constancia (20 días válidos 30-60 tests 85% aciertos) + 20% Cobertura 7 días + 10% Estabilidad exámenes. Si fallas N-01 Alcohol te manda a Temario directo 3 automáticamente.</div>
   </div>
   <div style="margin-bottom:12px; padding:12px; background:#001a33; border-left:4px solid #00D9FF; border-radius:10px;">
     <div style="font-weight:700; color:#00D9FF; font-size:14px">3. EXAMEN diario cuando llegues al 90%</div>
-    <div style="color:#ccc; font-size:12px; margin-top:6px;">Racha de 6 aprobados = listo para DGT real</div>
+    <div style="color:#ccc; font-size:12px; margin-top:6px; line-height:1.5">Cuando tengas 90% global, haz 1 simulacro diario de 30 preguntas. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen mezcla N-01..N-15 + S-100 + M- + A- + E-. Si suspendes, mira P. Débiles.</div>
+  </div>
+  <div style="background:#0a0a1a; padding:14px; border-radius:12px; border:2px solid #FFD700; margin-top:14px;">
+    <h3 style="color:#FFD700; margin-bottom:8px; text-align:center">🚀 ¿CUÁNDO ESTOY LISTO? 90% = LISTO</h3>
+    <div style="color:#fff; font-size:12px; line-height:1.6;">
+      <p>✅ Cuando tu RESUMEN marque <b style="color:#FFD700">90%</b> se desbloquea botón "PRESENTARME AL EXAMEN DGT OFICIAL".</p>
+      <p>📊 No es solo nota: es retención + constancia + cobertura. Si además llevas 6 exámenes seguidos aprobados, ve tranquilo.</p>
+      <p>📍 <b>P. DÉBILES</b> es tu GPS: lee tu panel_id y te dice qué ficha exacta repasar y qué biblioteca oficial abrir.</p>
+      <p>💰 Tasa DGT 2026: 94,05€ - Pide cita en DGT.es - Lleva DNI.</p>
+    </div>
   </div>
   `;
 }
+// Sobrescribe la función original de app.js para que no borre nuestras píldoras
 window.actualitzarOrientacioV11 = actualitzarOrientacioV11_FIX;
 
 window.addEventListener('load',()=>{
   setTimeout(()=>{
     actualitzarOrientacioV11_FIX();
-    // ESTAD es el inicio por defecto, no hace falta cargar test
-    if(typeof actualitzarEstadistiques_V94 === 'function') actualitzarEstadistiques_V94();
-  }, 600);
+    if(document.getElementById('temari-rapido')) canviarTemaFicha(null,'t01');
+  }, 900);
 });
 </script>
 </body>
