@@ -1149,7 +1149,7 @@ const EMOJI_TIENDA = [
 ];
 
 
-// ===== GASDRIVE DGT ES V14.3.7 FINAL - TEST 30 FIX BOTON + TIP SIEMPRE + SIMULACROS 30 SIN TIP =====
+// ===== GASDRIVE DGT ES V14.3.14 FINAL - ORDEN 1-8 ESTAD TEST SIMULACROS EXAMEN GARAJE TIENDA TIPS TEMARIO =====
 let tipsData = [];
 let currentTip = 0;
 let tempsIniciTemari = null;
@@ -1182,7 +1182,7 @@ const MAPA_FICHAS_LARGAS_V14 = {
 };
 const TEMARIO_DGT_LINKS_FIJOS = ["https://share.google/OB30FJpKxoUxfUwZT","https://share.google/cdTfRzcGeB9s9xnuQ","https://share.google/d16o0xmNpIAQ6Nh1c","https://share.google/tW0GEXMT1rJlb5Vqt","https://share.google/i2dZbEcYBk2QaCx2t"];
 const TEMARIO_V14_CONFIG = {temas:['t01','t02','t03','t04','t05','t06','t07','t08','t09','t10','t11'],totalFichas:22,paseMinutos:10,bibliotecaLinks:{'01':'https://share.google/OB30FJpKxoUxfUwZT','02':'https://share.google/cdTfRzcGeB9s9xnuQ','03':'https://share.google/d16o0xmNpIAQ6Nh1c','04':'https://share.google/tW0GEXMT1rJlb5Vqt','05':'https://share.google/i2dZbEcYBk2QaCx2t'},temarioDirecto:TEMARIO_DGT_LINKS_FIJOS};
-if(typeof PREGUNTAS!=='undefined' && typeof PREGUNTES==='undefined'){var PREGUNTES=PREGUNTAS;}
+if(typeof PREGUNTAS!=='undefined' && typeof PREGUNTES==='undefined'){var PREGUNTAS=PREGUNTAS;}
 if(typeof SITUACIONES!=='undefined' && typeof SITUACIONS==='undefined'){var SITUACIONS=SITUACIONES;}
 if(typeof PREGUNTES!=='undefined'){PREGUNTES.senales=PREGUNTES.senales||PREGUNTES.senyals;PREGUNTES.senyals=PREGUNTES.senyals||PREGUNTES.senales;PREGUNTES.normas=PREGUNTES.normas||PREGUNTES.normes;PREGUNTES.normes=PREGUNTES.normes||PREGUNTES.normas;PREGUNTES.auxilios=PREGUNTES.auxilios||PREGUNTES.auxilis;PREGUNTES.auxilis=PREGUNTES.auxilis||PREGUNTES.auxilios;PREGUNTES.medio_ambiente=PREGUNTES.medio_ambiente||PREGUNTES.mediambient||PREGUNTES.medioambiente;PREGUNTES.mediambient=PREGUNTES.mediambient||PREGUNTES.medio_ambiente;PREGUNTES.medioambiente=PREGUNTES.medioambiente||PREGUNTES.mediambient;}
 const MAPA_PANELLS_DETALLAT={'N-01':{nom:'Alcohol y Drogas Tasas',desc:'0,25 aire / 0,5 sangre - Novel 0,15 / 0,3 - N-01',temari:'TEMARIO 2',pag:22,familia:'NORMAS ALCOHOL',biblioteca:'03'},'N-02':{nom:'Cinturón y SRI Embarazada',desc:'Cinturón todos, niño hasta 1,35m SRI detrás - N-02',temari:'TEMARIO 2',pag:33,familia:'NORMAS SEGURIDAD',biblioteca:'03'},'N-03':{nom:'Permiso Puntos y Edad',desc:'B 18 años - Novel 8 puntos - General 12 - Máx 15 - N-03',temari:'TEMARIO 2',pag:18,familia:'NORMAS PERMISO',biblioteca:'02'},'N-04':{nom:'Velocidad Ciudad 20/30/50',desc:'Zona 20=20, 1 carril=30, 2 carriles=50 - N-04',temari:'TEMARIO 2',pag:40,familia:'NORMAS VELOCIDAD CIUDAD',biblioteca:'02'},'N-05':{nom:'Velocidad Carretera 90/120',desc:'Turismo 90 convencional, 120 autopista - N-05',temari:'TEMARIO 2',pag:45,familia:'NORMAS VELOCIDAD CARRETERA',biblioteca:'02'},'N-06':{nom:'Distracciones Móvil',desc:'Móvil manos libres 200€+6 puntos, auriculares prohibido - N-06',temari:'TEMARIO 2',pag:34,familia:'NORMAS DISTRACCIÓN',biblioteca:'02'},'N-07':{nom:'Documentación ITV Seguro',desc:'ITV 4 años después cada 2 hasta 10 después anual - N-07',temari:'TEMARIO 2',pag:38,familia:'NORMAS DOCS',biblioteca:'04'},'N-08':{nom:'Penal Delito Multas',desc:'Delito 0,60 aire, velocidad +60 ciudad +80 carretera - N-08',temari:'TEMARIO 2',pag:30,familia:'NORMAS PENAL',biblioteca:'02'},'N-09':{nom:'Stop Ceda Semáforo',desc:'Stop línea, ceda si no viene nadie, ámbar fijo parar - N-09',temari:'TEMARIO 2',pag:50,familia:'NORMAS SEÑALES REGULACIÓN',biblioteca:'01'},'N-10':{nom:'Prioridad Carril Glorieta',desc:'Glorieta prioridad dentro, salir exterior derecha - N-10',temari:'TEMARIO 2',pag:12,familia:'NORMAS PRIORIDAD GLORIETA',biblioteca:'02'},'N-11':{nom:'Prioritarios Bus Peatón Bici',desc:'Bus no carril bus, cebra prioridad peatón, bici 1,5m - N-11',temari:'TEMARIO 2',pag:15,familia:'NORMAS PRIORITARIOS',biblioteca:'02'},'N-12':{nom:'Luces Señales Luminosas V16',desc:'Cruce noche obligatorio, V16 2026 obligatorio - N-12',temari:'TEMARIO 2',pag:55,familia:'NORMAS LUCES',biblioteca:'04'},'N-13':{nom:'Parada Estacionamiento Arcén',desc:'Parada <2min conductor dentro, doble fila prohibido - N-13',temari:'TEMARIO 2',pag:60,familia:'NORMAS PARADA',biblioteca:'02'},'N-14':{nom:'Túnel Paso Nivel VAO',desc:'Túnel cruce, VAO mínimo 2 ocupantes moto sí - N-14',temari:'TEMARIO 2',pag:65,familia:'NORMAS TÚNEL VAO',biblioteca:'02'},'N-15':{nom:'Trampas Examen DGT',desc:'Respuesta más segura siempre correcta, palabras absolutas trampa - N-15',temari:'TEMARIO 2',pag:110,familia:'NORMAS TRAMPAS',biblioteca:'02'},'P-':{nom:'Señales Peligro Triangulares',desc:'Señales verticales de peligro - Forma triangular amarilla - Familia P-',temari:'TEMARIO 1',pag:53,familia:'SEÑALES PELIGRO',biblioteca:'01'},'R-':{nom:'Señales Prohibición / Obligación',desc:'Señales verticales circulares - Prohibición rojo, Obligación azul - Familia R-',temari:'TEMARIO 1',pag:46,familia:'SEÑALES REGULACIÓN',biblioteca:'01'},'S-100':{nom:'Servicios S-100 Familia',desc:'Señales información servicios azul con pictograma blanco - WC, gasolinera, hotel - S-105c a S-108',temari:'TEMARIO 1',pag:70,familia:'SEÑALES SERVICIOS',biblioteca:'01'},'S-200':{nom:'Preseñalización S-200',desc:'Preseñalización direcciones - Familia S-200',temari:'TEMARIO 1',pag:75,familia:'SEÑALES PRESEÑAL',biblioteca:'01'},'S-300':{nom:'Dirección S-300',desc:'Señales dirección - Familia S-300',temari:'TEMARIO 1',pag:80,familia:'SEÑALES DIRECCIÓN',biblioteca:'01'},'S-400':{nom:'Localización y Confirmación',desc:'Señales S-400 confirmación',temari:'TEMARIO 1',pag:82,familia:'SEÑALES LOCALIZACIÓN',biblioteca:'01'},'M-':{nom:'Mecánica Híbrida',desc:'Motor eléctrico, batería litio, freno regenerativo, ESP, EBS - Familia M-',temari:'TEMARIO 4',pag:85,familia:'MECÁNICA HÍBRIDA',biblioteca:'04'},'A-':{nom:'Auxilios Motorista Casco',desc:'Motorista casco no quitar si respira, RCP, hemorragias - Familia A-',temari:'TEMARIO 3',pag:96,familia:'AUXILIOS MOTORISTA',biblioteca:'03'},'E-':{nom:'Medio Ambiente ZBE',desc:'ZBE zonas bajas emisiones, distintivo ambiental - Familia E-',temari:'TEMARIO 5',pag:103,familia:'MEDIO AMBIENTE ZBE',biblioteca:'05'}};
@@ -1196,36 +1196,37 @@ for(let c in PROGRESO.casos){PROGRESO.casos[c].unicas=new Set(PROGRESO.casos[c].
 PROGRESO.diesEstudi=new Set(PROGRESO.diesEstudi||[]);
 let estat={coins:parseInt(localStorage.getItem('gd_coins'))||0,cotxes:JSON.parse(localStorage.getItem('gd_cotxes'))||['c1'],accessoris:JSON.parse(localStorage.getItem('gd_accessoris'))||[],emojis:JSON.parse(localStorage.getItem('gd_emojis'))||[],historial:JSON.parse(localStorage.getItem('gd_historial'))||[],stats:JSON.parse(localStorage.getItem('gd_stats'))||{tempsEstudiatAvui:0,diaActual:new Date().toISOString().split('T')[0],paseCompletado:false,puntsDebils:{},preguntesFetes:0,encertsTotals:0,perCategoria:{},historialEvolucio:[],historialPregunta:{}},test:{general:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},senales:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},senyals:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},trampas:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},trampes:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},normas:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},normes:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},mecanica:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},auxilios:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},auxilis:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},mediambient:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30},medio_ambiente:{idx:0,encerts:0,ratxa:0,puntuacio:0,preguntes:[],index:0,encertsSesion:0,total:30}},examen:{activa:false,preguntes:[],index:0,encerts:0,fallos:0,timer:null,temps:1800,categoria:'general'},sit:{clima:{idx:0,encerts:0,puntuacio:0,preguntes:[],index:0,total:30,current:null},urbano:{idx:0,encerts:0,puntuacio:0,preguntes:[],index:0,total:30,current:null},urbà:{idx:0,encerts:0,puntuacio:0,preguntes:[],index:0,total:30,current:null},carretera:{idx:0,encerts:0,puntuacio:0,preguntes:[],index:0,total:30,current:null},emergencia:{idx:0,encerts:0,puntuacio:0,preguntes:[],index:0,total:30,current:null},emergència:{idx:0,encerts:0,puntuacio:0,preguntes:[],index:0,total:30,current:null}}};
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
-function init(){console.log("GasDrive V14.3.7 PRO - TEST 30 FIX");if(typeof PREGUNTES!=='undefined'){if((!PREGUNTES.mecanica||PREGUNTES.mecanica.length===0)&&typeof BANCO_MECANICA_66!== 'undefined'){PREGUNTES.mecanica=BANCO_MECANICA_66;}if((!PREGUNTES.normas||PREGUNTES.normas.length===0)&&typeof BANCO_PREGUNTAS_NORMAS_V1!== 'undefined'){PREGUNTES.normas=BANCO_PREGUNTAS_NORMAS_V1;}}autoMapearTotesPreguntes();comprovarNouDia();iniciarComptadorTemari();mostrarIntro();actualitzarCoins();try{if(typeof carregarGaratge==='function')carregarGaratge();}catch(e){}try{if(typeof carregarBotiga==='function')carregarBotiga();}catch(e){}try{if(typeof carregarTemari_V14==='function')carregarTemari_V14();}catch(e){}actualitzarMissatgeMotivacional();}
+function init(){console.log("GasDrive V14.3.14 PRO - ORDEN 8 FIX");if(typeof PREGUNTES!=='undefined'){if((!PREGUNTES.mecanica||PREGUNTES.mecanica.length===0)&&typeof BANCO_MECANICA_66!== 'undefined'){PREGUNTES.mecanica=BANCO_MECANICA_66;}if((!PREGUNTES.normas||PREGUNTES.normas.length===0)&&typeof BANCO_PREGUNTAS_NORMAS_V1!== 'undefined'){PREGUNTES.normas=BANCO_PREGUNTAS_NORMAS_V1;}}autoMapearTotesPreguntes();comprovarNouDia();iniciarComptadorTemari();mostrarIntro();actualitzarCoins();try{if(typeof carregarGaratge==='function')carregarGaratge();}catch(e){}try{if(typeof carregarBotiga==='function')carregarBotiga();}catch(e){}try{if(typeof carregarTemari_V14==='function')carregarTemari_V14();}catch(e){}actualitzarMissatgeMotivacional();}
 function guardar(){localStorage.setItem('gd_coins',estat.coins);localStorage.setItem('gd_cotxes',JSON.stringify(estat.cotxes));localStorage.setItem('gd_accessoris',JSON.stringify(estat.accessoris));localStorage.setItem('gd_emojis',JSON.stringify(estat.emojis));localStorage.setItem('gd_historial',JSON.stringify(estat.historial));localStorage.setItem('gd_stats',JSON.stringify(estat.stats));const progGuardar=JSON.parse(JSON.stringify(PROGRESO));for(let c in progGuardar.tests)progGuardar.tests[c].unicas=[...PROGRESO.tests[c].unicas];for(let c in progGuardar.casos)progGuardar.casos[c].unicas=[...PROGRESO.casos[c].unicas];progGuardar.diesEstudi=[...PROGRESO.diesEstudi];localStorage.setItem('gd_progreso_v2',JSON.stringify(progGuardar));}
 function actualitzarCoins(){const el=document.getElementById('coins');if(el)el.textContent=`💰 ${estat.coins}`;}
 function actualizarMetricasTest(categoria,preguntaId,acierto){const catNet=categoria.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();if(!PROGRESO.tests[catNet]&&!PROGRESO.tests[categoria])return;const key=PROGRESO.tests[catNet]?catNet:categoria;const prog=PROGRESO.tests[key];const avui=estat.stats.diaActual;prog.total++;if(acierto)prog.aciertos++;prog.unicas.add(preguntaId);if(!acierto&&!prog.falladas.includes(preguntaId))prog.falladas.push(preguntaId);if(!prog.dies[avui])prog.dies[avui]=0;prog.dies[avui]++;PROGRESO.diesEstudi.add(avui);guardar();}
 function actualizarMetricasCaso(subcat,preguntaId,acierto){let key=subcat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();if(key==='urbà')key='urbano';if(key==='emergència')key='emergencia';if(!PROGRESO.casos[key])return;const prog=PROGRESO.casos[key];const avui=estat.stats.diaActual;prog.total++;if(acierto)prog.aciertos++;prog.unicas.add(preguntaId);if(!acierto&&!prog.falladas.includes(preguntaId))prog.falladas.push(preguntaId);if(!prog.dies[avui])prog.dies[avui]=0;prog.dies[avui]++;PROGRESO.diesEstudi.add(avui);guardar();}
 function registrarHistorialPregunta(preguntaId,acierto){if(!preguntaId)return;if(!estat.stats.historialPregunta)estat.stats.historialPregunta={};const avui=new Date().toISOString();if(!estat.stats.historialPregunta[preguntaId]){estat.stats.historialPregunta[preguntaId]={consecutius:0,ultima:avui};}if(acierto)estat.stats.historialPregunta[preguntaId].consecutius++;else estat.stats.historialPregunta[preguntaId].consecutius=0;estat.stats.historialPregunta[preguntaId].ultima=avui;guardar();}
 function calcularPreparacioDGT_V94(){const avui=new Date();const fa7Dies=new Date(avui.getTime()-7*24*60*60*1000);let totalPreg=0,domina=0,aprenent=0;let historial=estat.stats.historialPregunta||{};if(typeof PREGUNTES!=='undefined'){for(let cat in PREGUNTES){PREGUNTES[cat].forEach(p=>{totalPreg++;const h=historial[p.id];if(!h)return;const diesDesdeUltim=(avui-new Date(h.ultima))/(1000*60*60*24);if(h.consecutius>=3&&diesDesdeUltim<3)domina++;else if((h.consecutius>=1&&diesDesdeUltim<7)||diesDesdeUltim<3)aprenent++;});}}let retencioRaw=totalPreg>0?((domina*1.0)+(aprenent*0.5))/totalPreg*100:0;const retencioAyer=estat.stats.historialEvolucio.length>0?estat.stats.historialEvolucio[estat.stats.historialEvolucio.length-1].retencio||0:0;const retencio=Math.round(Math.min(retencioRaw,retencioAyer+3));let diesValids=0;PROGRESO.diesEstudi.forEach(dia=>{let fetesDia=0,encertsDia=0,totalDia=0;for(let c in PROGRESO.tests){fetesDia+=PROGRESO.tests[c].dies[dia]||0;totalDia+=PROGRESO.tests[c].total;encertsDia+=PROGRESO.tests[c].aciertos;}const percentDia=totalDia>0?(encertsDia/totalDia):0;if(fetesDia>=30&&fetesDia<=60&&percentDia>=0.85)diesValids++;});let constancia=Math.round((diesValids/20)*100);if(constancia>100)constancia=100;let unicas7Dies=new Set();if(typeof PREGUNTES!=='undefined'){for(let cat in PREGUNTES){PREGUNTES[cat].forEach(p=>{const h=historial[p.id];if(h&&new Date(h.ultima)>=fa7Dies)unicas7Dies.add(p.id);});}}let coberturaRaw=Math.round((unicas7Dies.size/Math.max(1,getTotalBanco()))*100);const coberturaAyer=estat.stats.historialEvolucio.length>0?estat.stats.historialEvolucio[estat.stats.historialEvolucio.length-1].cobertura||0:0;const cobertura=Math.round(Math.min(coberturaRaw,coberturaAyer+5));let maxRatxa=0,ratxa=0;PROGRESO.examen.historial.forEach(e=>{if(e.nota>=27){ratxa++;maxRatxa=Math.max(maxRatxa,ratxa);}else ratxa=0;});const estabilitat=maxRatxa>=6?100:Math.round((maxRatxa/6)*100);const preparacio=Math.round((retencio*0.3)+(constancia*0.4)+(cobertura*0.2)+(estabilitat*0.1));return{preparacio:Math.round(preparacio),retencio:Math.round(retencio),constancia:Math.round(constancia),cobertura:Math.round(cobertura),estabilitat:Math.round(estabilitat),domina,aprenent,diesValids,maxRatxa,total:totalPreg};}
-function iniciarComptadorTemari(){if(contadorTemari)clearInterval(contadorTemari);comprovarNouDia();actualitzarPaseUI();contadorTemari=setInterval(()=>{const vistaTemariActiva=document.getElementById('tab-temari')?.classList.contains('active');if(vistaTemariActiva){if(tempsIniciTemari===null){tempsIniciTemari=Date.now();}else{const ara=Date.now();const segundos=(ara-tempsIniciTemari)/1000;if(segundos>=3){estat.stats.tempsEstudiatAvui+=segundos/60;tempsIniciTemari=ara;guardar();actualitzarPaseUI();}}if(estat.stats.tempsEstudiatAvui>=TEMARIO_V14_CONFIG.paseMinutos&&!estat.stats.paseCompletado){estat.stats.paseCompletado=true;estat.coins+=50;guardar();alert(`✅ PASE DESBLOQUEADO V14.3.7!\nHas estudiado ${TEMARIO_V14_CONFIG.paseMinutos} minutos con fichas verticales. +50 coins`);if(typeof actualitzarEstadistiques_V94==='function')actualitzarEstadistiques_V94();}}else{if(tempsIniciTemari!==null){const ara=Date.now();const segundos=(ara-tempsIniciTemari)/1000;estat.stats.tempsEstudiatAvui+=segundos/60;tempsIniciTemari=null;guardar();actualitzarPaseUI();}}},1000);}
+function iniciarComptadorTemari(){if(contadorTemari)clearInterval(contadorTemari);comprovarNouDia();actualitzarPaseUI();contadorTemari=setInterval(()=>{const vistaTemariActiva=document.getElementById('tab-temari')?.classList.contains('active');if(vistaTemariActiva){if(tempsIniciTemari===null){tempsIniciTemari=Date.now();}else{const ara=Date.now();const segundos=(ara-tempsIniciTemari)/1000;if(segundos>=3){estat.stats.tempsEstudiatAvui+=segundos/60;tempsIniciTemari=ara;guardar();actualitzarPaseUI();}}if(estat.stats.tempsEstudiatAvui>=TEMARIO_V14_CONFIG.paseMinutos&&!estat.stats.paseCompletado){estat.stats.paseCompletado=true;estat.coins+=50;guardar();alert(`✅ PASE DESBLOQUEADO V14.3.14!\nHas estudiado ${TEMARIO_V14_CONFIG.paseMinutos} minutos con fichas verticales. +50 coins`);if(typeof actualitzarEstadistiques_V94==='function')actualitzarEstadistiques_V94();}}else{if(tempsIniciTemari!==null){const ara=Date.now();const segundos=(ara-tempsIniciTemari)/1000;estat.stats.tempsEstudiatAvui+=segundos/60;tempsIniciTemari=null;guardar();actualitzarPaseUI();}}},1000);}
 function sumarTiempoEstudio(){if(tempsIniciTemari===null)tempsIniciTemari=Date.now();else{const ara=Date.now();const diff=(ara-tempsIniciTemari)/1000;if(diff>1){estat.stats.tempsEstudiatAvui+=diff/60;tempsIniciTemari=ara;guardar();actualitzarPaseUI();}}}
 function comprovarNouDia(){const avuiISO=new Date().toISOString().split('T')[0];const avuiLegible=new Date().toLocaleDateString('es-ES');if(estat.stats.diaActual!==avuiISO&&estat.stats.diaActual!==avuiLegible){const stats=calcularPreparacioDGT_V94();estat.stats.historialEvolucio.push({dia:estat.stats.diaActual,percent:stats.preparacio,retencio:stats.retencio,cobertura:stats.cobertura});if(estat.stats.historialEvolucio.length>30)estat.stats.historialEvolucio.shift();estat.stats.tempsEstudiatAvui=0;estat.stats.diaActual=avuiISO;estat.stats.paseCompletado=false;tempsIniciTemari=null;for(let c in PROGRESO.tests)PROGRESO.tests[c].dies={};for(let c in PROGRESO.casos)PROGRESO.casos[c].dies={};guardar();actualitzarPaseUI();}else if(estat.stats.diaActual===avuiLegible){estat.stats.diaActual=avuiISO;guardar();}}
 function actualitzarPaseUI(){const minuts=Math.floor(estat.stats.tempsEstudiatAvui||0);const segons=Math.floor(((estat.stats.tempsEstudiatAvui||0)-minuts)*60);const el=document.getElementById('pase-temps');if(el)el.textContent=`${minuts}:${segons.toString().padStart(2,'0')} / ${TEMARIO_V14_CONFIG.paseMinutos}:00`;const msg=document.getElementById('stats-motivacio');if(msg){if(estat.stats.paseCompletado)msg.textContent="✅ Pase Activo 10min. A practicar 💪";else{const falten=Math.max(0,TEMARIO_V14_CONFIG.paseMinutos-estat.stats.tempsEstudiatAvui);const fMin=Math.floor(falten);const fSeg=Math.floor((falten-fMin)*60);msg.textContent=`Estudia ${fMin}:${fSeg.toString().padStart(2,'0')} más en el TEMARIO (22 fichas) para desbloquear`;}}}
-function carregarTemari_V14(){console.log("V14.3.7 Temario 22 fichas");setTimeout(()=>{const visor=document.getElementById('visor-ficha-container');if(visor&&!visor.querySelector('img'))obrirFichaJPG('ficha-t01a');},600);}
+function carregarTemari_V14(){console.log("V14.3.14 Temario 22 fichas");setTimeout(()=>{const visor=document.getElementById('visor-ficha-container');if(visor&&!visor.querySelector('img'))obrirFichaJPG('ficha-t01a');},600);}
 function carregarTemari(){carregarTemari_V14();}
 function canviarTemariPrincipal(evt,id){const container=document.getElementById('tab-temari');if(!container)return;const mainTabs=container.querySelectorAll(':scope >.sub-tabs:first-child >.sub-tab-btn');mainTabs.forEach(b=>b.classList.remove('active'));if(evt&&evt.currentTarget)evt.currentTarget.classList.add('active');const rapido=document.getElementById('temari-rapido');const biblio=document.getElementById('temari-biblioteca');if(rapido){rapido.classList.remove('active');rapido.style.display='none';}if(biblio){biblio.classList.remove('active');biblio.style.display='none';}const t=document.getElementById('temari-'+id);if(t){t.classList.add('active');t.style.display='block';}if(id==='rapido'){setTimeout(()=>obrirFichaJPG('ficha-t01a'),100);}}
 function canviarTemaFicha(evt,tema){const rapido=document.getElementById('temari-rapido');if(!rapido)return;const temaBtns=rapido.querySelectorAll(':scope >.sub-tabs >.sub-tab-btn');temaBtns.forEach(b=>b.classList.remove('active'));if(evt&&evt.currentTarget)evt.currentTarget.classList.add('active');rapido.querySelectorAll('.tema-cont').forEach(c=>{c.classList.remove('active');c.style.display='none';});const cont=document.getElementById('tema-'+tema);if(cont){cont.classList.add('active');cont.style.display='block';}obrirFichaJPG('ficha-'+tema+'a');}
 function obrirFichaJPG(nombreCorto){const visor=document.getElementById('visor-ficha-container');if(!visor){const real=MAPA_FICHAS_LARGAS_V14[nombreCorto]||nombreCorto+'.jpg';window.open('./'+real,'_blank');return;}sumarTiempoEstudio();const nombreReal=MAPA_FICHAS_LARGAS_V14[nombreCorto]||(nombreCorto.endsWith('.jpg')?nombreCorto:nombreCorto+'.jpg');const nombreCortoFallback=nombreCorto+'.jpg';visor.innerHTML=`<div style="padding:10px;text-align:center;color:#00D9FF;font-size:11px">⏳ Cargando ${nombreCorto} → ${nombreReal} - Scroll vertical...</div><img src="./${nombreReal}" alt="${nombreCorto}" style="width:100%;height:auto;display:block;border-radius:12px;" loading="lazy" onload="sumarTiempoEstudio(); iniciarComptadorTemari(); if(this.previousElementSibling) this.previousElementSibling.style.display='none';" onerror="this.onerror=null; this.src='./${nombreCortoFallback}'; this.onerror=function(){this.parentElement.innerHTML='<div style=\\'padding:30px 20px;text-align:center;color:#ff4757;font-size:13px;background:#1a0a0a;border-radius:12px;border:1px solid #a00\\'>❌ No se encontró<br><b>${nombreReal}</b><br><small>${nombreCortoFallback}</small><br><br>Revisa GitHub: 22 fichas en raíz<br><br><button class=\\'btn\\' onclick=\\'obrirFichaJPG(\\'ficha-t01a\\')\\'>Volver a T01A</button></div>'}">`;setTimeout(()=>{visor.scrollIntoView({behavior:'smooth',block:'start'});},150);}
 function obrirBibliotecaOficial(id){const link=TEMARIO_V14_CONFIG.bibliotecaLinks[id]||TEMARIO_DGT_LINKS_FIJOS[0];if(link)window.open(link,'_blank');}
 function getBibliotecaLinkParaPanel(panelId){if(!panelId)return null;for(let key in MAPA_PANELLS_DETALLAT){if(panelId.toUpperCase().startsWith(key)){const bib=MAPA_PANELLS_DETALLAT[key].biblioteca;if(bib)return{id:bib,link:TEMARIO_V14_CONFIG.bibliotecaLinks[bib],info:MAPA_PANELLS_DETALLAT[key]};}}const pref=panelId.substring(0,2).toUpperCase();if(MAPA_PANELLS_DETALLAT[pref]){const bib=MAPA_PANELLS_DETALLAT[pref].biblioteca;return{id:bib,link:TEMARIO_V14_CONFIG.bibliotecaLinks[bib],info:MAPA_PANELLS_DETALLAT[pref]};}return null;}
-function obrirPDF(){console.warn("V14.3.7 obsoleto - usa obrirFichaJPG");}
+function obrirPDF(){console.warn("V14.3.14 obsoleto - usa obrirFichaJPG");}
 function tancarPDF(){}
 
 function obtenirDetallRealPregunta(pregunta){if(!pregunta)return{nom:'General',desc:'General',temari:'TEMARIO 1',pag:1,panel:'',biblioteca:'02'};const codi=(pregunta.codi||pregunta.panel_id||'').toUpperCase();const nombre=(pregunta.nombre_senal||pregunta.nombre||'').toUpperCase();const ruta=(pregunta.ruta_panel||pregunta.ruta||'').toUpperCase();const q=(pregunta.q||pregunta.pregunta||'').toUpperCase();for(let i=1;i<=15;i++){const key=`N-${i.toString().padStart(2,'0')}`;if(codi.includes(key)||ruta.includes(key)||nombre.includes(key)){return{...MAPA_PANELLS_DETALLAT[key],panel:key};}}if(codi.includes('S-100')||ruta.includes('S-100')||codi.match(/S-10[0-9]/)||nombre.includes('S-10'))return{...MAPA_PANELLS_DETALLAT['S-100'],panel:'S-100'};if(codi.includes('S-200')||ruta.includes('S-200'))return{...MAPA_PANELLS_DETALLAT['S-200'],panel:'S-200'};if(codi.includes('S-300')||ruta.includes('S-300'))return{...MAPA_PANELLS_DETALLAT['S-300'],panel:'S-300'};if(codi.startsWith('S-')||ruta.includes('S-')){if(codi.startsWith('S-1')||nombre.includes('SERVICIO')||q.includes('SERVICIO')||q.includes('GASOLINERA'))return{...MAPA_PANELLS_DETALLAT['S-100'],panel:'S-100'};}if(codi.startsWith('P-')||ruta.startsWith('P-'))return{...MAPA_PANELLS_DETALLAT['P-'],panel:'P-'};if(codi.startsWith('R-')||ruta.startsWith('R-'))return{...MAPA_PANELLS_DETALLAT['R-'],panel:'R-'};if(codi.startsWith('M-')||ruta.startsWith('M-')||q.includes('MOTOR')||q.includes('BATERIA')||q.includes('HIBRIDO'))return{...MAPA_PANELLS_DETALLAT['M-'],panel:'M-'};if(codi.startsWith('A-')||ruta.startsWith('A-')||q.includes('CASCO')||q.includes('RCP')||q.includes('HEMORRAGIA'))return{...MAPA_PANELLS_DETALLAT['A-'],panel:'A-'};if(codi.startsWith('E-')||ruta.startsWith('E-')||q.includes('ZBE')||q.includes('CONTAMINACION'))return{...MAPA_PANELLS_DETALLAT['E-'],panel:'E-'};for(let key in MAPEO_PALABRAS_CLAVE){if((pregunta.q||pregunta.pregunta||'').toLowerCase().includes(key)){const m=MAPEO_PALABRAS_CLAVE[key];return{nom:m.subtema,desc:m.subtema,temari:'TEMARIO 2',pag:m.pag,panel:key,biblioteca:'02'};}}return{nom:pregunta.nombre_senal||pregunta.codi||'General',desc:pregunta.nombre_senal||'General',temari:'TEMARIO 1',pag:1,panel:codi||'',biblioteca:'02'};}
-function autoMapearTotesPreguntes(){let idCounter=1;if(typeof PREGUNTES==='undefined'){console.warn('PREGUNTES no definido aun');return;}for(let cat in PREGUNTES){PREGUNTES[cat]=PREGUNTES[cat].map(p=>{const detall=obtenirDetallRealPregunta(p);return{...p,id:p.id||idCounter++,subtema:detall.nom,pag:detall.pag,detallReal:detall,familia:detall.familia};});}console.log('✅ V14.3.12 MAPEADO - Total:',getTotalBanco());}
-function registrarFallada(categoria,subtema,pagina,preguntaOriginal){if(!subtema||subtema==='undefined')subtema='General';if(!pagina)pagina=1;if(!estat.stats.puntsDebils)estat.stats.puntsDebils={};if(!estat.stats.puntsDebils[categoria])estat.stats.puntsDebils[categoria]={};let clau=subtema;let detall=null;if(preguntaOriginal){detall=obtenirDetallRealPregunta(preguntaOriginal);clau=`${detall.familia} | ${detall.nom}`;pagina=detall.pag;}if(!estat.stats.puntsDebils[categoria][clau]){estat.stats.puntsDebils[categoria][clau]={fallos:0,pag:pagina,detall:detall||{nom:subtema,pag:pagina,temari:'TEMARIO 1',familia:subtema,biblioteca:'02'}};}estat.stats.puntsDebils[categoria][clau].fallos++;guardar();}
+function autoMapearTotesPreguntes(){let idCounter=1;if(typeof PREGUNTES==='undefined'){console.warn('PREGUNTES no definido aun');return;}for(let cat in PREGUNTES){PREGUNTES[cat]=PREGUNTES[cat].map(p=>{const detall=obtenirDetallRealPregunta(p);return{...p,id:p.id||idCounter++,subtema:detall.nom,pag:detall.pag,detallReal:detall,familia:detall.familia};});}console.log('✅ V14.3.14 MAPEADO - Total:',getTotalBanco());}
+function normalizarCatDebil(cat){if(!cat) return 'senales';const c=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();if(['senyals','senales','señales','senal'].includes(c)) return 'senales';if(['normes','normas','norma'].includes(c)) return 'normas';if(['auxilis','auxilios','auxilio'].includes(c)) return 'auxilios';if(['trampes','trampas','trampa'].includes(c)) return 'trampas';if(['mediambient','medio_ambiente','medioambiente','medio ambiente','medio'].includes(c)) return 'medio_ambiente';if(['mecanica','mecànica'].includes(c)) return 'mecanica';if(['general'].includes(c)) return 'general';return c;}
+function registrarFallada(categoria,subtema,pagina,preguntaOriginal){if(!subtema||subtema==='undefined')subtema='General';if(!pagina)pagina=1;if(!estat.stats.puntsDebils)estat.stats.puntsDebils={};const catNorm=normalizarCatDebil(categoria);if(!estat.stats.puntsDebils[catNorm])estat.stats.puntsDebils[catNorm]={};let clau=subtema;let detall=null;if(preguntaOriginal){detall=obtenirDetallRealPregunta(preguntaOriginal);clau=`${detall.familia} | ${detall.nom}`;pagina=detall.pag;}if(!estat.stats.puntsDebils[catNorm][clau]){estat.stats.puntsDebils[catNorm][clau]={fallos:0,pag:pagina,detall:detall||{nom:subtema,pag:pagina,temari:'TEMARIO 1',familia:subtema,biblioteca:'02'}};}estat.stats.puntsDebils[catNorm][clau].fallos++;guardar();}
 function barrejarArray(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function normalizarPregunta(p){const q=p.q||p.pregunta||'';const a=p.a||p.opcions||p.opciones||[];const ok=p.ok!==undefined?p.ok:(p.correcta!==undefined?p.correcta:0);return{...p,q,a,ok,pregunta:q,opcions:a,correcta:ok};}
 function potFerTests(){comprovarNouDia();return estat.stats.paseCompletado;}
-function mostrarPopupPase(){const minutsQueFalten=Math.max(0,10-Math.floor(estat.stats.tempsEstudiatAvui));alert(`⛔ PASE BLOQUEADO V14.3.12\nEstudia ${minutsQueFalten} min más en TEMARIO para desbloquear.`);}
+function mostrarPopupPase(){const minutsQueFalten=Math.max(0,10-Math.floor(estat.stats.tempsEstudiatAvui));alert(`⛔ PASE BLOQUEADO V14.3.14\nEstudia ${minutsQueFalten} min más en TEMARIO para desbloquear.`);}
 
-// ===== TEST 5 TEMARIOS - INTACTO PERFECTO DE TU BLOQUE =====
+// ===== TEST 5 TEMARIOS - INTACTO =====
 function carregarPregunta(cat){
   const catNet=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
   let catReal=catNet; if(catNet==='senales') catReal='senyals'; if(catNet==='normas') catReal='normes'; if(catNet==='auxilios') catReal='auxilis'; if(catNet==='medio_ambiente'||catNet==='medioambiente') catReal='mediambient';
@@ -1256,7 +1257,7 @@ function respondreTest_V94(cat,idx,el){
   const catNet=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
   const s=estat.test[catNet]||estat.test[cat]; if(!s||!s.current) return;
   const p=s.current;
-  const cont=document.getElementById(`test-${catNet}-opciones`)||document.getElementById(`test-${cat}-opciones`)||document.getElementById(`test-${catNet}-opciones`)?.parentElement?.querySelector('.opciones');
+  const cont=document.getElementById(`test-${catNet}-opciones`)||document.getElementById(`test-${cat}-opciones`);
   if(!cont) return;
   if(cont.querySelector('.correcta')) return;
   cont.querySelectorAll('.opcio').forEach(o=>o.classList.add('bloquejada'));
@@ -1264,7 +1265,7 @@ function respondreTest_V94(cat,idx,el){
   if(correcte){el.classList.add('correcta'); s.encerts++; s.encertsSesion++; s.ratxa++; s.puntuacio+=10+(s.ratxa*2); estat.coins+=5; mostrarEmoji(true,el);}
   else{el.classList.add('incorrecta'); const ops=cont.querySelectorAll('.opcio'); if(ops[p.ok]) ops[p.ok].classList.add('correcta'); s.ratxa=0; registrarFallada(catNet,p.subtema,p.pag,s.currentOriginal||p); mostrarEmoji(false,el);}
   actualizarMetricasTest(catNet,p.id,correcte); registrarHistorialPregunta(p.id,correcte); actualitzarCoins(); guardar();
-  const tipDiv=document.getElementById(`test-${catNet}-tip`)||document.getElementById(`test-${cat}-tip`)||document.getElementById(`test-${catNet}-tip`);
+  const tipDiv=document.getElementById(`test-${catNet}-tip`)||document.getElementById(`test-${cat}-tip`);
   if(tipDiv){
     const txtReal=(s.currentOriginal?.tip||s.currentOriginal?.explicacio||p.tip||p.explicacio||"").trim();
     const txtFinal=txtReal!==""?txtReal:`Recuerda: la respuesta más segura y conservadora es siempre la correcta en DGT. Repasa ficha ${p.subtema||'general'}.`;
@@ -1272,7 +1273,7 @@ function respondreTest_V94(cat,idx,el){
     tipDiv.style.display='block'; tipDiv.style.border='3px solid #00D9FF'; tipDiv.style.background='#fff9c4'; tipDiv.style.color='#000'; tipDiv.style.padding='14px'; tipDiv.style.borderRadius='12px'; tipDiv.style.marginTop='12px'; tipDiv.style.fontWeight='700'; tipDiv.style.fontSize='13px';
   }
   desbloquearSiguienteUniversal();
-  const btnSig=document.getElementById(`btn-sig-test-${catNet}`)||document.getElementById(`btn-sig-test-${cat}`)||document.getElementById(`btn-sig-test-${catNet.replace('á','a').replace('à','a')}`)||document.querySelector(`[id^="btn-sig-test-"]`);
+  const btnSig=document.getElementById(`btn-sig-test-${catNet}`)||document.getElementById(`btn-sig-test-${cat}`)||document.querySelector(`[id^="btn-sig-test-"]`);
   if(btnSig){btnSig.disabled=false; btnSig.removeAttribute('disabled'); btnSig.style.opacity='1'; btnSig.style.pointerEvents='auto'; btnSig.style.display='block'; btnSig.style.background='linear-gradient(180deg,#00D9FF 0%,#00ff88 100%)'; btnSig.style.color='#000'; btnSig.style.fontWeight='900';}
 }
 function seguentTest(e,cat){
@@ -1291,69 +1292,92 @@ function seguentTest(e,cat){
   }
   carregarPregunta(catNet);
 }
-// ===== SIMULACROS 4 TESTS - INTACTO PERFECTO - USA TU BANCO YA GUARDADO =====
+
+// ===== SIMULACROS FIX V14.3.14 - urbà->urbano emergència->emergencia =====
+function mapSit(cat){
+  if(!cat) return 'clima';
+  const c = cat.toLowerCase().trim();
+  if(c.includes('clima')) return 'clima';
+  if(c.includes('urb')) return 'urbano';
+  if(c.includes('carre')) return 'carretera';
+  if(c.includes('emer')) return 'emergencia';
+  return 'clima';
+}
 function carregarSituacio(cat){
-  if(!cat) cat=sitCategoriaActiva;
-  const catNorm=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
-  let banco=SITUACIONS[cat]||SITUACIONS[catNorm]||SITUACIONS['clima']||SITUACIONS['urbano']||SITUACIONS['carretera']||SITUACIONS['emergencia']||PREGUNTES['general'];
+  if(!cat) cat=sitCategoriaActiva||'clima';
+  const keyReal = mapSit(cat);
+  sitCategoriaActiva = keyReal;
+  let banco = null;
+  if(typeof SITUACIONS!=='undefined') banco = SITUACIONS[keyReal] || SITUACIONS[cat] || SITUACIONS[keyReal.normalize?keyReal:keyReal];
+  if(!banco && typeof SITUACIONES!=='undefined') banco = SITUACIONES[keyReal]||SITUACIONES[cat];
+  if(!banco) banco = SITUACIONS?SITUACIONS['clima']:null;
   if(!banco||banco.length===0) return;
-  const s=estat.sit[cat]||estat.sit[catNorm]||estat.sit['clima']||estat.sit['urbano']||estat.sit['carretera']||estat.sit['emergencia'];
+  let s = estat.sit[keyReal] || estat.sit[cat] || estat.sit['urbà'] || estat.sit['emergència'];
   if(!s) return;
-  sitCategoriaActiva=catNorm;
+  estat.sit[keyReal]=s;
+  if(keyReal==='urbano') estat.sit['urbà']=s;
+  if(keyReal==='emergencia') estat.sit['emergència']=s;
   if(!s.preguntes||s.preguntes.length===0||s.index>=30){
     s.preguntes=barrejarArray(banco).slice(0,Math.min(30,banco.length));
-    s.index=0; s.encerts=0;
+    s.index=0; s.encerts=0; s.puntuacio=0;
   }
   const pOriginal=s.preguntes[s.index]; if(!pOriginal) return;
   const pNorm=normalizarPregunta(pOriginal);
   const opcionsBarrejades=barrejarArray(pNorm.a);
-  const p={...pNorm,a:opcionsBarrejades,ok:opcionsBarrejades.indexOf(pNorm.a[pNorm.ok]),q:pNorm.q,id:pOriginal.id||(catNorm+'_'+s.index)};
+  const p={...pNorm,a:opcionsBarrejades,ok:opcionsBarrejades.indexOf(pNorm.a[pNorm.ok]),q:pNorm.q,id:pOriginal.id||(keyReal+'_'+s.index)};
   s.current=p; s.currentOriginal=pOriginal;
-  const preEl=document.getElementById(`sit-${cat}-pregunta`)||document.getElementById(`sit-${catNorm}-pregunta`)||document.getElementById('sit-clima-pregunta')||document.getElementById('sit-urbano-pregunta')||document.getElementById('sit-carretera-pregunta')||document.getElementById('sit-emergencia-pregunta');
+  const idHTML = keyReal==='urbano'?'urbà':keyReal==='emergencia'?'emergència':keyReal;
+  const preEl=document.getElementById(`sit-${idHTML}-pregunta`)||document.getElementById(`sit-${keyReal}-pregunta`)||document.getElementById(`sit-${cat}-pregunta`);
   if(preEl) preEl.textContent=`${s.index+1}/30 - ${p.q}`;
-  const acEl=document.getElementById(`sit-${cat}-aciertos`)||document.getElementById(`sit-${catNorm}-aciertos`)||document.getElementById('sit-clima-aciertos');
+  const acEl=document.getElementById(`sit-${idHTML}-aciertos`)||document.getElementById(`sit-${keyReal}-aciertos`)||document.getElementById(`sit-${cat}-aciertos`)||document.getElementById('sit-clima-aciertos');
   if(acEl) acEl.textContent=s.encerts+'/30';
-  const progEl=document.getElementById(`sit-${cat}-progress`)||document.getElementById(`sit-${catNorm}-progress`)||document.getElementById('sit-clima-progress');
+  const scEl=document.getElementById(`sit-${idHTML}-score`)||document.getElementById(`sit-${keyReal}-score`);
+  if(scEl) scEl.textContent=s.puntuacio;
+  const progEl=document.getElementById(`sit-${idHTML}-progress`)||document.getElementById(`sit-${keyReal}-progress`)||document.getElementById(`sit-${cat}-progress`)||document.getElementById('sit-clima-progress');
   if(progEl) progEl.style.width=`${(s.index/30)*100}%`;
-  const cont=document.getElementById(`sit-${cat}-opciones`)||document.getElementById(`sit-${catNorm}-opciones`)||document.getElementById('sit-clima-opciones')||document.getElementById('sit-urbano-opciones')||document.getElementById('sit-carretera-opciones')||document.getElementById('sit-emergencia-opciones');
+  const cont=document.getElementById(`sit-${idHTML}-opciones`)||document.getElementById(`sit-${keyReal}-opciones`)||document.getElementById(`sit-${cat}-opciones`)||document.getElementById('sit-clima-opciones');
   if(!cont) return; cont.innerHTML='';
-  const btn=document.getElementById(`btn-sig-sit-${cat}`)||document.getElementById(`btn-sig-sit-${catNorm}`)||document.getElementById('btn-sig-sit-clima')||document.getElementById('btn-sig-sit-urbano')||document.getElementById('btn-sig-sit-carretera')||document.getElementById('btn-sig-sit-emergencia');
+  const tipEl=document.getElementById(`sit-${idHTML}-tip`)||document.getElementById(`sit-${keyReal}-tip`); if(tipEl){tipEl.style.display='none'; tipEl.innerHTML='';}
+  const btn=document.getElementById(`btn-sig-sit-${idHTML}`)||document.getElementById(`btn-sig-sit-${keyReal}`)||document.getElementById(`btn-sig-sit-${cat}`);
   if(btn){btn.disabled=true; btn.setAttribute('disabled',''); btn.style.opacity='0.4'; btn.style.pointerEvents='none'; btn.textContent=(s.index===29?'Ver resultado →':'Siguiente →');}
-  p.a.forEach((txt,i)=>{const div=document.createElement('div'); div.className='opcio'; div.textContent=txt; div.onclick=function(){respondreSituacio_V94(catNorm,i,this);}; cont.appendChild(div);});
+  p.a.forEach((txt,i)=>{const div=document.createElement('div'); div.className='opcio'; div.textContent=txt; div.onclick=function(){respondreSituacio_V94(keyReal,i,this);}; cont.appendChild(div);});
 }
 function respondreSituacio_V94(cat,idx,el){
   if(!potFerTests()) return mostrarPopupPase();
-  const catNorm=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-  const s=estat.sit[cat]||estat.sit[catNorm]||estat.sit['clima']||estat.sit['urbano']||estat.sit['carretera']||estat.sit['emergencia'];
-  if(!s||!s.current) return;
+  const keyReal = mapSit(cat);
+  const s=estat.sit[keyReal]||estat.sit[cat]||estat.sit['urbà']||estat.sit['emergència']; if(!s||!s.current) return;
   const p=s.current;
-  const cont=document.getElementById(`sit-${cat}-opciones`)||document.getElementById(`sit-${catNorm}-opciones`)||document.getElementById('sit-clima-opciones')||document.getElementById('sit-urbano-opciones')||document.getElementById('sit-carretera-opciones')||document.getElementById('sit-emergencia-opciones');
+  const idHTML = keyReal==='urbano'?'urbà':keyReal==='emergencia'?'emergència':keyReal;
+  const cont=document.getElementById(`sit-${idHTML}-opciones`)||document.getElementById(`sit-${keyReal}-opciones`)||document.getElementById(`sit-${cat}-opciones`);
   if(!cont||cont.querySelector('.correcta')) return;
   cont.querySelectorAll('.opcio').forEach(o=>o.classList.add('bloquejada'));
   const correcte=idx===p.ok;
   if(correcte){el.classList.add('correcta'); s.encerts++; s.puntuacio+=15; estat.coins+=10; mostrarEmoji(true,el);}else{el.classList.add('incorrecta'); cont.querySelectorAll('.opcio')[p.ok]?.classList.add('correcta'); mostrarEmoji(false,el);}
-  actualizarMetricasCaso(catNorm,p.id,correcte); registrarHistorialPregunta(p.id,correcte); actualitzarCoins(); guardar();
-  desbloquearSiguienteUniversal();
-  const btn=document.getElementById(`btn-sig-sit-${cat}`)||document.getElementById(`btn-sig-sit-${catNorm}`)||document.getElementById('btn-sig-sit-clima')||document.getElementById('btn-sig-sit-urbano')||document.getElementById('btn-sig-sit-carretera')||document.getElementById('btn-sig-sit-emergencia')||document.querySelector('[id^="btn-sig-sit-"]');
-  if(btn){btn.disabled=false; btn.removeAttribute('disabled'); btn.style.opacity='1'; btn.style.pointerEvents='auto'; btn.style.display='block'; btn.style.background='linear-gradient(180deg,#00D9FF 0%,#00ff88 100%)'; btn.style.color='#000'; btn.style.fontWeight='900';}
+  actualizarMetricasCaso(keyReal,p.id,correcte); registrarHistorialPregunta(p.id,correcte);
+  const acEl=document.getElementById(`sit-${idHTML}-aciertos`)||document.getElementById(`sit-${keyReal}-aciertos`); if(acEl) acEl.textContent=s.encerts+'/30';
+  const scEl=document.getElementById(`sit-${idHTML}-score`)||document.getElementById(`sit-${keyReal}-score`); if(scEl) scEl.textContent=s.puntuacio;
+  actualitzarCoins(); guardar(); desbloquearSiguienteUniversal();
+  const btn=document.getElementById(`sit-${idHTML}-opciones`)||document.getElementById(`sit-${keyReal}-opciones`)||document.getElementById(`sit-${cat}-opciones`);
+  const btnSig=document.getElementById(`btn-sig-sit-${idHTML}`)||document.getElementById(`btn-sig-sit-${keyReal}`)||document.getElementById(`btn-sig-sit-${cat}`);
+  if(btnSig){btnSig.disabled=false; btnSig.removeAttribute('disabled'); btnSig.style.opacity='1'; btnSig.style.pointerEvents='auto'; btnSig.style.display='block'; btnSig.style.background='linear-gradient(180deg,#00D9FF 0%,#00ff88 100%)'; btnSig.style.color='#000'; btnSig.style.fontWeight='900';}
 }
 function seguentSituacio(e,cat){
   if(e) e.preventDefault();
-  const catNorm=cat.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-  const s=estat.sit[cat]||estat.sit[catNorm]||estat.sit['clima']||estat.sit['urbano']||estat.sit['carretera']||estat.sit['emergencia'];
-  if(!s) return;
-  s.index++; s.idx++;
+  const keyReal = mapSit(cat||sitCategoriaActiva);
+  const s=estat.sit[keyReal]||estat.sit[cat]; if(!s) return;
+  s.index++;
   if(s.index>=30){
     const pct=Math.round((s.encerts/30)*100);
     const m=document.createElement('div'); m.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
-    m.innerHTML=`<div style="background:#1a1a1a; border:3px solid #00D9FF; border-radius:20px; padding:24px; max-width:340px; width:100%; text-align:center;"><h2 style="color:#00D9FF;">Fin ${s.encerts}/30 - ${pct}%</h2><button id="btn-cont-sit" style="background:#00D9FF; color:#000; border:none; padding:12px; border-radius:12px; width:100%; margin-top:12px; font-weight:800; cursor:pointer;">Siguiente tanda de 30 →</button></div>`;
+    m.innerHTML=`<div style="background:#1a1a1a; border:3px solid #00D9FF; border-radius:20px; padding:24px; max-width:340px; width:100%; text-align:center;"><h2 style="color:#00D9FF;">Fin ${keyReal} ${s.encerts}/30 - ${pct}%</h2><button id="btn-cont-sit" style="background:#00D9FF; color:#000; border:none; padding:12px; border-radius:12px; width:100%; margin-top:12px; font-weight:800; cursor:pointer;">Siguiente tanda de 30 →</button></div>`;
     document.body.appendChild(m);
-    document.getElementById('btn-cont-sit').onclick=()=>{m.remove(); s.preguntes=[]; s.index=0; s.encerts=0; carregarSituacio(catNorm);};
+    document.getElementById('btn-cont-sit').onclick=()=>{m.remove(); s.preguntes=[]; s.index=0; s.encerts=0; s.puntuacio=0; carregarSituacio(keyReal);};
     return;
   }
-  carregarSituacio(catNorm);
+  carregarSituacio(keyReal);
 }
-// ===== EXAMEN - INTACTO PERFECTO =====
+
+// ===== EXAMEN - INTACTO =====
 function iniciarExamen(e){if(!potFerTests())return mostrarPopupPase();let totes=[];for(let k in PREGUNTES) totes=totes.concat(PREGUNTES[k]); if(totes.length<30){alert(`Faltan ${totes.length}`);return;}estat.examen.preguntes=barrejarArray(totes).slice(0,30);estat.examen.index=0;estat.examen.encerts=0;estat.examen.fallos=0;estat.examen.activa=true;document.getElementById('btn-iniciar-examen').style.display='none';document.getElementById('btn-sig-examen').style.display='block';iniciarTimerExamen();carregarPreguntaExamen();}
 function iniciarTimerExamen(){clearInterval(estat.examen.timer);estat.examen.temps=1800;estat.examen.timer=setInterval(()=>{estat.examen.temps--;const m=Math.floor(estat.examen.temps/60);const s=estat.examen.temps%60;const t=document.getElementById('examen-timer');if(t)t.textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;if(estat.examen.temps<=0)finalitzarExamen();},1000);}
 function carregarPreguntaExamen(){if(estat.examen.index>=30)return finalitzarExamen();const pOriginal=estat.examen.preguntes[estat.examen.index];const pNorm=normalizarPregunta(pOriginal);const opcionsBarrejades=barrejarArray(pNorm.a);const p={...pNorm,a:opcionsBarrejades,ok:opcionsBarrejades.indexOf(pNorm.a[pNorm.ok]),q:pNorm.q,id:pOriginal.id||('examen_'+estat.examen.index),ruta_panel:pOriginal.ruta_panel,ruta:pOriginal.ruta,emoji:pOriginal.emoji,forma:pOriginal.forma,tip:pOriginal.tip,explicacio:pOriginal.explicacio};estat.examen.preguntes[estat.examen.index]=p;estat.examen.currentOriginal=pOriginal;pintarImatgeSiExisteix('examen',pOriginal);document.getElementById('examen-num').textContent=estat.examen.index+1;document.getElementById('examen-aciertos').textContent=estat.examen.encerts;document.getElementById('examen-progress').style.width=`${(estat.examen.index/30)*100}%`;document.getElementById('examen-pregunta').innerHTML=`${p.q} <button class="btn-audio" onclick="parlar('${p.q.replace(/'/g,"\\'")}')" style="background:#00D9FF; border:none; border-radius:50%; width:32px; height:32px;">🔊</button>`;const cont=document.getElementById('examen-opciones');cont.innerHTML='';document.getElementById('btn-sig-examen').disabled=true;document.getElementById('examen-tip').style.display='none';p.a.forEach((txt,i)=>{const d=document.createElement('div');d.className='opcio';d.textContent=txt;d.onclick=function(){respondreExamen(i,this);};cont.appendChild(d);});}
@@ -1361,7 +1385,8 @@ function respondreExamen(idx,el){const p=estat.examen.preguntes[estat.examen.ind
 function seguentPreguntaExamen(e){e.preventDefault();estat.examen.index++;if(estat.examen.index>=30)finalitzarExamen();else carregarPreguntaExamen();}
 function finalitzarExamen(){clearInterval(estat.examen.timer);estat.examen.activa=false;const nota=estat.examen.encerts;PROGRESO.examen.realitzats++;if(nota>=27)PROGRESO.examen.aprovats++;PROGRESO.examen.historial.push({data:estat.stats.diaActual,nota});guardar();const res=document.getElementById('examen-resultat');res.style.display='block';res.innerHTML=nota>=27?`<h2 style="color:#2ecc71">✅ APROBADO ${nota}/30</h2><button class="btn" onclick="reiniciarExamen()">Otro examen</button>`:`<h2 style="color:#e74c3c">❌ SUSPENSO ${nota}/30</h2><button class="btn" onclick="reiniciarExamen()">Reintentar</button>`;}
 function reiniciarExamen(){document.getElementById('examen-resultat').style.display='none';document.getElementById('btn-iniciar-examen').style.display='block';document.getElementById('btn-sig-examen').style.display='none';document.getElementById('examen-pregunta').textContent="Pulsa Inicia el Examen";document.getElementById('examen-opciones').innerHTML='';document.getElementById('examen-tip').style.display='none';}
-// ===== GARAGE Y TIENDA RESTAURADOS - PERFECTO ORIGINAL =====
+
+// ===== GARAGE Y TIENDA - INTACTO =====
 function carregarGaratge(){const cont=document.getElementById('garage-lista')||document.getElementById('garaje-lista');if(!cont)return;cont.innerHTML='';let hpTotal=90;estat.accessoris.forEach(id=>{const acc=(typeof ACCESORIOS!=='undefined'?ACCESORIOS.find(a=>a.id===id):null)||(typeof ACCESSORIS!=='undefined'?ACCESSORIS.find(a=>a.id===id):null);if(acc)hpTotal+=(acc.hp||0);});const scoreEl=document.getElementById('garage-score')||document.getElementById('garaje-score');if(scoreEl)scoreEl.textContent=`🏎️ ${hpTotal} CV - ${estat.coins} 💰`;const lista=(typeof COCHES!=='undefined'?COCHES:(typeof COTXES!=='undefined'?COTXES:[]));lista.forEach(cotxe=>{const desbloquejat=estat.cotxes.includes(cotxe.id);const div=document.createElement('div');div.style.cssText='background:#1a1a1a;padding:12px;border-radius:12px;text-align:center;border:1px solid #333;margin-bottom:10px;';div.innerHTML=`<div style="font-size:40px;">${cotxe.emoji||'🚗'}</div><div style="color:#fff;">${cotxe.nombre||cotxe.nom}</div><div style="color:#00D9FF;">${cotxe.cv||90} CV</div>${!desbloquejat?`<button onclick="comprarCotxe('${cotxe.id}')" style="background:#00D9FF;border:none;padding:8px 12px;border-radius:8px;margin-top:6px;">Comprar ${cotxe.precio||cotxe.preu} 💰</button>`:'<div style="color:#2ecc71;">✓</div>'}`;cont.appendChild(div);});}
 function comprarCotxe(id){const lista=(typeof COCHES!=='undefined'?COCHES:COTXES);const c=lista.find(c=>c.id===id);if(estat.coins<(c.precio||c.preu)){alert('💰 Faltan monedas');return;}estat.coins-=(c.precio||c.preu);estat.cotxes.push(id);guardar();actualitzarCoins();carregarGaratge();}
 function carregarBotiga(){
@@ -1371,7 +1396,7 @@ function carregarBotiga(){
   const listaAcc=(typeof ACCESORIOS!=='undefined'?ACCESORIOS:(typeof ACCESSORIS!=='undefined'?ACCESSORIS:[]));
   const listaEmoji=(typeof EMOJI_TIENDA!=='undefined'?EMOJI_TIENDA:(typeof EMOJI_BOTIGA!=='undefined'?EMOJI_BOTIGA:[]));
   if(listaAcc.length===0 && listaEmoji.length===0){
-    cont.innerHTML='<div style="color:#999; text-align:center; padding:20px;">🛒 Tienda cargando...<br><small>Verifica ACCESORIOS y EMOJI_TIENDA</small></div>';
+    cont.innerHTML='<div style="color:#999; text-align:center; padding:20px;">🛒 Tienda cargando...</div>';
     return;
   }
   listaAcc.forEach(acc=>{
@@ -1409,15 +1434,13 @@ function comprarEmoji(id){
   if(!estat.emojis.includes(id)) estat.emojis.push(id);
   guardar(); actualitzarCoins(); carregarBotiga();
 }
-function carregarTemari(){carregarTemari_V14();}
-function obrirPDF(){}
-function tancarPDF(){}
 function carregarTips(){if(typeof TIPS==='undefined')return;tipsData=TIPS;currentTip=0;mostrarTip();}
 function mostrarTip(){if(!tipsData.length)return;const tip=tipsData[currentTip];document.getElementById('tip-content').innerHTML=`<div style="text-align:center;"><div style="font-size:48px;">${tip.emoji||'💡'}</div><div style="background:#fff9c4; color:#000; padding:14px; border-radius:12px; border:3px solid #00D9FF; margin-top:10px;">${tip.txt||tip.texto}</div></div>`;document.getElementById('tip-counter').textContent=`${currentTip+1}/${tipsData.length}`;}
 function nextTip(e){if(e)e.preventDefault();currentTip=(currentTip+1)%tipsData.length;mostrarTip();}
 function prevTip(e){if(e)e.preventDefault();currentTip=(currentTip-1+tipsData.length)%tipsData.length;mostrarTip();}
 function dibujarGraficaEvolucion(){const canvas=document.getElementById('grafica-evolucion'); if(!canvas) return; const ctx=canvas.getContext('2d'); const dades=getDadesEvolucio(); if(dades.length<2){ctx.fillStyle='#666'; ctx.textAlign='center'; ctx.fillText('Haz tests 2 días para ver evolución',canvas.width/2,canvas.height/2); return;} ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#00D9FF'; ctx.lineWidth=3; ctx.beginPath(); dades.forEach((d,i)=>{const x=30+(i*(canvas.width-60)/Math.max(1,dades.length-1)); const y=canvas.height-30-(d.global/100*(canvas.height-60)); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);}); ctx.stroke();}
-// ===== ESTADISTICA FIX DEFINITIVO - SOLO ESTE BLOQUE CAMBIADO - V14.3.12 =====
+
+// ===== ESTADISTICA FIX V14.3.14 - DÈBILS CON MAPEO senyals/senales =====
 function dibuixarPuntsDebils_V94(){
   const cont=document.getElementById('stats-debils-lista'); if(!cont) return;
   cont.innerHTML='';
@@ -1425,22 +1448,28 @@ function dibuixarPuntsDebils_V94(){
     cont.innerHTML='<div style="text-align:center;color:#999; padding:20px;">Haz más tests para detectar tus puntos débiles reales<br><small>El sistema lee panel_id N-01..N-15, S-100, M-, A-, E- y te manda a biblioteca oficial</small></div>';
     return;
   }
-  const categories=['senales','trampas','normas','mecanica','auxilios','medio_ambiente','mediambient'];
-  const noms=['🚦 SEÑALES','🪤 TRAMPAS','📋 NORMAS','⚙️ MECÁNICA','🚑 AUXILIOS','♻️ MEDIO AMBIENTE'];
-  categories.forEach((cat,i)=>{
-    const keyReal=cat==='medio_ambiente'?'medio_ambiente':cat;
-    if(!estat.stats.puntsDebils[keyReal]||Object.keys(estat.stats.puntsDebils[keyReal]).length===0){
-      if(i<6) cont.innerHTML+=`<div style="margin-bottom:15px; padding:12px; background:#1a1a1a; border-radius:8px;"><div style="font-weight:700; color:#00D9FF">${noms[i]}</div><div style="color:#666">Aún no tienes datos - Haz tests</div></div>`;
+  const mapa = [
+    {keys:['senales','senyals','señales'], nom:'🚦 SEÑALES'},
+    {keys:['trampas','trampes'], nom:'🪤 TRAMPAS'},
+    {keys:['normas','normes'], nom:'📋 NORMAS'},
+    {keys:['mecanica','mecànica'], nom:'⚙️ MECÁNICA'},
+    {keys:['auxilios','auxilis'], nom:'🚑 AUXILIOS'},
+    {keys:['medio_ambiente','mediambient','medioambiente'], nom:'♻️ MEDIO AMBIENTE'},
+    {keys:['general'], nom:'📚 GENERAL'}
+  ];
+  mapa.forEach(entry=>{
+    let datos=null;
+    for(let k of entry.keys){ if(estat.stats.puntsDebils[k] && Object.keys(estat.stats.puntsDebils[k]).length>0){ datos=estat.stats.puntsDebils[k]; break; } }
+    if(!datos){
+      if(entry.nom!=='📚 GENERAL') cont.innerHTML+=`<div style="margin-bottom:15px; padding:12px; background:#1a1a1a; border-radius:8px;"><div style="font-weight:700; color:#00D9FF">${entry.nom}</div><div style="color:#666">Aún no tienes datos - Haz tests</div></div>`;
       return;
     }
     let maxFallos=0; let pitjorClau='General'; let detallMillor=null;
-    for(let clau in estat.stats.puntsDebils[keyReal]){
-      if(estat.stats.puntsDebils[keyReal][clau].fallos>maxFallos){ maxFallos=estat.stats.puntsDebils[keyReal][clau].fallos; pitjorClau=clau; detallMillor=estat.stats.puntsDebils[keyReal][clau].detall; }
-    }
+    for(let clau in datos){ if(datos[clau].fallos>maxFallos){ maxFallos=datos[clau].fallos; pitjorClau=clau; detallMillor=datos[clau].detall; } }
     const detall=detallMillor||{nom:pitjorClau,desc:'',temari:'TEMARIO 1',pag:1,familia:pitjorClau,biblioteca:'02',panel:''};
     const bibId=detall.biblioteca||'02';
     const bibLink=(typeof TEMARIO_V14_CONFIG!=='undefined'&&TEMARIO_V14_CONFIG.bibliotecaLinks[bibId])?TEMARIO_V14_CONFIG.bibliotecaLinks[bibId]:TEMARIO_DGT_LINKS_FIJOS[0];
-    cont.innerHTML+=`<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px;">${noms[i]}</div><div style="color:#fff; font-weight:600;">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b> - ${maxFallos} fallos ${detall.panel?` - ${detall.panel}`:''}</div><div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;"><button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%;">📖 Reforzar: ${detall.familia||detall.nom} ↗</button></div></div>`;
+    cont.innerHTML+=`<div style="margin-bottom:15px; padding:14px; background:#1a1a1a; border-left:4px solid #FFD700; border-radius:10px;"><div style="font-weight:700; color:#00D9FF; margin-bottom:6px;">${entry.nom}</div><div style="color:#fff; font-weight:600;">Tu punto débil: <b style="color:#FFD700">"${detall.familia||detall.nom}"</b> - ${maxFallos} fallos ${detall.panel?` - ${detall.panel}`:''}</div><div style="margin-top:10px; background:#001a33; border:1px solid #00D9FF; border-radius:8px; padding:10px;"><button onclick="window.open('${bibLink}','_blank')" style="background:linear-gradient(135deg,#00D9FF,#00ff88); border:none; border-radius:8px; padding:8px 12px; cursor:pointer; font-weight:800; color:#000; font-size:12px; width:100%;">📖 Reforzar: ${detall.familia||detall.nom} ↗</button></div></div>`;
   });
 }
 function actualitzarOrientacioV11(){
@@ -1474,7 +1503,6 @@ function actualitzarEstadistiques_V94(){
   const el11=document.getElementById('stats-simulacres-bar'); if(el11) el11.style.width=Math.round(stats.estabilitat)+'%';
   const el12=document.getElementById('stats-examen-aprobados'); if(el12) el12.textContent=`Mejor racha: ${stats.maxRatxa}/6 aprobados seguidos`;
   dibujarGraficaEvolucion(); dibuixarPuntsDebils_V94(); actualitzarOrientacioV11();
-  // FIX PASE
   const paseEl=document.getElementById('pase-temps');
   if(paseEl){
     const m=Math.floor(estat.stats.tempsEstudiatAvui||0);
@@ -1484,8 +1512,9 @@ function actualitzarEstadistiques_V94(){
 }
 function getDadesEvolucio(){return estat.stats.historialEvolucio.map(h=>{let diaNum='0';if(h.dia&&h.dia.includes('-')){diaNum=h.dia.split('-')[2]||'0';if(diaNum.includes('T'))diaNum=diaNum.split('T')[0];}else if(h.dia&&h.dia.includes('/')){diaNum=h.dia.split('/')[0];}else{diaNum=(h.dia||'').toString().substring(0,2);}diaNum=diaNum.replace(/^0+/,'')||'0';return{dia:diaNum,global:Math.round(h.percent||0)};});}
 function mostrarIntro(){}
-function actualitzarMissatgeMotivacional(){const el=document.getElementById('motivacio');if(el)el.textContent="V14.3.12 FINAL - ESTAD 100% FIX 💪";}
-// ===== FIX NAVEGACIÓN ESTAD - EVITA VACÍO =====
+function actualitzarMissatgeMotivacional(){const el=document.getElementById('motivacio');if(el)el.textContent="V14.3.14 FINAL - ORDEN 1-8 FIX 💪";}
+
+// ===== NAVEGACIÓN FIX V14.3.14 - ORDEN 1 ESTAD 2 TEST 3 SIMULACROS 4 EXAMEN 5 GARAJE 6 TIENDA 7 TIPS 8 TEMARIO =====
 function canviarTab_V94(e,tab){
   const tabTemari=document.getElementById('tab-temari');
   if(tabTemari&&tabTemari.classList.contains('active')&&tempsIniciTemari!==null){estat.stats.tempsEstudiatAvui+=(Date.now()-tempsIniciTemari)/1000/60;tempsIniciTemari=null;guardar();}
@@ -1498,8 +1527,17 @@ function canviarTab_V94(e,tab){
   if(tab==='temari'){carregarTemari_V14();iniciarComptadorTemari();}
   if(tab==='tips')carregarTips();
   if(tab==='test')carregarPregunta('senales');
+  if(tab==='situaciones'){
+    setTimeout(()=>{
+      const cont=document.getElementById('tab-situaciones');
+      if(!cont) return;
+      cont.querySelectorAll('.sub-tab-btn').forEach((b,i)=>{b.classList.remove('active'); if(i===0) b.classList.add('active');});
+      cont.querySelectorAll('.sub-content').forEach(c=>c.classList.remove('active'));
+      const clima=document.getElementById('sit-clima'); if(clima) clima.classList.add('active');
+      carregarSituacio('clima');
+    },50);
+  }
   if(tab==='estadistiques'||tab==='estadisticas'||tab==='estad'){
-    // Fuerza que RESUMEN esté activo por defecto y pinte todo
     setTimeout(()=>{
       const cont=document.getElementById('tab-estadistiques'); if(!cont) return;
       cont.querySelectorAll('.sub-tab-btn').forEach((b,i)=>{b.classList.remove('active'); if(i===0) b.classList.add('active');});
@@ -1515,20 +1553,27 @@ function canviarSubTab(e,tab,subtab){
   contenidor.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));
   contenidor.querySelectorAll('.sub-content').forEach(c=>c.classList.remove('active'));
   if(e&&e.target) e.target.classList.add('active');
+  if(tab==='sit'){
+    const keyReal = mapSit(subtab);
+    const idHTML = keyReal==='urbano'?'urbà':keyReal==='emergencia'?'emergència':keyReal;
+    const el=document.getElementById('sit-'+idHTML)||document.getElementById('sit-'+keyReal)||document.getElementById('sit-'+subtab);
+    if(el) el.classList.add('active');
+    carregarSituacio(keyReal);
+    return;
+  }
   const subNorm=subtab.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
   const mapa={'resum':'stats-resum','resumen':'stats-resum','evolucio':'stats-evolucio','evolucion':'stats-evolucio','debils':'stats-debils','debiles':'stats-debils','pase':'stats-pase','orientacio':'stats-orientacio','orientacion':'stats-orientacio'};
   const idReal=mapa[subNorm]||`test-${subtab}`||`sit-${subtab}`||`stats-${subNorm}`;
   const el=document.getElementById(idReal)||document.getElementById(`test-${subNorm}`)||document.getElementById(`sit-${subtab}`)||document.getElementById(`sit-${subNorm}`);
   if(el) el.classList.add('active');
   if(tab==='test')carregarPregunta(subNorm);
-  if(tab==='sit')carregarSituacio(subtab);
   if(tab==='stats'||tab==='estad'){
     if(subNorm==='resum'||subNorm==='resumen') actualitzarEstadistiques_V94();
-    if(subNorm==='evolucio'||subNorm==='evolucion') { dibujarGraficaEvolucion(); const mot=document.getElementById('evolucio-motivacio'); if(mot){ const hist=estat.stats.historialEvolucio||[]; mot.textContent=hist.length>=2?`Evolución ${hist.length} días`:'Haz tests 2 días para ver evolución real'; } }
+    if(subNorm==='evolucio'||subNorm==='evolucion') { dibujarGraficaEvolucion(); }
     if(subNorm==='debils'||subNorm==='debiles') dibuixarPuntsDebils_V94();
     if(subNorm==='pase'){ const paseEl=document.getElementById('pase-temps'); if(paseEl){ const m=Math.floor(estat.stats.tempsEstudiatAvui||0); const s=Math.floor(((estat.stats.tempsEstudiatAvui||0)-m)*60); paseEl.textContent=`${m}:${s.toString().padStart(2,'0')} / 10:00`; } }
     if(subNorm==='orientacio'||subNorm==='orientacion') actualitzarOrientacioV11();
   }
 }
 function mostrarEmoji(encert,element){const span=document.createElement('span');span.textContent=encert?'✅':'❌';span.style.cssText='position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:28px;';element.style.position='relative';element.appendChild(span);setTimeout(()=>span.remove(),600);}
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').then(()=>console.log('SW V14.3.12 FINAL ESTAD FIX')).catch(()=>{});});}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').then(()=>console.log('SW V14.3.14 ORDEN 8 FIX')).catch(()=>{});});}
