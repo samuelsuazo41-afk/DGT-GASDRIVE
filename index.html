@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GasDrive DGT ES V14.3.15 PRO</title>
+<title>GasDrive DGT ES V14.3.16 FINAL - ESTAD INICIO COOL</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -104,7 +104,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   <div id="motivacio" style="margin-top:8px;font-size:13px;color:#FFD700"></div>
 </div>
 
-<div id="tab-estadistiques" class="tab-content">
+<div id="tab-estadistiques" class="tab-content active">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="canviarSubTab(event,'stats','resum')">📊 RESUMEN</button>
     <button class="sub-tab-btn" onclick="canviarSubTab(event,'stats','evolucio')">📈 EVOLUCIÓN</button>
@@ -153,7 +153,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   </div>
 </div>
 
-<div id="tab-test" class="tab-content active">
+<div id="tab-test" class="tab-content">
   <div class="sub-tabs">
     <button class="sub-tab-btn active" onclick="canviarSubTab(event,'test','general')">📝 General</button>
     <button class="sub-tab-btn" onclick="canviarSubTab(event,'test','senyals')">🚸 Señales</button>
@@ -254,9 +254,9 @@ h1{font-size:24px;font-weight:900;letter-spacing:1.5px;margin-bottom:3px}
   <button class="tab-btn" onclick="canviarTab_V94(event,'temari')"><span class="emoji">📖</span>TEMARIO</button>
 </div>
 
-<script src="./app.js?v=14.3.1"></script>
+<script src="./app.js?v=14.3.16"></script>
 <script>
-// ===== V14.3.4 - FIX DEFINITIVO - NO BORRA NADA - SOLO AÑADE =====
+// ===== V14.3.16 - ESTAD INICIO COOL NATIVO =====
 const MAPA_TEMAS_NATIVOS = {
   't01': 'TEMA 1: DEFINICIONES Y CLASIFICACIÓN - Masas, MMA, dimensiones, vehículos',
   't02': 'TEMA 2: LA VÍA - Partes, marcas viales, intersecciones, velocidades 20/30/50',
@@ -318,7 +318,6 @@ function canviarTemaFicha(evt, tema){
   });
   if(typeof obrirFichaJPG === 'function') obrirFichaJPG(MAPA_TEMAS_2_FICHAS[tema][0]);
 }
-// ===== ORIENTACION PILDORAS FIX - SOBRESCRIBE LA DE APP.JS PERO MANTIENE TODO LO DEMAS =====
 function actualitzarOrientacioV11_FIX(){
   const cont = document.getElementById('stats-orientacio-lista');
   if(!cont) return;
@@ -346,7 +345,7 @@ function actualitzarOrientacioV11_FIX(){
     <div style="font-weight:700; color:#00D9FF; font-size:14px">3. EXAMEN diario cuando llegues al 90%</div>
     <div style="color:#ccc; font-size:12px; margin-top:6px; line-height:1.5">Cuando tengas 90% global, haz 1 simulacro diario de 30 preguntas. Necesitas racha de 6 aprobados seguidos (27/30) para ir seguro a DGT real. Cada examen mezcla N-01..N-15 + S-100 + M- + A- + E-. Si suspendes, mira P. Débiles.</div>
   </div>
-  <div style="background:#0a0a1a; padding:14px; border-radius:12px; border:2px solid #FFD700; margin-top:14px;">
+  <div style="background:#0a0a0a; padding:14px; border-radius:12px; border:2px solid #FFD700; margin-top:14px;">
     <h3 style="color:#FFD700; margin-bottom:8px; text-align:center">🚀 ¿CUÁNDO ESTOY LISTO? 90% = LISTO</h3>
     <div style="color:#fff; font-size:12px; line-height:1.6;">
       <p>✅ Cuando tu RESUMEN marque <b style="color:#FFD700">90%</b> se desbloquea botón "PRESENTARME AL EXAMEN DGT OFICIAL".</p>
@@ -357,7 +356,6 @@ function actualitzarOrientacioV11_FIX(){
   </div>
   `;
 }
-// Sobrescribe la función original de app.js para que no borre nuestras píldoras
 window.actualitzarOrientacioV11 = actualitzarOrientacioV11_FIX;
 
 window.addEventListener('load',()=>{
@@ -368,4 +366,4 @@ window.addEventListener('load',()=>{
 });
 </script>
 </body>
-</html> 
+</html>
